@@ -1,0 +1,42 @@
+﻿@model WebApplication7.ViewModels.ViewGoalVm
+
+@foreach (var goalComment in Model.GoalComments.data)
+{
+    
+    <div class="GoalCommentWrapper">
+
+        <b>@goalComment.text</b>
+        <br/>
+        @goalComment.created_at
+        <br/>
+        Created By: @goalComment.created_by.first_name @goalComment.created_by.last_name<br />
+        @if (goalComment.created_by.avatar_url != null)
+        {
+            <img src="@goalComment.created_by.avatar_url" height="50px"/>
+        }    
+
+    </div>
+}
+
+@if (Model.GoalComments.paging.next != null)
+        {
+            var query = HttpUtility.ParseQueryString(@Model.GoalComments.paging.next.Query);
+
+            var limitParam = query.Get("limit");
+            var afterParam = query.Get("after");
+            var orderParam = query.Get("order");
+            
+            <a href="javascript:ShowComments('@Model.Goal.id', @limitParam, '@afterParam', '@orderParam');"> next comments </a>
+        }
+
+<script type="text/javascript"> 
+    function ShowComments(id, limit, after, order) {     
+        $.ajax({
+            url: '@Url.Action("GetGoalComments", "Goal")',
+            data: { goalId: id , limit: limit, after: after, order: order},
+            success: function (data) {            
+                $("#GoalComments").append(data);              
+            }
+        });
+    }
+</script>

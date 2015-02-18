@@ -1,0 +1,34 @@
+﻿@model WebApplication7.ViewModels.ViewCategoryProductsVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Category - @Model.Category.CategoryName</h1>
+
+     @Html.ActionLink("New Product", "NewCategoryProduct", "Category", new { categoryId = @Model.Category.CategoryId }, null)
+
+<br/>
+<h2>Category Products</h2>
+
+@foreach (var product in Model.CategoryProducts)
+{
+    @:Id: @product.ProductId
+    <br/>
+    @:Title: @product.Title
+    <br/>
+    @:Description: @product.Description
+    <br/>
+    @:Price: @product.Price
+    <br/>
+    @:Size: @product.Size
+    <br/>
+
+    @Html.ActionLink("View Product", "ViewProduct", "Product", new { productId = @product.ProductId }, null)
+    @:&nbsp;
+     @Html.ActionLink("Edit Product", "EditProduct", "Product", new { productId = @product.ProductId }, null)
+    <br/><br/>
+      
+}
+
+

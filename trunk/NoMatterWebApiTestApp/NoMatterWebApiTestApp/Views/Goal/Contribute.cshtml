@@ -1,0 +1,38 @@
+﻿@model WebApplication7.ViewModels.ContributeVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/><br/>
+
+@using (Html.BeginForm("ContributeStart", "Goal"))
+{
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        Card Token
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.CardToken)
+        @Html.ValidationMessageFor(model => model.CardToken)
+    </div>
+    
+      <div class="editor-label">
+       Card CVV
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.CardCvv)
+        @Html.ValidationMessageFor(model => model.CardCvv)
+    </div>
+    
+
+        @Html.HiddenFor(model => model.GoalId)
+        @Html.HiddenFor(model => model.Amount)
+        
+    <br/>
+      <p>
+        <input type="submit" value="Contribute" />
+    </p>
+
+
+}

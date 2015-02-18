@@ -1,0 +1,25 @@
+﻿@model IEnumerable<NoMatterWebApiModels.Models.Category>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Section Categories</h1>
+
+@foreach (var category in Model)
+{
+    @category.CategoryId
+    <br/>
+    @category.CategoryName
+    <br/>
+    @category.CategoryDescription
+    <br/>
+    @category.CategoryOrder
+    <br/>
+
+    @Html.ActionLink("Get Products", "GetCategoryProducts", "Category", new { categoryId = @category.CategoryId }, null)
+
+
+    <br/><br/>
+    
+    
+}

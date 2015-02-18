@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="fb-root"></div>
+
+<script type="text/javascript">
+    (function () {
+
+        //Facebook javasripts
+        var e = document.createElement('script'); e.async = true;
+        e.src = document.location.protocol
+            + '//connect.facebook.net/en_US/all.js';
+        document.getElementById('fb-root').appendChild(e);
+    })();
+</script>
+
+<br/><br/>
+<a href="javascript:void(0);" id="fb-auth">Facebook Register</a>
+
+<script type="text/javascript">
+
+    //Facebook scripts
+    $(document).ready(function () {
+        // Init the SDK upon load
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1502745586651203', // App ID
+                scope: 'name,first_name,last_name',
+                status: true, // check login status
+                cookie: true, // enable cookies to allow the server to access the session
+                xfbml: true,  // parse XFBML
+                oauth: true
+            });
+        };
+
+        var button = document.getElementById('fb-auth');
+        button.onclick = function () {
+            FB.login(function (response) {
+
+                if (response.authResponse) {
+
+                    var accessToken = response.authResponse.accessToken;
+
+                    var form = document.createElement("form");
+                    form.setAttribute("method", 'post');
+                    form.setAttribute("action", '@Url.Action("RegisterQueryFacebook", "User")');
+
+                      var field = document.createElement("input");
+                      field.setAttribute("type", "hidden");
+                      field.setAttribute("name", 'accessToken');
+                      field.setAttribute("value", accessToken);
+                      form.appendChild(field);
+
+                      document.body.appendChild(form);
+                      form.submit();
+
+                  } else {
+                      //user cancelled login or did not grant authorization
+                  }
+              }, { scope: 'email' });
+          };
+
+    });
+</script>
+
+

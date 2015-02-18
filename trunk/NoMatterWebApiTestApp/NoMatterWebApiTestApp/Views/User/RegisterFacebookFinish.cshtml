@@ -1,0 +1,18 @@
+﻿@model WebApplication7.Models.LoginResponse
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Thanks your registration was successful</h1>
+<br/><br/>
+<b>Access Token:</b> @Model.token_details.access_token
+<br/><br/>
+<b>Access Token Expiry:</b> @Model.token_details.access_token_expiry_utc
+<br/><br/>
+<b>Refresh Token:</b> @Model.token_details.refresh_token
+<br /><br />
+<br /><br />
+<b>Facebook Token:</b> @Model.FacebookToken
+
+

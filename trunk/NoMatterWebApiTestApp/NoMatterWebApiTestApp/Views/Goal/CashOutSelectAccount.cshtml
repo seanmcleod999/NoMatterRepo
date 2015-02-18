@@ -1,0 +1,30 @@
+﻿@model WebApplication7.ViewModels.SelectAccountVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br/>
+<h2>Select your account for cashout:</h2>
+<br/><br/>
+Raised Amount: @Model.RaisedAmount
+<br/>
+Fee Amount: @Model.FeeAmount
+<br/>
+Available Amount: @Model.AvailableAmount
+<br/><br/>
+
+@foreach (var account in Model.Accounts)
+{
+    @:Account Type: <b>@account.account_type</b>
+    <br/>
+    @:Account Number: <b>@account.account_number</b>
+    <br/>
+    @:Token: <b>@account.account_token</b>
+    <br/>
+    @Html.ActionLink("Select Account", "CompletePayment", "Goal", new { goalId = Model.GoalUuid, accountToken = account.account_token}, null)
+    <br/><br/>
+}
+
+<br/><br/>
+@Model.AccountData

@@ -1,0 +1,22 @@
+﻿@model IEnumerable<WebApplication7.Models.GoalContribution>
+<br/>
+
+<h2>Contributors</h2>
+<br/>
+@foreach (var contribution in Model)
+{
+    
+    <div class="GoalCommentWrapper">
+        @if (contribution.contributed_by.avatar_url != null)
+        {
+            <img src="@contribution.contributed_by.avatar_url" height="50px"/>
+        }  
+        <br/>
+        <b>@contribution.contributed_by.first_name @contribution.contributed_by.last_name</b>
+        <br/>
+        R @contribution.amount
+        <br/>
+        @contribution.created_at<br />
+          
+    </div>
+}

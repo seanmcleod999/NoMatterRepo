@@ -1,0 +1,18 @@
+﻿@model IEnumerable<NoMatterWebApiModels.Models.Section>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Client Sections</h1>
+
+@foreach (var section1 in Model)
+{
+    @section1.SectionId
+    <br/>
+    @section1.SectionName
+    <br/>
+    @Html.ActionLink("Get Categories", "GetSectionCategories", "Section", new { sectionId = @section1.SectionId }, null)
+    <br/><br/>
+    
+    
+}

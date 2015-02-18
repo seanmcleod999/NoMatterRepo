@@ -1,0 +1,63 @@
+﻿@model WebApplication7.Models.FacebookUser
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Update your profile</h1>
+
+@using (Html.BeginForm("RegisterFacebookFinish", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        
+         @Html.HiddenFor(m => m.AvatarUrl)
+         @Html.HiddenFor(m => m.AccessToken)
+
+          
+        <div class="editor-label">
+            <br/>
+            First Name
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.First_Name)
+            @Html.ValidationMessageFor(m => m.First_Name)
+        </div>
+
+        <div class="editor-label">
+            <br/>
+            Surname
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Last_Name)
+            @Html.ValidationMessageFor(m => m.Last_Name)
+        </div>
+        
+         <div class="editor-label">
+            <br/>
+            Email
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Email)
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
+        
+        <div>
+            <br/>
+            
+            <img src="@Model.AvatarUrl" height="50px"/>
+        </div>
+        <br/>
+        or upload an image
+
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.File, new { type = "file" })
+            @Html.ValidationMessageFor(m => m.File)
+        </div>
+       
+        <br/><br/>
+        <p>
+            <input type="submit" value="Finish" />
+        </p>
+
+    </div>
+}

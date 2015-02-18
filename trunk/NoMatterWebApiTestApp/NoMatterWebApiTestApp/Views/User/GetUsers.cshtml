@@ -1,0 +1,68 @@
+﻿@model IEnumerable<WebApplication7.Models.Profile>
+
+    @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <h1>Users</h1>
+
+<table cellpadding="2">
+
+    <tr>
+        <th>
+            
+        </th>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            User Id
+        </th>
+         <th>
+         
+        </th>
+
+    </tr>
+
+        @foreach (var profile in Model)
+        {
+            <tr>
+
+                <td>
+                    <img src="@profile.avatar_url" height="50px" />
+                </td>
+                <td>
+                    @profile.first_name
+                </td>
+                <td>
+                    @profile.last_name
+                </td>
+                <td>
+                    @profile.email
+                </td>
+                <td>
+                    @profile.id
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteUser", "User", new { id = profile.id }, new { onclick = "return confirm('Are you sure you wish to delete this user?');" })
+                </td>
+
+            </tr>
+
+        }
+
+           
+
+</table>
+
+
+
+
+
+

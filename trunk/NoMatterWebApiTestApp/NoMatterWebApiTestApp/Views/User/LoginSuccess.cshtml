@@ -1,0 +1,12 @@
+﻿@model NoMatterWebApiModels.Models.UserAuthenticatedResult
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Your login was successful</h1>
+<br/><br/>
+<b>Access Token:</b> @Model.TokenDetails.Token
+<br /><br />
+<b>Facebook Token:</b> @Model.FacebookToken
+<br /><br />

@@ -1,0 +1,29 @@
+﻿@model WebApplication7.ViewModels.AddGoalCommentVm
+
+<br/><br/>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.NewGoalComment.text)
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.NewGoalComment.text)
+        @Html.ValidationMessageFor(model => model.NewGoalComment.text)
+    </div>
+    
+
+        @Html.HiddenFor(model => model.GoalId)
+     
+
+       
+    <br/>
+      <p>
+        <input type="submit" value="Create" />
+    </p>
+
+
+}
+

@@ -1,0 +1,108 @@
+﻿@model WebApplication7.ViewModels.ViewGoalVm
+
+<div class="GoalWrapper">
+        
+    <h2>@Model.Goal.title</h2><br/>
+
+    @if (Model.Goal.header_image_url != null)
+    {
+        <img src="@Model.Goal.header_image_url" height="300px"/><br/><br/>
+    }
+
+    Detail: <b>@Model.Goal.description</b>
+    <br/>
+    TagLine: <b>@Model.Goal.tagline</b>
+    <br/><br/>
+    Goal Amount: <b>R @Model.Goal.goal_amount</b>
+    <br/><br/>     
+
+    Start Date: <b>@Model.Goal.start_date.ToShortDateString()</b>
+    <br/>
+    End Date: <b>@Model.Goal.end_date.ToShortDateString()</b>
+    <br/><br/>
+      
+    Amount Raised: <b>R @Model.Goal.meta.amount_raised</b>
+    <br/>
+    Number of Contributors: <b>@Model.Goal.meta.number_of_contributors</b>
+    <br/><br/>
+    @Html.ActionLink("View Contributors", "ViewContributors", "Goal", new { goalId = @Model.Goal.id }, null)
+    <br/><br/>
+    Likes: <b>@Model.SocialStats.likes</b>
+    <br/>
+    Follows: <b>@Model.SocialStats.followers</b>
+    <br/>
+    Shares: <b>@Model.SocialStats.shares</b>
+    <br/><br/>
+    
+    @using (Html.BeginForm("Like", "Goal", FormMethod.Post))
+    {
+        <input type="hidden" id="goalId" name="goalId" value="@Model.Goal.id"/>
+        <input type="submit" value="Like" />
+    }
+
+    @using (Html.BeginForm("Unlike", "Goal", FormMethod.Post))
+    {
+        <input type="hidden" id="goalId" name="goalId" value="@Model.Goal.id"/>
+        <input type="submit" value="Unlike" />
+    }
+    
+     @using (Html.BeginForm("Follow", "Goal", FormMethod.Post))
+     {
+         <input type="hidden" id="goalId" name="goalId" value="@Model.Goal.id"/>
+         <input type="submit" value="Follow" />
+     }
+    
+    @using (Html.BeginForm("unfollow", "Goal", FormMethod.Post))
+     {
+         <input type="hidden" id="goalId" name="goalId" value="@Model.Goal.id"/>
+         <input type="submit" value="Unfollow" />
+     }
+
+    @using (Html.BeginForm("Share", "Goal", FormMethod.Post))
+    {
+        <input type="hidden" id="goalId" name="goalId" value="@Model.Goal.id"/>
+        <input type="submit" value="Share" />
+    }
+    <br/>
+    User has liked: <b>@Model.SocialStats.user_interactions.like</b>
+    <br/>
+    User has followed: <b>@Model.SocialStats.user_interactions.follow</b>
+    <br/><br/>
+  
+    Id: <b><i>@Model.Goal.id</i></b><br/><br />
+    
+    @using (Html.BeginForm("Contribute", "Goal", FormMethod.Post))
+    {
+        <input type="hidden" id="goalId" name="goalId" value="@Model.Goal.id"/>
+        <input type="text" id="amount" name="amount" value="50"/>
+        <input type="submit" value="Contribute" />
+    }
+    
+    <br/>
+     @Html.ActionLink("Cash out", "CashOutSelectAccount", "Goal", new { goalId = @Model.Goal.id }, null)
+    <br/><br/>
+    Created By: <b>@Model.Goal.created_by.first_name @Model.Goal.created_by.last_name</b><br />
+    @if (Model.Goal.created_by.avatar_url != null)
+    {
+        <img src="@Model.Goal.created_by.avatar_url" height="80px"/>
+    }
+    <br/><br/>
+    
+    @*<a href="javascript:ShowComments('@Model.Goal.id')">Show Comments (@Model.Goal.meta.comment_count)</a>*@
+    <br/>
+    <b>Comments</b>
+    &nbsp;&nbsp;
+     @Html.ActionLink("Add Comment", "NewGoalComment", "Goal", new { goalId = @Model.Goal.id }, null)
+        
+    <div id="GoalComments">
+        
+        @Html.Partial("partialGoalComments", Model)  
+        
+    </div>
+ 
+       
+</div>
+
+
+
+

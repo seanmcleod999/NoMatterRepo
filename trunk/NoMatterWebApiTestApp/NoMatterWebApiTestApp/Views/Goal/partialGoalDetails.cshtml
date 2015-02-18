@@ -1,0 +1,40 @@
+﻿@model WebApplication7.Models.Goal
+
+<div class="GoalWrapper">
+        
+    @if (Model.header_image_url != null)
+    {
+        <a href="@Url.Action("ViewPublicGoal", "Goal", new { id = @Model.id}, null)">
+            <img src="@Model.header_image_url" height="150px"/>
+        </a>
+
+        <br/><br/>
+    }
+
+    Title: <b>@Model.title</b><br/><br/>
+    Detail: @Model.description<br/>
+    TagLine: @Model.tagline<br/><br/>
+    Goal Amount: R @Model.goal_amount<br/><br/>     
+
+    Start Date: @Model.start_date.ToShortDateString()<br/>
+    End Date: @Model.end_date.ToShortDateString()<br/><br/>
+        
+    Id: <i>@Model.id</i><br/><br />
+
+    Created By: @Model.created_by.first_name @Model.created_by.last_name<br />
+    @if (Model.created_by.avatar_url != null)
+    {
+        <img src="@Model.created_by.avatar_url" height="50px"/>
+    }
+    <br/><br/>
+    @Model.meta.comment_count comments<br><br/>
+        @*<a href="">Show/Hide Comments (@Model.comment_count)</a>
+        
+    <div class="GoalComments">
+                
+
+    </div>*@
+    
+    @Html.ActionLink("View Goal", "ViewPublicGoal", "Goal", new { id = @Model.id}, null)
+       
+</div>

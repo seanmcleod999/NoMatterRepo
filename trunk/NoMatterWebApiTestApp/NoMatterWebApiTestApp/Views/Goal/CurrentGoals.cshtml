@@ -1,0 +1,57 @@
+﻿@model WebApplication7.Models.PagedGoals
+
+<h1>Current Goals</h1>
+
+@if (@Model.paging.previous != null)
+{
+    var query = HttpUtility.ParseQueryString(@Model.paging.previous.Query);
+
+    var limitParam = query.Get("limit");
+    var nextParam = query.Get("next");
+        
+    @Html.ActionLink("<< previous page", "GetPublic", "Goal", new {limit = limitParam, next = nextParam}, null)
+    
+    @:&nbsp; &nbsp;
+}
+
+@if (@Model.paging.next != null)
+{
+    var query = HttpUtility.ParseQueryString(@Model.paging.next.Query);
+
+    var limitParam = query.Get("limit");
+    var beforeParam = query.Get("before");
+        
+    @Html.ActionLink("next page >>", "GetPublic", "Goal", new {limit = limitParam, before = beforeParam}, null)
+
+}
+
+@foreach (var goal in Model.data)
+{
+    @Html.Partial("partialGoalDetails", goal)
+}
+
+<br/>
+
+@if (@Model.paging.previous != null)
+{
+
+    var query = HttpUtility.ParseQueryString(@Model.paging.previous.Query);
+
+    var limitParam = query.Get("limit");
+    var nextParam = query.Get("next");
+        
+    @Html.ActionLink("<< previous page", "GetPublic", "Goal", new {limit = limitParam, next = nextParam}, null)
+    
+    @:&nbsp; &nbsp;
+}
+
+@if (@Model.paging.next != null)
+{
+    var query = HttpUtility.ParseQueryString(@Model.paging.next.Query);
+
+    var limitParam = query.Get("limit");
+    var beforeParam = query.Get("before");
+        
+    @Html.ActionLink("next page >>", "GetPublic", "Goal", new {limit = limitParam, before = beforeParam}, null)
+
+}

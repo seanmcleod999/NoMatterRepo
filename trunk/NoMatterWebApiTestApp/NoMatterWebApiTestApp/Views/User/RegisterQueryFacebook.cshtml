@@ -1,0 +1,21 @@
+﻿@model WebApplication7.Models.RegisterQueryResponse
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br/><br/>
+<b>User Exists:</b> @Model.UserExists
+<br/><br/>
+<b>Email:</b> @Model.Email
+<br/><br/>
+<b>FirstName:</b> @Model.FirstName
+<br/><br/>
+<b>FirstName:</b> @Model.LastName
+<br/><br/>
+<b>Facebook Avatar:</b> @Model.FacebookAvatarUrl
+<br/><br/>
+@if (Model.FacebookAvatarUrl != null)
+{
+    <img src="@Model.FacebookAvatarUrl">
+}

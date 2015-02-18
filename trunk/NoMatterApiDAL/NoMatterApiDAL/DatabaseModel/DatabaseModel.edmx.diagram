@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="433aea3bced64730a5994eb85b1866bc" Name="Diagram1" ZoomLevel="51">
+        <EntityTypeShape EntityType="DatabaseModel.Client" Width="1.5" PointX="5.5" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.User" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="DatabaseModel.FK_User_Client" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DatabaseModel.Category" Width="1.5" PointX="5.25" PointY="8.25" />
+        <EntityTypeShape EntityType="DatabaseModel.Product" Width="1.5" PointX="9" PointY="7.125" />
+        <EntityTypeShape EntityType="DatabaseModel.Section" Width="1.5" PointX="5.375" PointY="5" />
+        <AssociationConnector Association="DatabaseModel.FK_Category_Section" />
+        <AssociationConnector Association="DatabaseModel.FK_Product_Category" />
+        <AssociationConnector Association="DatabaseModel.FK_Section_Section" />
+        <EntityTypeShape EntityType="DatabaseModel.Discount" Width="1.5" PointX="9.75" PointY="2.375" />
+        <EntityTypeShape EntityType="DatabaseModel.DiscountType" Width="1.5" PointX="12.625" PointY="2.625" />
+        <AssociationConnector Association="DatabaseModel.FK_Discount_DiscountType" />
+        <AssociationConnector Association="DatabaseModel.FK_Discount_Client" />
+        <EntityTypeShape EntityType="DatabaseModel.DiscountProduct" Width="2.75" PointX="13.625" PointY="5.5" />
+        <AssociationConnector Association="DatabaseModel.FK_DiscountProduct_Discount" />
+        <AssociationConnector Association="DatabaseModel.FK_DiscountProduct_Product" />
+        <EntityTypeShape EntityType="DatabaseModel.ProductKeyword" Width="1.5" PointX="11.25" PointY="9.375" />
+        <AssociationConnector Association="DatabaseModel.FK_ProductKeyword_Product" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

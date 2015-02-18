@@ -1,0 +1,14 @@
+﻿@model WebApplication7.ViewModels.Contribute3dsVm
+
+
+<!DOCTYPE html>
+
+<HTML> 
+<BODY onload="document.frmLaunch.submit();"> 
+    <FORM name="frmLaunch" method="POST" action="@Model.AcsUrl">
+        <input type=hidden name="TermUrl" value="@Model.TermUrl">  
+        <input type=hidden name="MD" value="@Model.D3SessionGuid"> 
+        <input type=hidden name="PaReq" value="@Model.D3Payload"> 
+    </FORM> 
+</BODY> 
+</HTML>

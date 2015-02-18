@@ -1,0 +1,45 @@
+﻿@model NoMatterWebApi.ViewModels.RunMySqlScriptVm
+
+@{
+    ViewBag.Title = "AddDiscount";
+}
+
+<h2>Run MySql Script</h2>
+
+
+ @using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+     
+    <div class="editor-label">
+    Script
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(m => m.Script, new {style = "width: 500px; height:200px;"})
+    </div>
+     
+    <input type="submit" value="Run script" />
+            
+       
+     if (Model.ScriptExecuted)
+      {
+            <div class="editor-label">
+            Success
+            </div>
+            <div class="editor-field">
+                @Model.Success
+            </div>
+
+          if (!Model.Success)
+          {
+              <div class="editor-label">
+                  Script
+              </div>
+              <div class="editor-field">
+                  @Model.ErrorText
+              </div>
+          }
+      }
+               
+}
