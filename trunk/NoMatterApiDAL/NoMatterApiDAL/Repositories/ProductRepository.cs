@@ -12,7 +12,7 @@ namespace NoMatterApiDAL.Repositories
 	{
 		Task<Product> GetProductAsync(int productId);
 		Task<Product> GetProductAsync(Guid productUuid);
-		Task<string> AddProductAsync(Product product);
+		Task<int> AddProductAsync(Product product);
 		void UpdateProductAsync(Product product);
 		void DeleteProductAsync(Guid productUuid);
 		Task<List<Product>> GetRelatedProductsByKeywordsAsync(Guid productUuid, List<string> keywords, int relatedItemsCount);
@@ -49,9 +49,8 @@ namespace NoMatterApiDAL.Repositories
 			return product;
 		}
 
-		public async Task<string> AddProductAsync(Product product)
+		public async Task<int> AddProductAsync(Product product)
 		{
-			product.ProductUUID = Guid.NewGuid();
 			product.DateCreated = DateTime.Now;
 			product.Sold = false;
 
@@ -59,7 +58,7 @@ namespace NoMatterApiDAL.Repositories
 
 			await databaseConnection.SaveChangesAsync();
 
-			return product.ProductUUID.ToString();
+			return product.ProductId;
 
 		}
 

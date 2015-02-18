@@ -56,7 +56,6 @@
     <Compile Include="CategoryHelper.cs" />
     <Compile Include="ClientHelper.cs" />
     <Compile Include="Enums\PictureTypeEnum.cs" />
-    <Compile Include="FacebookHelper.cs" />
     <Compile Include="OtherHelpers\GlobalSettings.cs" />
     <Compile Include="OtherHelpers\PictureUploadSettings.cs" />
     <Compile Include="PictureHelper.cs" />

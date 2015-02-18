@@ -34,7 +34,7 @@ namespace NoMatterWebApiWebHelper
 		{
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri(_globalSettings.BaseAddress);
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -56,7 +56,7 @@ namespace NoMatterWebApiWebHelper
 		{
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri(_globalSettings.BaseAddress);
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -71,6 +71,31 @@ namespace NoMatterWebApiWebHelper
 
 				throw new Exception("Cannot get Product. " + response.ToString());
 
+			}
+		}
+
+		public async Task<Product> UpdateProductsAsync(Product product, string token)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
+
+				var response = await client.PostAsJsonAsync(String.Format("api/v1/products/{0}", product.ProductId), product);
+
+				if (response.IsSuccessStatusCode)
+				{
+					var responseProduct = await response.Content.ReadAsAsync<Product>();
+
+					return responseProduct;
+				}
+				else
+				{
+					throw new Exception("Cannot update Product. " + response.ToString());
+				}
 			}
 		}
 	}

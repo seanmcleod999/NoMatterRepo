@@ -203,6 +203,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\EditProductVm.cs" />
     <Compile Include="ViewModels\NewProductVm.cs" />
     <Compile Include="ViewModels\UserLoginVm.cs" />
     <Compile Include="ViewModels\ViewCategoryProductsVm.cs" />

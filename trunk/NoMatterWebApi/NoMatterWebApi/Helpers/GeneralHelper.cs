@@ -5,15 +5,24 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using GoogleAPI.UrlShortener;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
 
 namespace NoMatterWebApi.Helpers
 {
-	public class FacebookHelper
+	public interface IGeneralHelper
 	{
-		public static FacebookUser VerifyFacebookToken(string accessToken)
+		Task<FacebookUser> VerifyFacebookTokenAsync(string accessToken);
+		string MakeGoogleShortUrl(string accessToken);
+	}
+
+	public class GeneralHelper : IGeneralHelper
+	{
+
+		public async Task<FacebookUser> VerifyFacebookTokenAsync(string accessToken)
 		{
 			try
 			{
@@ -23,7 +32,7 @@ namespace NoMatterWebApi.Helpers
 				var client = new HttpClient();
 				var uri = new Uri(path);
 
-				var response = client.GetAsync(uri).Result;
+				var response = await client.GetAsync(uri);
 
 				// todo: proper error handling, check response is valid etc refer to facebook developer documentation
 
@@ -58,5 +67,27 @@ namespace NoMatterWebApi.Helpers
 		//		return builder.ToString();
 		//	}
 		//}
+
+		public string MakeGoogleShortUrl(string productUrl)
+		{
+			try
+			{
+				//Generate a google short url
+				var googleShortUrlclient = new UrlResource();
+
+				// Shorten url according the parameter below.
+				var response = googleShortUrlclient.Insert(new ShortenRequest { LongUrl = productUrl });
+
+				// Get the short url
+				return response.Id;
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return "";
+			}
+
+		}
 	}
 }

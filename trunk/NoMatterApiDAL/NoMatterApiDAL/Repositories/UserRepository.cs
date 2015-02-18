@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,10 @@ namespace NoMatterApiDAL.Repositories
 {
 	public interface IUserRepository
 	{
-		User GetClientUserByEmail(Guid clientUuid, string email);
-		User GetClientUserByFacebookId(Guid clientUuid, string email);
-		User GetUserByUuid(Guid userUuid);
-		string SaveUser(User user);
+		Task<User> GetClientUserByEmailAsync(Guid clientUuid, string email);
+		Task<User> GetClientUserByFacebookIdAsync(Guid clientUuid, string email);
+		Task<User> GetUserByUuidAsync(Guid userUuid);
+		Task<string> SaveUserAsync(User user);
 	}
 
 	public class UserRepository : IUserRepository
@@ -24,25 +25,25 @@ namespace NoMatterApiDAL.Repositories
 			this.databaseConnection = databaseConnection;
 		}
 
-		public User GetClientUserByEmail(Guid clientUuid, string email)
+		public async Task<User> GetClientUserByEmailAsync(Guid clientUuid, string email)
 		{
-			var user = databaseConnection.Users.SingleOrDefault(x => x.Client.ClientUUID == clientUuid && x.Email == email && x.CredentialTypeId == 1);
+			var user = await databaseConnection.Users.SingleOrDefaultAsync(x => x.Client.ClientUUID == clientUuid && x.Email == email && x.CredentialTypeId == 1);
 			return user;
 		}
 
-		public User GetClientUserByFacebookId(Guid clientUuid, string facebookIdentifier)
+		public async Task<User> GetClientUserByFacebookIdAsync(Guid clientUuid, string facebookIdentifier)
 		{
-			var user = databaseConnection.Users.SingleOrDefault(x => x.Client.ClientUUID == clientUuid && x.Identifier == facebookIdentifier && x.CredentialTypeId == 2);
+			var user = await databaseConnection.Users.SingleOrDefaultAsync(x => x.Client.ClientUUID == clientUuid && x.Identifier == facebookIdentifier && x.CredentialTypeId == 2);
 			return user;
 		}
 
-		public User GetUserByUuid(Guid userUuid)
+		public async Task<User> GetUserByUuidAsync(Guid userUuid)
 		{
-			var user = databaseConnection.Users.SingleOrDefault(x => x.UserUUID == userUuid);
+			var user = await databaseConnection.Users.SingleOrDefaultAsync(x => x.UserUUID == userUuid);
 			return user;
 		}
 
-		public string SaveUser(User user)
+		public async Task<string> SaveUserAsync(User user)
 		{
 			user.UserUUID = Guid.NewGuid();
 			user.DateAdded = DateTime.Now;
@@ -50,18 +51,9 @@ namespace NoMatterApiDAL.Repositories
 
 			databaseConnection.Users.Add(user);
 
-			databaseConnection.SaveChanges();
+			await databaseConnection.SaveChangesAsync();
 
 			return user.UserUUID.ToString();
-		}
-
-		
-
-		public Client GetClient(Guid clientUuid)
-		{
-			var requestDb = databaseConnection.Clients.SingleOrDefault(x => x.ClientUUID == clientUuid);
-
-			return requestDb;
 		}
 
 		public void Save()

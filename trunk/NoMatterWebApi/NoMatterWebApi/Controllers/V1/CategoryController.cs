@@ -9,6 +9,7 @@ using System.Web.Http.Description;
 using NoMatterApiDAL.DatabaseModel;
 using NoMatterApiDAL.Repositories;
 using NoMatterWebApi.Extensions;
+using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
 using NoMatterWebApiModels.Models;
@@ -24,6 +25,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 		private IProductRepository _productRepository;
 		private ICategoryRepository _categoryRepository;
+		
 
 		public CategoryController()
 		{
@@ -32,79 +34,16 @@ namespace NoMatterWebApi.Controllers.V1
 			_productRepository = new ProductRepository(databaseEntity);
 			_categoryRepository = new CategoryRepository(databaseEntity);
 			
+			
 		}
 
-		public CategoryController(IProductRepository productRepository, ICategoryRepository categoryRepository)
+		public CategoryController(IProductRepository productRepository, ICategoryRepository categoryRepository, IGeneralHelper generalHelper)
 		{
 			_productRepository = productRepository;
 			_categoryRepository = categoryRepository;
-
 		}
 
-		// POST api/v1/category/{categoryid}/products
-		[HttpPost]
-		[Route("{categoryid}/products")]
-		[ResponseType(typeof (Product))]
-		public async Task<IHttpActionResult> AddCategoryProduct(string categoryid, NewProduct model)
-		{
-			//TODO: make sure the user can post to this category
-
-			try
-			{		
-				var userToken = User.Identity.Name;
-
-
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
-
-				if (categoryDb == null) return BadRequest("CategoryNotFound");
-
-				var productDb = new NoMatterApiDAL.DatabaseModel.Product
-					{
-						Category = categoryDb,
-						Title = model.Title,
-						Description = model.Description,
-						Size = model.Size,
-						Price = model.Price,
-						Reserved = model.Reserved,
-						Hidden = model.Hidden,
-						AdminNotes = model.AdminNotes,
-						Picture1 = model.Picture1,
-						Picture2 = model.Picture2,
-						Picture3 = model.Picture3,
-						Picture4 = model.Picture4,
-						Picture5 = model.Picture5,
-						PictureOther = model.PictureOther,
-						ReleaseDate = Convert.ToDateTime(model.ReleaseDate)
-					};
-
-				if (model.Keywords != null)
-				{
-					var keywords = model.Keywords.Split(',');
-
-					foreach (var productKeyword in keywords.Select(keyword => new NoMatterApiDAL.DatabaseModel.ProductKeyword
-						{
-							Product = productDb,
-							Keyword = keyword.Trim().ToLower()
-						}))
-					{
-						productDb.ProductKeywords.Add(productKeyword);
-					}
-				}
-
-				var productUuid = await _productRepository.AddProductAsync(productDb);
-
-				var product = await _productRepository.GetProductAsync(new Guid(productUuid));
-
-				//TODO: change to created response
-				return Ok(product.ToDomainProduct());
-
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				return InternalServerError(ex);
-			}
-		}
+		
 
 		// GET api/v1/category/{categoryid}
 		[HttpGet]

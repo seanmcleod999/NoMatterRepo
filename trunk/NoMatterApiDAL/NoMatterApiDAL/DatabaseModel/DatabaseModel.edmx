@@ -80,7 +80,7 @@
           <Property Name="FacebookPostId" Type="varchar" MaxLength="20" />
           <Property Name="TwitterPostId" Type="varchar" MaxLength="20" />
           <Property Name="ProductShortUrl" Type="varchar" MaxLength="50" />
-          <Property Name="ReleaseDate" Type="date" />
+          <Property Name="ReleaseDate" Type="date" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductKeyword">
@@ -406,7 +406,7 @@
           <Property Name="FacebookPostId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="TwitterPostId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ProductShortUrl" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ReleaseDate" Type="DateTime" Precision="0" />
+          <Property Name="ReleaseDate" Type="DateTime" Precision="0" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Category" Relationship="DatabaseModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
           <Property Name="Picture5" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />

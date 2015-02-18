@@ -51,12 +51,12 @@ namespace WebApplication7.Controllers
 		{
 			var product = await _productHelper.GetProductNoRelatedProductsAsync(productId);
 
-			var viewProductVm = new ViewProductVm
+			var editProductVm = new EditProductVm
 			{
 				Product = product,
 			};
 
-			return View(viewProductVm);
+			return View(editProductVm);
 		}
 
 	  

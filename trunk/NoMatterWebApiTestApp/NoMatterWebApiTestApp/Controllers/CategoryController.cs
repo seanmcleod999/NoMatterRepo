@@ -88,6 +88,8 @@ namespace WebApplication7.Controllers
 			if (newProductVm.Picture5 != null) newProductVm.Product.Picture5 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture5.InputStream), _shopItemPictureUploadSettings);
 			if (newProductVm.PictureOther != null) newProductVm.Product.PictureOther = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.PictureOther.InputStream), _shopItemPictureUploadSettings);
 
+			newProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
+
 			var product = await _categoryHelper.PostCategoryProductsAsync(newProductVm.CategoryId, newProductVm.Product, token);
 
 			return RedirectToAction("GetCategoryProducts", new {categoryId = newProductVm.CategoryId});

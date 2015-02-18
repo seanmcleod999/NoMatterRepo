@@ -11,8 +11,6 @@ using System.Web.Security;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using WebApplication7.Logging;
-using WebApplication7.Models;
-using WebApplication7.Helpers;
 using WebApplication7.ViewModels;
 
 namespace WebApplication7.Controllers

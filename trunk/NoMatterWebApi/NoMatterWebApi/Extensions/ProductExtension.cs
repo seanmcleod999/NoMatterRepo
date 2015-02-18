@@ -35,6 +35,8 @@ namespace NoMatterWebApi.Extensions
 				FacebookPostId = product.FacebookPostId,
 				TwitterPostId = product.TwitterPostId,
 				ProductShortUrl = product.ProductShortUrl,
+				AdminNotes=product.AdminNotes,
+				Keywords = string.Join(",", product.ProductKeywords.Select(x => x.Keyword)), 
 				DiscountDetails = GetDiscountDetails(product.DiscountProducts, product.Price),
 				//RelatedProductDetails = GetRelatedProductDetails(product.ProductKeywords.ToList(), product.ProductUUID.ToString())
 			};

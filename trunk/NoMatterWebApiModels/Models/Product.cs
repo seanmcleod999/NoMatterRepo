@@ -48,6 +48,10 @@ namespace NoMatterWebApiModels.Models
 
 		public string ProductShortUrl { get; set; }
 
+		public string AdminNotes { get; set; }
+
+		public string Keywords { get; set; }
+
 		[Display(Name = "Date Created")]
 		public DateTime? DateCreated { get; set; }
 
@@ -56,7 +60,7 @@ namespace NoMatterWebApiModels.Models
 
 		[Required(ErrorMessage = "required")]
 		[Display(Name = "Release Date")]
-		public DateTime? ReleaseDate { get; set; }
+		public DateTime ReleaseDate { get; set; }
 
 		public DiscountDetails DiscountDetails { get; set; }
 

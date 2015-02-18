@@ -23,6 +23,7 @@ namespace NoMatterWebApi.Controllers.V1
 	{
 		private IClientRepository _clientRepository;
 		private IUserRepository _userRepository;
+		private IGeneralHelper _generalHelper;
 
 		public UserController()
 		{
@@ -30,12 +31,14 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_clientRepository = new ClientRepository(databaseEntity);
 			_userRepository = new UserRepository(databaseEntity);
+			_generalHelper = new GeneralHelper();
 		}
 
-		public UserController(IClientRepository clientRepository, IUserRepository userRepository)
+		public UserController(IClientRepository clientRepository, IUserRepository userRepository, IGeneralHelper facebookHelper)
 		{
 			_clientRepository = clientRepository;
 			_userRepository = userRepository;
+			_generalHelper = facebookHelper;
 		}
 
 		// POST api/v1/clients/{clientUuid}/users>
@@ -51,7 +54,7 @@ namespace NoMatterWebApi.Controllers.V1
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientUuid));
 				if (clientDb == null) return BadRequest("Client Not Found");
 
-				var userDb = _userRepository.GetClientUserByEmail(new Guid(clientUuid), model.Email);
+				var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
 				if (userDb != null) return BadRequest("User Already Exists");
 
 				if (string.IsNullOrEmpty(model.FacebookToken))
@@ -72,7 +75,7 @@ namespace NoMatterWebApi.Controllers.V1
 				else
 				{
 					//Facebook User.. need to validate the token etc
-					var facebookUser = FacebookHelper.VerifyFacebookToken(model.FacebookToken);
+					var facebookUser = await _generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
 
 					userDb = new User
 					{
@@ -86,7 +89,7 @@ namespace NoMatterWebApi.Controllers.V1
 					};
 				}
 
-				var userUuid = _userRepository.SaveUser(userDb);
+				var userUuid = await _userRepository.SaveUserAsync(userDb);
 
 				//Return the user details and token etc
 				var user = new UserAuthenticatedResult()
@@ -122,13 +125,13 @@ namespace NoMatterWebApi.Controllers.V1
 			if (!string.IsNullOrEmpty(model.FacebookToken))
 			{
 				//Facebook User.. need to validate the token etc
-				var facebookUser = FacebookHelper.VerifyFacebookToken(model.FacebookToken);
+				var facebookUser = await _generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
 
-				userDb = _userRepository.GetClientUserByFacebookId(new Guid(clientUuid), facebookUser.Id);
+				userDb = await _userRepository.GetClientUserByFacebookIdAsync(new Guid(clientUuid), facebookUser.Id);
 			}
 			else
 			{
-				userDb = _userRepository.GetClientUserByEmail(new Guid(clientUuid), model.Email);
+				userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
 			}		
 
 			if (userDb == null)

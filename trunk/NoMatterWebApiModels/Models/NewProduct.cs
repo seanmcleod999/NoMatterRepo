@@ -42,5 +42,7 @@ namespace NoMatterWebApiModels.Models
 		[Required(ErrorMessage = "required")]
 		public string ReleaseDate { get; set; }
 
+		public string ViewProductUrl { get; set; }
+
 	}
 }

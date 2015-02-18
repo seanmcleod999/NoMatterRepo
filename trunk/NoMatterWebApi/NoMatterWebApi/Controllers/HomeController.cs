@@ -13,6 +13,19 @@ namespace NoMatterWebApi.Controllers.v1
 {
     public class HomeController : Controller
     {
+		private IGeneralHelper _generalHelper;
+		
+
+		public HomeController()
+		{
+			_generalHelper = new GeneralHelper();		
+		}
+
+		public HomeController(IGeneralHelper facebookHelper)
+		{
+			_generalHelper = facebookHelper;
+		}
+
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
@@ -27,13 +40,13 @@ namespace NoMatterWebApi.Controllers.v1
 			return View();
 		}
 
-		public ActionResult LoginFacebook(string accessToken)
+		public async Task<ActionResult> LoginFacebook(string accessToken)
 		{
 			try
 			{
 				Logger.WriteGeneralInformationLog("loggin in via facebook");
 
-				var facebookUser = FacebookHelper.VerifyFacebookToken(accessToken);
+				var facebookUser = await _generalHelper.VerifyFacebookTokenAsync(accessToken);
 
 				if (facebookUser.Id != "10152508163385666") return View("LoginFailed");
 

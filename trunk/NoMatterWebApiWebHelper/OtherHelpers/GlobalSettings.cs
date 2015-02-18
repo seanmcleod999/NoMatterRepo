@@ -9,7 +9,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 {
 	public interface IGlobalSettings
 	{
-		string BaseAddress { get; }
+		string ApiBaseAddress { get; }
 		string FacebookAppId { get; }
 		string FacebookAppSecret { get; }
 
@@ -22,7 +22,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		//string SiteHomePageTitle { get; }
 		//string SiteLogoPath { get; }
 
-		//string ShopItemPath { get; }
+		string ShopItemPath { get; }
 		//string OgShopImagesPath { get; }
 		string ShopImagesPath { get; }
 		string SliderImagesPath { get; }
@@ -77,9 +77,13 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 	public class GlobalSettings : IGlobalSettings
 	{
-		public string BaseAddress { get { return ConfigurationManager.AppSettings["BaseAddress"]; } }
+		public string SiteUrl { get { return ConfigurationManager.AppSettings["SiteUrl"]; } }
+
+		public string ApiBaseAddress { get { return ConfigurationManager.AppSettings["ApiBaseAddress"]; } }
 		public string FacebookAppId { get { return ConfigurationManager.AppSettings["FacebookAppId"]; } }
 		public string FacebookAppSecret { get { return ConfigurationManager.AppSettings["FacebookAppSecret"]; } }
+
+		public string ShopItemPath { get { return SiteUrl + ConfigurationManager.AppSettings["ShopItemPath"]; } }
 
 		public string ShopImagesPath { get { return ConfigurationManager.AppSettings["ShopImagesPath"]; } }
 		public string SliderImagesPath { get { return ConfigurationManager.AppSettings["SliderImagesPath"]; } }

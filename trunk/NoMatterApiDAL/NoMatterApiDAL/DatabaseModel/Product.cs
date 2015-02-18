@@ -40,7 +40,7 @@ namespace NoMatterApiDAL.DatabaseModel
         public string FacebookPostId { get; set; }
         public string TwitterPostId { get; set; }
         public string ProductShortUrl { get; set; }
-        public Nullable<System.DateTime> ReleaseDate { get; set; }
+        public System.DateTime ReleaseDate { get; set; }
         public System.DateTime DateCreated { get; set; }
         public string Picture5 { get; set; }
     
