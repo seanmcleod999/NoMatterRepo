@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<scriptOptions sqlVersion="SQL2008">
+
+  <scriptTables outputFile="create tables.sql">
+  </scriptTables>
+
+  <scriptValues outputFile="insert.sql">
+       <table name="DiscountType" />
+  </scriptValues>
+
+
+</scriptOptions>
