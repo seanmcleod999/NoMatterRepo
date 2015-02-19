@@ -82,79 +82,7 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// POST api/v1/category/{categoryid}/products
-		[HttpPost]
-		[Route("~/api/v1/categories/{categoryid}/products")]
-		[ResponseType(typeof(Product))]
-		public async Task<IHttpActionResult> AddProduct(string categoryid, NewProduct model)
-		{
-			//TODO: make sure the user can post to this category
-
-			try
-			{
-				var userToken = User.Identity.Name;
-
-				var productUuid = Guid.NewGuid();
-
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
-
-				if (categoryDb == null) return BadRequest("CategoryNotFound");
-
-				var productDb = new NoMatterApiDAL.DatabaseModel.Product
-				{
-					ProductUUID = productUuid,
-					Category = categoryDb,
-					Title = model.Title,
-					Description = model.Description,
-					Size = model.Size,
-					Price = model.Price,
-					Reserved = model.Reserved,
-					Hidden = model.Hidden,
-					AdminNotes = model.AdminNotes,
-					Picture1 = model.Picture1,
-					Picture2 = model.Picture2,
-					Picture3 = model.Picture3,
-					Picture4 = model.Picture4,
-					Picture5 = model.Picture5,
-					PictureOther = model.PictureOther,
-					ReleaseDate = Convert.ToDateTime(model.ReleaseDate),
-
-				};
-
-				//Handle the keywords
-				if (model.Keywords != null)
-				{
-					var keywords = model.Keywords.Split(',');
-
-					foreach (var productKeyword in keywords.Select(keyword => new NoMatterApiDAL.DatabaseModel.ProductKeyword
-					{
-						Product = productDb,
-						Keyword = keyword.Trim().ToLower()
-					}))
-					{
-						productDb.ProductKeywords.Add(productKeyword);
-					}
-				}
-
-				//Generate the short url
-				productDb.ProductShortUrl = _generalHelper.MakeGoogleShortUrl(model.ViewProductUrl + productUuid);
-
-				//Save the product
-				var productId = await _productRepository.AddProductAsync(productDb);
-
-				//Get the product to return the details
-				var product = await _productRepository.GetProductAsync(productId);
-
-				//TODO: change to created response
-				return Ok(product.ToDomainProduct());
-
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				return InternalServerError(ex);
-			}
-		}
+		
 
 		// POST api/v1/products/{productId}
 		[HttpPost]
@@ -169,9 +97,50 @@ namespace NoMatterWebApi.Controllers.V1
 
 				var productDb = await _productRepository.GetProductAsync(new Guid(productId));
 
+				//productDb.CategoryId = model.CategoryId,
+				productDb.Title = model.Title;
+				productDb.Description = model.Description;
+				productDb.Size = model.Size;
+				productDb.Price = model.Price;
+				productDb.Reserved = model.Reserved;
+				productDb.Hidden = model.Hidden;
+				productDb.AdminNotes = model.AdminNotes;
+				productDb.Picture1 = model.Picture1;
+				productDb.Picture2 = model.Picture2;
+				productDb.Picture3 = model.Picture3;
+				productDb.Picture4 = model.Picture4;
+				productDb.Picture5 = model.Picture5;
+				productDb.PictureOther = model.PictureOther;
+				productDb.ReleaseDate = Convert.ToDateTime(model.ReleaseDate);
+
+				productDb.Sold = model.DateSold != null;
+				productDb.DateSold = model.DateSold;
+
+				//Remove all previous keyword
+				//foreach (var productKeyword in productDb.ProductKeywords)
+				//{
+				//	productDb.ProductKeywords.Remove(productKeyword);
+				//}
+
+				////Add all the keywords if there are any
+				//if (!string.IsNullOrEmpty(model.Keywords))
+				//{
+				//	var keywords = model.Keywords.Split(',');
+
+				//	foreach (var keyword in keywords)
+				//	{
+				//		var shopitemkeyword = productDb.ProductKeywords.Create();
+
+				//		shopitemkeyword.ShopItemId = shopItem.ShopItemId;
+				//		shopitemkeyword.keyword = keyword.Trim().ToLower();
+
+				//		mainDb.shopitemkeywords.Add(shopitemkeyword);
+				//	}
+				//}
+
+				await _productRepository.UpdateProductAsync(productDb);
+
 				var product = productDb.ToDomainProduct();
-
-
 
 				return Ok(product);
 			}

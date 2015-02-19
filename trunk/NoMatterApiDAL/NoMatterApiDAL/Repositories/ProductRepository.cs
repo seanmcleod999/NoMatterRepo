@@ -13,8 +13,8 @@ namespace NoMatterApiDAL.Repositories
 		Task<Product> GetProductAsync(int productId);
 		Task<Product> GetProductAsync(Guid productUuid);
 		Task<int> AddProductAsync(Product product);
-		void UpdateProductAsync(Product product);
-		void DeleteProductAsync(Guid productUuid);
+		Task UpdateProductAsync(Product product);
+		Task DeleteProductAsync(Guid productUuid);
 		Task<List<Product>> GetRelatedProductsByKeywordsAsync(Guid productUuid, List<string> keywords, int relatedItemsCount);
 	}
 
@@ -62,15 +62,17 @@ namespace NoMatterApiDAL.Repositories
 
 		}
 
-		public async void UpdateProductAsync(Product product)
+		public async Task UpdateProductAsync(Product product)
 		{
-			databaseConnection.Products.Attach(product);
+			//databaseConnection.Products.Attach(product);
+
+			databaseConnection.Entry(product).State = EntityState.Modified;
 
 			await databaseConnection.SaveChangesAsync();
 
 		}
 
-		public async void DeleteProductAsync(Guid productUuid)
+		public async Task DeleteProductAsync(Guid productUuid)
 		{
 			var product = await databaseConnection.Products.Where(x => x.ProductUUID == productUuid).SingleOrDefaultAsync();
 

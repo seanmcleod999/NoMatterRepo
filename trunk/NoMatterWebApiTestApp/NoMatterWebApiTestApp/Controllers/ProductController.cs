@@ -21,12 +21,16 @@ namespace WebApplication7.Controllers
     public class ProductController : Controller
     {
 		private IProductHelper _productHelper;
+		private IPictureHelper _pictureHelper;
 		private IGlobalSettings _globalSettings;
+		private IPictureUploadSettings _productPictureUploadSettings;
 
 		public ProductController()
 		{
 			_productHelper = new ProductHelper();
+			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
+			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ShopItemPicture, _globalSettings);
 		}
 
 		//public CategoryController(ICurrentUser currentUser)
@@ -57,6 +61,25 @@ namespace WebApplication7.Controllers
 			};
 
 			return View(editProductVm);
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> EditProduct(EditProductVm editProductVm)
+		{
+			var token = ((CustomPrincipal)HttpContext.User).Token;
+
+			if (editProductVm.Picture1 != null) editProductVm.Product.Picture1 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture1.InputStream), _productPictureUploadSettings);
+			if (editProductVm.Picture2 != null) editProductVm.Product.Picture2 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture2.InputStream), _productPictureUploadSettings);
+			if (editProductVm.Picture3 != null) editProductVm.Product.Picture3 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture3.InputStream), _productPictureUploadSettings);
+			if (editProductVm.Picture4 != null) editProductVm.Product.Picture4 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture4.InputStream), _productPictureUploadSettings);
+			if (editProductVm.Picture5 != null) editProductVm.Product.Picture5 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture5.InputStream), _productPictureUploadSettings);
+			if (editProductVm.PictureOther != null) editProductVm.Product.PictureOther = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.PictureOther.InputStream), _productPictureUploadSettings);
+
+			//editProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
+
+			var product = await _productHelper.UpdateProductAsync(editProductVm.Product, token);
+
+			return RedirectToAction("GetCategoryProducts", "Category", new { categoryId = editProductVm.Product.CategoryId });
 		}
 
 	  

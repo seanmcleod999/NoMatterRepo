@@ -25,14 +25,26 @@ Size: @Model.Product.Size
 <br/><br/>
 Short Url: @Model.Product.ProductShortUrl
 <br/><br/>
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture1)" width="200px"/>
-<br/><br/>
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture2)" width="200px"/>
-<br/><br/>
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture3)" width="200px"/>
-<br/><br/>
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture4)" width="200px"/>
-<br/><br/>
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture5)" width="200px"/>
-<br/><br/>
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="200px"/>
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture1)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture2)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture3)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture4)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture5)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="100px"/>
+
+<h3>Related Products</h3>
+
+@foreach (var product in Model.Product.RelatedProductDetails.RelatedProducts)
+{
+    @product.ProductId
+    <br/>
+    @product.Title
+    <br/>
+    <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)" width="50px"/>
+    <br/><br/>
+}

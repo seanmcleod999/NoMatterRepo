@@ -322,7 +322,6 @@
     <Folder Include="Content\CategoryImages\" />
     <Folder Include="Content\ShopImages\" />
     <Folder Include="Content\SliderImages\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

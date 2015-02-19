@@ -14,6 +14,7 @@ namespace NoMatterWebApiWebHelper
 	{
 		Task<Product> GetProductAsync(string productId);
 		Task<Product> GetProductNoRelatedProductsAsync(string productId);
+		Task<Product> UpdateProductAsync(Product product, string token);
 	}
 
 	public class ProductHelper : IProductHelper
@@ -74,7 +75,7 @@ namespace NoMatterWebApiWebHelper
 			}
 		}
 
-		public async Task<Product> UpdateProductsAsync(Product product, string token)
+		public async Task<Product> UpdateProductAsync(Product product, string token)
 		{
 			using (var client = new HttpClient())
 			{

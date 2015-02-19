@@ -25,6 +25,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 		private IProductRepository _productRepository;
 		private ICategoryRepository _categoryRepository;
+		private IGeneralHelper _generalHelper;
 		
 
 		public CategoryController()
@@ -33,6 +34,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_productRepository = new ProductRepository(databaseEntity);
 			_categoryRepository = new CategoryRepository(databaseEntity);
+			_generalHelper = new GeneralHelper();
 			
 			
 		}
@@ -41,24 +43,106 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			_productRepository = productRepository;
 			_categoryRepository = categoryRepository;
+			_generalHelper = generalHelper;
 		}
 
-		
+		// POST api/v1/category/{categoryid}/products
+		[HttpPost]
+		[Route("{categoryid}/products")]
+		[ResponseType(typeof(Product))]
+		public async Task<IHttpActionResult> AddProduct(string categoryid, NewProduct model)
+		{
+			//TODO: make sure the user can post to this category
 
+			try
+			{
+				var userToken = User.Identity.Name;
+
+				var productUuid = Guid.NewGuid();
+
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
+
+				if (categoryDb == null) return BadRequest("CategoryNotFound");
+
+				var productDb = new NoMatterApiDAL.DatabaseModel.Product
+				{
+					ProductUUID = productUuid,
+					Category = categoryDb,
+					Title = model.Title,
+					Description = model.Description,
+					Size = model.Size,
+					Price = model.Price,
+					Reserved = model.Reserved,
+					Hidden = model.Hidden,
+					AdminNotes = model.AdminNotes,
+					Picture1 = model.Picture1,
+					Picture2 = model.Picture2,
+					Picture3 = model.Picture3,
+					Picture4 = model.Picture4,
+					Picture5 = model.Picture5,
+					PictureOther = model.PictureOther,
+					ReleaseDate = Convert.ToDateTime(model.ReleaseDate),
+
+				};
+
+				//Handle the keywords
+				if (model.Keywords != null)
+				{
+					var keywords = model.Keywords.Split(',');
+
+					foreach (var productKeyword in keywords.Select(keyword => new NoMatterApiDAL.DatabaseModel.ProductKeyword
+					{
+						Product = productDb,
+						Keyword = keyword.Trim().ToLower()
+					}))
+					{
+						productDb.ProductKeywords.Add(productKeyword);
+					}
+				}
+
+				//Generate the short url
+				productDb.ProductShortUrl = _generalHelper.MakeGoogleShortUrl(model.ViewProductUrl + productUuid);
+
+				//Save the product
+				var productId = await _productRepository.AddProductAsync(productDb);
+
+				//Get the product to return the details
+				var product = await _productRepository.GetProductAsync(productId);
+
+				//TODO: change to created response
+				return Ok(product.ToDomainProduct());
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+	
 		// GET api/v1/category/{categoryid}
 		[HttpGet]
 		[Route("{categoryid}")]
 		[ResponseType(typeof(Category))]
 		public async Task<IHttpActionResult> GetCategory(string categoryid)
 		{
-			//TODO: make sure the user can access this category
-			//Need to get bearer token, and lookup the user so we know which client the user is from
+			try
+			{
+				//TODO: make sure the user can access this category
+				//Need to get bearer token, and lookup the user so we know which client the user is from
 
-			var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
 
-			var category = categoryDb.ToDomainCategory();
+				var category = categoryDb.ToDomainCategory();
 
-			return Ok(category);
+				return Ok(category);
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
 		}
 
 		// GET api/v1/category/{categoryid}/products
@@ -67,31 +151,23 @@ namespace NoMatterWebApi.Controllers.V1
 		[ResponseType(typeof(List<Product>))]
 		public async Task<IHttpActionResult> GetCategoryProducts(string categoryid)
 		{
-			//TODO: make sure the user can get products for this category
-			//Need to get bearer token, and lookup the user so we know which client the user is from
+			try
+			{	
+				//TODO: make sure the user can get products for this category
+				//Need to get bearer token, and lookup the user so we know which client the user is from
 
-			var productsDb = await _categoryRepository.GetCategoryProductsAsync(new Guid(categoryid));
+				var productsDb = await _categoryRepository.GetCategoryProductsAsync(new Guid(categoryid));
 
-			var products = productsDb.Select(x => x.ToDomainProduct()).ToList();
+				var products = productsDb.Select(x => x.ToDomainProduct()).ToList();
 
-			return Ok(products);
+				return Ok(products);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
 		}
 
-		// GET api/v1/category/{categoryid}/products-for-edit
-		[Route("{categoryid}/products-for-edit")]
-		[ResponseType(typeof(List<Section>))]
-		public async Task<IHttpActionResult> GetCategoryProductsEdit()
-		{
-			//Need to get bearer token, and lookup the user so we know which client the user is from
-
-			var sections = new List<Section>
-				{
-					new Section() {SectionId = "1", SectionName = "Test1"},
-					new Section() {SectionId = "2", SectionName = "Test2"},
-					new Section() {SectionId = "3", SectionName = "Test3"}
-				};
-
-			return Ok(sections);
-		}
 	}
 }

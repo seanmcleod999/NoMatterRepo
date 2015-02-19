@@ -23,14 +23,14 @@ namespace WebApplication7.Controllers
 		private ICategoryHelper _categoryHelper;
 		private IPictureHelper _pictureHelper;
 		private IGlobalSettings _globalSettings;
-		private IPictureUploadSettings _shopItemPictureUploadSettings;
+		private IPictureUploadSettings _productPictureUploadSettings;
 
 		public CategoryController()
 		{
 			_categoryHelper = new CategoryHelper();
 			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
-			_shopItemPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ShopItemPicture, _globalSettings);
+			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ShopItemPicture, _globalSettings);
 		}
 
 		//public CategoryController(ICurrentUser currentUser)
@@ -81,12 +81,12 @@ namespace WebApplication7.Controllers
 		{
 			var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			if (newProductVm.Picture1 != null) newProductVm.Product.Picture1 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture1.InputStream), _shopItemPictureUploadSettings);
-			if (newProductVm.Picture2 != null) newProductVm.Product.Picture2 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture2.InputStream), _shopItemPictureUploadSettings);
-			if (newProductVm.Picture3 != null) newProductVm.Product.Picture3 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture3.InputStream), _shopItemPictureUploadSettings);
-			if (newProductVm.Picture4 != null) newProductVm.Product.Picture4 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture4.InputStream), _shopItemPictureUploadSettings);
-			if (newProductVm.Picture5 != null) newProductVm.Product.Picture5 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture5.InputStream), _shopItemPictureUploadSettings);
-			if (newProductVm.PictureOther != null) newProductVm.Product.PictureOther = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.PictureOther.InputStream), _shopItemPictureUploadSettings);
+			if (newProductVm.Picture1 != null) newProductVm.Product.Picture1 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture1.InputStream), _productPictureUploadSettings);
+			if (newProductVm.Picture2 != null) newProductVm.Product.Picture2 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture2.InputStream), _productPictureUploadSettings);
+			if (newProductVm.Picture3 != null) newProductVm.Product.Picture3 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture3.InputStream), _productPictureUploadSettings);
+			if (newProductVm.Picture4 != null) newProductVm.Product.Picture4 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture4.InputStream), _productPictureUploadSettings);
+			if (newProductVm.Picture5 != null) newProductVm.Product.Picture5 = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.Picture5.InputStream), _productPictureUploadSettings);
+			if (newProductVm.PictureOther != null) newProductVm.Product.PictureOther = _pictureHelper.UploadPicture(Image.FromStream(newProductVm.PictureOther.InputStream), _productPictureUploadSettings);
 
 			newProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
 
