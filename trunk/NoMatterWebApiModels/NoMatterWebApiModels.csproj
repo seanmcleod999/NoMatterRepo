@@ -43,8 +43,10 @@
   <ItemGroup>
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ClientSetting.cs" />
     <Compile Include="Models\DiscountDetails.cs" />
     <Compile Include="Models\FacebookUser.cs" />
+    <Compile Include="Models\GlobalSetting.cs" />
     <Compile Include="Models\NewProduct.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\RelatedProducts.cs" />

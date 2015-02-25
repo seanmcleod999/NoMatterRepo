@@ -15,6 +15,7 @@ namespace NoMatterWebApiWebHelper
 	{
 		Task<List<Client>> GetClientsAsync();
 		Task<List<Section>> GetClientSectionsAsync(string clientId);
+		List<ClientSetting> GetClientSettings(string clientId);
 	}
 
     public class ClientHelper : IClientHelper
@@ -71,6 +72,28 @@ namespace NoMatterWebApiWebHelper
 				}
 
 				throw new Exception("Cannot get Sections. " + response.ToString());
+
+			}
+		}
+
+		public List<ClientSetting> GetClientSettings(string clientId)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				var response = client.GetAsync(string.Format("api/v1/clients/{0}/settings", clientId)).Result;
+
+				if (response.IsSuccessStatusCode)
+				{
+					var clientSettings = response.Content.ReadAsAsync<List<ClientSetting>>().Result;
+
+					return clientSettings;
+				}
+
+				throw new Exception("Cannot get Client Settings. " + response.ToString());
 
 			}
 		}

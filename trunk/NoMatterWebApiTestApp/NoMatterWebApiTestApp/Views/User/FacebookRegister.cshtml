@@ -1,6 +1,8 @@
-﻿@using WebApplication7.Helpers
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var globalSettings = new GlobalSettings();
 }
 
 
@@ -27,7 +29,7 @@
         // Init the SDK upon load
         window.fbAsyncInit = function () {
             FB.init({
-                appId: '@GlobalSettings.FacebookAppId', // App ID
+                appId: '@globalSettings.FacebookAppId', // App ID
                   scope: 'name,first_name,last_name',
                   status: true, // check login status
                   cookie: true, // enable cookies to allow the server to access the session

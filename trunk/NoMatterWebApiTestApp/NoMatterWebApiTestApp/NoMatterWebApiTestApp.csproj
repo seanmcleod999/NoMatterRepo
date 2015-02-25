@@ -203,7 +203,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ClientSettingsVm.cs" />
     <Compile Include="ViewModels\EditProductVm.cs" />
+    <Compile Include="ViewModels\GlobalSettingsVm.cs" />
     <Compile Include="ViewModels\NewProductVm.cs" />
     <Compile Include="ViewModels\UserLoginVm.cs" />
     <Compile Include="ViewModels\ViewCategoryProductsVm.cs" />
@@ -258,6 +260,8 @@
     <Content Include="Views\Category\NewCategoryProduct.cshtml" />
     <Content Include="Views\Product\ViewProduct.cshtml" />
     <Content Include="Views\Product\EditProduct.cshtml" />
+    <Content Include="Views\Client\GetClientSettings.cshtml" />
+    <Content Include="Views\Home\GetGlobalSettings.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

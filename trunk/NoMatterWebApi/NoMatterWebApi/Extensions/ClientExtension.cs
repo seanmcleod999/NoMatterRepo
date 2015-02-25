@@ -7,7 +7,7 @@ namespace NoMatterWebApi.Extensions
 {
 	public static class ClientExtension
 	{
-		public static NoMatterWebApiModels.Models.Client ToDomainClient(this   NoMatterApiDAL.DatabaseModel.Client client)
+		public static NoMatterWebApiModels.Models.Client ToDomainClient(this   NoMatterDatabaseModel.Client client)
 		{
 			return new NoMatterWebApiModels.Models.Client
 			{

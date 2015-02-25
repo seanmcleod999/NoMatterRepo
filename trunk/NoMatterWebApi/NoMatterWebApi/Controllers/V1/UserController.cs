@@ -7,14 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NoMatterApiDAL.DatabaseModel;
-using NoMatterApiDAL.Repositories;
+using NoMatterDatabaseModel;
+using NoMatterWebApi.DAL;
 using NoMatterWebApi.Enums;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
 using NoMatterWebApiModels.Models;
-using User = NoMatterApiDAL.DatabaseModel.User;
+using User = NoMatterDatabaseModel.User;
+
 
 namespace NoMatterWebApi.Controllers.V1
 {
@@ -132,19 +133,19 @@ namespace NoMatterWebApi.Controllers.V1
 			else
 			{
 				userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
+
+				var dBytes = userDb.Password;
+				var enc = new UTF8Encoding();
+				var length = dBytes.TakeWhile(b => b != 0).Count();
+				var strDbPassword = enc.GetString(dBytes, 0, length);
+
+				if (strDbPassword != PasswordHelper.CreatePasswordHash(model.Password, userDb.PasswordSalt))
+				{
+					return BadRequest("Authentication Failed");
+				}
 			}		
 
 			if (userDb == null)
-			{
-				return BadRequest("Authentication Failed");
-			}
-
-			var dBytes = userDb.Password;
-			var enc = new UTF8Encoding();
-			var length = dBytes.TakeWhile(b => b != 0).Count();
-			var strDbPassword = enc.GetString(dBytes, 0, length);
-
-			if (strDbPassword != PasswordHelper.CreatePasswordHash(model.Password, userDb.PasswordSalt))
 			{
 				return BadRequest("Authentication Failed");
 			}

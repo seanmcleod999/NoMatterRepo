@@ -1,0 +1,23 @@
+﻿@model WebApplication7.ViewModels.ClientSettingsVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Client Settings</h1>
+
+@Html.ActionLink("Reset Settings Cache", "ResetClientSettings", "Client", new { clientId = Model.ClientId }, null)
+<br/><br/>
+
+@foreach (var section1 in Model.ClientSettings)
+{
+    @section1.SettingName
+    <br/>
+    @section1.SettingType
+    <br/>
+    @section1.StringValue
+    <br/>
+    @section1.IntValue
+    <br/><br/>
+    
+    
+}

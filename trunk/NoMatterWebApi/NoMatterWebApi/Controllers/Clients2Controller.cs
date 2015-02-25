@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using NoMatterApiDAL.DatabaseModel;
+using NoMatterDatabaseModel;
 using NoMatterWebApi.Logging;
 
 namespace NoMatterWebApi.Controllers

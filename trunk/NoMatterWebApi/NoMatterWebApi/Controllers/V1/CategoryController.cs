@@ -6,8 +6,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NoMatterApiDAL.DatabaseModel;
-using NoMatterApiDAL.Repositories;
+using NoMatterDatabaseModel;
+using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
@@ -64,7 +64,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 				if (categoryDb == null) return BadRequest("CategoryNotFound");
 
-				var productDb = new NoMatterApiDAL.DatabaseModel.Product
+				var productDb = new NoMatterDatabaseModel.Product
 				{
 					ProductUUID = productUuid,
 					Category = categoryDb,
@@ -90,7 +90,7 @@ namespace NoMatterWebApi.Controllers.V1
 				{
 					var keywords = model.Keywords.Split(',');
 
-					foreach (var productKeyword in keywords.Select(keyword => new NoMatterApiDAL.DatabaseModel.ProductKeyword
+					foreach (var productKeyword in keywords.Select(keyword => new NoMatterDatabaseModel.ProductKeyword
 					{
 						Product = productDb,
 						Keyword = keyword.Trim().ToLower()

@@ -56,6 +56,11 @@
     <Compile Include="CategoryHelper.cs" />
     <Compile Include="ClientHelper.cs" />
     <Compile Include="Enums\PictureTypeEnum.cs" />
+    <Compile Include="GlobalHelper.cs" />
+    <Compile Include="OtherHelpers\ClientSettingsStaticCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OtherHelpers\GlobalSettingsStaticCache.cs" />
     <Compile Include="OtherHelpers\GlobalSettings.cs" />
     <Compile Include="OtherHelpers\PictureUploadSettings.cs" />
     <Compile Include="PictureHelper.cs" />

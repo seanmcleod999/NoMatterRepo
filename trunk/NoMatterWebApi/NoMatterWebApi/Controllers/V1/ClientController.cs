@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NoMatterApiDAL.DatabaseModel;
-using NoMatterApiDAL.Repositories;
+using NoMatterDatabaseModel;
+using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
+using NoMatterWebApi.Logging;
 using Client = NoMatterWebApiModels.Models.Client;
 using Section = NoMatterWebApiModels.Models.Section;
 
@@ -39,12 +40,20 @@ namespace NoMatterWebApi.Controllers.V1
 		[ResponseType(typeof(List<Client>))]
 		public async Task<IHttpActionResult> GetClients()
 		{
+			try
+			{
+				var clientsDb = await _clientRepository.GetClientsAsync();
 
-			var clientsDb = await _clientRepository.GetClientsAsync();
+				var clients = clientsDb.Select(x => x.ToDomainClient()).ToList();
 
-			var clients = clientsDb.Select(x => x.ToDomainClient()).ToList();
-
-			return Ok(clients);
+				return Ok(clients);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+			
 		}
 
 		// GET api/v1/clients/{clientUuid}/sections
@@ -60,28 +69,25 @@ namespace NoMatterWebApi.Controllers.V1
 			return Ok(sections);
 		}
 
-		// GET api/v1/client/5/configs
-		[Route("{clientUuid}/configs")]
+		// GET api/v1/client/5/settingd
+		[Route("{clientUuid}/settings")]
 		[ResponseType(typeof(Client))]
-		public IHttpActionResult GetClientConfigs(string clientUuid)
+		public async Task<IHttpActionResult> GetClientSettings(string clientUuid)
 		{
-
-			using (var mainDb = new DatabaseEntities())
+			try
 			{
+				var settingsDb = await _clientRepository.GetClientSettingsAsync(new Guid(clientUuid));
 
-				var users = mainDb.Users.ToList();
+				var settings = settingsDb.Select(x => x.ToDomainClientSetting()).ToList();
 
-				var userList = new List<string>();
-
-
-				foreach (var user in users)
-				{
-					userList.Add(user.LastName);
-				}
-
-				return Ok(userList);
-
+				return Ok(settings);
 			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+			
 			//var client = new Client() { ClientId = id, ClientName = "Test1" };
 			//return Ok(client);
 		}

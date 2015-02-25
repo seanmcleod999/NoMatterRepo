@@ -1,0 +1,1327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CartProduct">
+          <Key>
+            <PropertyRef Name="CartProductId" />
+          </Key>
+          <Property Name="CartProductId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CartId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SectionId" Type="int" Nullable="false" />
+          <Property Name="CategoryUUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CategoryName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CategoryDescription" Type="varchar(max)" />
+          <Property Name="CategoryOrder" Type="smallint" Nullable="false" />
+          <Property Name="Hidden" Type="bit" Nullable="false" />
+          <Property Name="Conditional" Type="bit" Nullable="false" />
+          <Property Name="Picture" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientUUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ClientName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientPaymentType">
+          <Key>
+            <PropertyRef Name="ClientPaymentTypeId" />
+          </Key>
+          <Property Name="ClientPaymentTypeId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="PaymentTypeId" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DeliveryOption">
+          <Key>
+            <PropertyRef Name="DeliveryOptionId" />
+          </Key>
+          <Property Name="DeliveryOptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OptionOrder" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Discount">
+          <Key>
+            <PropertyRef Name="DiscountId" />
+          </Key>
+          <Property Name="DiscountId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="DiscountTypeId" Type="smallint" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
+          <Property Name="DiscountAmount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DiscountProduct">
+          <Key>
+            <PropertyRef Name="DiscountId" />
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="DiscountProductId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DiscountId" Type="smallint" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DiscountType">
+          <Key>
+            <PropertyRef Name="DiscountTypeId" />
+          </Key>
+          <Property Name="DiscountTypeId" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Enquiry">
+          <Key>
+            <PropertyRef Name="EnquiryId" />
+          </Key>
+          <Property Name="EnquiryId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="50" />
+          <Property Name="Message" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GlobalSetting">
+          <Key>
+            <PropertyRef Name="GlobalSettingId" />
+          </Key>
+          <Property Name="GlobalSettingId" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SettingName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SettingType" Type="tinyint" Nullable="false" />
+          <Property Name="StringValue" Type="varchar" MaxLength="200" />
+          <Property Name="IntValue" Type="smallint" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="300" />
+          <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ShippingAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CourierName" Type="varchar" MaxLength="50" />
+          <Property Name="TrackingNumber" Type="varchar" MaxLength="50" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="Paid" Type="bit" Nullable="false" />
+          <Property Name="PaymentTypeId" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderProduct">
+          <Key>
+            <PropertyRef Name="OrderProductId" />
+          </Key>
+          <Property Name="OrderProductId" Type="int" Nullable="false" />
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaymentType">
+          <Key>
+            <PropertyRef Name="PaymentTypeId" />
+          </Key>
+          <Property Name="PaymentTypeId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Details" Type="varchar" MaxLength="200" />
+          <Property Name="Picture" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="ProductUUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="AdminNotes" Type="varchar" MaxLength="200" />
+          <Property Name="Size" Type="varchar" MaxLength="20" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Hidden" Type="bit" Nullable="false" />
+          <Property Name="Reserved" Type="bit" Nullable="false" />
+          <Property Name="Sold" Type="bit" Nullable="false" />
+          <Property Name="DateSold" Type="datetime" />
+          <Property Name="Picture1" Type="varchar" MaxLength="50" />
+          <Property Name="Picture2" Type="varchar" MaxLength="50" />
+          <Property Name="Picture3" Type="varchar" MaxLength="50" />
+          <Property Name="Picture4" Type="varchar" MaxLength="50" />
+          <Property Name="Picture5" Type="varchar" MaxLength="50" />
+          <Property Name="PictureOther" Type="varchar" MaxLength="50" />
+          <Property Name="FacebookPostId" Type="varchar" MaxLength="20" />
+          <Property Name="TwitterPostId" Type="varchar" MaxLength="20" />
+          <Property Name="ProductShortUrl" Type="varchar" MaxLength="50" />
+          <Property Name="ReleaseDate" Type="date" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductKeyword">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="Keyword" />
+          </Key>
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Keyword" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="SectionId" />
+          </Key>
+          <Property Name="SectionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="SectionUUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SectionName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ControllerName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Setting">
+          <Key>
+            <PropertyRef Name="SettingId" />
+          </Key>
+          <Property Name="SettingId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="SettingName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SettingType" Type="tinyint" Nullable="false" />
+          <Property Name="StringValue" Type="varchar" MaxLength="200" />
+          <Property Name="IntValue" Type="smallint" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="UserUUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CredentialTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="Identifier" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="binary" MaxLength="200" />
+          <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
+          <Property Name="DateUpdated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CartProduct_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="CartProduct">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CartProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="CartProduct">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category_Section">
+          <End Role="Section" Type="Self.Section" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="SectionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientDeliveryOption_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="DeliveryOption" Type="Self.DeliveryOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="DeliveryOption">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientEnquiry_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Enquiry" Type="Self.Enquiry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Enquiry">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientPaymentType_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientPaymentType" Type="Self.ClientPaymentType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientPaymentType">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientPaymentType_PaymentType">
+          <End Role="PaymentType" Type="Self.PaymentType" Multiplicity="1" />
+          <End Role="ClientPaymentType" Type="Self.ClientPaymentType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentType">
+              <PropertyRef Name="PaymentTypeId" />
+            </Principal>
+            <Dependent Role="ClientPaymentType">
+              <PropertyRef Name="PaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientSetting_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Setting" Type="Self.Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Discount_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Discount" Type="Self.Discount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Discount">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Discount_DiscountType">
+          <End Role="DiscountType" Type="Self.DiscountType" Multiplicity="1" />
+          <End Role="Discount" Type="Self.Discount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DiscountType">
+              <PropertyRef Name="DiscountTypeId" />
+            </Principal>
+            <Dependent Role="Discount">
+              <PropertyRef Name="DiscountTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiscountProduct_Discount">
+          <End Role="Discount" Type="Self.Discount" Multiplicity="1" />
+          <End Role="DiscountProduct" Type="Self.DiscountProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Discount">
+              <PropertyRef Name="DiscountId" />
+            </Principal>
+            <Dependent Role="DiscountProduct">
+              <PropertyRef Name="DiscountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiscountProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="DiscountProduct" Type="Self.DiscountProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="DiscountProduct">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderProduct_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderProduct" Type="Self.OrderProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderProduct">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductKeyword_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductKeyword" Type="Self.ProductKeyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="ProductKeyword">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Section_Section">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Section" Type="Self.Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Section">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserOrder_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseModelStoreContainer">
+          <EntitySet Name="CartProduct" EntityType="Self.CartProduct" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientPaymentType" EntityType="Self.ClientPaymentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeliveryOption" EntityType="Self.DeliveryOption" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DiscountProduct" EntityType="Self.DiscountProduct" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DiscountType" EntityType="Self.DiscountType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Enquiry" EntityType="Self.Enquiry" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GlobalSetting" EntityType="Self.GlobalSetting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderProduct" EntityType="Self.OrderProduct" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentType" EntityType="Self.PaymentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductKeyword" EntityType="Self.ProductKeyword" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CartProduct_Client" Association="Self.FK_CartProduct_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="CartProduct" EntitySet="CartProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CartProduct_Product" Association="Self.FK_CartProduct_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="CartProduct" EntitySet="CartProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category_Section" Association="Self.FK_Category_Section">
+            <End Role="Section" EntitySet="Section" />
+            <End Role="Category" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientDeliveryOption_Client" Association="Self.FK_ClientDeliveryOption_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="DeliveryOption" EntitySet="DeliveryOption" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientEnquiry_Client" Association="Self.FK_ClientEnquiry_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Enquiry" EntitySet="Enquiry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientPaymentType_Client" Association="Self.FK_ClientPaymentType_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ClientPaymentType" EntitySet="ClientPaymentType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientPaymentType_PaymentType" Association="Self.FK_ClientPaymentType_PaymentType">
+            <End Role="PaymentType" EntitySet="PaymentType" />
+            <End Role="ClientPaymentType" EntitySet="ClientPaymentType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientSetting_Client" Association="Self.FK_ClientSetting_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Setting" EntitySet="Setting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Discount_Client" Association="Self.FK_Discount_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Discount" EntitySet="Discount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Discount_DiscountType" Association="Self.FK_Discount_DiscountType">
+            <End Role="DiscountType" EntitySet="DiscountType" />
+            <End Role="Discount" EntitySet="Discount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscountProduct_Discount" Association="Self.FK_DiscountProduct_Discount">
+            <End Role="Discount" EntitySet="Discount" />
+            <End Role="DiscountProduct" EntitySet="DiscountProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscountProduct_Product" Association="Self.FK_DiscountProduct_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="DiscountProduct" EntitySet="DiscountProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderProduct_Order" Association="Self.FK_OrderProduct_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="OrderProduct" EntitySet="OrderProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductKeyword_Product" Association="Self.FK_ProductKeyword_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductKeyword" EntitySet="ProductKeyword" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Section_Section" Association="Self.FK_Section_Section">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Section" EntitySet="Section" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Client" Association="Self.FK_User_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserOrder_User" Association="Self.FK_UserOrder_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CartProduct">
+          <Key>
+            <PropertyRef Name="CartProductId" />
+          </Key>
+          <Property Name="CartProductId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CartId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_CartProduct_Client" FromRole="CartProduct" ToRole="Client" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_CartProduct_Product" FromRole="CartProduct" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SectionId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryUUID" Type="Guid" Nullable="false" />
+          <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CategoryDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CategoryOrder" Type="Int16" Nullable="false" />
+          <Property Name="Hidden" Type="Boolean" Nullable="false" />
+          <Property Name="Conditional" Type="Boolean" Nullable="false" />
+          <Property Name="Picture" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Section" Relationship="Self.FK_Category_Section" FromRole="Category" ToRole="Section" />
+          <NavigationProperty Name="Products" Relationship="Self.FK_Product_Category" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientUUID" Type="Guid" Nullable="false" />
+          <Property Name="ClientName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CartProducts" Relationship="Self.FK_CartProduct_Client" FromRole="Client" ToRole="CartProduct" />
+          <NavigationProperty Name="DeliveryOptions" Relationship="Self.FK_ClientDeliveryOption_Client" FromRole="Client" ToRole="DeliveryOption" />
+          <NavigationProperty Name="Enquiries" Relationship="Self.FK_ClientEnquiry_Client" FromRole="Client" ToRole="Enquiry" />
+          <NavigationProperty Name="ClientPaymentTypes" Relationship="Self.FK_ClientPaymentType_Client" FromRole="Client" ToRole="ClientPaymentType" />
+          <NavigationProperty Name="Settings" Relationship="Self.FK_ClientSetting_Client" FromRole="Client" ToRole="Setting" />
+          <NavigationProperty Name="Discounts" Relationship="Self.FK_Discount_Client" FromRole="Client" ToRole="Discount" />
+          <NavigationProperty Name="Sections" Relationship="Self.FK_Section_Section" FromRole="Client" ToRole="Section" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_User_Client" FromRole="Client" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ClientPaymentType">
+          <Key>
+            <PropertyRef Name="ClientPaymentTypeId" />
+          </Key>
+          <Property Name="ClientPaymentTypeId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="PaymentTypeId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ClientPaymentType_Client" FromRole="ClientPaymentType" ToRole="Client" />
+          <NavigationProperty Name="PaymentType" Relationship="Self.FK_ClientPaymentType_PaymentType" FromRole="ClientPaymentType" ToRole="PaymentType" />
+        </EntityType>
+        <EntityType Name="DeliveryOption">
+          <Key>
+            <PropertyRef Name="DeliveryOptionId" />
+          </Key>
+          <Property Name="DeliveryOptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DeliveryAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OptionOrder" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ClientDeliveryOption_Client" FromRole="DeliveryOption" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="Discount">
+          <Key>
+            <PropertyRef Name="DiscountId" />
+          </Key>
+          <Property Name="DiscountId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="DiscountTypeId" Type="Int16" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DiscountAmount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Discount_Client" FromRole="Discount" ToRole="Client" />
+          <NavigationProperty Name="DiscountType" Relationship="Self.FK_Discount_DiscountType" FromRole="Discount" ToRole="DiscountType" />
+          <NavigationProperty Name="DiscountProducts" Relationship="Self.FK_DiscountProduct_Discount" FromRole="Discount" ToRole="DiscountProduct" />
+        </EntityType>
+        <EntityType Name="DiscountProduct">
+          <Key>
+            <PropertyRef Name="DiscountId" />
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="DiscountProductId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DiscountId" Type="Int16" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Discount" Relationship="Self.FK_DiscountProduct_Discount" FromRole="DiscountProduct" ToRole="Discount" />
+          <NavigationProperty Name="Product" Relationship="DatabaseModel.FK_DiscountProduct_Product" FromRole="DiscountProduct" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="DiscountType">
+          <Key>
+            <PropertyRef Name="DiscountTypeId" />
+          </Key>
+          <Property Name="DiscountTypeId" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Discounts" Relationship="Self.FK_Discount_DiscountType" FromRole="DiscountType" ToRole="Discount" />
+        </EntityType>
+        <EntityType Name="Enquiry">
+          <Key>
+            <PropertyRef Name="EnquiryId" />
+          </Key>
+          <Property Name="EnquiryId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ContactNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ClientEnquiry_Client" FromRole="Enquiry" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="GlobalSetting">
+          <Key>
+            <PropertyRef Name="GlobalSettingId" />
+          </Key>
+          <Property Name="GlobalSettingId" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SettingName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SettingType" Type="Byte" Nullable="false" />
+          <Property Name="StringValue" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntValue" Type="Int16" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ShippingAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CourierName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TrackingNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Paid" Type="Boolean" Nullable="false" />
+          <Property Name="PaymentTypeId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="OrderProducts" Relationship="Self.FK_OrderProduct_Order" FromRole="Order" ToRole="OrderProduct" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserOrder_User" FromRole="Order" ToRole="User" />
+        </EntityType>
+        <EntityType Name="OrderProduct">
+          <Key>
+            <PropertyRef Name="OrderProductId" />
+          </Key>
+          <Property Name="OrderProductId" Type="Int32" Nullable="false" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_OrderProduct_Order" FromRole="OrderProduct" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="PaymentType">
+          <Key>
+            <PropertyRef Name="PaymentTypeId" />
+          </Key>
+          <Property Name="PaymentTypeId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Details" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Picture" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClientPaymentTypes" Relationship="Self.FK_ClientPaymentType_PaymentType" FromRole="PaymentType" ToRole="ClientPaymentType" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="ProductUUID" Type="Guid" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="AdminNotes" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Size" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Hidden" Type="Boolean" Nullable="false" />
+          <Property Name="Reserved" Type="Boolean" Nullable="false" />
+          <Property Name="Sold" Type="Boolean" Nullable="false" />
+          <Property Name="DateSold" Type="DateTime" Precision="3" />
+          <Property Name="Picture1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picture2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picture3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picture4" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picture5" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PictureOther" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FacebookPostId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TwitterPostId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ProductShortUrl" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReleaseDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CartProducts" Relationship="Self.FK_CartProduct_Product" FromRole="Product" ToRole="CartProduct" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Product_Category" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="ProductKeywords" Relationship="DatabaseModel.FK_ProductKeyword_Product" FromRole="Product" ToRole="ProductKeyword" />
+          <NavigationProperty Name="DiscountProducts" Relationship="DatabaseModel.FK_DiscountProduct_Product" FromRole="Product" ToRole="DiscountProduct" />
+        </EntityType>
+        <EntityType Name="ProductKeyword">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="Keyword" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Keyword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="DatabaseModel.FK_ProductKeyword_Product" FromRole="ProductKeyword" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Section">
+          <Key>
+            <PropertyRef Name="SectionId" />
+          </Key>
+          <Property Name="SectionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="SectionUUID" Type="Guid" Nullable="false" />
+          <Property Name="SectionName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ControllerName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Categories" Relationship="Self.FK_Category_Section" FromRole="Section" ToRole="Category" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Section_Section" FromRole="Section" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="Setting">
+          <Key>
+            <PropertyRef Name="SettingId" />
+          </Key>
+          <Property Name="SettingId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="SettingName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SettingType" Type="Byte" Nullable="false" />
+          <Property Name="StringValue" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntValue" Type="Int16" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ClientSetting_Client" FromRole="Setting" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="UserUUID" Type="Guid" Nullable="false" />
+          <Property Name="CredentialTypeId" Type="Byte" Nullable="false" />
+          <Property Name="Identifier" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="Binary" MaxLength="200" FixedLength="true" />
+          <Property Name="PasswordSalt" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateUpdated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_User_Client" FromRole="User" ToRole="Client" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_UserOrder_User" FromRole="User" ToRole="Order" />
+        </EntityType>
+        <Association Name="FK_CartProduct_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="CartProduct">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CartProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="CartProduct">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category_Section">
+          <End Role="Section" Type="Self.Section" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="SectionId" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="SectionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientDeliveryOption_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="DeliveryOption" Type="Self.DeliveryOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="DeliveryOption">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientEnquiry_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Enquiry" Type="Self.Enquiry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Enquiry">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientPaymentType_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientPaymentType" Type="Self.ClientPaymentType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientPaymentType">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientSetting_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Setting" Type="Self.Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Discount_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Discount" Type="Self.Discount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Discount">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Section_Section">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Section" Type="Self.Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Section">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientPaymentType_PaymentType">
+          <End Role="PaymentType" Type="Self.PaymentType" Multiplicity="1" />
+          <End Role="ClientPaymentType" Type="Self.ClientPaymentType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentType">
+              <PropertyRef Name="PaymentTypeId" />
+            </Principal>
+            <Dependent Role="ClientPaymentType">
+              <PropertyRef Name="PaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Discount_DiscountType">
+          <End Role="DiscountType" Type="Self.DiscountType" Multiplicity="1" />
+          <End Role="Discount" Type="Self.Discount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DiscountType">
+              <PropertyRef Name="DiscountTypeId" />
+            </Principal>
+            <Dependent Role="Discount">
+              <PropertyRef Name="DiscountTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiscountProduct_Discount">
+          <End Role="Discount" Type="Self.Discount" Multiplicity="1" />
+          <End Role="DiscountProduct" Type="Self.DiscountProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Discount">
+              <PropertyRef Name="DiscountId" />
+            </Principal>
+            <Dependent Role="DiscountProduct">
+              <PropertyRef Name="DiscountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderProduct_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderProduct" Type="Self.OrderProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderProduct">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserOrder_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CartProducts" EntityType="Self.CartProduct" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Clients" EntityType="Self.Client" />
+          <EntitySet Name="ClientPaymentTypes" EntityType="Self.ClientPaymentType" />
+          <EntitySet Name="DeliveryOptions" EntityType="Self.DeliveryOption" />
+          <EntitySet Name="Discounts" EntityType="Self.Discount" />
+          <EntitySet Name="DiscountProducts" EntityType="Self.DiscountProduct" />
+          <EntitySet Name="DiscountTypes" EntityType="Self.DiscountType" />
+          <EntitySet Name="Enquiries" EntityType="Self.Enquiry" />
+          <EntitySet Name="GlobalSettings" EntityType="Self.GlobalSetting" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="OrderProducts" EntityType="Self.OrderProduct" />
+          <EntitySet Name="PaymentTypes" EntityType="Self.PaymentType" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="ProductKeywords" EntityType="Self.ProductKeyword" />
+          <EntitySet Name="Sections" EntityType="Self.Section" />
+          <EntitySet Name="Settings" EntityType="Self.Setting" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_CartProduct_Client" Association="Self.FK_CartProduct_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="CartProduct" EntitySet="CartProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CartProduct_Product" Association="Self.FK_CartProduct_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="CartProduct" EntitySet="CartProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category_Section" Association="Self.FK_Category_Section">
+            <End Role="Section" EntitySet="Sections" />
+            <End Role="Category" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientDeliveryOption_Client" Association="Self.FK_ClientDeliveryOption_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="DeliveryOption" EntitySet="DeliveryOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientEnquiry_Client" Association="Self.FK_ClientEnquiry_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Enquiry" EntitySet="Enquiries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientPaymentType_Client" Association="Self.FK_ClientPaymentType_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientPaymentType" EntitySet="ClientPaymentTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientSetting_Client" Association="Self.FK_ClientSetting_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Setting" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Discount_Client" Association="Self.FK_Discount_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Discount" EntitySet="Discounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Section_Section" Association="Self.FK_Section_Section">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Section" EntitySet="Sections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Client" Association="Self.FK_User_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientPaymentType_PaymentType" Association="Self.FK_ClientPaymentType_PaymentType">
+            <End Role="PaymentType" EntitySet="PaymentTypes" />
+            <End Role="ClientPaymentType" EntitySet="ClientPaymentTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Discount_DiscountType" Association="Self.FK_Discount_DiscountType">
+            <End Role="DiscountType" EntitySet="DiscountTypes" />
+            <End Role="Discount" EntitySet="Discounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscountProduct_Discount" Association="Self.FK_DiscountProduct_Discount">
+            <End Role="Discount" EntitySet="Discounts" />
+            <End Role="DiscountProduct" EntitySet="DiscountProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderProduct_Order" Association="Self.FK_OrderProduct_Order">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="OrderProduct" EntitySet="OrderProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserOrder_User" Association="Self.FK_UserOrder_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductKeyword_Product" Association="DatabaseModel.FK_ProductKeyword_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductKeyword" EntitySet="ProductKeywords" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscountProduct_Product" Association="DatabaseModel.FK_DiscountProduct_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="DiscountProduct" EntitySet="DiscountProducts" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_ProductKeyword_Product">
+          <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="DatabaseModel.ProductKeyword" Role="ProductKeyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="ProductKeyword">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiscountProduct_Product">
+          <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="DatabaseModel.DiscountProduct" Role="DiscountProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="DiscountProduct">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DatabaseModelStoreContainer" CdmEntityContainer="DatabaseEntities">
+          <EntitySetMapping Name="CartProducts">
+            <EntityTypeMapping TypeName="DatabaseModel.CartProduct">
+              <MappingFragment StoreEntitySet="CartProduct">
+                <ScalarProperty Name="CartProductId" ColumnName="CartProductId" />
+                <ScalarProperty Name="CartId" ColumnName="CartId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="DatabaseModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
+                <ScalarProperty Name="CategoryUUID" ColumnName="CategoryUUID" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="CategoryDescription" ColumnName="CategoryDescription" />
+                <ScalarProperty Name="CategoryOrder" ColumnName="CategoryOrder" />
+                <ScalarProperty Name="Hidden" ColumnName="Hidden" />
+                <ScalarProperty Name="Conditional" ColumnName="Conditional" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="DatabaseModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ClientUUID" ColumnName="ClientUUID" />
+                <ScalarProperty Name="ClientName" ColumnName="ClientName" />
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientPaymentTypes">
+            <EntityTypeMapping TypeName="DatabaseModel.ClientPaymentType">
+              <MappingFragment StoreEntitySet="ClientPaymentType">
+                <ScalarProperty Name="ClientPaymentTypeId" ColumnName="ClientPaymentTypeId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeliveryOptions">
+            <EntityTypeMapping TypeName="DatabaseModel.DeliveryOption">
+              <MappingFragment StoreEntitySet="DeliveryOption">
+                <ScalarProperty Name="DeliveryOptionId" ColumnName="DeliveryOptionId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DeliveryAmount" ColumnName="DeliveryAmount" />
+                <ScalarProperty Name="OptionOrder" ColumnName="OptionOrder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Discounts">
+            <EntityTypeMapping TypeName="DatabaseModel.Discount">
+              <MappingFragment StoreEntitySet="Discount">
+                <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="DiscountTypeId" ColumnName="DiscountTypeId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DiscountProducts">
+            <EntityTypeMapping TypeName="DatabaseModel.DiscountProduct">
+              <MappingFragment StoreEntitySet="DiscountProduct">
+                <ScalarProperty Name="DiscountProductId" ColumnName="DiscountProductId" />
+                <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DiscountTypes">
+            <EntityTypeMapping TypeName="DatabaseModel.DiscountType">
+              <MappingFragment StoreEntitySet="DiscountType">
+                <ScalarProperty Name="DiscountTypeId" ColumnName="DiscountTypeId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Enquiries">
+            <EntityTypeMapping TypeName="DatabaseModel.Enquiry">
+              <MappingFragment StoreEntitySet="Enquiry">
+                <ScalarProperty Name="EnquiryId" ColumnName="EnquiryId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GlobalSettings">
+            <EntityTypeMapping TypeName="DatabaseModel.GlobalSetting">
+              <MappingFragment StoreEntitySet="GlobalSetting">
+                <ScalarProperty Name="GlobalSettingId" ColumnName="GlobalSettingId" />
+                <ScalarProperty Name="SettingName" ColumnName="SettingName" />
+                <ScalarProperty Name="SettingType" ColumnName="SettingType" />
+                <ScalarProperty Name="StringValue" ColumnName="StringValue" />
+                <ScalarProperty Name="IntValue" ColumnName="IntValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="DatabaseModel.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="ShippingAmount" ColumnName="ShippingAmount" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderProducts">
+            <EntityTypeMapping TypeName="DatabaseModel.OrderProduct">
+              <MappingFragment StoreEntitySet="OrderProduct">
+                <ScalarProperty Name="OrderProductId" ColumnName="OrderProductId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentTypes">
+            <EntityTypeMapping TypeName="DatabaseModel.PaymentType">
+              <MappingFragment StoreEntitySet="PaymentType">
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="DatabaseModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="ProductUUID" ColumnName="ProductUUID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Hidden" ColumnName="Hidden" />
+                <ScalarProperty Name="Reserved" ColumnName="Reserved" />
+                <ScalarProperty Name="Sold" ColumnName="Sold" />
+                <ScalarProperty Name="DateSold" ColumnName="DateSold" />
+                <ScalarProperty Name="Picture1" ColumnName="Picture1" />
+                <ScalarProperty Name="Picture2" ColumnName="Picture2" />
+                <ScalarProperty Name="Picture3" ColumnName="Picture3" />
+                <ScalarProperty Name="Picture4" ColumnName="Picture4" />
+                <ScalarProperty Name="Picture5" ColumnName="Picture5" />
+                <ScalarProperty Name="PictureOther" ColumnName="PictureOther" />
+                <ScalarProperty Name="FacebookPostId" ColumnName="FacebookPostId" />
+                <ScalarProperty Name="TwitterPostId" ColumnName="TwitterPostId" />
+                <ScalarProperty Name="ProductShortUrl" ColumnName="ProductShortUrl" />
+                <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductKeywords">
+            <EntityTypeMapping TypeName="DatabaseModel.ProductKeyword">
+              <MappingFragment StoreEntitySet="ProductKeyword">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Keyword" ColumnName="Keyword" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sections">
+            <EntityTypeMapping TypeName="DatabaseModel.Section">
+              <MappingFragment StoreEntitySet="Section">
+                <ScalarProperty Name="SectionId" ColumnName="SectionId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="SectionUUID" ColumnName="SectionUUID" />
+                <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Settings">
+            <EntityTypeMapping TypeName="DatabaseModel.Setting">
+              <MappingFragment StoreEntitySet="Setting">
+                <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="SettingName" ColumnName="SettingName" />
+                <ScalarProperty Name="SettingType" ColumnName="SettingType" />
+                <ScalarProperty Name="StringValue" ColumnName="StringValue" />
+                <ScalarProperty Name="IntValue" ColumnName="IntValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="DatabaseModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="UserUUID" ColumnName="UserUUID" />
+                <ScalarProperty Name="CredentialTypeId" ColumnName="CredentialTypeId" />
+                <ScalarProperty Name="Identifier" ColumnName="Identifier" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

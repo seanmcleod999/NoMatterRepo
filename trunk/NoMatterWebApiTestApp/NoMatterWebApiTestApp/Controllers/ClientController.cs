@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using NoMatterWebApiWebHelper;
+using NoMatterWebApiWebHelper.OtherHelpers;
+using WebApplication7.ViewModels;
 
 
 namespace WebApplication7.Controllers
@@ -30,6 +32,9 @@ namespace WebApplication7.Controllers
 		// GET: User
 		public async Task<ActionResult> GetClients()
 		{
+
+			
+
 			var clients = await _clientHelper.GetClientsAsync();
 
 			return View(clients);
@@ -41,6 +46,31 @@ namespace WebApplication7.Controllers
 			var clientSections = await _clientHelper.GetClientSectionsAsync(clientId);
 
 			return View(clientSections);
+		}
+
+		public async Task<ActionResult> GetClientSettings(string clientId)
+		{
+
+			var clientSettingsVm = new ClientSettingsVm
+				{
+					ClientId = clientId,
+					ClientSettings = ClientSettingsStaticCache.GetClientSettings()
+				};
+
+			return View(clientSettingsVm);
+		}
+
+		public async Task<ActionResult> ResetClientSettings(string clientId)
+		{
+			ClientSettingsStaticCache.LoadClientSettingsCache();
+
+			var clientSettingsVm = new ClientSettingsVm
+			{
+				ClientId = clientId,
+				ClientSettings = ClientSettingsStaticCache.GetClientSettings()
+			};
+
+			return View("GetClientSettings", clientSettingsVm);
 		}
 
     }

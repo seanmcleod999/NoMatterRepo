@@ -73,6 +73,8 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		string DefaultClientId { get; }
 
+		string Test1 { get; }
+
 	}
 
 	public class GlobalSettings : IGlobalSettings
@@ -96,5 +98,9 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public int PictureThumbnailSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["PictureThumbnailSize"]); } }
 
 		public string DefaultClientId { get { return ConfigurationManager.AppSettings["DefaultClientId"]; } }
+
+		public string Test1 { get { return ClientSettingsStaticCache.GetStringSetting("Test1"); } }
+
+		
 	}
 }

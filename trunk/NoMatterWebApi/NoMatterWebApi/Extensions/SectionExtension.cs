@@ -7,7 +7,7 @@ namespace NoMatterWebApi.Extensions
 {
 	public static class SectionExtension
 	{
-		public static NoMatterWebApiModels.Models.Section ToDomainSection(this   NoMatterApiDAL.DatabaseModel.Section section)
+		public static NoMatterWebApiModels.Models.Section ToDomainSection(this   NoMatterDatabaseModel.Section section)
 		{
 			return new NoMatterWebApiModels.Models.Section
 			{

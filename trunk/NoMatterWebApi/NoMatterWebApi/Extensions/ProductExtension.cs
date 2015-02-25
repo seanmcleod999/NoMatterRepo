@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using NoMatterApiDAL.DatabaseModel;
+using NoMatterDatabaseModel;
 using NoMatterWebApi.Enums;
 using NoMatterWebApiModels.Models;
 
@@ -10,7 +10,7 @@ namespace NoMatterWebApi.Extensions
 {
 	public static class ProductExtension
 	{
-		public static NoMatterWebApiModels.Models.Product ToDomainProduct(this NoMatterApiDAL.DatabaseModel.Product product)
+		public static NoMatterWebApiModels.Models.Product ToDomainProduct(this NoMatterDatabaseModel.Product product)
 		{
 			return new NoMatterWebApiModels.Models.Product()
 			{

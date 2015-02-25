@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using NoMatterWebApiWebHelper.OtherHelpers;
+using WebApplication7.ViewModels;
 
 namespace WebApplication7.Controllers
 {
@@ -13,18 +16,27 @@ namespace WebApplication7.Controllers
             return View();
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+		public async Task<ActionResult> GetGlobalSettings(string clientId)
+		{
 
-            return View();
-        }
+			var clientSettingsVm = new GlobalSettingsVm
+			{
+				GlobalSettings = GlobalSettingsStaticCache.GetGlobalSettings()
+			};
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+			return View(clientSettingsVm);
+		}
 
-            return View();
-        }
+		public async Task<ActionResult> ResetGlobalSettings(string clientId)
+		{
+			GlobalSettingsStaticCache.LoadGlobalSettingsCache();
+
+			var clientSettingsVm = new GlobalSettingsVm
+			{
+				GlobalSettings = GlobalSettingsStaticCache.GetGlobalSettings()
+			};
+
+			return View("GetGlobalSettings", clientSettingsVm);
+		}
     }
 }
