@@ -37,7 +37,7 @@ namespace NoMatterWebApiWebHelper
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = client.GetAsync("api/v1/global/settings").Result;
+				var response = client.GetAsync("api/v1/globals/settings").Result;
 
 				if (response.IsSuccessStatusCode)
 				{

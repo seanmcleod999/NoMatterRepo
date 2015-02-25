@@ -1,7 +1,10 @@
-﻿@model WebApplication7.ViewModels.ViewCategoryProductsVm
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model WebApplication7.ViewModels.ViewCategoryProductsVm
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var globalSettings = new GlobalSettings();
 }
 
 <h1>Category - @Model.Category.CategoryName</h1>
@@ -17,16 +20,14 @@
     <br/>
     @:Title: @product.Title
     <br/>
-    @:Description: @product.Description
+    <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)" width="100px"/>
     <br/>
-    @:Price: @product.Price
-    <br/>
-    @:Size: @product.Size
-    <br/>
-
     @Html.ActionLink("View Product", "ViewProduct", "Product", new { productId = @product.ProductId }, null)
     @:&nbsp;
      @Html.ActionLink("Edit Product", "EditProduct", "Product", new { productId = @product.ProductId }, null)
+    @:&nbsp;
+     @Html.ActionLink("Delete Product", "DeleteProduct", "Product", new { productId = @product.ProductId }, new { onclick = "return confirm('Are you sure you wish to delete this ?');" })
+ 
     <br/><br/>
       
 }

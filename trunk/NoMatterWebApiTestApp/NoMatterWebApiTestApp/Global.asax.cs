@@ -23,6 +23,7 @@ namespace WebApplication7
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 			ClientSettingsStaticCache.LoadClientSettingsCache();
+			GlobalSettingsStaticCache.LoadGlobalSettingsCache();
         }
 
 		protected void Application_OnPostAuthenticateRequest(Object sender, EventArgs e)

@@ -8,6 +8,7 @@ using NoMatterDatabaseModel;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Logging;
+using NoMatterWebApiModels.Models;
 using Client = NoMatterWebApiModels.Models.Client;
 using Section = NoMatterWebApiModels.Models.Section;
 
@@ -61,17 +62,26 @@ namespace NoMatterWebApi.Controllers.V1
 		[ResponseType(typeof(List<Section>))]
 		public async Task<IHttpActionResult> GetClientSections(string clientUuid)
 		{
+			try
+			{
+		
+				var sectionsDb = await _clientRepository.GetClientSectionsAsync(new Guid(clientUuid));
 
-			var sectionsDb = await _clientRepository.GetClientSectionsAsync(new Guid(clientUuid));
+				var sections = sectionsDb.Select(x => x.ToDomainSection()).ToList();
 
-			var sections = sectionsDb.Select(x => x.ToDomainSection()).ToList();
+				return Ok(sections);
 
-			return Ok(sections);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
 		}
 
 		// GET api/v1/client/5/settingd
 		[Route("{clientUuid}/settings")]
-		[ResponseType(typeof(Client))]
+		[ResponseType(typeof(ClientSetting))]
 		public async Task<IHttpActionResult> GetClientSettings(string clientUuid)
 		{
 			try
@@ -88,8 +98,6 @@ namespace NoMatterWebApi.Controllers.V1
 				return InternalServerError(ex);
 			}
 			
-			//var client = new Client() { ClientId = id, ClientName = "Test1" };
-			//return Ok(client);
 		}
 
 		// GET api/v1/client/5/payment-types

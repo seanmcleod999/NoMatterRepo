@@ -8,11 +8,13 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
+using WebApplication7.Logging;
 using WebApplication7.Models;
 using WebApplication7.ViewModels;
 
@@ -32,12 +34,6 @@ namespace WebApplication7.Controllers
 			_globalSettings = new GlobalSettings();
 			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ShopItemPicture, _globalSettings);
 		}
-
-		//public CategoryController(ICurrentUser currentUser)
-		//{
-		//	_productService = new ProductService();
-		//	_currentUser = currentUser;
-		//}
 
         public async Task<ActionResult> ViewProduct(string productId)
         {
@@ -82,6 +78,22 @@ namespace WebApplication7.Controllers
 			return RedirectToAction("GetCategoryProducts", "Category", new { categoryId = editProductVm.Product.CategoryId });
 		}
 
-	  
+		public async Task<ActionResult> DeleteProduct(string productId, string clientId)
+		{
+			try
+			{
+				var token = ((CustomPrincipal)HttpContext.User).Token;
+
+				await _productHelper.DeleteProductAsync(productId, token);
+
+				return RedirectToAction("GetCategoryProducts", "Category", new { clientId = clientId });
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+			
+		}
     }
 }

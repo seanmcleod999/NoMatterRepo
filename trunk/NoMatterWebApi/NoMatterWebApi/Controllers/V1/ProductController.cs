@@ -20,23 +20,23 @@ namespace NoMatterWebApi.Controllers.V1
 	public class ProductController : ApiController
 	{
 		private IProductRepository _productRepository;
-		private ICategoryRepository _categoryRepository;
-		private IGeneralHelper _generalHelper;
+		//private ICategoryRepository _categoryRepository;
+		//private IGeneralHelper _generalHelper;
 
 		public ProductController()
 		{
 			var databaseEntity = new DatabaseEntities();
 
 			_productRepository = new ProductRepository(databaseEntity);
-			_categoryRepository = new CategoryRepository(databaseEntity);
-			_generalHelper = new GeneralHelper();
+			//_categoryRepository = new CategoryRepository(databaseEntity);
+			//_generalHelper = new GeneralHelper();
 		}
 
-		public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IGeneralHelper generalHelper)
+		public ProductController(IProductRepository productRepository)
 		{
 			_productRepository = productRepository;
-			_categoryRepository = categoryRepository;
-			_generalHelper = generalHelper;
+			//_categoryRepository = categoryRepository;
+			//_generalHelper = generalHelper;
 		}
 
 		// GET api/v1/products/{productId}?relatedProducts=false
