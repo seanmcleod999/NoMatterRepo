@@ -48,29 +48,43 @@ namespace WebApplication7.Controllers
 			return View(clientSections);
 		}
 
-		public async Task<ActionResult> GetClientSettings(string clientId)
+		public ActionResult GetClientCacheSettings()
 		{
+			//ClientSettingsStaticCache.LoadClientSettingsCache(clientId);
 
 			var clientSettingsVm = new ClientSettingsVm
 				{
-					ClientId = clientId,
+					//ClientId = clientId,
 					ClientSettings = ClientSettingsStaticCache.GetClientSettings()
 				};
 
 			return View(clientSettingsVm);
 		}
 
-		public async Task<ActionResult> ResetClientSettings(string clientId)
+		public ActionResult GetClientSettings(string clientId)
+		{
+			//ClientSettingsStaticCache.LoadClientSettingsCache(clientId);
+
+			var clientSettingsVm = new ClientSettingsVm
+			{
+				ClientId = clientId,
+				ClientSettings = _clientHelper.GetClientSettings(clientId)
+			};
+
+			return View(clientSettingsVm);
+		}
+
+		public ActionResult ResetClientCacheSettings()
 		{
 			ClientSettingsStaticCache.LoadClientSettingsCache();
 
 			var clientSettingsVm = new ClientSettingsVm
 			{
-				ClientId = clientId,
+				//ClientId = clientId,
 				ClientSettings = ClientSettingsStaticCache.GetClientSettings()
 			};
 
-			return View("GetClientSettings", clientSettingsVm);
+			return View("GetClientCacheSettings", clientSettingsVm);
 		}
 
     }

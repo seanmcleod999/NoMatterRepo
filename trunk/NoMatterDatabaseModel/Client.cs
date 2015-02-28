@@ -17,13 +17,13 @@ namespace NoMatterDatabaseModel
         public Client()
         {
             this.CartProducts = new HashSet<CartProduct>();
-            this.DeliveryOptions = new HashSet<DeliveryOption>();
             this.Enquiries = new HashSet<Enquiry>();
             this.ClientPaymentTypes = new HashSet<ClientPaymentType>();
             this.Settings = new HashSet<Setting>();
             this.Discounts = new HashSet<Discount>();
             this.Sections = new HashSet<Section>();
             this.Users = new HashSet<User>();
+            this.ClientDeliveryOptions = new HashSet<ClientDeliveryOption>();
         }
     
         public int ClientId { get; set; }
@@ -32,12 +32,12 @@ namespace NoMatterDatabaseModel
         public bool Enabled { get; set; }
     
         public virtual ICollection<CartProduct> CartProducts { get; set; }
-        public virtual ICollection<DeliveryOption> DeliveryOptions { get; set; }
         public virtual ICollection<Enquiry> Enquiries { get; set; }
         public virtual ICollection<ClientPaymentType> ClientPaymentTypes { get; set; }
         public virtual ICollection<Setting> Settings { get; set; }
         public virtual ICollection<Discount> Discounts { get; set; }
         public virtual ICollection<Section> Sections { get; set; }
         public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<ClientDeliveryOption> ClientDeliveryOptions { get; set; }
     }
 }

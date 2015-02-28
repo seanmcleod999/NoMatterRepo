@@ -188,6 +188,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
@@ -260,8 +261,10 @@
     <Content Include="Views\Category\NewCategoryProduct.cshtml" />
     <Content Include="Views\Product\ViewProduct.cshtml" />
     <Content Include="Views\Product\EditProduct.cshtml" />
-    <Content Include="Views\Client\GetClientSettings.cshtml" />
+    <Content Include="Views\Client\GetClientCacheSettings.cshtml" />
     <Content Include="Views\Home\GetGlobalSettings.cshtml" />
+    <Content Include="Views\Client\GetClientSettings.cshtml" />
+    <Content Include="Views\Shop\Index.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

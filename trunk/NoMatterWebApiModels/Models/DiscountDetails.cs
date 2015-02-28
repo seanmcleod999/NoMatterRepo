@@ -10,7 +10,7 @@ namespace NoMatterWebApiModels.Models
 	{
 		public bool Discounted { get; set; }
 		public decimal DiscountAmount { get; set; }
-		public decimal SalePrice { get; set; }
+		public decimal DiscountedPrice { get; set; }
 		public short DiscountTypeId { get; set; }
 	}
 }

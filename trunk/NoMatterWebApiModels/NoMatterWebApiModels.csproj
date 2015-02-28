@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ClientDeliveryOption.cs" />
+    <Compile Include="Models\ClientPaymentType.cs" />
+    <Compile Include="Models\ShoppingCartDetails.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ClientSetting.cs" />

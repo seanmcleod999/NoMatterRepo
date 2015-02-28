@@ -7,9 +7,9 @@
 
 @foreach (var client in Model)
 {
-    @client.ClientId
+    <b>@client.ClientName</b>
     <br/>
-    @client.ClientName
+    @client.ClientId
     <br/>
     @Html.ActionLink("Get Sections", "GetClientSections", "Client", new { clientId = @client.ClientId }, null)@:&nbsp;&nbsp;
     @Html.ActionLink("Get Settings", "GetClientSettings", "Client", new { clientId = @client.ClientId }, null)

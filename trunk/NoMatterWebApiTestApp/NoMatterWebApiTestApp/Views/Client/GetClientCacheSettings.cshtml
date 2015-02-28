@@ -5,6 +5,8 @@
 }
 <h1>Client Settings</h1>
 
+@Html.ActionLink("Reset Settings Cache", "ResetClientCacheSettings", "Client", new { clientId = Model.ClientId }, null)
+<br/><br/>
 
 @foreach (var section1 in Model.ClientSettings)
 {

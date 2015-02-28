@@ -63,6 +63,9 @@
     <Compile Include="Client.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ClientDeliveryOption.cs">
+      <DependentUpon>DatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ClientPaymentType.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
@@ -80,9 +83,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="DeliveryOption.cs">
-      <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Discount.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>

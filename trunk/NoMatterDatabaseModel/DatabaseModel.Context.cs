@@ -29,7 +29,6 @@ namespace NoMatterDatabaseModel
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<ClientPaymentType> ClientPaymentTypes { get; set; }
-        public virtual DbSet<DeliveryOption> DeliveryOptions { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
         public virtual DbSet<DiscountProduct> DiscountProducts { get; set; }
         public virtual DbSet<DiscountType> DiscountTypes { get; set; }
@@ -43,5 +42,6 @@ namespace NoMatterDatabaseModel
         public virtual DbSet<Section> Sections { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<ClientDeliveryOption> ClientDeliveryOptions { get; set; }
     }
 }

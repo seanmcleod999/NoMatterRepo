@@ -12,13 +12,13 @@ namespace NoMatterDatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class DeliveryOption
+    public partial class ClientDeliveryOption
     {
-        public int DeliveryOptionId { get; set; }
         public int ClientId { get; set; }
         public string Description { get; set; }
         public decimal DeliveryAmount { get; set; }
         public byte OptionOrder { get; set; }
+        public int ClientDeliveryOptionId { get; set; }
     
         public virtual Client Client { get; set; }
     }

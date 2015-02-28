@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,10 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public static void LoadClientSettingsCache()
 		{
 			var clientHelper = new ClientHelper();
-			var globalSettings = new GlobalSettings();
 
-			_clientSettings = clientHelper.GetClientSettings(globalSettings.DefaultClientId);
+			var clientId = ConfigurationManager.AppSettings["DefaultClientId"];
+
+			_clientSettings = clientHelper.GetClientSettings(clientId);
 		}
 
 		public static List<ClientSetting> GetClientSettings()

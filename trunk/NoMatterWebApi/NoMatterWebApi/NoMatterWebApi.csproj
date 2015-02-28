@@ -209,6 +209,7 @@
     <Compile Include="Controllers\Clients2Controller.cs" />
     <Compile Include="Controllers\SuperuserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\V1\CartController.cs" />
     <Compile Include="Controllers\V1\CategoryController.cs" />
     <Compile Include="Controllers\V1\ClientController.cs" />
     <Compile Include="Controllers\V1\GlobalController.cs" />
@@ -217,11 +218,15 @@
     <Compile Include="Controllers\V1\UserController.cs" />
     <Compile Include="CustomAuth\AuthenticationFailureResult.cs" />
     <Compile Include="CustomAuth\CustomAuthenticationFilter.cs" />
+    <Compile Include="DAL\CartRepository.cs" />
     <Compile Include="DAL\GlobalRepository.cs" />
     <Compile Include="Enums\CredentialTypeEnum.cs" />
     <Compile Include="Enums\DiscountTypeEnum.cs" />
+    <Compile Include="Extensions\CartProductsExtension.cs" />
     <Compile Include="Extensions\CategoryExtension.cs" />
+    <Compile Include="Extensions\ClientDeliveryOptionExtension.cs" />
     <Compile Include="Extensions\ClientExtension.cs" />
+    <Compile Include="Extensions\ClientPaymentTypeExtension.cs" />
     <Compile Include="Extensions\ClientSettingExtension.cs" />
     <Compile Include="Extensions\GlobalSettingExtension.cs" />
     <Compile Include="Extensions\ProductExtension.cs" />
@@ -234,6 +239,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CartProduct.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CustomPrincipal.cs" />
     <Compile Include="Models\FacebookUser.cs" />

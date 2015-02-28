@@ -17,6 +17,7 @@ namespace NoMatterDatabaseModel
         public short ClientPaymentTypeId { get; set; }
         public int ClientId { get; set; }
         public short PaymentTypeId { get; set; }
+        public byte PaymentTypeOrder { get; set; }
     
         public virtual Client Client { get; set; }
         public virtual PaymentType PaymentType { get; set; }

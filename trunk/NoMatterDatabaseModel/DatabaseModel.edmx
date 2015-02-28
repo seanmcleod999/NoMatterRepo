@@ -38,6 +38,16 @@
           <Property Name="ClientName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="ClientDeliveryOption">
+          <Key>
+            <PropertyRef Name="ClientDeliveryOptionId" />
+          </Key>
+          <Property Name="ClientDeliveryOptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OptionOrder" Type="tinyint" Nullable="false" />
+        </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
             <PropertyRef Name="ClientPaymentTypeId" />
@@ -45,16 +55,7 @@
           <Property Name="ClientPaymentTypeId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ClientId" Type="int" Nullable="false" />
           <Property Name="PaymentTypeId" Type="smallint" Nullable="false" />
-        </EntityType>
-        <EntityType Name="DeliveryOption">
-          <Key>
-            <PropertyRef Name="DeliveryOptionId" />
-          </Key>
-          <Property Name="DeliveryOptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientId" Type="int" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="OptionOrder" Type="tinyint" Nullable="false" />
+          <Property Name="PaymentTypeOrder" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="Discount">
           <Key>
@@ -249,12 +250,12 @@
         </Association>
         <Association Name="FK_ClientDeliveryOption_Client">
           <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="DeliveryOption" Type="Self.DeliveryOption" Multiplicity="*" />
+          <End Role="ClientDeliveryOption" Type="Self.ClientDeliveryOption" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Client">
               <PropertyRef Name="ClientId" />
             </Principal>
-            <Dependent Role="DeliveryOption">
+            <Dependent Role="ClientDeliveryOption">
               <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
@@ -431,8 +432,8 @@
           <EntitySet Name="CartProduct" EntityType="Self.CartProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientDeliveryOption" EntityType="Self.ClientDeliveryOption" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientPaymentType" EntityType="Self.ClientPaymentType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DeliveryOption" EntityType="Self.DeliveryOption" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscountProduct" EntityType="Self.DiscountProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscountType" EntityType="Self.DiscountType" Schema="dbo" store:Type="Tables" />
@@ -460,7 +461,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_ClientDeliveryOption_Client" Association="Self.FK_ClientDeliveryOption_Client">
             <End Role="Client" EntitySet="Client" />
-            <End Role="DeliveryOption" EntitySet="DeliveryOption" />
+            <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOption" />
           </AssociationSet>
           <AssociationSet Name="FK_ClientEnquiry_Client" Association="Self.FK_ClientEnquiry_Client">
             <End Role="Client" EntitySet="Client" />
@@ -560,13 +561,13 @@
           <Property Name="ClientName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Enabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CartProducts" Relationship="Self.FK_CartProduct_Client" FromRole="Client" ToRole="CartProduct" />
-          <NavigationProperty Name="DeliveryOptions" Relationship="Self.FK_ClientDeliveryOption_Client" FromRole="Client" ToRole="DeliveryOption" />
           <NavigationProperty Name="Enquiries" Relationship="Self.FK_ClientEnquiry_Client" FromRole="Client" ToRole="Enquiry" />
           <NavigationProperty Name="ClientPaymentTypes" Relationship="Self.FK_ClientPaymentType_Client" FromRole="Client" ToRole="ClientPaymentType" />
           <NavigationProperty Name="Settings" Relationship="Self.FK_ClientSetting_Client" FromRole="Client" ToRole="Setting" />
           <NavigationProperty Name="Discounts" Relationship="Self.FK_Discount_Client" FromRole="Client" ToRole="Discount" />
           <NavigationProperty Name="Sections" Relationship="Self.FK_Section_Section" FromRole="Client" ToRole="Section" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_Client" FromRole="Client" ToRole="User" />
+          <NavigationProperty Name="ClientDeliveryOptions" Relationship="DatabaseModel.FK_ClientDeliveryOption_Client1" FromRole="Client" ToRole="ClientDeliveryOption" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -577,17 +578,7 @@
           <Property Name="PaymentTypeId" Type="Int16" Nullable="false" />
           <NavigationProperty Name="Client" Relationship="Self.FK_ClientPaymentType_Client" FromRole="ClientPaymentType" ToRole="Client" />
           <NavigationProperty Name="PaymentType" Relationship="Self.FK_ClientPaymentType_PaymentType" FromRole="ClientPaymentType" ToRole="PaymentType" />
-        </EntityType>
-        <EntityType Name="DeliveryOption">
-          <Key>
-            <PropertyRef Name="DeliveryOptionId" />
-          </Key>
-          <Property Name="DeliveryOptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientId" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="DeliveryAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="OptionOrder" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="Client" Relationship="Self.FK_ClientDeliveryOption_Client" FromRole="DeliveryOption" ToRole="Client" />
+          <Property Name="PaymentTypeOrder" Type="Byte" Nullable="false" />
         </EntityType>
         <EntityType Name="Discount">
           <Key>
@@ -813,18 +804,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ClientDeliveryOption_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="DeliveryOption" Type="Self.DeliveryOption" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientId" />
-            </Principal>
-            <Dependent Role="DeliveryOption">
-              <PropertyRef Name="ClientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ClientEnquiry_Client">
           <End Role="Client" Type="Self.Client" Multiplicity="1" />
           <End Role="Enquiry" Type="Self.Enquiry" Multiplicity="*" />
@@ -962,7 +941,6 @@
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Clients" EntityType="Self.Client" />
           <EntitySet Name="ClientPaymentTypes" EntityType="Self.ClientPaymentType" />
-          <EntitySet Name="DeliveryOptions" EntityType="Self.DeliveryOption" />
           <EntitySet Name="Discounts" EntityType="Self.Discount" />
           <EntitySet Name="DiscountProducts" EntityType="Self.DiscountProduct" />
           <EntitySet Name="DiscountTypes" EntityType="Self.DiscountType" />
@@ -991,10 +969,6 @@
           <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ClientDeliveryOption_Client" Association="Self.FK_ClientDeliveryOption_Client">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="DeliveryOption" EntitySet="DeliveryOptions" />
           </AssociationSet>
           <AssociationSet Name="FK_ClientEnquiry_Client" Association="Self.FK_ClientEnquiry_Client">
             <End Role="Client" EntitySet="Clients" />
@@ -1048,6 +1022,11 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="DiscountProduct" EntitySet="DiscountProducts" />
           </AssociationSet>
+          <EntitySet Name="ClientDeliveryOptions" EntityType="DatabaseModel.ClientDeliveryOption" />
+          <AssociationSet Name="FK_ClientDeliveryOption_Client1" Association="DatabaseModel.FK_ClientDeliveryOption_Client1">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOptions" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
           <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
@@ -1070,6 +1049,29 @@
             </Principal>
             <Dependent Role="DiscountProduct">
               <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ClientDeliveryOption">
+          <Key>
+            <PropertyRef Name="ClientDeliveryOptionId" />
+          </Key>
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveryAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="OptionOrder" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_ClientDeliveryOption_Client1" FromRole="ClientDeliveryOption" ToRole="Client" />
+          <Property Name="ClientDeliveryOptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="FK_ClientDeliveryOption_Client1">
+          <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DatabaseModel.ClientDeliveryOption" Role="ClientDeliveryOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientDeliveryOption">
+              <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1118,20 +1120,10 @@
           <EntitySetMapping Name="ClientPaymentTypes">
             <EntityTypeMapping TypeName="DatabaseModel.ClientPaymentType">
               <MappingFragment StoreEntitySet="ClientPaymentType">
+                <ScalarProperty Name="PaymentTypeOrder" ColumnName="PaymentTypeOrder" />
                 <ScalarProperty Name="ClientPaymentTypeId" ColumnName="ClientPaymentTypeId" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DeliveryOptions">
-            <EntityTypeMapping TypeName="DatabaseModel.DeliveryOption">
-              <MappingFragment StoreEntitySet="DeliveryOption">
-                <ScalarProperty Name="DeliveryOptionId" ColumnName="DeliveryOptionId" />
-                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DeliveryAmount" ColumnName="DeliveryAmount" />
-                <ScalarProperty Name="OptionOrder" ColumnName="OptionOrder" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1298,6 +1290,17 @@
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientDeliveryOptions">
+            <EntityTypeMapping TypeName="DatabaseModel.ClientDeliveryOption">
+              <MappingFragment StoreEntitySet="ClientDeliveryOption">
+                <ScalarProperty Name="ClientDeliveryOptionId" ColumnName="ClientDeliveryOptionId" />
+                <ScalarProperty Name="OptionOrder" ColumnName="OptionOrder" />
+                <ScalarProperty Name="DeliveryAmount" ColumnName="DeliveryAmount" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

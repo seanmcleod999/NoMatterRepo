@@ -10,6 +10,8 @@ using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
 using Client = NoMatterWebApiModels.Models.Client;
+using ClientDeliveryOption = NoMatterWebApiModels.Models.ClientDeliveryOption;
+using ClientPaymentType = NoMatterWebApiModels.Models.ClientPaymentType;
 using Section = NoMatterWebApiModels.Models.Section;
 
 
@@ -101,12 +103,43 @@ namespace NoMatterWebApi.Controllers.V1
 		}
 
 		// GET api/v1/client/5/payment-types
-		[Route("{clientUuid}/payment-types")]
-		[ResponseType(typeof(Client))]
-		public IHttpActionResult GetClientPaymentTypes(string clientUuid)
+		[Route("{clientUuid}/delivery-options")]
+		[ResponseType(typeof(List<ClientDeliveryOption>))]
+		public async Task<IHttpActionResult> GetClientDeliveryOptions(string clientUuid)
 		{
-			var client = new Client() { ClientId = clientUuid, ClientName = "Test1" };
-			return Ok(client);
+			try
+			{
+				var clientDeliveryOptionsDb = await _clientRepository.GetClientDeliveryOptionsAsync(new Guid(clientUuid));
+
+				var clientDeliveryOptions = clientDeliveryOptionsDb.Select(x => x.ToDomainClientDeliveryOption()).ToList();
+
+				return Ok(clientDeliveryOptions);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+		// GET api/v1/client/5/payment-types
+		[Route("{clientUuid}/payment-types")]
+		[ResponseType(typeof(ClientPaymentType))]
+		public async Task<IHttpActionResult> GetClientPaymentTypes(string clientUuid)
+		{
+			try
+			{
+				var clientPaymentTypesDb = await _clientRepository.GetClientPaymentTypesAsync(new Guid(clientUuid));
+
+				var clientPaymentTypes = clientPaymentTypesDb.Select(x => x.ToDomainClientPaymentType()).ToList();
+
+				return Ok(clientPaymentTypes);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
 		}
 
 		//// POST api/<controller>

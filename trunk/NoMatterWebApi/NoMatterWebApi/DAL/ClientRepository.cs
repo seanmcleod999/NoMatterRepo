@@ -14,6 +14,8 @@ namespace NoMatterWebApi.DAL
 		Task<List<Client>> GetClientsAsync();
 		Task<List<Section>> GetClientSectionsAsync(Guid clientUuid);
 		Task<List<Setting>> GetClientSettingsAsync(Guid clientUuid);
+		Task<List<ClientPaymentType>> GetClientPaymentTypesAsync(Guid clientUuid);
+		Task<List<ClientDeliveryOption>> GetClientDeliveryOptionsAsync(Guid clientUuid);
 	}
 
 	public class ClientRepository : IClientRepository
@@ -58,6 +60,26 @@ namespace NoMatterWebApi.DAL
 			var settings = await databaseConnection.Settings.Where(x => x.Client.ClientUUID == clientUuid).ToListAsync();
 
 			return settings;
+		}
+
+		public async Task<List<ClientPaymentType>> GetClientPaymentTypesAsync(Guid clientUuid)
+		{
+			var paymentTypes = await databaseConnection.ClientPaymentTypes.Include("PaymentType")
+				.Where(x => x.Client.ClientUUID == clientUuid)
+				.OrderBy(x=>x.PaymentTypeOrder)
+				.ToListAsync();
+
+			return paymentTypes;
+		}
+
+		public async Task<List<ClientDeliveryOption>> GetClientDeliveryOptionsAsync(Guid clientUuid)
+		{
+			var deliveryOptions = await databaseConnection.ClientDeliveryOptions
+				.Where(x => x.Client.ClientUUID == clientUuid)
+				.OrderBy(x=>x.OptionOrder)
+				.ToListAsync();
+
+			return deliveryOptions;
 		}
 
 		public void Save()

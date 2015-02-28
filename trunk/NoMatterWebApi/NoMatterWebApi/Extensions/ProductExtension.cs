@@ -46,7 +46,7 @@ namespace NoMatterWebApi.Extensions
 
 		internal static DiscountDetails GetDiscountDetails(IEnumerable<DiscountProduct> discountProducts, decimal shopItemPrice)
 		{
-			var discountDetails = new DiscountDetails { Discounted = false };
+			var discountDetails = new DiscountDetails { Discounted = false, DiscountedPrice = shopItemPrice };
 
 			if (discountProducts == null) return discountDetails;
 
@@ -70,10 +70,10 @@ namespace NoMatterWebApi.Extensions
 			switch (activeDiscounts.Discount.DiscountTypeId)
 			{
 				case (byte)DiscountTypeEnum.FixedAmount:
-					discountDetails.SalePrice = shopItemPrice - activeDiscounts.Discount.DiscountAmount;
+					discountDetails.DiscountedPrice = shopItemPrice - activeDiscounts.Discount.DiscountAmount;
 					break;
 				case (byte)DiscountTypeEnum.Percentage:
-					discountDetails.SalePrice = decimal.Ceiling(shopItemPrice - ((shopItemPrice / 100) * activeDiscounts.Discount.DiscountAmount));
+					discountDetails.DiscountedPrice = decimal.Ceiling(shopItemPrice - ((shopItemPrice / 100) * activeDiscounts.Discount.DiscountAmount));
 					break;
 			}
 
