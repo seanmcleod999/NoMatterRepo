@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -11,6 +12,7 @@ namespace NoMatterWebApi.DAL
 	public interface IOrderRepository
 	{
 		Task<string> AddOrderAsync(Order order);
+		Task<Order> GetOrderAsync(Guid orderId);
 		
 	}
 
@@ -34,6 +36,16 @@ namespace NoMatterWebApi.DAL
 			await databaseConnection.SaveChangesAsync();
 
 			return order.OrderUUID.ToString();
+		}
+
+		public async Task<Order> GetOrderAsync(Guid orderId)
+		{
+			var order = await databaseConnection.Orders
+				.Include("OrderProducts")
+				.Include("OrderProducts.Product")
+				.Include("User").Where(x => x.OrderUUID == orderId).SingleOrDefaultAsync();
+
+			return order;
 		}
 
 		public void Save()

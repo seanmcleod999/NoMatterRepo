@@ -7,7 +7,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 {
 	public class GeneralHelper
 	{
-		public static List<SelectListItem> GetSuburbs()
+		public static List<SelectListItem> GetProvinces()
 		{
 			var suburbs = new List<SelectListItem>()
 			{

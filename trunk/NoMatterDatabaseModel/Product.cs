@@ -19,6 +19,7 @@ namespace NoMatterDatabaseModel
             this.CartProducts = new HashSet<CartProduct>();
             this.ProductKeywords = new HashSet<ProductKeyword>();
             this.DiscountProducts = new HashSet<DiscountProduct>();
+            this.OrderProducts = new HashSet<OrderProduct>();
         }
     
         public int ProductId { get; set; }
@@ -49,5 +50,6 @@ namespace NoMatterDatabaseModel
         public virtual Category Category { get; set; }
         public virtual ICollection<ProductKeyword> ProductKeywords { get; set; }
         public virtual ICollection<DiscountProduct> DiscountProducts { get; set; }
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

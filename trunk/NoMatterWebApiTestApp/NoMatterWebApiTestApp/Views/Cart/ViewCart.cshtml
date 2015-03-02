@@ -9,9 +9,7 @@
 
 <h1>Your Cart</h1>
 
-Total: @Model.TotalAmount
 
-<br/><br/>
 
 @foreach (var product in Model.Products)
 {
@@ -19,11 +17,17 @@ Total: @Model.TotalAmount
     @:&nbsp; &nbsp;
     @product.Title  
     @:&nbsp; &nbsp;  
-    @product.DiscountDetails.DiscountedPrice
+    @:R @product.DiscountDetails.DiscountedPrice
     @:&nbsp; &nbsp; 
     
     @Html.ActionLink("Remove from cart", "RemoveProductFromCart", "Cart", new { productId = @product.ProductId }, new { @class = "RemoveFromCartLink" })
     <br/><br/>
 }
 
-  @Html.ActionLink("Checkout", "Index", "Checkout")
+Total: R @Model.TotalAmount
+
+<br/><br/>
+
+<br/>
+  @Html.ActionLink("Checkout", "Index", "Checkout", null, new {@class="siteButton"})
+<br/><br/>

@@ -36,7 +36,9 @@ namespace NoMatterWebApi.DAL
 
 		public async Task<List<CartProduct>> GetCartProductsAsync(string cartId)
 		{
-			var cartProducts = await databaseConnection.CartProducts.Include("Product").Where(x => x.CartId == cartId).ToListAsync();
+			var cartProducts = await databaseConnection.CartProducts
+				.Include("Product")
+				.Where(x => x.CartId == cartId).OrderBy(x=>x.Product.Title).ToListAsync();
 
 			return cartProducts;
 		}

@@ -42,7 +42,6 @@ namespace WebApplication7.Controllers
 
         public async Task<ActionResult> GetCategoryProducts(string categoryId)
         {
-			var test1 = _globalSettings.Test1;
 
 			var categoryTask = _categoryHelper.GetCategoryAsync(categoryId);
 

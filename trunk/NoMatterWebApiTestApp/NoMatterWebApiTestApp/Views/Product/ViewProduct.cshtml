@@ -9,21 +9,22 @@
 <div class="PageNavigationBar">
     @Html.ActionLink("Back to Products", "GetCategoryProducts", "Category", new { categoryId = @Model.Product.CategoryId }, new { @class = "BackLink" })
 </div>
-<br/>
+
 
 <h1>Product details</h1>
 
 Category: @Model.Product.CategoryId
 <br/><br/>
-Title: @Model.Product.Title
+Title: <b>@Model.Product.Title</b>
 <br/><br/>
-Description: @Model.Product.Description
+Description: <i>@Model.Product.Description</i>
 <br/><br/>
-Price: @Model.Product.Price
-<br/><br/>
-Discounted Price: @Model.Product.DiscountDetails.DiscountedPrice
-<br/><br/>
-Discount Amount: @Model.Product.DiscountDetails.DiscountAmount
+Price: R @Model.Product.Price
+<br/>
+Discount Amount: R @Model.Product.DiscountDetails.DiscountAmount
+<br />
+Discounted Price: <b>R @Model.Product.DiscountDetails.DiscountedPrice</b>
+
 <br/><br/>
 Size: @Model.Product.Size
 <br/><br/>
@@ -42,7 +43,7 @@ Short Url: @Model.Product.ProductShortUrl
 <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="100px"/>
 
 <br/><br/>
-@Html.ActionLink("Add to cart", "AddProductToCart", "Cart", new { productId = @Model.Product.ProductId }, new { @class = "AddToCartLink" })
+<a href="javascript:void(0);" class="siteButton" onclick="addToCart(@Model.Product.ProductId);">Add to Cart</a>
 
 <h3>Related Products</h3>
 
@@ -55,3 +56,27 @@ Short Url: @Model.Product.ProductShortUrl
     <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)" width="50px"/>
     <br/><br/>
 }
+
+<script type="text/javascript">
+
+     
+     function addToCart(id) {
+
+         $.post('@Url.Action("AddProductToCart", "Cart")' + "?productId=" + id + "&quantity=1")
+             .success(function(data) {
+
+                // var cartItemCount = $('#cartItemCount').html();                 
+                 //$('#cartItemCount').html(parseInt(cartItemCount) + 1);
+                 
+                 alert("Thank you. The item was added to your cart.");
+                 
+                 //$(".headerCart").css("display", "block");
+                 
+             })
+             .error(function(xhr) {
+                 var obj = jQuery.parseJSON(xhr.responseText);
+                 alert(obj.Message);
+             });
+     }
+
+</script>

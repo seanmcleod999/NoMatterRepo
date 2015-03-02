@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
+using WebApplication7.Logging;
 
 namespace WebApplication7.Controllers
 {
@@ -28,13 +30,27 @@ namespace WebApplication7.Controllers
 			return View(shoppingCartDetails);
 	    }
 
-	    public async Task<ActionResult> AddProductToCart(string productId)
+	    public async Task<string> AddProductToCart(string productId, int quantity = 1)
         {
-			await _cartHelper.AddProductToCartAsync(_currentUser.CartId(), productId, 1);
+			
 
-		    ViewBag.ProductId = productId;
+		    //ViewBag.ProductId = productId;
 
-			return View();
+			//return View();
+
+			try
+			{
+				await _cartHelper.AddProductToCartAsync(_currentUser.CartId(), productId, quantity);
+
+				//Session["CartItemCount"] = _shoppingCartService.GetItemCount(_currentUser.CartId());
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return "False";
+			}
+
+			return "Success";
         }
 
 		public async Task<ActionResult> RemoveProductFromCart(string productId)

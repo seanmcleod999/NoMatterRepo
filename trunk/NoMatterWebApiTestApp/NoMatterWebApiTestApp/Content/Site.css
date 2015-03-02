@@ -51,3 +51,15 @@ textarea {
     width: 150px;
     padding: 0 10px;
 }
+
+.siteButton {
+    border-radius:20px;
+    /*border-color: #7c7c7c;
+    border-style: solid;
+    border-width: 2px;*/
+	padding:4px 20px;
+    text-decoration: none;
+    background-color:black;
+    color: white;
+
+}

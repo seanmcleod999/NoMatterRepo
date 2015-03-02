@@ -212,6 +212,7 @@
     <Compile Include="Controllers\V1\CartController.cs" />
     <Compile Include="Controllers\V1\CategoryController.cs" />
     <Compile Include="Controllers\V1\ClientController.cs" />
+    <Compile Include="Controllers\V1\OrderController.cs" />
     <Compile Include="Controllers\V1\GlobalController.cs" />
     <Compile Include="Controllers\V1\ProductController.cs" />
     <Compile Include="Controllers\V1\SectionController.cs" />
@@ -230,8 +231,10 @@
     <Compile Include="Extensions\ClientPaymentTypeExtension.cs" />
     <Compile Include="Extensions\ClientSettingExtension.cs" />
     <Compile Include="Extensions\GlobalSettingExtension.cs" />
+    <Compile Include="Extensions\OrderExtension.cs" />
     <Compile Include="Extensions\ProductExtension.cs" />
     <Compile Include="Extensions\SectionExtension.cs" />
+    <Compile Include="Extensions\UserExtension.cs" />
     <Compile Include="Helpers\GeneralHelper.cs" />
     <Compile Include="Helpers\GlobalSettings.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />

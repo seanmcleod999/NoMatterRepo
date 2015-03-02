@@ -8,9 +8,9 @@ namespace WebApplication7.ViewModels
 {
 	public class CheckoutSummaryVm
 	{
-		public ShoppingCartDetails ShoppingCartDetails { get; set; }
+		public Order Order { get; set; }
 
-		public ClientDeliveryOption DeliveryOption { get; set; }
+		//public ClientDeliveryOption DeliveryOption { get; set; }
 
 		public string PaymentType { get; set; }
 

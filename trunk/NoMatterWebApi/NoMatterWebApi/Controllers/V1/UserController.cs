@@ -10,10 +10,12 @@ using System.Web.Http.Description;
 using NoMatterDatabaseModel;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Enums;
+using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
 using NoMatterWebApiModels.Models;
+using Order = NoMatterDatabaseModel.Order;
 using User = NoMatterDatabaseModel.User;
 
 
@@ -255,21 +257,24 @@ namespace NoMatterWebApi.Controllers.V1
 
 				if (userDb.Client.ClientUUID != clientDb.ClientUUID) return BadRequest("User does not belong to client");
 
-				var cartProducts = await _cartRepository.GetCartProductsAsync(model.CartId);
+				var cartProductsDb = await _cartRepository.GetCartProductsAsync(model.CartId);
 
-				var order = new Order();
+				var cartProducts = cartProductsDb.Select(x => x.ToDomainCartProduct()).ToList();
 
-				order.User = userDb;
-				order.TotalAmount = cartProducts.Sum(x => x.Product.Price); //TODO: fix this as its not the discounted price.. may need to store the price in the cart rather
-				//order.
-				order.Message = model.Message;
-				order.ClientDeliveryOptionId = Convert.ToInt16(model.ClientDeliveryOptionId);
-				order.OrderStatusId = 1;
+				var order = new Order
+					{
+						User = userDb,
+						TotalAmount = cartProducts.Sum(x => x.Product.DiscountDetails.DiscountedPrice),
+						Message = model.Message,
+						ClientDeliveryOptionId = Convert.ToInt16(model.ClientDeliveryOptionId),
+						OrderStatusId = 1
+					};
 
-				foreach (var cartProduct in cartProducts)
-				{
-					order.OrderProducts.Add(new OrderProduct() { ProductId = cartProduct .ProductId});
-				}
+				//TODO: FIX THIS
+				//foreach (var cartProduct in cartProducts)
+				//{
+				//	order.OrderProducts.Add(new OrderProduct() { ProductId = cartProduct.Product.ProductId});
+				//}
 
 				var orderId = await _orderRepository.AddOrderAsync(order);
 

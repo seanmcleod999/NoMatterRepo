@@ -113,6 +113,8 @@ namespace NoMatterWebApi.Controllers.V1
 
 				var clientDeliveryOptions = clientDeliveryOptionsDb.Select(x => x.ToDomainClientDeliveryOption()).ToList();
 
+				clientDeliveryOptions.First().Selected = true;
+
 				return Ok(clientDeliveryOptions);
 			}
 			catch (Exception ex)
@@ -132,6 +134,8 @@ namespace NoMatterWebApi.Controllers.V1
 				var clientPaymentTypesDb = await _clientRepository.GetClientPaymentTypesAsync(new Guid(clientUuid));
 
 				var clientPaymentTypes = clientPaymentTypesDb.Select(x => x.ToDomainClientPaymentType()).ToList();
+
+				clientPaymentTypes.First().Selected = true;
 
 				return Ok(clientPaymentTypes);
 			}

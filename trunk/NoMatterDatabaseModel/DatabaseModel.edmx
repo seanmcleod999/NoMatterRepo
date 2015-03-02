@@ -127,7 +127,7 @@
           <Key>
             <PropertyRef Name="OrderProductId" />
           </Key>
-          <Property Name="OrderProductId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OrderProductId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderId" Type="int" Nullable="false" />
           <Property Name="ProductId" Type="int" Nullable="false" />
         </EntityType>
@@ -388,6 +388,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OrderProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderProduct" Type="Self.OrderProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="OrderProduct">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Product_Category">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
@@ -509,6 +521,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_OrderProduct_Order" Association="Self.FK_OrderProduct_Order">
             <End Role="Order" EntitySet="Order" />
+            <End Role="OrderProduct" EntitySet="OrderProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderProduct_Product" Association="Self.FK_OrderProduct_Product">
+            <End Role="Product" EntitySet="Product" />
             <End Role="OrderProduct" EntitySet="OrderProduct" />
           </AssociationSet>
           <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
@@ -672,6 +688,7 @@
           <Property Name="OrderId" Type="Int32" Nullable="false" />
           <Property Name="ProductId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Order" Relationship="Self.FK_OrderProduct_Order" FromRole="OrderProduct" ToRole="Order" />
+          <NavigationProperty Name="Product" Relationship="DatabaseModel.FK_OrderProduct_Product" FromRole="OrderProduct" ToRole="Product" />
         </EntityType>
         <EntityType Name="PaymentType">
           <Key>
@@ -714,6 +731,7 @@
           <NavigationProperty Name="Category" Relationship="Self.FK_Product_Category" FromRole="Product" ToRole="Category" />
           <NavigationProperty Name="ProductKeywords" Relationship="DatabaseModel.FK_ProductKeyword_Product" FromRole="Product" ToRole="ProductKeyword" />
           <NavigationProperty Name="DiscountProducts" Relationship="DatabaseModel.FK_DiscountProduct_Product" FromRole="Product" ToRole="DiscountProduct" />
+          <NavigationProperty Name="OrderProducts" Relationship="DatabaseModel.FK_OrderProduct_Product" FromRole="Product" ToRole="OrderProduct" />
         </EntityType>
         <EntityType Name="ProductKeyword">
           <Key>
@@ -1036,6 +1054,10 @@
             <End Role="ClientPaymentType" EntitySet="ClientPaymentTypes" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_OrderProduct_Product" Association="DatabaseModel.FK_OrderProduct_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderProduct" EntitySet="OrderProducts" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
           <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
@@ -1106,6 +1128,18 @@
             </Principal>
             <Dependent Role="Order">
               <PropertyRef Name="ClientPaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderProduct_Product">
+          <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="DatabaseModel.OrderProduct" Role="OrderProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="OrderProduct">
+              <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

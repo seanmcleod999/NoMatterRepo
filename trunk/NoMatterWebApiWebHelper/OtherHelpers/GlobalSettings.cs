@@ -13,8 +13,8 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		string FacebookAppId { get; }
 		string FacebookAppSecret { get; }
 
-		//string SiteName { get; }
-		//string SiteUrl { get; }
+		string SiteName { get; }
+		string SiteUrl { get; }
 		//string SEOKeywords { get; }
 		//string SiteNameFriendly { get; }
 		//string SiteDescription { get; }
@@ -39,12 +39,12 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		//string EmailAddressSales { get; }
 		//string EmailAddressInfo { get; }
 
-		//string PayfastPaymentMode { get; }
-		//string PayfastMerchantId { get; }
-		//string PayfastMerchantKey { get; }
-		//string PayfastReturnUrl { get; }
-		//string PayfastCancelUrl { get; }
-		//string PayfastNotifyUrl { get; }
+		string PayfastPaymentMode { get; }
+		string PayfastMerchantId { get; }
+		string PayfastMerchantKey { get; }
+		string PayfastReturnUrl { get; }
+		string PayfastCancelUrl { get; }
+		string PayfastNotifyUrl { get; }
 		
 		//string PintrestUrl { get; }
 		//string InstagramUrl { get; }
@@ -73,13 +73,12 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		string DefaultClientId { get; }
 
-		string Test1 { get; }
+
 
 	}
 
 	public class GlobalSettings : IGlobalSettings
 	{
-		public string SiteUrl { get { return ConfigurationManager.AppSettings["SiteUrl"]; } }
 
 		public string ApiBaseAddress { get { return ConfigurationManager.AppSettings["ApiBaseAddress"]; } }
 		public string FacebookAppId { get { return ConfigurationManager.AppSettings["FacebookAppId"]; } }
@@ -99,7 +98,15 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		public string DefaultClientId { get { return ConfigurationManager.AppSettings["DefaultClientId"]; } }
 
-		public string Test1 { get { return ClientSettingsStaticCache.GetStringSetting("Test1"); } }
+		public string SiteName { get { return ConfigurationManager.AppSettings["SiteName"]; } }
+		public string SiteUrl { get { return ConfigurationManager.AppSettings["SiteUrl"]; } }
+
+		public string PayfastPaymentMode { get { return ConfigurationManager.AppSettings["PayfastPaymentMode"]; } }
+		public string PayfastMerchantId { get { return ConfigurationManager.AppSettings["PayfastMerchantId"]; } }
+		public string PayfastMerchantKey { get { return ConfigurationManager.AppSettings["PayfastMerchantKey"]; } }
+		public string PayfastReturnUrl { get { return SiteUrl + ConfigurationManager.AppSettings["PayfastReturnUrl"]; } }
+		public string PayfastCancelUrl { get { return SiteUrl + ConfigurationManager.AppSettings["PayfastCancelUrl"]; } }
+		public string PayfastNotifyUrl { get { return SiteUrl + ConfigurationManager.AppSettings["PayfastNotifyUrl"]; } }
 
 		
 	}

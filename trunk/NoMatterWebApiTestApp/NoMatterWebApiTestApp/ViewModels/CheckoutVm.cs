@@ -29,7 +29,7 @@ namespace WebApplication7.ViewModels
 		//[Required(ErrorMessage = "required")]
 		//public string Suburb { get; set; }
 
-		public List<SelectListItem> Suburbs { get; set; }
+		public List<SelectListItem> Provinces { get; set; }
 
 		//[Required(ErrorMessage = "required")]
 		//public string City { get; set; }
