@@ -13,5 +13,7 @@ namespace NoMatterWebApiModels.Models
 		public string Description { get; set; }
 
 		public Decimal DeliveryAmount { get; set; }
+
+		public bool Selected { get; set; }
 	}
 }

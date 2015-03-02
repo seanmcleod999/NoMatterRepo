@@ -13,7 +13,7 @@ using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
 using NoMatterWebApiModels.Models;
-using Category = NoMatterWebApi.Models.Category;
+using Category = NoMatterWebApiModels.Models.Category;
 using Product = NoMatterWebApiModels.Models.Product;
 using Section = NoMatterWebApiModels.Models.Section;
 

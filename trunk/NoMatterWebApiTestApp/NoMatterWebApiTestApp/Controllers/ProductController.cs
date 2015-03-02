@@ -14,6 +14,7 @@ using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
+using NoMatterWebApiWebHelper.WebApiHelpers;
 using WebApplication7.Logging;
 using WebApplication7.Models;
 using WebApplication7.ViewModels;
@@ -47,6 +48,7 @@ namespace WebApplication7.Controllers
 			return View(viewProductVm);
         }
 
+		[Authorize]
 		public async Task<ActionResult> EditProduct(string productId)
 		{
 			var product = await _productHelper.GetProductNoRelatedProductsAsync(productId);
@@ -59,6 +61,7 @@ namespace WebApplication7.Controllers
 			return View(editProductVm);
 		}
 
+		[Authorize]
 		[HttpPost]
 		public async Task<ActionResult> EditProduct(EditProductVm editProductVm)
 		{
@@ -78,6 +81,7 @@ namespace WebApplication7.Controllers
 			return RedirectToAction("GetCategoryProducts", "Category", new { categoryId = editProductVm.Product.CategoryId });
 		}
 
+		[Authorize]
 		public async Task<ActionResult> DeleteProduct(string productId, string clientId)
 		{
 			try

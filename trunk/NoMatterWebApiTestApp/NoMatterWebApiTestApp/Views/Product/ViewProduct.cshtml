@@ -21,6 +21,10 @@ Description: @Model.Product.Description
 <br/><br/>
 Price: @Model.Product.Price
 <br/><br/>
+Discounted Price: @Model.Product.DiscountDetails.DiscountedPrice
+<br/><br/>
+Discount Amount: @Model.Product.DiscountDetails.DiscountAmount
+<br/><br/>
 Size: @Model.Product.Size
 <br/><br/>
 Short Url: @Model.Product.ProductShortUrl
@@ -36,6 +40,9 @@ Short Url: @Model.Product.ProductShortUrl
 <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture5)" width="100px"/>
 
 <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="100px"/>
+
+<br/><br/>
+@Html.ActionLink("Add to cart", "AddProductToCart", "Cart", new { productId = @Model.Product.ProductId }, new { @class = "AddToCartLink" })
 
 <h3>Related Products</h3>
 

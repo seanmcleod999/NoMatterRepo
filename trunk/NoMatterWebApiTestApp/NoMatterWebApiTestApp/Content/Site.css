@@ -42,3 +42,12 @@ textarea {
     width : 800px;
     height : 100px;
 }
+
+.ShopProduct {
+   display: inline-block
+}
+
+.ShopProduct img{
+    width: 150px;
+    padding: 0 10px;
+}

@@ -10,7 +10,7 @@ using NoMatterDatabaseModel;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Models;
-using Category = NoMatterWebApi.Models.Category;
+using Category = NoMatterWebApiModels.Models.Category;
 
 namespace NoMatterWebApi.Controllers.V1
 {

@@ -11,8 +11,8 @@
           </Key>
           <Property Name="CartProductId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CartId" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="ClientId" Type="int" Nullable="false" />
           <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="smallint" Nullable="false" />
           <Property Name="DateAdded" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Category">
@@ -42,7 +42,7 @@
           <Key>
             <PropertyRef Name="ClientDeliveryOptionId" />
           </Key>
-          <Property Name="ClientDeliveryOptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientDeliveryOptionId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ClientId" Type="int" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
@@ -112,20 +112,22 @@
           </Key>
           <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="OrderUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Message" Type="varchar" MaxLength="300" />
           <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="ShippingAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ClientDeliveryOptionId" Type="smallint" Nullable="false" />
           <Property Name="CourierName" Type="varchar" MaxLength="50" />
           <Property Name="TrackingNumber" Type="varchar" MaxLength="50" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="ClientPaymentTypeId" Type="smallint" />
           <Property Name="Paid" Type="bit" Nullable="false" />
-          <Property Name="PaymentTypeId" Type="smallint" Nullable="false" />
+          <Property Name="OrderStatusId" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderProduct">
           <Key>
             <PropertyRef Name="OrderProductId" />
           </Key>
-          <Property Name="OrderProductId" Type="int" Nullable="false" />
+          <Property Name="OrderProductId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="OrderId" Type="int" Nullable="false" />
           <Property Name="ProductId" Type="int" Nullable="false" />
         </EntityType>
@@ -207,23 +209,17 @@
           <Property Name="Password" Type="binary" MaxLength="200" />
           <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" />
           <Property Name="Email" Type="varchar" MaxLength="100" />
-          <Property Name="FirstName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="LastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FullName" Type="varchar" MaxLength="100" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="100" />
+          <Property Name="Address" Type="varchar" MaxLength="200" />
+          <Property Name="Suburb" Type="varchar" MaxLength="20" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+          <Property Name="Province" Type="varchar" MaxLength="20" />
+          <Property Name="Country" Type="varchar" MaxLength="20" />
+          <Property Name="PostalCode" Type="varchar" MaxLength="10" />
           <Property Name="DateAdded" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
         </EntityType>
-        <Association Name="FK_CartProduct_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientId" />
-            </Principal>
-            <Dependent Role="CartProduct">
-              <PropertyRef Name="ClientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CartProduct_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="1" />
           <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
@@ -356,6 +352,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_ClientDeliveryOption">
+          <End Role="ClientDeliveryOption" Type="Self.ClientDeliveryOption" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientDeliveryOption">
+              <PropertyRef Name="ClientDeliveryOptionId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="ClientDeliveryOptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_ClientPaymentType">
+          <End Role="ClientPaymentType" Type="Self.ClientPaymentType" Multiplicity="0..1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientPaymentType">
+              <PropertyRef Name="ClientPaymentTypeId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="ClientPaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OrderProduct_Order">
           <End Role="Order" Type="Self.Order" Multiplicity="1" />
           <End Role="OrderProduct" Type="Self.OrderProduct" Multiplicity="*" />
@@ -404,18 +424,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_User_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientId" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="ClientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_UserOrder_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="Order" Type="Self.Order" Multiplicity="*" />
@@ -447,10 +455,6 @@
           <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_CartProduct_Client" Association="Self.FK_CartProduct_Client">
-            <End Role="Client" EntitySet="Client" />
-            <End Role="CartProduct" EntitySet="CartProduct" />
-          </AssociationSet>
           <AssociationSet Name="FK_CartProduct_Product" Association="Self.FK_CartProduct_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="CartProduct" EntitySet="CartProduct" />
@@ -495,6 +499,14 @@
             <End Role="Product" EntitySet="Product" />
             <End Role="DiscountProduct" EntitySet="DiscountProduct" />
           </AssociationSet>
+          <AssociationSet Name="FK_Order_ClientDeliveryOption" Association="Self.FK_Order_ClientDeliveryOption">
+            <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOption" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_ClientPaymentType" Association="Self.FK_Order_ClientPaymentType">
+            <End Role="ClientPaymentType" EntitySet="ClientPaymentType" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
           <AssociationSet Name="FK_OrderProduct_Order" Association="Self.FK_OrderProduct_Order">
             <End Role="Order" EntitySet="Order" />
             <End Role="OrderProduct" EntitySet="OrderProduct" />
@@ -511,10 +523,6 @@
             <End Role="Client" EntitySet="Client" />
             <End Role="Section" EntitySet="Section" />
           </AssociationSet>
-          <AssociationSet Name="FK_User_Client" Association="Self.FK_User_Client">
-            <End Role="Client" EntitySet="Client" />
-            <End Role="User" EntitySet="User" />
-          </AssociationSet>
           <AssociationSet Name="FK_UserOrder_User" Association="Self.FK_UserOrder_User">
             <End Role="User" EntitySet="User" />
             <End Role="Order" EntitySet="Order" />
@@ -530,11 +538,10 @@
           </Key>
           <Property Name="CartProductId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CartId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ClientId" Type="Int32" Nullable="false" />
           <Property Name="ProductId" Type="Int32" Nullable="false" />
           <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Client" Relationship="Self.FK_CartProduct_Client" FromRole="CartProduct" ToRole="Client" />
           <NavigationProperty Name="Product" Relationship="Self.FK_CartProduct_Product" FromRole="CartProduct" ToRole="Product" />
+          <Property Name="Quantity" Type="Int16" Nullable="false" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -560,7 +567,6 @@
           <Property Name="ClientUUID" Type="Guid" Nullable="false" />
           <Property Name="ClientName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Enabled" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CartProducts" Relationship="Self.FK_CartProduct_Client" FromRole="Client" ToRole="CartProduct" />
           <NavigationProperty Name="Enquiries" Relationship="Self.FK_ClientEnquiry_Client" FromRole="Client" ToRole="Enquiry" />
           <NavigationProperty Name="ClientPaymentTypes" Relationship="Self.FK_ClientPaymentType_Client" FromRole="Client" ToRole="ClientPaymentType" />
           <NavigationProperty Name="Settings" Relationship="Self.FK_ClientSetting_Client" FromRole="Client" ToRole="Setting" />
@@ -579,6 +585,7 @@
           <NavigationProperty Name="Client" Relationship="Self.FK_ClientPaymentType_Client" FromRole="ClientPaymentType" ToRole="Client" />
           <NavigationProperty Name="PaymentType" Relationship="Self.FK_ClientPaymentType_PaymentType" FromRole="ClientPaymentType" ToRole="PaymentType" />
           <Property Name="PaymentTypeOrder" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="DatabaseModel.FK_Order_ClientPaymentType" FromRole="ClientPaymentType" ToRole="Order" />
         </EntityType>
         <EntityType Name="Discount">
           <Key>
@@ -644,20 +651,24 @@
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="Message" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="ShippingAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="CourierName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="TrackingNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Paid" Type="Boolean" Nullable="false" />
-          <Property Name="PaymentTypeId" Type="Int16" Nullable="false" />
           <NavigationProperty Name="OrderProducts" Relationship="Self.FK_OrderProduct_Order" FromRole="Order" ToRole="OrderProduct" />
           <NavigationProperty Name="User" Relationship="Self.FK_UserOrder_User" FromRole="Order" ToRole="User" />
+          <Property Name="ClientDeliveryOptionId" Type="Int16" Nullable="false" />
+          <Property Name="ClientPaymentTypeId" Type="Int16" />
+          <NavigationProperty Name="ClientDeliveryOption" Relationship="DatabaseModel.FK_Order_ClientDeliveryOption" FromRole="Order" ToRole="ClientDeliveryOption" />
+          <NavigationProperty Name="ClientPaymentType" Relationship="DatabaseModel.FK_Order_ClientPaymentType" FromRole="Order" ToRole="ClientPaymentType" />
+          <Property Name="OrderUUID" Type="Guid" Nullable="false" />
+          <Property Name="OrderStatusId" Type="Int16" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderProduct">
           <Key>
             <PropertyRef Name="OrderProductId" />
           </Key>
-          <Property Name="OrderProductId" Type="Int32" Nullable="false" />
+          <Property Name="OrderProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OrderId" Type="Int32" Nullable="false" />
           <Property Name="ProductId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Order" Relationship="Self.FK_OrderProduct_Order" FromRole="OrderProduct" ToRole="Order" />
@@ -749,25 +760,19 @@
           <Property Name="Password" Type="Binary" MaxLength="200" FixedLength="true" />
           <Property Name="PasswordSalt" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateUpdated" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Client" Relationship="Self.FK_User_Client" FromRole="User" ToRole="Client" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_UserOrder_User" FromRole="User" ToRole="Order" />
+          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Suburb" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Province" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PostalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="FK_CartProduct_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientId" />
-            </Principal>
-            <Dependent Role="CartProduct">
-              <PropertyRef Name="ClientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CartProduct_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="1" />
           <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
@@ -925,8 +930,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserOrder_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <End Type="Self.User" Multiplicity="1" Role="User" />
+          <End Type="Self.Order" Multiplicity="*" Role="Order" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserId" />
@@ -954,10 +959,6 @@
           <EntitySet Name="Sections" EntityType="Self.Section" />
           <EntitySet Name="Settings" EntityType="Self.Setting" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_CartProduct_Client" Association="Self.FK_CartProduct_Client">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="CartProduct" EntitySet="CartProducts" />
-          </AssociationSet>
           <AssociationSet Name="FK_CartProduct_Product" Association="Self.FK_CartProduct_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="CartProduct" EntitySet="CartProducts" />
@@ -1011,8 +1012,8 @@
             <End Role="OrderProduct" EntitySet="OrderProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_UserOrder_User" Association="Self.FK_UserOrder_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Order" EntitySet="Orders" />
+            <End EntitySet="Users" Role="User" />
+            <End EntitySet="Orders" Role="Order" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductKeyword_Product" Association="DatabaseModel.FK_ProductKeyword_Product">
             <End Role="Product" EntitySet="Products" />
@@ -1026,6 +1027,14 @@
           <AssociationSet Name="FK_ClientDeliveryOption_Client1" Association="DatabaseModel.FK_ClientDeliveryOption_Client1">
             <End Role="Client" EntitySet="Clients" />
             <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_ClientDeliveryOption" Association="DatabaseModel.FK_Order_ClientDeliveryOption">
+            <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOptions" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_ClientPaymentType" Association="DatabaseModel.FK_Order_ClientPaymentType">
+            <End Role="ClientPaymentType" EntitySet="ClientPaymentTypes" />
+            <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
@@ -1061,7 +1070,8 @@
           <Property Name="DeliveryAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="OptionOrder" Type="Byte" Nullable="false" />
           <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_ClientDeliveryOption_Client1" FromRole="ClientDeliveryOption" ToRole="Client" />
-          <Property Name="ClientDeliveryOptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientDeliveryOptionId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Orders" Relationship="DatabaseModel.FK_Order_ClientDeliveryOption" FromRole="ClientDeliveryOption" ToRole="Order" />
         </EntityType>
         <Association Name="FK_ClientDeliveryOption_Client1">
           <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
@@ -1075,6 +1085,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_ClientDeliveryOption">
+          <End Type="DatabaseModel.ClientDeliveryOption" Role="ClientDeliveryOption" Multiplicity="1" />
+          <End Type="DatabaseModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientDeliveryOption">
+              <PropertyRef Name="ClientDeliveryOptionId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="ClientDeliveryOptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_ClientPaymentType">
+          <End Type="DatabaseModel.ClientPaymentType" Role="ClientPaymentType" Multiplicity="0..1" />
+          <End Type="DatabaseModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientPaymentType">
+              <PropertyRef Name="ClientPaymentTypeId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="ClientPaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1084,9 +1118,9 @@
           <EntitySetMapping Name="CartProducts">
             <EntityTypeMapping TypeName="DatabaseModel.CartProduct">
               <MappingFragment StoreEntitySet="CartProduct">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="CartProductId" ColumnName="CartProductId" />
                 <ScalarProperty Name="CartId" ColumnName="CartId" />
-                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
               </MappingFragment>
@@ -1183,16 +1217,18 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="DatabaseModel.Order">
               <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="OrderStatusId" ColumnName="OrderStatusId" />
+                <ScalarProperty Name="OrderUUID" ColumnName="OrderUUID" />
+                <ScalarProperty Name="ClientPaymentTypeId" ColumnName="ClientPaymentTypeId" />
+                <ScalarProperty Name="ClientDeliveryOptionId" ColumnName="ClientDeliveryOptionId" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="ShippingAmount" ColumnName="ShippingAmount" />
                 <ScalarProperty Name="CourierName" ColumnName="CourierName" />
                 <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="Paid" ColumnName="Paid" />
-                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1278,6 +1314,14 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="DatabaseModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Suburb" ColumnName="Suburb" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="UserUUID" ColumnName="UserUUID" />
@@ -1286,8 +1330,6 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
               </MappingFragment>

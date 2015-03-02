@@ -8,7 +8,8 @@ namespace NoMatterWebApiModels.Models
 {
     public class Category
     {
-       
+		public string SectionId { get; set; }
+
         public string CategoryId { get; set; }
 
         public string CategoryName { get; set; }

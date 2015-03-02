@@ -32,7 +32,7 @@ namespace NoMatterWebApi.DAL
 
 		public async Task<List<Category>> GetSectionCategoriesAsync(Guid sectionUuid)
 		{
-			var categories = await databaseConnection.Categories.Where(x => x.Section.SectionUUID == sectionUuid).ToListAsync();
+			var categories = await databaseConnection.Categories.Include("Section").Where(x => x.Section.SectionUUID == sectionUuid).ToListAsync();
 			return categories;
 		}
 

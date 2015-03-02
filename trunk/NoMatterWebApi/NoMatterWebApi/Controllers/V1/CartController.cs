@@ -67,28 +67,28 @@ namespace NoMatterWebApi.Controllers.V1
 
 		}
 
-		// POST api/v1/cart/{cartId}/product/{productId}
-		[Route("{cartId}/product/{productId}")]
+		// POST api/v1/cart/{cartId}
+		[Route("{cartId}")]
 		[HttpPost]
-		public async Task<IHttpActionResult> AddShoppingCartProduct(string cartId, string productId)
+		public async Task<IHttpActionResult> AddProductToCart(string cartId, AddProductToCartModel model)
 		{
 
 			//TODO: if the product allows more than one order and the product already exists in the cart.. update the quantity
 			try
 			{
-				var cartProduct = await _cartRepository.GetCartProductAsync(cartId, new Guid(productId));
+				var cartProduct = await _cartRepository.GetCartProductAsync(cartId, new Guid(model.ProductId));
 
 				if (cartProduct == null)
 				{
-					var product = await _productRepository.GetProductAsync(new Guid(productId));
+					var product = await _productRepository.GetProductAsync(new Guid(model.ProductId));
 
 					if (product == null) return BadRequest("ProductNotFound");
 
 					cartProduct = new CartProduct
 					{
-						ClientId = 1, //TODO: fix this
 						CartId = cartId,
-						Product = product
+						Product = product,
+						Quantity = Convert.ToInt16(model.Quantity)
 					};
 
 					await _cartRepository.AddCartProductAsync(cartProduct);
@@ -107,7 +107,7 @@ namespace NoMatterWebApi.Controllers.V1
 		// DELETE api/v1/cart/{cartId}/product/{productId}
 		[Route("{cartId}/product/{productId}")]
 		[HttpDelete]
-		public async Task<IHttpActionResult> DeleteShoppingCartProduct(string cartId, string productId)
+		public async Task<IHttpActionResult> DeleteProductFromCart(string cartId, string productId)
 		{
 			//TODO: IF deleting and the quanity is more than 1... remove 1 from quanity
 

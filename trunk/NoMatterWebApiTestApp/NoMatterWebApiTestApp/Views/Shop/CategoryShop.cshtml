@@ -1,0 +1,32 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model WebApplication7.ViewModels.CategoryShopVm
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var globalSettings = new GlobalSettings();
+}
+
+<h2>Section</h2>
+@Model.Section.SectionName
+
+<h2>Categories</h2>
+@foreach (var category in Model.Categories)
+{
+     @Html.ActionLink((string)category.CategoryName, "CategoryShop", "Shop", new { categoryId = @category.CategoryId }, null) @:&nbsp; &nbsp;
+}
+
+<h2>@Model.Category.CategoryName - @Model.Category.CategoryDescription</h2>
+
+@foreach (var product in Model.Products)
+{
+    <div class="ShopProduct">
+        <a id="@product.ProductId" href="@Url.Action("ViewProduct", new { productId = product.ProductId, category = Model.Category.CategoryName })"> 
+                           
+            <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)"/>
+              
+        </a>
+        
+        <br/>
+        @product.Title
+    </div>
+}

@@ -57,5 +57,30 @@ namespace NoMatterWebApi.DAL
 
 			await databaseConnection.SaveChangesAsync();
 		}
+
+		public void Save()
+		{
+			databaseConnection.SaveChanges();
+		}
+
+		private bool disposed = false;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this.disposed)
+			{
+				if (disposing)
+				{
+					databaseConnection.Dispose();
+				}
+			}
+			this.disposed = true;
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 	}
 }

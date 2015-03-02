@@ -10,7 +10,7 @@ using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper.Exceptions;
 using NoMatterWebApiWebHelper.OtherHelpers;
 
-namespace NoMatterWebApiWebHelper
+namespace NoMatterWebApiWebHelper.WebApiHelpers
 {
 	public interface IProductHelper
 	{
@@ -44,15 +44,13 @@ namespace NoMatterWebApiWebHelper
 
 				var response = await client.GetAsync(string.Format("api/v1/products/{0}", productId));
 
-				if (response.IsSuccessStatusCode)
-				{
-					var product = await response.Content.ReadAsAsync<Product>();
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot get Product", response);	
 
-					return product;
-				}
+				var product = await response.Content.ReadAsAsync<Product>();
 
-				throw new WebApiException("Cannot get Product", response);
-
+				return product;
+			
 			}
 		}
 
@@ -66,14 +64,12 @@ namespace NoMatterWebApiWebHelper
 
 				var response = await client.GetAsync(string.Format("api/v1/products/{0}?relatedProducts=false", productId));
 
-				if (response.IsSuccessStatusCode)
-				{
-					var product = await response.Content.ReadAsAsync<Product>();
-					return product;
-				}
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot get Product", response);	
 
-				throw new WebApiException("Cannot get Product", response);
-
+				var product = await response.Content.ReadAsAsync<Product>();
+				return product;
+				
 			}
 		}
 
@@ -89,14 +85,12 @@ namespace NoMatterWebApiWebHelper
 
 				var response = await client.PostAsJsonAsync(String.Format("api/v1/products/{0}", product.ProductId), product);
 
-				if (response.IsSuccessStatusCode)
-				{
-					var responseProduct = await response.Content.ReadAsAsync<Product>();
-					return responseProduct;
-				}
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot update Product", response);	
 
-				throw new WebApiException("Cannot update Product", response);
-				
+				var responseProduct = await response.Content.ReadAsAsync<Product>();
+				return responseProduct;
+							
 			}
 		}
 
@@ -112,14 +106,8 @@ namespace NoMatterWebApiWebHelper
 
 				var response = await client.DeleteAsync(string.Format("api/v1/products/{0}", productId));
 
-				if (response.IsSuccessStatusCode)
-				{
-					
-				}
-				else
-				{
+				if (!response.IsSuccessStatusCode)
 					throw new WebApiException("Cannot delete Product", response);
-				}
 			}
 		}
 	}

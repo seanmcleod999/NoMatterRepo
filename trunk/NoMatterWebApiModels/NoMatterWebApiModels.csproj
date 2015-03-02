@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AddProductToCartModel.cs" />
     <Compile Include="Models\ClientDeliveryOption.cs" />
     <Compile Include="Models\ClientPaymentType.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\CreateOrUpdateUserResult.cs" />
     <Compile Include="Models\ShoppingCartDetails.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Client.cs" />
@@ -57,6 +60,7 @@
     <Compile Include="Models\TokenDetails.cs" />
     <Compile Include="Models\UserAuthenticateModel.cs" />
     <Compile Include="Models\UserAuthenticatedResult.cs" />
+    <Compile Include="Models\GenerateUserOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

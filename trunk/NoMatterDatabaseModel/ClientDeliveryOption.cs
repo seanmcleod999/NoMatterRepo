@@ -14,12 +14,18 @@ namespace NoMatterDatabaseModel
     
     public partial class ClientDeliveryOption
     {
+        public ClientDeliveryOption()
+        {
+            this.Orders = new HashSet<Order>();
+        }
+    
         public int ClientId { get; set; }
         public string Description { get; set; }
         public decimal DeliveryAmount { get; set; }
         public byte OptionOrder { get; set; }
-        public int ClientDeliveryOptionId { get; set; }
+        public short ClientDeliveryOptionId { get; set; }
     
         public virtual Client Client { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

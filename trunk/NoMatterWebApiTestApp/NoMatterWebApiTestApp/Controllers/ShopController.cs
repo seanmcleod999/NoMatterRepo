@@ -13,6 +13,7 @@ using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
+using NoMatterWebApiWebHelper.WebApiHelpers;
 using WebApplication7.Models;
 using WebApplication7.ViewModels;
 
@@ -22,16 +23,17 @@ namespace WebApplication7.Controllers
     {
 		private IClientHelper _clientHelper;
 		private ISectionHelper _sectionHelper;
+		private ICategoryHelper _categoryHelper;
 		private IProductHelper _productHelper;
-		private IPictureHelper _pictureHelper;
+		//private IPictureHelper _pictureHelper;
 		private IGlobalSettings _globalSettings;
 
 		public ShopController()
 		{
 			_clientHelper = new ClientHelper();
 			_sectionHelper = new SectionHelper();
+			_categoryHelper = new CategoryHelper();
 			_productHelper = new ProductHelper();
-			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
 			
 		}
@@ -41,14 +43,68 @@ namespace WebApplication7.Controllers
 
 			var sections = await _clientHelper.GetClientSectionsAsync(_globalSettings.DefaultClientId);
 
-			//var sectionCategories = await _sectionHelper.GetSectionCategoriesAsync(sectionId);
-
-			//var categoryProductsTask = _categoryHelper.GetCategoryProductsAsync(categoryId);
-
 			return View(sections);
         }
 
-	   
+		public async Task<ActionResult> SectionShop(string sectionId)
+		{
+			var section = await _sectionHelper.GetSectionAsync(sectionId);
 
+			//Get the categories for the selected section
+			var categories = await _sectionHelper.GetSectionCategoriesAsync(sectionId);
+
+			//Get the products for the first category
+			var products = await _categoryHelper.GetCategoryProductsAsync(categories.First().CategoryId);
+
+			var categoryShopVm = new CategoryShopVm
+				{
+					Section = section,
+					Category = categories.First(),
+					Categories = categories, 
+					Products = products
+				};
+
+			return View("CategoryShop", categoryShopVm);
+		}
+
+		public async Task<ActionResult> CategoryShop(string categoryId)
+		{
+			//TODO: move this to a cache
+			//Get the categories details for the selected category
+			var category = await _categoryHelper.GetCategoryAsync(categoryId);
+
+			//Get all the other categories for this section from the cache
+			var categories = await SectionCategoriesSessionCache.GetSectionCategories(_sectionHelper, category.SectionId);
+
+			//TODO: move this to a cache
+			//Get the section details from the cache
+			var section = await _sectionHelper.GetSectionAsync(category.SectionId);
+
+			//Get the products for the selected category
+			var products = await _categoryHelper.GetCategoryProductsAsync(category.CategoryId);
+
+			var categoryShopVm = new CategoryShopVm
+			{
+				Section = section,
+				Category = category,
+				Categories = categories,
+				Products = products
+			};
+
+			return View("CategoryShop", categoryShopVm);
+		}
+
+	    public async Task<ActionResult> ViewProduct(string productId)
+	    {
+			var product = await _productHelper.GetProductAsync(productId);
+
+			var viewProductVm = new ViewProductVm
+			{
+				Product = product,
+			};
+
+			return View(viewProductVm);
+
+	    }
     }
 }

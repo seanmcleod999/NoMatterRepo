@@ -6,9 +6,10 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using NoMatterWebApiModels.Models;
+using NoMatterWebApiWebHelper.Exceptions;
 using NoMatterWebApiWebHelper.OtherHelpers;
 
-namespace NoMatterWebApiWebHelper
+namespace NoMatterWebApiWebHelper.WebApiHelpers
 {
 	public interface IGlobalHelper
 	{
@@ -39,14 +40,12 @@ namespace NoMatterWebApiWebHelper
 
 				var response = client.GetAsync("api/v1/globals/settings").Result;
 
-				if (response.IsSuccessStatusCode)
-				{
-					var globalSettings = response.Content.ReadAsAsync<List<GlobalSetting>>().Result;
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot get global Settings", response);
 
-					return globalSettings;
-				}
+				var globalSettings = response.Content.ReadAsAsync<List<GlobalSetting>>().Result;
 
-				throw new Exception(string.Format("Cannot get global Settings. Status Code: {0}. Reason:{1}", response.StatusCode, response.ReasonPhrase));
+				return globalSettings;
 
 			}
 		}

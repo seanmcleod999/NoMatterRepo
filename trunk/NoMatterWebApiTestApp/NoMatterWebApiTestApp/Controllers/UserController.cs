@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.OtherHelpers;
+using NoMatterWebApiWebHelper.WebApiHelpers;
 using WebApplication7.Logging;
 using WebApplication7.ViewModels;
 
@@ -55,7 +56,7 @@ namespace WebApplication7.Controllers
 	    {
 			var userAuthenticatedResult = await _userHelper.Login(_globalSettings.DefaultClientId, facebookToken, null, null);
 
-			GenerateAuthenticationCookie(userAuthenticatedResult.TokenDetails.Token, userAuthenticatedResult.Id, userAuthenticatedResult.FirstName);
+			GenerateAuthenticationCookie(userAuthenticatedResult.TokenDetails.Token, userAuthenticatedResult.Id, userAuthenticatedResult.Fullname);
 
 			userAuthenticatedResult.FacebookToken = facebookToken;
 
@@ -76,7 +77,7 @@ namespace WebApplication7.Controllers
 
 			var userAuthenticatedResult = await _userHelper.Login(_globalSettings.DefaultClientId, null, userLoginVm.Username, userLoginVm.Password);
 
-			GenerateAuthenticationCookie(userAuthenticatedResult.TokenDetails.Token, userAuthenticatedResult.Id, userAuthenticatedResult.FirstName);
+			GenerateAuthenticationCookie(userAuthenticatedResult.TokenDetails.Token, userAuthenticatedResult.Id, userAuthenticatedResult.Fullname);
 
 			return View("LoginSuccess", userAuthenticatedResult);
 		}

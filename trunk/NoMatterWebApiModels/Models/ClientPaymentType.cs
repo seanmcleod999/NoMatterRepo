@@ -15,5 +15,7 @@ namespace NoMatterWebApiModels.Models
 		public string PaymentTypeDetails { get; set; }
 
 		public string PaymentTypePicture { get; set; }
+
+		public bool Selected { get; set; }
 	}
 }

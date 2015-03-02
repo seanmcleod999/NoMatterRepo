@@ -1,0 +1,44 @@
+﻿@model WebApplication7.ViewModels.CheckoutSummaryVm
+
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Summary</h1>
+
+<div class="PaymentTypeHeader">
+    <table>
+        @foreach (var paymentType in Model.PaymentTypes)
+        {                                     
+            <tr>
+                <td>
+                    @if (paymentType.Selected)
+                    {
+                        <input type="radio" name="selectedPaymentType" value="@paymentType.ClientPaymentTypeId" checked="checked" />
+                    }
+                    else
+                    {
+                        <input type="radio" name="selectedPaymentType" value="@paymentType.ClientPaymentTypeId" />                                          
+                    }
+                </td>
+                <td align="left">
+                    @if (!string.IsNullOrEmpty(paymentType.PaymentTypePicture))
+                    {
+                        <img src="@Url.Content(paymentType.PaymentTypePicture)"/>
+                    }
+                    else
+                    {
+                        @paymentType.PaymentTypeName
+                    }
+                </td>
+                <td>
+                                        
+                                        
+                </td>
+            </tr>        
+        }  
+    </table>            
+</div>
+
+

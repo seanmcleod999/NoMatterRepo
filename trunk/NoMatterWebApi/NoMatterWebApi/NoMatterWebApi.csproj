@@ -220,6 +220,7 @@
     <Compile Include="CustomAuth\CustomAuthenticationFilter.cs" />
     <Compile Include="DAL\CartRepository.cs" />
     <Compile Include="DAL\GlobalRepository.cs" />
+    <Compile Include="DAL\OrderRepository.cs" />
     <Compile Include="Enums\CredentialTypeEnum.cs" />
     <Compile Include="Enums\DiscountTypeEnum.cs" />
     <Compile Include="Extensions\CartProductsExtension.cs" />
@@ -240,7 +241,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CartProduct.cs" />
-    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CustomPrincipal.cs" />
     <Compile Include="Models\FacebookUser.cs" />
     <Compile Include="Models\NewSection.cs" />

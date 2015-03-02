@@ -1,0 +1,53 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model WebApplication7.ViewModels.ViewProductVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var globalSettings = new GlobalSettings();
+}
+<div class="PageNavigationBar">
+    @Html.ActionLink("Back to Products", "CategoryShop", "Shop", new { categoryId = @Model.Product.CategoryId }, new { @class = "BackLink" })
+</div>
+<br/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture1)" width="200px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture2)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture3)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture4)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture5)" width="100px"/>
+
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="100px"/>
+<br/><br/>
+Title: @Model.Product.Title
+<br/>
+Description: @Model.Product.Description
+<br/>
+Price: @Model.Product.Price
+<br/>
+Discounted Price: @Model.Product.DiscountDetails.DiscountedPrice
+<br/>
+Discount Amount: @Model.Product.DiscountDetails.DiscountAmount
+<br/>
+Size: @Model.Product.Size
+<br/>
+Short Url: @Model.Product.ProductShortUrl
+<br/>
+<br/>
+@Html.ActionLink("Add to cart", "AddProductToCart", "Cart", new { productId = @Model.Product.ProductId }, new { @class = "AddToCartLink" })
+
+<h3>Related Products</h3>
+
+@foreach (var product in Model.Product.RelatedProductDetails.RelatedProducts)
+{
+    @product.ProductId
+    <br/>
+    @product.Title
+    <br/>
+    <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)" width="50px"/>
+    <br/><br/>
+}

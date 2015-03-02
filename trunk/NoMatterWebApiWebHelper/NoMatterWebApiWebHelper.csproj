@@ -46,6 +46,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,22 +54,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CategoryHelper.cs" />
-    <Compile Include="ClientHelper.cs" />
+    <Compile Include="OtherHelpers\CurrentUser.cs" />
+    <Compile Include="OtherHelpers\GeneralHelper.cs" />
+    <Compile Include="OtherHelpers\SectionCategoriesSessionCache.cs" />
+    <Compile Include="WebApiHelpers\CartHelper.cs" />
+    <Compile Include="WebApiHelpers\CategoryHelper.cs" />
+    <Compile Include="WebApiHelpers\ClientHelper.cs" />
     <Compile Include="Enums\PictureTypeEnum.cs" />
     <Compile Include="Exceptions\WebApiException.cs" />
-    <Compile Include="GlobalHelper.cs" />
+    <Compile Include="WebApiHelpers\GlobalHelper.cs" />
     <Compile Include="OtherHelpers\ClientSettingsStaticCache.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="OtherHelpers\GlobalSettingsStaticCache.cs" />
     <Compile Include="OtherHelpers\GlobalSettings.cs" />
     <Compile Include="OtherHelpers\PictureUploadSettings.cs" />
-    <Compile Include="PictureHelper.cs" />
-    <Compile Include="ProductHelper.cs" />
+    <Compile Include="OtherHelpers\PictureHelper.cs" />
+    <Compile Include="WebApiHelpers\OrderHelper.cs" />
+    <Compile Include="WebApiHelpers\ProductHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SectionHelper.cs" />
-    <Compile Include="UserHelper.cs" />
+    <Compile Include="WebApiHelpers\SectionHelper.cs" />
+    <Compile Include="WebApiHelpers\UserHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NoMatterWebApiModels\NoMatterWebApiModels.csproj">

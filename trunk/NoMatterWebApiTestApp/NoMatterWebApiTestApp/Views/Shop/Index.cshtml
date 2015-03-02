@@ -4,15 +4,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>Sections</h2>
 
 @foreach (var section1 in Model)
 {
-    @section1.SectionId
-    <br/>
-    @section1.SectionName
-    <br/>
-    @Html.ActionLink("Get Categories", "GetSectionCategories", "Section", new { sectionId = @section1.SectionId }, null)
-    <br/><br/>
-    
+
+    @Html.ActionLink((string)section1.SectionName, "SectionShop", "Shop", new { sectionId = @section1.SectionId }, null) @:&nbsp; &nbsp;
+
     
 }

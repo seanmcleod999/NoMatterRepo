@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using NoMatterWebApiWebHelper;
+using NoMatterWebApiWebHelper.WebApiHelpers;
 
 namespace WebApplication7.Controllers
 {

@@ -7,9 +7,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using NoMatterWebApiModels.Models;
+using NoMatterWebApiWebHelper.Exceptions;
 using NoMatterWebApiWebHelper.OtherHelpers;
 
-namespace NoMatterWebApiWebHelper
+namespace NoMatterWebApiWebHelper.WebApiHelpers
 {
 	public interface ISectionHelper
 	{
@@ -41,15 +42,12 @@ namespace NoMatterWebApiWebHelper
 
 				var response = await client.GetAsync(string.Format("api/v1/sections/{0}", sectionId));
 
-				if (response.IsSuccessStatusCode)
-				{
-					var section = await response.Content.ReadAsAsync<Section>();
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot get Section", response);	
 
-					return section;
-				}
+				var section = await response.Content.ReadAsAsync<Section>();
 
-				throw new Exception("Cannot get Section. " + response.ToString());
-
+				return section;
 			}
 		}
 
@@ -63,15 +61,13 @@ namespace NoMatterWebApiWebHelper
 
                 var response = await client.GetAsync(string.Format("api/v1/sections/{0}/categories", sectionId));
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var sections = await response.Content.ReadAsAsync<List<Category>>();
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot get Categories", response);	
+               
+                var sections = await response.Content.ReadAsAsync<List<Category>>();
 
-                    return sections;
-                }
-
-                throw new Exception("Cannot get Categories. " + response.ToString());
-
+                return sections;
+               
             }
         }
     }

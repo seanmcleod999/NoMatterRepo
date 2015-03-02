@@ -14,6 +14,7 @@ namespace NoMatterWebApi.DAL
 		Task<User> GetClientUserByFacebookIdAsync(Guid clientUuid, string email);
 		Task<User> GetUserByUuidAsync(Guid userUuid);
 		Task<string> SaveUserAsync(User user);
+		Task UpdateUserAsync(User user);
 	}
 
 	public class UserRepository : IUserRepository
@@ -54,6 +55,17 @@ namespace NoMatterWebApi.DAL
 			await databaseConnection.SaveChangesAsync();
 
 			return user.UserUUID.ToString();
+		}
+
+		public async Task UpdateUserAsync(User user)
+		{
+			
+			databaseConnection.Users.Attach(user);
+
+			user.DateUpdated = DateTime.Now;
+
+			await databaseConnection.SaveChangesAsync();
+
 		}
 
 		public void Save()

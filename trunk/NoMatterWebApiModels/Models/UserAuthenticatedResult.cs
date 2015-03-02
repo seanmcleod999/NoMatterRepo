@@ -11,9 +11,7 @@ namespace NoMatterWebApiModels.Models
 
 		public string Email { get; set; }
 
-		public string FirstName { get; set; }
-
-		public string LastName { get; set; }
+		public string Fullname { get; set; }
 
 		public TokenDetails TokenDetails { get; set; }
 

@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br/>
+Thanks your product was added to the cart.
+<br/><br/>
+  @Html.ActionLink("Back to Product", "ViewProduct", "Shop", new { productId = @ViewBag.ProductId }, new { @class = "BackLink" })
+
+

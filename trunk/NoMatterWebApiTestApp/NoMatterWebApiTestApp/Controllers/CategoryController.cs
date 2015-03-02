@@ -13,6 +13,7 @@ using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
+using NoMatterWebApiWebHelper.WebApiHelpers;
 using WebApplication7.Models;
 using WebApplication7.ViewModels;
 
@@ -55,7 +56,7 @@ namespace WebApplication7.Controllers
 
 	        var viewCategoryProductsVm = new ViewCategoryProductsVm
 		        {
-			        Category = category,
+					Category = category,
 			        CategoryProducts = categoryProducts
 		        };
 

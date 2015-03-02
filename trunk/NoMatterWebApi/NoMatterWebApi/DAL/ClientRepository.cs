@@ -16,6 +16,7 @@ namespace NoMatterWebApi.DAL
 		Task<List<Setting>> GetClientSettingsAsync(Guid clientUuid);
 		Task<List<ClientPaymentType>> GetClientPaymentTypesAsync(Guid clientUuid);
 		Task<List<ClientDeliveryOption>> GetClientDeliveryOptionsAsync(Guid clientUuid);
+		Task<ClientDeliveryOption> GetClientDeliveryOptionAsync(short clientDeliveryOptionId);
 	}
 
 	public class ClientRepository : IClientRepository
@@ -80,6 +81,13 @@ namespace NoMatterWebApi.DAL
 				.ToListAsync();
 
 			return deliveryOptions;
+		}
+
+		public async Task<ClientDeliveryOption> GetClientDeliveryOptionAsync(short clientDeliveryOptionId)
+		{
+			var deliveryOption = await databaseConnection.ClientDeliveryOptions.Where(x => x.ClientDeliveryOptionId == clientDeliveryOptionId).SingleOrDefaultAsync();
+				
+			return deliveryOption;
 		}
 
 		public void Save()

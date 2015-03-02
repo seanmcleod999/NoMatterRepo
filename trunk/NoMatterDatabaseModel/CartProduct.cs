@@ -16,11 +16,10 @@ namespace NoMatterDatabaseModel
     {
         public short CartProductId { get; set; }
         public string CartId { get; set; }
-        public int ClientId { get; set; }
         public int ProductId { get; set; }
         public System.DateTime DateAdded { get; set; }
+        public short Quantity { get; set; }
     
-        public virtual Client Client { get; set; }
         public virtual Product Product { get; set; }
     }
 }

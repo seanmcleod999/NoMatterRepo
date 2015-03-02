@@ -16,7 +16,6 @@ namespace NoMatterDatabaseModel
     {
         public Client()
         {
-            this.CartProducts = new HashSet<CartProduct>();
             this.Enquiries = new HashSet<Enquiry>();
             this.ClientPaymentTypes = new HashSet<ClientPaymentType>();
             this.Settings = new HashSet<Setting>();
@@ -31,7 +30,6 @@ namespace NoMatterDatabaseModel
         public string ClientName { get; set; }
         public bool Enabled { get; set; }
     
-        public virtual ICollection<CartProduct> CartProducts { get; set; }
         public virtual ICollection<Enquiry> Enquiries { get; set; }
         public virtual ICollection<ClientPaymentType> ClientPaymentTypes { get; set; }
         public virtual ICollection<Setting> Settings { get; set; }

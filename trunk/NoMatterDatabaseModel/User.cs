@@ -27,10 +27,16 @@ namespace NoMatterDatabaseModel
         public byte[] Password { get; set; }
         public string PasswordSalt { get; set; }
         public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
         public System.DateTime DateAdded { get; set; }
         public System.DateTime DateUpdated { get; set; }
+        public string FullName { get; set; }
+        public string ContactNumber { get; set; }
+        public string Address { get; set; }
+        public string Suburb { get; set; }
+        public string City { get; set; }
+        public string Province { get; set; }
+        public string Country { get; set; }
+        public string PostalCode { get; set; }
     
         public virtual Client Client { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

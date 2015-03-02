@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NoMatterWebApiWebHelper.OtherHelpers;
 
-namespace NoMatterWebApiWebHelper
+namespace NoMatterWebApiWebHelper.OtherHelpers
 {
 	public interface IPictureHelper
 	{

@@ -7,10 +7,11 @@ namespace NoMatterWebApi.Extensions
 {
 	public static class CategoryExtension
 	{
-		public static Models.Category ToDomainCategory(this   NoMatterDatabaseModel.Category category)
+		public static NoMatterWebApiModels.Models.Category ToDomainCategory(this   NoMatterDatabaseModel.Category category)
 		{
-			return new Models.Category()
+			return new NoMatterWebApiModels.Models.Category()
 			{
+				SectionId = category.Section.SectionUUID.ToString(),
 				CategoryId = category.CategoryUUID.ToString(),
 				CategoryName = category.CategoryName,
 				CategoryDescription = category.CategoryDescription,
