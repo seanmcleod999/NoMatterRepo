@@ -14,8 +14,13 @@ namespace NoMatterWebApi.Extensions
 				SectionId = category.Section.SectionUUID.ToString(),
 				CategoryId = category.CategoryUUID.ToString(),
 				CategoryName = category.CategoryName,
+				CategoryOrder = category.CategoryOrder,
 				CategoryDescription = category.CategoryDescription,
-				Picture = category.Picture
+				ActionName = category.ActionName,
+				Conditional = category.Conditional,
+				Picture = category.Picture,
+				VisibleProductCount = category.Products.Count(x => !x.Sold && !x.Hidden), //TODO may have to include release date in this
+				FullProductCount = category.Products.Count() 
 			};
 		}
 	}

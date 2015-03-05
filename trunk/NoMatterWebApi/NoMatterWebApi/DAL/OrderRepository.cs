@@ -11,8 +11,8 @@ namespace NoMatterWebApi.DAL
 
 	public interface IOrderRepository
 	{
-		Task<string> AddOrderAsync(Order order);
-		Task<Order> GetOrderAsync(Guid orderId);
+		Task<int> AddOrderAsync(Order order);
+		Task<Order> GetOrderAsync(int orderId);
 		
 	}
 
@@ -25,9 +25,8 @@ namespace NoMatterWebApi.DAL
 			this.databaseConnection = databaseConnection;
 		}
 
-		public async Task<string> AddOrderAsync(Order order)
+		public async Task<int> AddOrderAsync(Order order)
 		{
-			order.OrderUUID = Guid.NewGuid();
 			order.DateCreated = DateTime.Now;
 			order.Paid = false;
 
@@ -35,15 +34,15 @@ namespace NoMatterWebApi.DAL
 
 			await databaseConnection.SaveChangesAsync();
 
-			return order.OrderUUID.ToString();
+			return order.OrderId;
 		}
 
-		public async Task<Order> GetOrderAsync(Guid orderId)
+		public async Task<Order> GetOrderAsync(int orderId)
 		{
 			var order = await databaseConnection.Orders
 				.Include("OrderProducts")
 				.Include("OrderProducts.Product")
-				.Include("User").Where(x => x.OrderUUID == orderId).SingleOrDefaultAsync();
+				.Include("User").Where(x => x.OrderId == orderId).SingleOrDefaultAsync();
 
 			return order;
 		}

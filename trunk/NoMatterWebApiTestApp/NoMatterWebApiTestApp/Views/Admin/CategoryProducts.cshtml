@@ -1,0 +1,61 @@
+﻿@model WebApplication7.ViewModels.CategoryProductsVm
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Products</h1>
+
+<b>@Model.Section.SectionName</b> --> <b>@Model.Category.CategoryName</b>
+<br/>
+<br/>
+
+
+<table>
+    <tr>
+        <th>
+            Title
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+
+@foreach (var product in Model.CategoryProducts)
+{
+    <tr>
+        
+        <td>
+            @product.Title
+        </td>
+        <td>
+            @product.Price
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditProduct", "Product", new { productId = @product.ProductId }, null)
+        </td>
+        <td>
+            @Html.ActionLink("View", "ViewProduct", "Product", new { productId = @product.ProductId }, null)
+        </td>
+         <td>
+            @Html.ActionLink("Delete", "DeleteProduct", "Admin", new { productId = @product.ProductId },  new { onclick = "return confirm('Are you sure you wish to delete this product? Note that this will also delete the products history.');" })
+        </td>
+
+       
+    </tr>
+    
+    
+}
+     
+</table>
+
+
+

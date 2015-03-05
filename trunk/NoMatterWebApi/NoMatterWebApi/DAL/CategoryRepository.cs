@@ -16,6 +16,7 @@ namespace NoMatterWebApi.DAL
 		void UpdateCategoryAsync(Category category);
 		void DeleteCategoryAsync(Guid categoryUuid);
 		Task<List<Product>> GetCategoryProductsAsync(Guid categoryUuid);
+		Task<List<Product>> GetCategoryProductsByTypeAsync(int sectionId, int categoryId, string type);
 	}
 
 	public class CategoryRepository : ICategoryRepository
@@ -77,6 +78,28 @@ namespace NoMatterWebApi.DAL
 				.OrderByDescending(x=>x.ReleaseDate).ToListAsync();
 
 			return products;
+		}
+
+		public async Task<List<Product>> GetCategoryProductsByTypeAsync(int sectionId, int categoryId, string type)
+		{
+			//todo: only show products after release date
+
+			var todaysDate = DateTime.Now;
+
+			IEnumerable<Product> products = databaseConnection.Products.Where(x=>!x.Hidden && x.ReleaseDate < todaysDate).OrderByDescending(x => x.ReleaseDate);
+
+			if (type != null && (type.ToLower() == "latest" || type.ToLower() == "sale"))
+			{
+				products = products
+					.Where(x => x.Category.SectionId == sectionId);
+			}
+			else
+			{
+				products = products
+					.Where(x => x.Category.SectionId == sectionId && x.CategoryId == categoryId);
+			}
+
+			return products.ToList();
 		}
 
 		public void Save()

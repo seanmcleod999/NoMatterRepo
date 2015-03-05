@@ -16,6 +16,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 		Task<ShoppingCartDetails> GetCartAsync(string cartId);
 		Task<Product> AddProductToCartAsync(string cartId, string productId, int quantity);
 		Task DeleteProductFromCartAsync(string cartId, string productId);
+		Task EmptyCartAsync(string cartId);
 	}
 
 	public class CartHelper : ICartHelper
@@ -89,6 +90,21 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 
 				if (!response.IsSuccessStatusCode)
 					throw new WebApiException("Cannot delete Product from cart", response);
+			}
+		}
+
+		public async Task EmptyCartAsync(string cartId)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				var response = await client.DeleteAsync(string.Format("api/v1/cart/{0}", cartId));
+
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot empty cart", response);
 			}
 		}
 	}

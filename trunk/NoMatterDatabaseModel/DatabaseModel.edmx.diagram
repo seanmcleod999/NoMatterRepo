@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="07669aa52e71479eb9b9e308963a04fc" Name="Diagram1" ZoomLevel="81">
+      <Diagram DiagramId="07669aa52e71479eb9b9e308963a04fc" Name="Diagram1" ZoomLevel="68">
         <EntityTypeShape EntityType="DatabaseModel.CartProduct" Width="1.5" PointX="9.75" PointY="20.5" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Category" Width="1.5" PointX="5.25" PointY="23.875" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Client" Width="1.5" PointX="0.75" PointY="15.125" IsExpanded="true" />
@@ -14,7 +14,7 @@
         <EntityTypeShape EntityType="DatabaseModel.DiscountType" Width="1.5" PointX="6.125" PointY="12.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Enquiry" Width="1.5" PointX="3" PointY="19.25" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.GlobalSetting" Width="1.5" PointX="1" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Order" Width="1.5" PointX="6.5" PointY="29.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Order" Width="1.875" PointX="6.5" PointY="29.875" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.OrderProduct" Width="1.5" PointX="9.25" PointY="30.5" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.PaymentType" Width="1.5" PointX="3" PointY="12.375" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Product" Width="1.5" PointX="7.5" PointY="22.5" IsExpanded="true" />
@@ -35,25 +35,13 @@
         <AssociationConnector Association="DatabaseModel.FK_Discount_DiscountType" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_DiscountProduct_Discount" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_OrderProduct_Order" ManuallyRouted="false" />
-        <AssociationConnector ManuallyRouted="true" Association="DatabaseModel.FK_UserOrder_User">
-          <ConnectorPoint PointX="4.25" PointY="33.364807942708339" />
-          <ConnectorPoint PointX="4.25" PointY="44.842039139456467" />
-          <ConnectorPoint PointX="3.3991935852135873" PointY="44.842039139456467" />
-          <ConnectorPoint PointX="4.5282259235210889" PointY="47.714190321756249" />
-          <ConnectorPoint PointX="5.3790323383075016" PointY="47.714190321756249" />
-          <ConnectorPoint PointX="5.3790323383075016" PointY="45.790635581363631" />
-          <ConnectorPoint PointX="5.75201621121348" PointY="45.790635581363631" />
-          <ConnectorPoint PointX="5.75201621121348" PointY="47.714190321756249" />
-          <ConnectorPoint PointX="6.87701621121348" PointY="44.990237381643965" />
-          <ConnectorPoint PointX="6.5" PointY="44.990237381643965" />
-          <ConnectorPoint PointX="6.5" PointY="33.585999348958339" />
+        <AssociationConnector ManuallyRouted="false" Association="DatabaseModel.FK_UserOrder_User">
         </AssociationConnector>
         <AssociationConnector Association="DatabaseModel.FK_ProductKeyword_Product" />
         <AssociationConnector Association="DatabaseModel.FK_DiscountProduct_Product" />
         <EntityTypeShape EntityType="DatabaseModel.ClientDeliveryOption" Width="1.5" PointX="3" PointY="8.75" />
         <AssociationConnector Association="DatabaseModel.FK_ClientDeliveryOption_Client1" />
         <AssociationConnector Association="DatabaseModel.FK_Order_ClientDeliveryOption" />
-        <AssociationConnector Association="DatabaseModel.FK_Order_ClientPaymentType" />
         <AssociationConnector Association="DatabaseModel.FK_OrderProduct_Product" />
       </Diagram>
     </edmx:Diagrams>

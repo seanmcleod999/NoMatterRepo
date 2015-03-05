@@ -156,9 +156,20 @@ namespace NoMatterWebApi.Controllers.V1
 				//TODO: make sure the user can get products for this category
 				//Need to get bearer token, and lookup the user so we know which client the user is from
 
-				var productsDb = await _categoryRepository.GetCategoryProductsAsync(new Guid(categoryid));
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
+
+				List<NoMatterDatabaseModel.Product> productsDb;
+
+
+				productsDb = await _categoryRepository.GetCategoryProductsByTypeAsync(categoryDb.SectionId, categoryDb.CategoryId, categoryDb.ActionName);
 
 				var products = productsDb.Select(x => x.ToDomainProduct()).ToList();
+
+				//If its he Sale category.. filter out sale items
+				if (categoryDb.ActionName != null && categoryDb.ActionName.ToLower() == "sale")
+				{
+					products = products.Where(x => x.DiscountDetails.Discounted).ToList();
+				}
 
 				return Ok(products);
 			}

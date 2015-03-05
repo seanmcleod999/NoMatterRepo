@@ -33,8 +33,7 @@ namespace WebApplication7.Controllers
 			_globalSettings = globalSettings;
 		}
 
-		// GET: User
-		public ActionResult FacebookRegisterQuery()
+		public ActionResult Login()
 		{
 			return View();
 		}
@@ -320,6 +319,17 @@ namespace WebApplication7.Controllers
 				return View("BadRequest", resultContent);
             }
         }
+
+		//
+		// POST: /Account/LogOff
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult LogOff()
+		{
+			Session.Clear();
+			FormsAuthentication.SignOut();
+			return RedirectToAction("Index", "Home");
+		}
 
     }
 }

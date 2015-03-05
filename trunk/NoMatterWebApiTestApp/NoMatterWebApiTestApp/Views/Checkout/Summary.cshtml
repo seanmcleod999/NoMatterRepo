@@ -104,7 +104,8 @@ Total: <b>R @Model.Order.TotalAmount</b>
 
 @using (Html.BeginForm())
 {
-
+    @Html.HiddenFor(x => x.Order.OrderId);
+    
     <div class="PaymentTypeHeader">
         <table>
             @foreach (var paymentType in Model.PaymentTypes)
@@ -113,11 +114,11 @@ Total: <b>R @Model.Order.TotalAmount</b>
                     <td>
                         @if (paymentType.Selected)
                         {
-                            <input type="radio" name="selectedPaymentType" value="@paymentType.ClientPaymentTypeId" checked="checked" />
+                            <input type="radio" name="PaymentType" value="@paymentType.ClientPaymentTypeId" checked="checked" />
                         }
                         else
                         {
-                            <input type="radio" name="selectedPaymentType" value="@paymentType.ClientPaymentTypeId" />
+                            <input type="radio" name="PaymentType" value="@paymentType.ClientPaymentTypeId" />
                         }
                     </td>
                     <td align="left">

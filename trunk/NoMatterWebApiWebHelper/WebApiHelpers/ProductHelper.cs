@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using NoMatterWebApiModels.Models;
+using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.Exceptions;
 using NoMatterWebApiWebHelper.OtherHelpers;
 
@@ -14,6 +15,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 {
 	public interface IProductHelper
 	{
+		Task<List<Product>> GetClientProductsAsync(string clientId, string productStatus, string categoryId);
 		Task<Product> GetProductAsync(string productId);
 		Task<Product> GetProductNoRelatedProductsAsync(string productId);
 		Task<Product> UpdateProductAsync(Product product, string token);
@@ -32,6 +34,26 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 		public ProductHelper(IGlobalSettings globalSettings)
 		{
 			_globalSettings = globalSettings;
+		}
+
+		public async Task<List<Product>> GetClientProductsAsync(string clientId, string productStatus, string categoryId)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/products?status={1}&categoryId={2}", clientId, productStatus, categoryId));
+
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot get Products", response);
+
+				var products = await response.Content.ReadAsAsync<List<Product>>();
+
+				return products;
+
+			}
 		}
 
 		public async Task<Product> GetProductAsync(string productId)

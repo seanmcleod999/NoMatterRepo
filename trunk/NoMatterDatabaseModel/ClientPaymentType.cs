@@ -14,11 +14,6 @@ namespace NoMatterDatabaseModel
     
     public partial class ClientPaymentType
     {
-        public ClientPaymentType()
-        {
-            this.Orders = new HashSet<Order>();
-        }
-    
         public short ClientPaymentTypeId { get; set; }
         public int ClientId { get; set; }
         public short PaymentTypeId { get; set; }
@@ -26,6 +21,5 @@ namespace NoMatterDatabaseModel
     
         public virtual Client Client { get; set; }
         public virtual PaymentType PaymentType { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
     }
 }

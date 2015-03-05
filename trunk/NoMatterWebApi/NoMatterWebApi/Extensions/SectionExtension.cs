@@ -12,7 +12,8 @@ namespace NoMatterWebApi.Extensions
 			return new NoMatterWebApiModels.Models.Section
 			{
 				SectionId = section.SectionUUID.ToString(),
-				SectionName = section.SectionName
+				SectionName = section.SectionName,
+				CategoryCount = section.Categories.Count
 			};
 		}
 	}

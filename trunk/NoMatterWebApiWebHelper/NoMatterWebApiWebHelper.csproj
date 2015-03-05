@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\PaymentType.cs" />
+    <Compile Include="Enums\ProductStatusEnum.cs" />
+    <Compile Include="OtherHelpers\ClientSectionsStaticCache.cs" />
     <Compile Include="OtherHelpers\CurrentUser.cs" />
     <Compile Include="OtherHelpers\GeneralHelper.cs" />
     <Compile Include="OtherHelpers\PayfastHelper.cs" />

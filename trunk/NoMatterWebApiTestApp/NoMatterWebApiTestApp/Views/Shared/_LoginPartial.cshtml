@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    using (Html.BeginForm("LogOff", "User", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
 
@@ -9,6 +9,7 @@
         <li>
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
+        <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>
     }
@@ -17,9 +18,10 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
          
-        <li>@Html.ActionLink("Register FB", "FacebookRegister", "User", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+@*        <li>@Html.ActionLink("Register FB", "FacebookRegister", "User", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
         <li>@Html.ActionLink("Login FB", "FacebookLogin", "User", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
         <li>@Html.ActionLink("Register User", "UserRegister", "User", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Login User", "UserLogin", "User", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>@Html.ActionLink("Login User", "UserLogin", "User", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>*@
+         <li>@Html.ActionLink("Login", "UserLogin", "User", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>
 }

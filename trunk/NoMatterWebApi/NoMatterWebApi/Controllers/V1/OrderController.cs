@@ -42,15 +42,36 @@ namespace NoMatterWebApi.Controllers.V1
 		// GET api/v1/orders/{orderId}
 		[Route("{orderId}")]
 		[ResponseType(typeof(ShoppingCartDetails))]
-		public async Task<IHttpActionResult> GetOrder(string orderId)
+		public async Task<IHttpActionResult> GetOrder(int orderId)
 		{
 			try
 			{
-				var orderDb = await _orderRepository.GetOrderAsync(new Guid(orderId));
+				var orderDb = await _orderRepository.GetOrderAsync(orderId);
 
 				var order = orderDb.ToDomainOrder();
 
 				return Ok(order);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+
+		}
+
+		// GET api/v1/orders/{orderId}/paid
+		[Route("{orderId}/paid")]
+		[HttpGet]
+		public async Task<IHttpActionResult> ProcessPaidOrder(int orderId)
+		{
+			try
+			{
+				//await _orderRepository.UpdateOrderPaid(orderId);
+
+				//await _orderRepository.UpdateOrderProductsAsSold(orderId);
+
+				return Ok();
 			}
 			catch (Exception ex)
 			{

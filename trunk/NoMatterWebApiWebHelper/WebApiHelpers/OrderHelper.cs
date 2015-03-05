@@ -16,7 +16,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	public interface IOrderHelper
 	{
 		Task<string> GenerateUserOrderAsync(string userId, GenerateUserOrder generateUserOrder);
-		Task<Order> GetOrderAsync(string orderId);
+		Task<Order> GetOrderAsync(int orderId);
 		Task<Order> ProcessPayfastOrderAsync(NameValueCollection req, bool testing = false);
 		string GeneratePayfastRedirectUrl(string orderId, string amount);
 	}
@@ -59,7 +59,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}
 		}
 
-		public async Task<Order> GetOrderAsync(string orderId)
+		public async Task<Order> GetOrderAsync(int orderId)
 		{
 			using (var client = new HttpClient())
 			{
@@ -117,11 +117,11 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			str.Append("&return_url=" + HttpUtility.UrlEncode(_globalSettings.PayfastReturnUrl));
 			str.Append("&cancel_url=" + HttpUtility.UrlEncode(_globalSettings.PayfastCancelUrl));
 			str.Append("&notify_url=" + HttpUtility.UrlEncode(_globalSettings.PayfastNotifyUrl));
-			str.Append("&m_payment_id=" + HttpUtility.UrlEncode(orderId.ToString()));
+			str.Append("&m_payment_id=" + HttpUtility.UrlEncode(orderId));
 			str.Append("&amount=" + HttpUtility.UrlEncode(amount));
 			str.Append("&item_name=" + HttpUtility.UrlEncode(paymentName));
 			str.Append("&item_description=" + HttpUtility.UrlEncode(paymentDescription));
-			str.Append("&custom_int1=" + HttpUtility.UrlEncode(orderId.ToString()));
+			//str.Append("&custom_int1=" + HttpUtility.UrlEncode(orderId.ToString()));
 
 			return site + str;
 
@@ -204,7 +204,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 						//OrderHelper.UpdateOrderPaid(Convert.ToInt16(orderId), true);
 						//OrderHelper.SoldOrderShopItems(Convert.ToInt16(orderId));
 						UpdateOrderPaid(Convert.ToInt16(orderId), true);
-						MarkOrderShopItemsAsSold(Convert.ToInt32(orderId));
+						//MarkOrderShopItemsAsSold(Convert.ToInt32(orderId));
 						break;
 
 					case "FAILED":
@@ -216,7 +216,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 						break;
 				}
 
-				var order = await GetOrderAsync(orderId);
+				var order = await GetOrderAsync(Convert.ToInt32(orderId));
 
 				return order;
 
@@ -253,32 +253,35 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}
 		}
 
-		private void MarkOrderShopItemsAsSold(int orderId)
-		{
-			try
+		public async Task UpdateOrderPaidAndSold(int orderId)
+		{		
+			using (var client = new HttpClient())
 			{
-				//using (var mainDb = new DatabaseModelEntities())
-				//{
-				//	var orderShopItems = mainDb.order_shopitem.Where(x => x.OrderId == orderId).ToList();
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				//	foreach (var shopItem in orderShopItems)
-				//	{
-				//		shopItem.shopitem.DateSold = DateTime.Now;
-				//		shopItem.shopitem.Sold = true;
-				//	}
+				var response = await client.PostAsJsonAsync(String.Format("api/v1/orders/{0}/paid", orderId), new object());
 
-				//	mainDb.SaveChanges();
-
-				//}
-				
-			}
-			catch (Exception ex)
-			{
-				//Logger.WriteGeneralError(ex);
-				throw;
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Error generating user order", response);
 			}
 		}
+
+		public async Task UpdateOrderReserved(int orderId)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				var response = await client.PostAsJsonAsync(String.Format("api/v1/orders/{0}/reserve", orderId), new object());
+
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Error generating user order", response);
+			}
+		}
+
 	}
-
-
 }

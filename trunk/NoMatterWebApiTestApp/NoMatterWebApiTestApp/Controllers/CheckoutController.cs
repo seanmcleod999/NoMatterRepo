@@ -14,6 +14,7 @@ using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
+using WebApplication7.Logging;
 using WebApplication7.Models;
 using WebApplication7.ViewModels;
 
@@ -93,7 +94,7 @@ namespace WebApplication7.Controllers
 			return RedirectToAction("Summary", new { id = orderId });
 	    }
 
-	    public async Task<ActionResult> Summary(string id)
+	    public async Task<ActionResult> Summary(int id)
 	    {
 		    var checkoutSummaryVm = new CheckoutSummaryVm
 			    {
@@ -149,7 +150,7 @@ namespace WebApplication7.Controllers
 				case (short)PaymentTypeEnum.Payfast:
 					//return RedirectToAction("ProcessPayfastPayment", new { OrderId = orderId, Total = cart.CartTotal });
 
-					var payFastRedirectUrl = _orderHelper.GeneratePayfastRedirectUrl(order.OrderId, order.TotalAmount.ToString("#.##"));
+					var payFastRedirectUrl = _orderHelper.GeneratePayfastRedirectUrl(order.OrderId.ToString(), order.TotalAmount.ToString("#.##"));
 
 					return new RedirectResult(payFastRedirectUrl, true);
 
@@ -158,5 +159,48 @@ namespace WebApplication7.Controllers
 
 			return RedirectToAction("Complete");
 	    }
+
+		public async Task<ActionResult> PayfastPaymentSuccessful()
+		{
+			await _cartHelper.EmptyCartAsync(_currentUser.CartId());
+			Session["CartItemCount"] = 0;
+
+			return View();
+		}
+
+		public ActionResult PayfastCancelPayment()
+		{
+			//string orderId = Request.Form["m_payment_id"];
+
+			//ViewBag.OrderId = orderId;
+
+			//update the order and set the order to cancelled
+			//TODO: do something to mark the order as cancelled
+			//var paymentCancelledVm = new PaymentCancelledVm();
+			return View();
+		}
+
+		public async Task PayfastNotifyPayment()
+		{
+			try
+			{
+				var order = await _orderHelper.ProcessPayfastOrderAsync(Request.Form);
+
+				////Send the emails
+				//var mailer = new PDTMailer();
+
+				////Send an email response to the user
+				//mailer.ConfirmPayfastOrder(order).Send();
+
+				////Send an email to the administrator
+				//mailer.CustomerOrder(order, _globalSettings.EmailAddressSales).Send();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				// An error occurred.. cant do much because payfast send this request via a different process
+			}
+		}
     }
 }

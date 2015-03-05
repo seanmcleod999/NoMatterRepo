@@ -8,6 +8,8 @@ namespace WebApplication7.ViewModels
 {
 	public class ViewProductVm
 	{
+		public string FromCategoryId { get; set; }
+
 		public Product Product { get; set; }
 	}
 }

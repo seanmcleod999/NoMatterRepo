@@ -16,10 +16,18 @@ namespace NoMatterWebApiModels.Models
 
         public string CategoryDescription { get; set; }
 
-        public string CategoryOrder { get; set; }
+        public int CategoryOrder { get; set; }
+
+		public string ActionName { get; set; }
 
         public bool Hidden { get; set; }
 
         public string Picture { get; set; }
+
+		public int FullProductCount { get; set; }
+
+		public int VisibleProductCount { get; set; }
+
+		public bool Conditional { get; set; }
     }
 }

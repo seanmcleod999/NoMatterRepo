@@ -109,3 +109,43 @@
       
 }
      
+
+<script type="text/javascript">
+  $(function()
+  {
+
+      $("#User_Email").change(function () {
+          
+          //try and get the users details and update the textboxes from the response
+
+          var serviceUrl = "http://localhost/NoMatterApi/api/v1/client/" + clientId + "/users/sean@dm.co.za";
+
+          $.ajax({
+              type: "GET",
+              url: serviceUrl
+          }).done(function (data) {
+              alert(data.User.ContactNumber);
+              $("#User_ContactNumber").val(data.User.ContactNumber);
+          }).error(function (jqXHR, textStatus, errorThrown) {
+              alert(jqXHR.responseText || textStatus);
+              //$('#value1').text(jqXHR.responseText || textStatus);
+          });
+          
+      });
+      
+      
+
+      function successFunc(data, status) {
+          alert(data);
+          
+          //Update the texboxes with the data
+          
+
+      }
+
+      function errorFunc() {
+          alert('error');
+      }
+
+  });
+</script>

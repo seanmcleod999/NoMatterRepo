@@ -28,13 +28,12 @@ namespace NoMatterDatabaseModel
         public System.DateTime DateCreated { get; set; }
         public bool Paid { get; set; }
         public short ClientDeliveryOptionId { get; set; }
-        public Nullable<short> ClientPaymentTypeId { get; set; }
-        public System.Guid OrderUUID { get; set; }
         public short OrderStatusId { get; set; }
+        public decimal DeliveryAmount { get; set; }
+        public string PaymentType { get; set; }
     
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
         public virtual User User { get; set; }
         public virtual ClientDeliveryOption ClientDeliveryOption { get; set; }
-        public virtual ClientPaymentType ClientPaymentType { get; set; }
     }
 }

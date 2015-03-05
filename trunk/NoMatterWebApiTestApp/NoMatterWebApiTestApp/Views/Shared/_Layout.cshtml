@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -24,10 +25,19 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Clients", "GetClients", "Client")</li>
+                    @*<li>@Html.ActionLink("Clients", "GetClients", "Client")</li>
                     <li>@Html.ActionLink("GlobalSettings", "GetGlobalSettings", "Home")</li>
                     <li>@Html.ActionLink("ClientSettings", "GetClientCacheSettings", "Client")</li>
-                    <li>@Html.ActionLink("Shop", "Index", "Shop")</li>
+                    <li>@Html.ActionLink("Shop", "Index", "Shop")</li>*@
+                      
+                    @{
+                        var sections = ClientSectionsStaticCache.GetClientSections();
+                        
+                        foreach (var section in sections)
+                        {
+                                <li>@Html.ActionLink((string)section.SectionName, "SectionShop", "Shop", new {sectionId = section.SectionId}, null)</li>
+                        }
+                    }
                     <li>@Html.ActionLink("Cart", "ViewCart", "Cart")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")

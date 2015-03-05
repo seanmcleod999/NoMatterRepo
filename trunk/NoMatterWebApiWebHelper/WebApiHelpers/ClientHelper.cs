@@ -16,6 +16,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	{
 		Task<List<Client>> GetClientsAsync();
 		Task<List<Section>> GetClientSectionsAsync(string clientId);
+		List<Section> GetClientSections(string clientId);
 		List<ClientSetting> GetClientSettings(string clientId);
 		Task<List<ClientPaymentType>> GetClientPaymentTypes(string clientId);
 		Task<List<ClientDeliveryOption>> GetClientDeliveryOptions(string clientId);
@@ -69,6 +70,25 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 					throw new WebApiException("Cannot get Sections", response);	
 
 				var sections = await response.Content.ReadAsAsync<List<Section>>();
+
+				return sections;
+			}
+		}
+
+		public List<Section> GetClientSections(string clientId)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				var response = client.GetAsync(string.Format("api/v1/clients/{0}/Sections", clientId)).Result;
+
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot get Sections", response);
+
+				var sections = response.Content.ReadAsAsync<List<Section>>().Result;
 
 				return sections;
 			}

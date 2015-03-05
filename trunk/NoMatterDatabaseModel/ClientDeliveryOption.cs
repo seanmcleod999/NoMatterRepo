@@ -24,6 +24,7 @@ namespace NoMatterDatabaseModel
         public decimal DeliveryAmount { get; set; }
         public byte OptionOrder { get; set; }
         public short ClientDeliveryOptionId { get; set; }
+        public bool Enabled { get; set; }
     
         public virtual Client Client { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

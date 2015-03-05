@@ -50,6 +50,19 @@ namespace NoMatterWebApi.Controllers.V1
 			_generalHelper = facebookHelper;
 		}
 
+		// GET api/v1/sections/{sectionUuid}/categories
+		[Route("{clientUuid}/users/{email}")]
+		[ResponseType(typeof(List<User>))]
+		public async Task<IHttpActionResult> GetUserByEmails(string clientUuid, string email)
+		{
+
+			var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), email);
+
+			var user = userDb.ToDomainUser();
+
+			return Ok(user);
+		}
+
 		// POST api/v1/clients/{clientUuid}/users/register>
 		[Route("{clientUuid}/users/register")]
 		[ResponseType(typeof(UserAuthenticatedResult))]
@@ -265,16 +278,16 @@ namespace NoMatterWebApi.Controllers.V1
 					{
 						User = userDb,
 						TotalAmount = cartProducts.Sum(x => x.Product.DiscountDetails.DiscountedPrice),
+						DeliveryAmount = clientDeliveryOption.DeliveryAmount,
 						Message = model.Message,
 						ClientDeliveryOptionId = Convert.ToInt16(model.ClientDeliveryOptionId),
-						OrderStatusId = 1
+						OrderStatusId = 1,
 					};
 
-				//TODO: FIX THIS
-				//foreach (var cartProduct in cartProducts)
-				//{
-				//	order.OrderProducts.Add(new OrderProduct() { ProductId = cartProduct.Product.ProductId});
-				//}
+				foreach (var cartProduct in cartProductsDb)
+				{
+					order.OrderProducts.Add(new OrderProduct() { ProductId = cartProduct.Product.ProductId });
+				}
 
 				var orderId = await _orderRepository.AddOrderAsync(order);
 

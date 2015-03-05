@@ -15,10 +15,10 @@ namespace NoMatterWebApi.Extensions
 		{
 			return new Order()
 			{
-				OrderId = order.OrderUUID.ToString(),
+				OrderId = order.OrderId,
 				Message = order.Message,
 				DeliveryDescription = order.ClientDeliveryOption.Description,
-				DeliveryAmount = order.ClientDeliveryOption.DeliveryAmount,
+				DeliveryAmount = order.DeliveryAmount,
 				ProductAmount = order.TotalAmount,
 				TotalAmount = order.TotalAmount + order.ClientDeliveryOption.DeliveryAmount,
 				OrderStatusId = order.OrderStatusId,

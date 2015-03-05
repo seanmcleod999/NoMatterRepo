@@ -25,6 +25,7 @@
           <Property Name="CategoryName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CategoryDescription" Type="varchar(max)" />
           <Property Name="CategoryOrder" Type="smallint" Nullable="false" />
+          <Property Name="ActionName" Type="varchar" MaxLength="20" />
           <Property Name="Hidden" Type="bit" Nullable="false" />
           <Property Name="Conditional" Type="bit" Nullable="false" />
           <Property Name="Picture" Type="varchar" MaxLength="50" />
@@ -47,6 +48,7 @@
           <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="OptionOrder" Type="tinyint" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -112,14 +114,14 @@
           </Key>
           <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="OrderUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Message" Type="varchar" MaxLength="300" />
           <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ClientDeliveryOptionId" Type="smallint" Nullable="false" />
           <Property Name="CourierName" Type="varchar" MaxLength="50" />
           <Property Name="TrackingNumber" Type="varchar" MaxLength="50" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
-          <Property Name="ClientPaymentTypeId" Type="smallint" />
+          <Property Name="PaymentType" Type="varchar" MaxLength="20" />
           <Property Name="Paid" Type="bit" Nullable="false" />
           <Property Name="OrderStatusId" Type="smallint" Nullable="false" />
         </EntityType>
@@ -364,18 +366,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Order_ClientPaymentType">
-          <End Role="ClientPaymentType" Type="Self.ClientPaymentType" Multiplicity="0..1" />
-          <End Role="Order" Type="Self.Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ClientPaymentType">
-              <PropertyRef Name="ClientPaymentTypeId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="ClientPaymentTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderProduct_Order">
           <End Role="Order" Type="Self.Order" Multiplicity="1" />
           <End Role="OrderProduct" Type="Self.OrderProduct" Multiplicity="*" />
@@ -515,10 +505,6 @@
             <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOption" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
-          <AssociationSet Name="FK_Order_ClientPaymentType" Association="Self.FK_Order_ClientPaymentType">
-            <End Role="ClientPaymentType" EntitySet="ClientPaymentType" />
-            <End Role="Order" EntitySet="Order" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderProduct_Order" Association="Self.FK_OrderProduct_Order">
             <End Role="Order" EntitySet="Order" />
             <End Role="OrderProduct" EntitySet="OrderProduct" />
@@ -574,6 +560,7 @@
           <Property Name="Picture" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Section" Relationship="Self.FK_Category_Section" FromRole="Category" ToRole="Section" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Product_Category" FromRole="Category" ToRole="Product" />
+          <Property Name="ActionName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Client">
           <Key>
@@ -601,7 +588,6 @@
           <NavigationProperty Name="Client" Relationship="Self.FK_ClientPaymentType_Client" FromRole="ClientPaymentType" ToRole="Client" />
           <NavigationProperty Name="PaymentType" Relationship="Self.FK_ClientPaymentType_PaymentType" FromRole="ClientPaymentType" ToRole="PaymentType" />
           <Property Name="PaymentTypeOrder" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="Orders" Relationship="DatabaseModel.FK_Order_ClientPaymentType" FromRole="ClientPaymentType" ToRole="Order" />
         </EntityType>
         <EntityType Name="Discount">
           <Key>
@@ -674,11 +660,10 @@
           <NavigationProperty Name="OrderProducts" Relationship="Self.FK_OrderProduct_Order" FromRole="Order" ToRole="OrderProduct" />
           <NavigationProperty Name="User" Relationship="Self.FK_UserOrder_User" FromRole="Order" ToRole="User" />
           <Property Name="ClientDeliveryOptionId" Type="Int16" Nullable="false" />
-          <Property Name="ClientPaymentTypeId" Type="Int16" />
           <NavigationProperty Name="ClientDeliveryOption" Relationship="DatabaseModel.FK_Order_ClientDeliveryOption" FromRole="Order" ToRole="ClientDeliveryOption" />
-          <NavigationProperty Name="ClientPaymentType" Relationship="DatabaseModel.FK_Order_ClientPaymentType" FromRole="Order" ToRole="ClientPaymentType" />
-          <Property Name="OrderUUID" Type="Guid" Nullable="false" />
           <Property Name="OrderStatusId" Type="Int16" Nullable="false" />
+          <Property Name="DeliveryAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PaymentType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="OrderProduct">
           <Key>
@@ -1050,10 +1035,6 @@
             <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOptions" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK_Order_ClientPaymentType" Association="DatabaseModel.FK_Order_ClientPaymentType">
-            <End Role="ClientPaymentType" EntitySet="ClientPaymentTypes" />
-            <End Role="Order" EntitySet="Orders" />
-          </AssociationSet>
           <AssociationSet Name="FK_OrderProduct_Product" Association="DatabaseModel.FK_OrderProduct_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderProduct" EntitySet="OrderProducts" />
@@ -1094,6 +1075,7 @@
           <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_ClientDeliveryOption_Client1" FromRole="ClientDeliveryOption" ToRole="Client" />
           <Property Name="ClientDeliveryOptionId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="Orders" Relationship="DatabaseModel.FK_Order_ClientDeliveryOption" FromRole="ClientDeliveryOption" ToRole="Order" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_ClientDeliveryOption_Client1">
           <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
@@ -1116,18 +1098,6 @@
             </Principal>
             <Dependent Role="Order">
               <PropertyRef Name="ClientDeliveryOptionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Order_ClientPaymentType">
-          <End Type="DatabaseModel.ClientPaymentType" Role="ClientPaymentType" Multiplicity="0..1" />
-          <End Type="DatabaseModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ClientPaymentType">
-              <PropertyRef Name="ClientPaymentTypeId" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="ClientPaymentTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1163,6 +1133,7 @@
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="DatabaseModel.Category">
               <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="ActionName" ColumnName="ActionName" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="SectionId" ColumnName="SectionId" />
                 <ScalarProperty Name="CategoryUUID" ColumnName="CategoryUUID" />
@@ -1251,9 +1222,9 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="DatabaseModel.Order">
               <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="DeliveryAmount" ColumnName="DeliveryAmount" />
                 <ScalarProperty Name="OrderStatusId" ColumnName="OrderStatusId" />
-                <ScalarProperty Name="OrderUUID" ColumnName="OrderUUID" />
-                <ScalarProperty Name="ClientPaymentTypeId" ColumnName="ClientPaymentTypeId" />
                 <ScalarProperty Name="ClientDeliveryOptionId" ColumnName="ClientDeliveryOptionId" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -1372,6 +1343,7 @@
           <EntitySetMapping Name="ClientDeliveryOptions">
             <EntityTypeMapping TypeName="DatabaseModel.ClientDeliveryOption">
               <MappingFragment StoreEntitySet="ClientDeliveryOption">
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
                 <ScalarProperty Name="ClientDeliveryOptionId" ColumnName="ClientDeliveryOptionId" />
                 <ScalarProperty Name="OptionOrder" ColumnName="OptionOrder" />
                 <ScalarProperty Name="DeliveryAmount" ColumnName="DeliveryAmount" />

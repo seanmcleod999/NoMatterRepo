@@ -40,6 +40,7 @@ namespace WebApplication7.Controllers
 		//	_currentUser = currentUser;
 		//}
 
+		[Authorize]
         public async Task<ActionResult> GetCategoryProducts(string categoryId)
         {
 
@@ -62,6 +63,7 @@ namespace WebApplication7.Controllers
 			return View(viewCategoryProductsVm);
         }
 
+		[Authorize]
 	    public ActionResult NewCategoryProduct(string categoryId)
 	    {
 			var newProductVm = new NewProductVm

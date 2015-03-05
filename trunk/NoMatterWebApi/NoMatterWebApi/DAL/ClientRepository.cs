@@ -51,7 +51,7 @@ namespace NoMatterWebApi.DAL
 
 		public async Task<List<Section>> GetClientSectionsAsync(Guid clientUuid)
 		{
-			var sections = await databaseConnection.Sections.Where(x => x.Client.ClientUUID == clientUuid).ToListAsync();
+			var sections = await databaseConnection.Sections.Include("Categories").Where(x => x.Client.ClientUUID == clientUuid && x.Categories.Any()).ToListAsync();
 
 			return sections;
 		}
@@ -76,7 +76,7 @@ namespace NoMatterWebApi.DAL
 		public async Task<List<ClientDeliveryOption>> GetClientDeliveryOptionsAsync(Guid clientUuid)
 		{
 			var deliveryOptions = await databaseConnection.ClientDeliveryOptions
-				.Where(x => x.Client.ClientUUID == clientUuid)
+				.Where(x => x.Client.ClientUUID == clientUuid && x.Enabled)
 				.OrderBy(x=>x.OptionOrder)
 				.ToListAsync();
 

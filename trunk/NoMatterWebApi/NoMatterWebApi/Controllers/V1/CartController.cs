@@ -129,5 +129,23 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
+		// DELETE api/v1/cart/{cartId}
+		[Route("{cartId}")]
+		[HttpDelete]
+		public async Task<IHttpActionResult> DeleteCart(string cartId)
+		{
+			try
+			{
+				await _cartRepository.DeleteCartProductsAsync(cartId);
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
 	}
 }

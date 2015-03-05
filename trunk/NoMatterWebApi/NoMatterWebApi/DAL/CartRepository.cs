@@ -13,7 +13,8 @@ namespace NoMatterWebApi.DAL
 		Task<CartProduct> GetCartProductAsync(string cartId, Guid productId);
 		Task<List<CartProduct>> GetCartProductsAsync(string cartId);
 		Task AddCartProductAsync(CartProduct cartProduct);
-		Task DeleteCartProductAsync(CartProduct cartProduct);		
+		Task DeleteCartProductAsync(CartProduct cartProduct);
+		Task DeleteCartProductsAsync(string cartId);	
 	}
 
 	public class CartRepository : ICartRepository
@@ -56,6 +57,18 @@ namespace NoMatterWebApi.DAL
 		public async Task DeleteCartProductAsync(CartProduct cartProduct)
 		{
 			databaseConnection.CartProducts.Remove(cartProduct);
+
+			await databaseConnection.SaveChangesAsync();
+		}
+
+		public async Task DeleteCartProductsAsync(string cartId)
+		{
+			var cartPruducts = await databaseConnection.CartProducts.Where(x => x.CartId == cartId).ToListAsync();
+
+			foreach (var cartProduct in cartPruducts)
+			{
+				databaseConnection.CartProducts.Remove(cartProduct);
+			}
 
 			await databaseConnection.SaveChangesAsync();
 		}

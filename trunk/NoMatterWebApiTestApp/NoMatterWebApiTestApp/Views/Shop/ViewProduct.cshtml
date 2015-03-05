@@ -7,24 +7,37 @@
     var globalSettings = new GlobalSettings();
 }
 <div class="PageNavigationBar">
-    @Html.ActionLink("Back to Products", "CategoryShop", "Shop", new { categoryId = @Model.Product.CategoryId }, new { @class = "BackLink" })
+    @Html.ActionLink("Back to Products", "CategoryShop", "Shop", new { categoryId = @Model.FromCategoryId }, new { @class = "BackLink" })
 </div>
-<h3>Product Details</h3>
-<br/>
 
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture1)" width="100px"/>
+<h3>@Model.Product.Title </h3>
 
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture2)" width="100px"/>
+<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture1)" width="200px"/>
 
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture3)" width="100px"/>
+@if (!string.IsNullOrEmpty(Model.Product.Picture2))
+{
+    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture2)" width="100px"/>
+}
 
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture4)" width="100px"/>
+@if (!string.IsNullOrEmpty(Model.Product.Picture3))
+{
+    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture3)" width="100px"/>
+}
 
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture5)" width="100px"/>
+@if (!string.IsNullOrEmpty(Model.Product.Picture4))
+{
+    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture4)" width="100px"/>
+}
 
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="100px"/>
-<br/><br/>
-Title: <b>@Model.Product.Title</b>
+@if (!string.IsNullOrEmpty(Model.Product.Picture5))
+{
+    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture5)" width="100px"/>
+}
+@if (!string.IsNullOrEmpty(Model.Product.PictureOther))
+{
+    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="100px"/>
+}
+
 <br/><br/>
 <i>@Model.Product.Description</i>
 <br/><br/>
@@ -47,19 +60,22 @@ Short Url: @Model.Product.ProductShortUrl
 <br/><br/>
 @if (Model.Product.RelatedProductDetails.RelatedProducts.Any())
 {
-    <h4>Related Products</h4>
+    <div class="RelatedProductsWrapper">
+        
+        <h4>Related Products</h4>
 
-    foreach (var product in Model.Product.RelatedProductDetails.RelatedProducts)
-    {
-        @product.ProductId
-        <br/>
-        @product.Title
-        <br/>
-        <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)" width="50px"/>
-        <br/>
-        <br/>
-    }
-
+        @foreach (var product in Model.Product.RelatedProductDetails.RelatedProducts)
+        {
+            <div class="ShopRelatedProduct">
+                <a id="@product.ProductId" href="@Url.Action("ViewProduct", new { productId = product.ProductId, categoryId = Model.FromCategoryId })"> 
+       
+                    <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)"/>
+                        
+                </a>
+            </div>
+        }
+        
+    </div>
 }
 
 

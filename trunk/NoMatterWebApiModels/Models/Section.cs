@@ -11,6 +11,8 @@ namespace NoMatterWebApiModels.Models
 
 		public string SectionName { get; set; }
 
+		public int CategoryCount { get; set; }
+
 		//public bool Enabled { get; set; }
 	}
 }

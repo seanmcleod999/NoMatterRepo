@@ -41,25 +41,39 @@ namespace WebApplication7.Controllers
         public async Task<ActionResult> Index()
         {
 
-			var sections = await _clientHelper.GetClientSectionsAsync(_globalSettings.DefaultClientId);
+			//var sections = await _clientHelper.GetClientSectionsAsync(_globalSettings.DefaultClientId);
+
+	        var sections = ClientSectionsStaticCache.GetClientSections();
 
 			return View(sections);
         }
 
 		public async Task<ActionResult> SectionShop(string sectionId)
 		{
-			var section = await _sectionHelper.GetSectionAsync(sectionId);
+			//var section = await _sectionHelper.GetSectionAsync(sectionId);
+			var section = ClientSectionsStaticCache.GetClientSection(sectionId);
 
 			//Get the categories for the selected section
-			var categories = await _sectionHelper.GetSectionCategoriesAsync(sectionId);
+			//var categories = await _sectionHelper.GetSectionCategoriesAsync(sectionId);
+			var categories = await SectionCategoriesSessionCache.GetSectionCategories(_sectionHelper, sectionId);
 
-			//Get the products for the first category
-			var products = await _categoryHelper.GetCategoryProductsAsync(categories.First().CategoryId);
+			//Filter out all the categories with no visible products //TODO: maybe move this to the webapi via querystring parameter
+			categories = categories.Where(x => x.VisibleProductCount > 0 || x.Conditional).ToList();
+			
+			List<Product> products = null;
+			Category category = null;
 
+			if (categories.Count > 0)
+			{
+				//Get the products for the first category
+				products = await _categoryHelper.GetCategoryProductsAsync(categories.First().CategoryId);
+				category = categories.First();
+			}
+			
 			var categoryShopVm = new CategoryShopVm
 				{
 					Section = section,
-					Category = categories.First(),
+					Category = category,
 					Categories = categories, 
 					Products = products
 				};
@@ -73,16 +87,19 @@ namespace WebApplication7.Controllers
 			//Get the categories details for the selected category
 			var category = await _categoryHelper.GetCategoryAsync(categoryId);
 
+			
+
 			//Get all the other categories for this section from the cache
 			var categories = await SectionCategoriesSessionCache.GetSectionCategories(_sectionHelper, category.SectionId);
 
 			//TODO: move this to a cache
 			//Get the section details from the cache
-			var section = await _sectionHelper.GetSectionAsync(category.SectionId);
+			//var section = await _sectionHelper.GetSectionAsync(category.SectionId);
+			var section = ClientSectionsStaticCache.GetClientSection(category.SectionId);
 
 			//Get the products for the selected category
-			var products = await _categoryHelper.GetCategoryProductsAsync(category.CategoryId);
-
+			var products = (await _categoryHelper.GetCategoryProductsAsync(category.CategoryId));
+		
 			var categoryShopVm = new CategoryShopVm
 			{
 				Section = section,
@@ -94,12 +111,13 @@ namespace WebApplication7.Controllers
 			return View("CategoryShop", categoryShopVm);
 		}
 
-	    public async Task<ActionResult> ViewProduct(string productId)
+	    public async Task<ActionResult> ViewProduct(string productId, string categoryId = null)
 	    {
 			var product = await _productHelper.GetProductAsync(productId);
 
 			var viewProductVm = new ViewProductVm
 			{
+				FromCategoryId = categoryId,
 				Product = product,
 			};
 

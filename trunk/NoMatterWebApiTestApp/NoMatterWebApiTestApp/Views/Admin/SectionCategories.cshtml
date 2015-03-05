@@ -1,0 +1,81 @@
+﻿@model WebApplication7.ViewModels.SectionCategoriesVm
+
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Categories for @Model.Section.SectionName</h1>
+
+@Html.ActionLink("Add Category", "AddCategory", "Admin", new { sectionId = @Model.Section.SectionId }, null)
+
+
+<br/><br/>
+<table>
+    <tr>
+        <th>
+            Category
+        </th>
+        <th>
+            Order
+        </th>
+        <th>
+            Hidden
+        </th>
+        <th>
+            Products
+        </th>
+         <th>
+            Visible Products
+        </th>
+        <th>
+            
+        </th>
+         <th>
+            
+        </th>
+    </tr>
+
+@foreach (var category in Model.Categories)
+{
+    <tr>
+        
+        <td>
+            @category.CategoryName
+        </td>
+        <td>
+            @category.CategoryOrder
+        </td>
+        <td>
+            @category.Hidden
+        </td>
+        <td>
+            @category.FullProductCount
+        </td>
+        <td>
+            @category.VisibleProductCount
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditCategory", "Admin", new { categoryId = @category.CategoryId }, null)
+        </td>
+        <td>
+            @if (!category.Conditional && category.FullProductCount == 0)
+            {
+                @Html.ActionLink("Delete", "DeleteCategory", "Admin", new { categoryId = @category.CategoryId }, new { onclick = "return confirm('Are you sure you wish to delete this category? Note that you can only delete categories that have no products.');" })
+            }
+            
+        </td>
+        <td>
+            @if (!category.Conditional)
+            {
+                @Html.ActionLink("Get Products", "CategoryProducts", "Admin", new {categoryId = @category.CategoryId}, null)
+            }
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>
+

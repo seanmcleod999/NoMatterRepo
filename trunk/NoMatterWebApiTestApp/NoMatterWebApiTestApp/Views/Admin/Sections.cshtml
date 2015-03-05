@@ -1,0 +1,44 @@
+﻿@model IEnumerable<NoMatterWebApiModels.Models.Section>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Sections</h1>
+
+@Html.ActionLink("Add Section", "AddSection", "Admin")
+<br/><br/>
+
+
+<table>
+    <tr>
+        <th>
+            Section
+        </th>
+        <th>
+            
+        </th>
+         <th>
+            
+        </th>
+    </tr>
+
+@foreach (var section1 in Model)
+{
+    <tr>
+        
+        <td>
+            @section1.SectionName
+        </td>
+         <td>
+            @Html.ActionLink("Edit", "EditSection", "Admin", new { sectionId = @section1.SectionId }, null)
+        </td>
+        <td>
+            @Html.ActionLink("Get Categories", "SectionCategories", "Admin", new { sectionId = @section1.SectionId }, null)
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>

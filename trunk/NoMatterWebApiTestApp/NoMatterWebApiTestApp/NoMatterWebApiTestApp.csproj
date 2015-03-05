@@ -190,6 +190,7 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
@@ -206,6 +207,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AddEditCategoryVm.cs" />
+    <Compile Include="ViewModels\AddProductVm.cs" />
+    <Compile Include="ViewModels\AddSectionVm.cs" />
+    <Compile Include="ViewModels\CategoryProductsVm.cs" />
     <Compile Include="ViewModels\CategoryShopVm.cs" />
     <Compile Include="ViewModels\CheckoutPostageVm.cs" />
     <Compile Include="ViewModels\CheckoutSummaryVm.cs" />
@@ -214,8 +219,10 @@
     <Compile Include="ViewModels\EditProductVm.cs" />
     <Compile Include="ViewModels\GlobalSettingsVm.cs" />
     <Compile Include="ViewModels\NewProductVm.cs" />
+    <Compile Include="ViewModels\SectionCategoriesVm.cs" />
     <Compile Include="ViewModels\UserLoginVm.cs" />
     <Compile Include="ViewModels\ViewCategoryProductsVm.cs" />
+    <Compile Include="ViewModels\ViewClientProducts.cs" />
     <Compile Include="ViewModels\ViewGoalVm.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -225,6 +232,15 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\icon_facebooklogin.png" />
+    <Content Include="Content\Images\payfast_icon.png" />
+    <Content Include="Content\Images\ReservedLayer.png" />
+    <Content Include="Content\Images\SaleLayer.png" />
+    <Content Include="Content\Images\SaleLayer2.png" />
+    <Content Include="Content\Images\SaleLayerLarge.png" />
+    <Content Include="Content\Images\SaleLayerLarge2.png" />
+    <Content Include="Content\Images\SoldLayer.png" />
+    <Content Include="Content\Images\SoldLayer2.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -248,8 +264,7 @@
     <Content Include="Views\User\RegisterFacebookFinish.cshtml" />
     <Content Include="Views\User\UserLogin.cshtml" />
     <Content Include="Views\Goal\GoalLinks.cshtml" />
-    <Content Include="Views\Admin\AdminLinks.cshtml" />
-    <Content Include="Views\Admin\AdminDone.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Goal\CashOutSelectAccount.cshtml" />
     <Content Include="Views\Goal\SessionExpired.cshtml" />
     <Content Include="Views\Goal\CompletePayment.cshtml" />
@@ -278,6 +293,15 @@
     <Content Include="Views\Checkout\Index.cshtml" />
     <Content Include="Views\Checkout\Postage.cshtml" />
     <Content Include="Views\Checkout\Summary.cshtml" />
+    <Content Include="Views\Checkout\PayfastPaymentSuccessful.cshtml" />
+    <Content Include="Views\Checkout\PayfastCancelPayment.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\Admin\Sections.cshtml" />
+    <Content Include="Views\Admin\SectionCategories.cshtml" />
+    <Content Include="Views\Admin\CategoryProducts.cshtml" />
+    <Content Include="Views\Admin\AddEditSection.cshtml" />
+    <Content Include="Views\Admin\AddEditCategory.cshtml" />
+    <Content Include="Views\Admin\AddProduct.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

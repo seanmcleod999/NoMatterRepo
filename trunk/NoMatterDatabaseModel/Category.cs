@@ -28,6 +28,7 @@ namespace NoMatterDatabaseModel
         public bool Hidden { get; set; }
         public bool Conditional { get; set; }
         public string Picture { get; set; }
+        public string ActionName { get; set; }
     
         public virtual Section Section { get; set; }
         public virtual ICollection<Product> Products { get; set; }

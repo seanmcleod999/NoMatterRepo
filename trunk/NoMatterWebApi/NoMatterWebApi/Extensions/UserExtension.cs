@@ -9,6 +9,8 @@ namespace NoMatterWebApi.Extensions
 	{
 		public static NoMatterWebApiModels.Models.User ToDomainUser(this   NoMatterDatabaseModel.User user)
 		{
+			if (user == null) return null;
+
 			return new NoMatterWebApiModels.Models.User()
 			{
 				UserId = user.UserUUID.ToString(),

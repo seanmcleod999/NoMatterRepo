@@ -23,6 +23,7 @@ namespace WebApplication7
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+			ClientSectionsStaticCache.LoadClientSectionsCache();
 			ClientSettingsStaticCache.LoadClientSettingsCache();
 			GlobalSettingsStaticCache.LoadGlobalSettingsCache();
         }

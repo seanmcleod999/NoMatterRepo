@@ -6,27 +6,51 @@
     var globalSettings = new GlobalSettings();
 }
 
-<h2>Section</h2>
-@Model.Section.SectionName
+<h2>@Model.Section.SectionName</h2>
 
-<h2>Categories</h2>
 @foreach (var category in Model.Categories)
 {
      @Html.ActionLink((string)category.CategoryName, "CategoryShop", "Shop", new { categoryId = @category.CategoryId }, null) @:&nbsp; &nbsp;
 }
 
-<h2>@Model.Category.CategoryName - @Model.Category.CategoryDescription</h2>
+<h3>@Model.Category.CategoryDescription</h3>
 
 @foreach (var product in Model.Products)
 {
     <div class="ShopProduct">
-        <a id="@product.ProductId" href="@Url.Action("ViewProduct", new { productId = product.ProductId, category = Model.Category.CategoryName })"> 
-                           
-            <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)"/>
+        <a id="@product.ProductId" href="@Url.Action("ViewProduct", new { productId = product.ProductId, categoryId = Model.Category.CategoryId })"> 
+            
+            <div class="ShopProductImage">
+                               
+                <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)"/>
+            
+                @if (product.Sold)
+                {                                                                          
+                    <div class="ShopProductSold"> 
+                        <div class="ShopProductSoldText">                      
+                            Sold
+                        </div>
+                    </div>                                                   
+                }
+                else if (product.Reserved)
+                {
+                    <div class="ShopProductReserved">
+                        <div class="ShopProductReservedText">                     
+                            Reserved
+                        </div>
+                    </div>
+                }
+                    
+                @if ((product.Reserved && product.DiscountDetails.Discounted) || product.DiscountDetails.Discounted)
+                {
+                    <div class="ShopProductSale">                         
+                    </div>
+                }
               
+            </div>
         </a>
-        
-        <br/>
+            
         @product.Title
+
     </div>
 }
