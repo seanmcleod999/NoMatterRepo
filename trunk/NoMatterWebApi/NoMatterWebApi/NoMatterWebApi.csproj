@@ -259,7 +259,7 @@
     <Compile Include="DAL\CategoryRepository.cs" />
     <Compile Include="DAL\ClientRepository.cs" />
     <Compile Include="DAL\ProductRepository.cs" />
-    <Compile Include="DAL\SectionRespository.cs" />
+    <Compile Include="DAL\SectionRepository.cs" />
     <Compile Include="DAL\UserRepository.cs" />
     <Compile Include="ViewModels\RunMySqlScriptVm.cs" />
   </ItemGroup>

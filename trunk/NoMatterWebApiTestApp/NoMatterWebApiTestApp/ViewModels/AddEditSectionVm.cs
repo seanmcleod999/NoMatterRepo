@@ -6,8 +6,10 @@ using NoMatterWebApiModels.Models;
 
 namespace WebApplication7.ViewModels
 {
-	public class AddSectionVm
+	public class AddEditSectionVm
 	{
+		//public string ClientId { get; set; }
+
 		public Section Section { get; set; }
 	}
 }

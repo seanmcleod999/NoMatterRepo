@@ -23,5 +23,19 @@ namespace NoMatterWebApi.Extensions
 				FullProductCount = category.Products.Count() 
 			};
 		}
+
+		public static NoMatterDatabaseModel.Category ToDatabaseCategory(this  NoMatterWebApiModels.Models.Category category, int sectionId)
+		{
+			return new NoMatterDatabaseModel.Category
+			{
+				SectionId = sectionId,
+				CategoryName = category.CategoryName,
+				CategoryDescription = category.CategoryDescription,
+				CategoryOrder = category.CategoryOrder,
+				Hidden = category.Hidden,
+				Picture = category.Picture
+
+			};
+		}
 	}
 }

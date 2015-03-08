@@ -145,6 +145,24 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
+		// DELETE api/v1/categories/{categoryid}
+		[HttpDelete]
+		[Route("{categoryId}")]
+		public async Task<IHttpActionResult> DeleteCategory(string categoryId)
+		{
+			try
+			{
+				await _categoryRepository.DeleteCategoryAsync(new Guid(categoryId));
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
 		// GET api/v1/category/{categoryid}/products
 		[HttpGet]
 		[Route("{categoryid}/products")]

@@ -14,6 +14,8 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 		Task<Category> GetCategoryAsync(string categoryId);
 		Task<List<Product>> GetCategoryProductsAsync(string categoryId);
 		Task<Product> PostCategoryProductsAsync(string categoryId, NewProduct newProduct, string token);
+		Task PostCategoryAsync(Category category, string token);
+		Task DeleteCategoryAsync(string categoryId, string token);
 	}
 
 	public class CategoryHelper : ICategoryHelper
@@ -47,6 +49,41 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 
 				return category;
 		
+			}
+		}
+
+		public async Task PostCategoryAsync(Category category, string token)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
+
+				var response = await client.PostAsJsonAsync(string.Format("api/v1/sections/{0}/categories", category.SectionId), category);
+
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot save Category", response);
+
+			}
+		}
+
+		public async Task DeleteCategoryAsync(string categoryId, string token)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
+
+				var response = await client.DeleteAsync(string.Format("api/v1/categories/{0}", categoryId));
+
+				if (!response.IsSuccessStatusCode)
+					throw new WebApiException("Cannot delete Category", response);
 			}
 		}
 

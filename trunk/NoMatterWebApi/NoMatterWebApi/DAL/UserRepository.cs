@@ -12,6 +12,7 @@ namespace NoMatterWebApi.DAL
 	{
 		Task<User> GetClientUserByEmailAsync(Guid clientUuid, string email);
 		Task<User> GetClientUserByFacebookIdAsync(Guid clientUuid, string email);
+		Task<User> GetClientUserByTokenAsync(string token);
 		Task<User> GetUserByUuidAsync(Guid userUuid);
 		Task<string> SaveUserAsync(User user);
 		Task UpdateUserAsync(User user);
@@ -38,11 +39,19 @@ namespace NoMatterWebApi.DAL
 			return user;
 		}
 
+		public async Task<User> GetClientUserByTokenAsync(string token)
+		{
+			var user = await databaseConnection.Users.Include(x=>x.Client).SingleOrDefaultAsync(x => x.PasswordSalt == token && (x.CredentialTypeId == 1 || x.CredentialTypeId == 2));
+			return user;
+		}
+
 		public async Task<User> GetUserByUuidAsync(Guid userUuid)
 		{
 			var user = await databaseConnection.Users.SingleOrDefaultAsync(x => x.UserUUID == userUuid);
 			return user;
 		}
+
+		
 
 		public async Task<string> SaveUserAsync(User user)
 		{

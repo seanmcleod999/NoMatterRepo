@@ -22,27 +22,31 @@ textarea {
     max-width: 280px;
 }
 
-
-.GoalWrapper {
-    padding: 20px 0 30px 0;
-    border-bottom-width:1px;
-     border-bottom-color:gainsboro;
-     border-bottom-style: solid; 
-}
-
-.GoalCommentWrapper {
-    margin: 20px 0 10px 0;
-    padding: 10px 40px;
-    border-top-width:1px;
-     border-top-color:gainsboro;
-     border-top-style: solid; 
-}
-
 .editor-field textarea {
     width : 800px;
     height : 100px;
 }
 
+/* General Stuff
+-----------------------------------------------------------*/
+.PageNavigationBar {
+    padding: 0 0 15px 0;
+}
+
+.siteButton {
+    border-radius:20px;
+    /*border-color: #7c7c7c;
+    border-style: solid;
+    border-width: 2px;*/
+	padding:4px 20px;
+    text-decoration: none;
+    background-color:black;
+    color: white;
+
+}
+
+/* View Shop Product
+-----------------------------------------------------------*/
 .ShopProduct {
     display: inline-block;
     padding: 5px 5px;
@@ -136,14 +140,62 @@ textarea {
    
 }
 
-.siteButton {
-    border-radius:20px;
-    /*border-color: #7c7c7c;
-    border-style: solid;
-    border-width: 2px;*/
-	padding:4px 20px;
-    text-decoration: none;
-    background-color:black;
-    color: white;
+/* Table grids
+-----------------------------------------------------------*/
 
+
+.table_grid
+{
+    border-collapse:collapse;
+}
+.table_grid, .table_grid th, .table_grid td
+{
+border-bottom: 0px solid #E8E8E8;
+}
+
+.table_grid tr:nth-child(even) {
+    background-color: #F4F4F4;
+}
+
+.table_grid tr:nth-child(odd) {
+    background-color: #EFEFEF;
+}
+
+.table_grid td, .table_grid th {
+    padding: 5px;
+}
+
+.table_grid th
+{
+  color: white;
+  text-align: left;
+  background-color: #00A99D;    
+}
+
+.table_grid th a
+{
+    text-decoration: none;    
+}
+
+/* Links
+-----------------------------------------------------------*/
+
+a.BackLink:link, a.BackLink:visited,  a.BackLink:hover,  a.BackLink:active 
+{
+    margin: 0px 0px 0px 0px;
+    background:url(images/icon_back.png) left center no-repeat;
+    background-size: 18px 18px;
+    padding:  0.2em 0.3em 0.2em 1.6em;
+    text-decoration: none;
+    font-weight: normal; 
+}
+
+a.AddLink:link, a.AddLink:visited,  a.AddLink:hover,  a.AddLink:active 
+{
+    margin: 0px 0px 0px 0px;
+    background:url(images/icon_add.png) left center no-repeat;
+    background-size: 18px 18px;
+    padding:  0.2em 0.3em 0.2em 1.6em;
+    text-decoration: none;
+    font-weight: normal; 
 }

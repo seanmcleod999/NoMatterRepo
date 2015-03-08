@@ -152,6 +152,24 @@ namespace NoMatterWebApi.Controllers.V1
 			
 		}	
 
-		
+		// DELETE api/v1/products/{productId}
+		[HttpDelete]
+		[Route("{productId}")]
+		public async Task<IHttpActionResult> DeleteProduct(string productId)
+		{
+			try
+			{
+				await _productRepository.DeleteProductAsync(new Guid(productId));
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+
 	}
 }

@@ -23,6 +23,7 @@ namespace NoMatterWebApi.Controllers.V1
 	{
 		private IClientRepository _clientRepository;
 		private IUserRepository _userRepository;
+		private ISectionRepository _sectionRepository;
 
 		public ClientController()
 		{
@@ -30,12 +31,14 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_clientRepository = new ClientRepository(databaseEntity);
 			_userRepository = new UserRepository(databaseEntity);
+			_sectionRepository = new SectionRepository(databaseEntity);
 		}
 
-		public ClientController(IClientRepository clientRepository, IUserRepository userRepository)
+		public ClientController(IClientRepository clientRepository, IUserRepository userRepository, SectionRepository sectionRepository)
 		{
 			_clientRepository = clientRepository;
 			_userRepository = userRepository;
+			_sectionRepository = sectionRepository;
 		}
 
 		// GET api/v1/clients
@@ -59,17 +62,92 @@ namespace NoMatterWebApi.Controllers.V1
 			
 		}
 
+		// POST api/v1/clients/{clientId}/sections
+		[Authorize]
+		[HttpPost]
+		[Route("{clientId}/sections")]
+		public async Task<IHttpActionResult> AddClientSection(string clientId, Section section)
+		{
+			//TODO: make sure the user can post to this category
+
+			try
+			{
+				var userToken = User.Identity.Name;
+
+				var user = await _userRepository.GetClientUserByTokenAsync(userToken);
+
+				var client = await _clientRepository.GetClientAsync(new Guid(clientId));
+
+				if (user.ClientId != client.ClientId) return BadRequest("User does not have access to this client");
+
+				NoMatterDatabaseModel.Section sectionDb = section.ToDatabaseSection(client.ClientId);
+
+				//Save the section
+				await _sectionRepository.AddSectionAsync(sectionDb);
+
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+		// POST api/v1/sections
+		[HttpPut]
+		[Authorize]
+		[Route("{clientId}/sections/{sectionId}")]
+		public async Task<IHttpActionResult> UpdateClientSection(string clientId, string sectionId, Section section)
+		{
+			//TODO: make sure the user can post to this category
+
+			try
+			{
+				var userToken = User.Identity.Name;
+
+				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
+				if (userDb == null) return BadRequest("User not found");
+
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				if (clientDb == null) return BadRequest("Client not found");
+
+				var sectionDb = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
+				if (sectionDb == null) return BadRequest("Section not found");
+
+				if (userDb.ClientId != clientDb.ClientId) return BadRequest("User does not have access to this client");
+
+				//Update the section
+				await _sectionRepository.UpdateSectionAsync(sectionDb, section);
+
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
 		// GET api/v1/clients/{clientUuid}/sections
+		[HttpGet]
 		[Route("{clientUuid}/sections")]
 		[ResponseType(typeof(List<Section>))]
-		public async Task<IHttpActionResult> GetClientSections(string clientUuid)
+		public async Task<IHttpActionResult> GetClientSections(string clientUuid, bool includeEmpty = false, bool includeHidden = false)
 		{
 			try
 			{
-		
-				var sectionsDb = await _clientRepository.GetClientSectionsAsync(new Guid(clientUuid));
+
+				var sectionsDb = await _clientRepository.GetClientSectionsAsync(new Guid(clientUuid), includeHidden);
 
 				var sections = sectionsDb.Select(x => x.ToDomainSection()).ToList();
+
+				if (!includeEmpty)
+				{
+					sections = sections.Where(x => x.FullCategoryCount > 0).ToList();
+				}
 
 				return Ok(sections);
 

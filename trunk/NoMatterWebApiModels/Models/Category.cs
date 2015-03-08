@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,15 @@ namespace NoMatterWebApiModels.Models
 
         public string CategoryId { get; set; }
 
+		[Required(ErrorMessage = "required")]
+		[StringLength(50, ErrorMessage = "Must be under 50 characters")]
         public string CategoryName { get; set; }
 
         public string CategoryDescription { get; set; }
 
-        public int CategoryOrder { get; set; }
+		[Range(0, 100)]
+		[Required(ErrorMessage = "required")]
+        public short CategoryOrder { get; set; }
 
 		public string ActionName { get; set; }
 

@@ -178,6 +178,13 @@
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="Keyword" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="smallint" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Section">
           <Key>
             <PropertyRef Name="SectionId" />
@@ -187,6 +194,10 @@
           <Property Name="SectionUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="SectionName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ControllerName" Type="varchar" MaxLength="50" />
+          <Property Name="SectionDescription" Type="varchar(max)" />
+          <Property Name="Hidden" Type="bit" Nullable="false" />
+          <Property Name="Picture" Type="varchar" MaxLength="50" />
+          <Property Name="SectionOrder" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="Setting">
           <Key>
@@ -221,6 +232,14 @@
           <Property Name="PostalCode" Type="varchar" MaxLength="10" />
           <Property Name="DateAdded" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleId" />
+          </Key>
+          <Property Name="UserRoleId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="smallint" Nullable="false" />
         </EntityType>
         <Association Name="FK_CartProduct_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="1" />
@@ -343,7 +362,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscountProduct_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="DiscountProduct" Type="Self.DiscountProduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
@@ -379,7 +400,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_OrderProduct_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="OrderProduct" Type="Self.OrderProduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
@@ -391,7 +414,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Product_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Category">
@@ -403,7 +428,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProductKeyword_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="ProductKeyword" Type="Self.ProductKeyword" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
@@ -438,6 +465,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserRole_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DatabaseModelStoreContainer">
           <EntitySet Name="CartProduct" EntityType="Self.CartProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
@@ -454,9 +505,11 @@
           <EntitySet Name="PaymentType" EntityType="Self.PaymentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductKeyword" EntityType="Self.ProductKeyword" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CartProduct_Product" Association="Self.FK_CartProduct_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="CartProduct" EntitySet="CartProduct" />
@@ -528,6 +581,14 @@
           <AssociationSet Name="FK_UserOrder_User" Association="Self.FK_UserOrder_User">
             <End Role="User" EntitySet="User" />
             <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_Role" Association="Self.FK_UserRole_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User" Association="Self.FK_UserRole_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -738,6 +799,10 @@
           <Property Name="ControllerName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Categories" Relationship="Self.FK_Category_Section" FromRole="Section" ToRole="Category" />
           <NavigationProperty Name="Client" Relationship="Self.FK_Section_Section" FromRole="Section" ToRole="Client" />
+          <Property Name="SectionDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Hidden" Type="Boolean" Nullable="false" />
+          <Property Name="Picture" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SectionOrder" Type="Int16" Nullable="false" />
         </EntityType>
         <EntityType Name="Setting">
           <Key>
@@ -775,6 +840,7 @@
           <Property Name="Province" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Country" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PostalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserRoles" Relationship="DatabaseModel.FK_UserRole_User" FromRole="User" ToRole="UserRole" />
         </EntityType>
         <Association Name="FK_CartProduct_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="1" />
@@ -1039,6 +1105,16 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderProduct" EntitySet="OrderProducts" />
           </AssociationSet>
+          <EntitySet Name="Roles" EntityType="DatabaseModel.Role" />
+          <EntitySet Name="UserRoles" EntityType="DatabaseModel.UserRole" />
+          <AssociationSet Name="FK_UserRole_Role" Association="DatabaseModel.FK_UserRole_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User" Association="DatabaseModel.FK_UserRole_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
           <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
@@ -1110,6 +1186,48 @@
             </Principal>
             <Dependent Role="OrderProduct">
               <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int16" Nullable="false" />
+          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserRoles" Relationship="DatabaseModel.FK_UserRole_Role" FromRole="Role" ToRole="UserRole" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleId" />
+          </Key>
+          <Property Name="UserRoleId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="DatabaseModel.FK_UserRole_Role" FromRole="UserRole" ToRole="Role" />
+          <NavigationProperty Name="User" Relationship="DatabaseModel.FK_UserRole_User" FromRole="UserRole" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_UserRole_Role">
+          <End Type="DatabaseModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="DatabaseModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_User">
+          <End Type="DatabaseModel.User" Role="User" Multiplicity="1" />
+          <End Type="DatabaseModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1296,6 +1414,10 @@
           <EntitySetMapping Name="Sections">
             <EntityTypeMapping TypeName="DatabaseModel.Section">
               <MappingFragment StoreEntitySet="Section">
+                <ScalarProperty Name="SectionOrder" ColumnName="SectionOrder" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Hidden" ColumnName="Hidden" />
+                <ScalarProperty Name="SectionDescription" ColumnName="SectionDescription" />
                 <ScalarProperty Name="SectionId" ColumnName="SectionId" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="SectionUUID" ColumnName="SectionUUID" />
@@ -1349,6 +1471,23 @@
                 <ScalarProperty Name="DeliveryAmount" ColumnName="DeliveryAmount" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="DatabaseModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="DatabaseModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRole">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

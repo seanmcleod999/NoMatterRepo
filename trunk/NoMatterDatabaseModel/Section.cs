@@ -24,6 +24,10 @@ namespace NoMatterDatabaseModel
         public System.Guid SectionUUID { get; set; }
         public string SectionName { get; set; }
         public string ControllerName { get; set; }
+        public string SectionDescription { get; set; }
+        public bool Hidden { get; set; }
+        public string Picture { get; set; }
+        public short SectionOrder { get; set; }
     
         public virtual ICollection<Category> Categories { get; set; }
         public virtual Client Client { get; set; }

@@ -8,8 +8,9 @@ namespace NoMatterWebApiWebHelper.Enums
 {
 	public enum PictureTypeEnum : short
 	{
-		ShopItemPicture = 1,
+		ProductPicture = 1,
 		CategoryPicture = 2,
-		SliderPicture = 3
+		SliderPicture = 3,
+		SectionPicture = 4
 	};
 }

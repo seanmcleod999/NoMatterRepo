@@ -43,6 +43,10 @@
         <AssociationConnector Association="DatabaseModel.FK_ClientDeliveryOption_Client1" />
         <AssociationConnector Association="DatabaseModel.FK_Order_ClientDeliveryOption" />
         <AssociationConnector Association="DatabaseModel.FK_OrderProduct_Product" />
+        <EntityTypeShape EntityType="DatabaseModel.Role" Width="1.5" PointX="2.75" PointY="35.25" />
+        <EntityTypeShape EntityType="DatabaseModel.UserRole" Width="1.5" PointX="5" PointY="35" />
+        <AssociationConnector Association="DatabaseModel.FK_UserRole_Role" />
+        <AssociationConnector Association="DatabaseModel.FK_UserRole_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

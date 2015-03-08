@@ -15,7 +15,7 @@ using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using WebApplication7.Models;
-using WebApplication7.ViewModels;
+using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers
 {
@@ -31,7 +31,7 @@ namespace WebApplication7.Controllers
 			_categoryHelper = new CategoryHelper();
 			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
-			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ShopItemPicture, _globalSettings);
+			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ProductPicture, _globalSettings);
 		}
 
 		//public CategoryController(ICurrentUser currentUser)

@@ -1,4 +1,4 @@
-﻿@model WebApplication7.ViewModels.SectionCategoriesVm
+﻿@model NoMatterWebApiModels.ViewModels.SectionCategoriesVm
 
 
 @{
@@ -7,11 +7,13 @@
 
 <h1>Categories for @Model.Section.SectionName</h1>
 
-@Html.ActionLink("Add Category", "AddCategory", "Admin", new { sectionId = @Model.Section.SectionId }, null)
+<div class="PageNavigationBar">
+@Html.ActionLink("Add Category", "CategoryAdd", "Admin", new { sectionId = @Model.Section.SectionId }, new { @class = "AddLink" })
+&nbsp;    
+@Html.ActionLink("Back to Sections", "Sections", "Admin", new { clientId = Model.Section.ClientId}, new { @class = "BackLink" })
+</div>
 
-
-<br/><br/>
-<table>
+<table class="table_grid">
     <tr>
         <th>
             Category
@@ -31,7 +33,10 @@
         <th>
             
         </th>
-         <th>
+        <th>
+            
+        </th>
+        <th>
             
         </th>
     </tr>
@@ -56,12 +61,12 @@
             @category.VisibleProductCount
         </td>
         <td>
-            @Html.ActionLink("Edit", "EditCategory", "Admin", new { categoryId = @category.CategoryId }, null)
+            @Html.ActionLink("Edit", "CategoryEdit", "Admin", new { categoryId = @category.CategoryId }, null)
         </td>
         <td>
             @if (!category.Conditional && category.FullProductCount == 0)
             {
-                @Html.ActionLink("Delete", "DeleteCategory", "Admin", new { categoryId = @category.CategoryId }, new { onclick = "return confirm('Are you sure you wish to delete this category? Note that you can only delete categories that have no products.');" })
+                @Html.ActionLink("Delete", "CategoryDelete", "Admin", new { categoryId = @category.CategoryId, sectionId = @Model.Section.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this category? Note that you can only delete categories that have no products.');" })
             }
             
         </td>

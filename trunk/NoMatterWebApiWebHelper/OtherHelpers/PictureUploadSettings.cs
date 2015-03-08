@@ -39,7 +39,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 			switch (pictureType)
 			{
-				case PictureTypeEnum.ShopItemPicture:
+				case PictureTypeEnum.ProductPicture:
 					_picturePath = HttpContext.Current.Server.MapPath(globalSettings.ShopImagesPath);
 					_maxPictureSize = globalSettings.ShopItemImageMaxSize;
 					_generateThumbnail = true;
@@ -54,6 +54,12 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 				case PictureTypeEnum.SliderPicture:
 					_picturePath = HttpContext.Current.Server.MapPath(globalSettings.SliderImagesPath);
 					_maxPictureSize = globalSettings.SliderImageMaxSize;
+					_generateThumbnail = true;
+					break;
+
+				case PictureTypeEnum.SectionPicture:
+					_picturePath = HttpContext.Current.Server.MapPath(globalSettings.SectionImagesPath);
+					_maxPictureSize = globalSettings.SectionImageMaxSize;
 					_generateThumbnail = true;
 					break;
 

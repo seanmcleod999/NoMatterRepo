@@ -27,10 +27,12 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		string ShopImagesPath { get; }
 		string SliderImagesPath { get; }
 		string CategoryImagesPath { get; }
+		string SectionImagesPath { get; }
 
 		int ShopItemImageMaxSize { get; }
 		int CategoryImageMaxSize { get; }
 		int SliderImageMaxSize { get; }
+		int SectionImageMaxSize { get; }
 
 		//int LatestItemsCount { get; }
 		//int RelatedItemsCount { get; }
@@ -89,10 +91,12 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public string ShopImagesPath { get { return ConfigurationManager.AppSettings["ShopImagesPath"]; } }
 		public string SliderImagesPath { get { return ConfigurationManager.AppSettings["SliderImagesPath"]; } }
 		public string CategoryImagesPath { get { return ConfigurationManager.AppSettings["CategoryImagesPath"]; } }
+		public string SectionImagesPath { get { return ConfigurationManager.AppSettings["SectionImagesPath"]; } }
 
 		public int ShopItemImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["ShopItemImageMaxSize"]); } }
 		public int CategoryImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["CategoryImageMaxSize"]); } }
 		public int SliderImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["SliderImageMaxSize"]); } }
+		public int SectionImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["SectionImageMaxSize"]); } }
 
 		public int PictureThumbnailSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["PictureThumbnailSize"]); } }
 

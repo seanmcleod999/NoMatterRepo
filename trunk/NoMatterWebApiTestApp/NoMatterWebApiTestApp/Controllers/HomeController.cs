@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using NoMatterWebApiWebHelper.OtherHelpers;
-using WebApplication7.ViewModels;
+using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers
 {

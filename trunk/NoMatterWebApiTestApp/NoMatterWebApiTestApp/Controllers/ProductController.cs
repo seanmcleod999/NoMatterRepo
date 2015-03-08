@@ -17,7 +17,7 @@ using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using WebApplication7.Logging;
 using WebApplication7.Models;
-using WebApplication7.ViewModels;
+using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers
 {
@@ -33,7 +33,7 @@ namespace WebApplication7.Controllers
 			_productHelper = new ProductHelper();
 			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
-			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ShopItemPicture, _globalSettings);
+			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ProductPicture, _globalSettings);
 		}
 
         public async Task<ActionResult> ViewProduct(string productId)

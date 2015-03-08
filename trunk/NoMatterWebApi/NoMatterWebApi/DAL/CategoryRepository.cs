@@ -13,8 +13,8 @@ namespace NoMatterWebApi.DAL
 		Task<Category> GetCategoryAsync(int categoryId);
 		Task<Category> GetCategoryAsync(Guid categoryUuid);
 		Task<string> AddCategoryAsync(Category category);
-		void UpdateCategoryAsync(Category category);
-		void DeleteCategoryAsync(Guid categoryUuid);
+		Task UpdateCategoryAsync(Category category);
+		Task DeleteCategoryAsync(Guid categoryUuid);
 		Task<List<Product>> GetCategoryProductsAsync(Guid categoryUuid);
 		Task<List<Product>> GetCategoryProductsByTypeAsync(int sectionId, int categoryId, string type);
 	}
@@ -54,7 +54,7 @@ namespace NoMatterWebApi.DAL
 
 		}
 
-		public async void UpdateCategoryAsync(Category category)
+		public async Task UpdateCategoryAsync(Category category)
 		{
 			databaseConnection.Categories.Attach(category);
 
@@ -62,7 +62,7 @@ namespace NoMatterWebApi.DAL
 
 		}
 
-		public async void DeleteCategoryAsync(Guid categoryUuid)
+		public async Task DeleteCategoryAsync(Guid categoryUuid)
 		{
 			var category = await databaseConnection.Categories.Where(x => x.CategoryUUID == categoryUuid).SingleOrDefaultAsync();
 

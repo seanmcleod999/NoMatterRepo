@@ -15,8 +15,8 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	public interface IClientHelper
 	{
 		Task<List<Client>> GetClientsAsync();
-		Task<List<Section>> GetClientSectionsAsync(string clientId);
-		List<Section> GetClientSections(string clientId);
+		Task<List<Section>> GetClientSectionsAsync(string clientId, bool includeEmpty, bool includeHidden);
+		List<Section> GetClientSections(string clientId, bool includeEmpty, bool includeHidden);
 		List<ClientSetting> GetClientSettings(string clientId);
 		Task<List<ClientPaymentType>> GetClientPaymentTypes(string clientId);
 		Task<List<ClientDeliveryOption>> GetClientDeliveryOptions(string clientId);
@@ -56,7 +56,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}
 		}
 
-		public async Task<List<Section>> GetClientSectionsAsync(string clientId)
+		public async Task<List<Section>> GetClientSectionsAsync(string clientId, bool includeEmpty, bool includeHidden)
 		{
 			using (var client = new HttpClient())
 			{
@@ -64,7 +64,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/Sections", clientId));
+				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/Sections?includeEmpty={1}&includeHidden={2}", clientId, includeEmpty, includeHidden));
 
 				if (!response.IsSuccessStatusCode)
 					throw new WebApiException("Cannot get Sections", response);	
@@ -75,7 +75,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}
 		}
 
-		public List<Section> GetClientSections(string clientId)
+		public List<Section> GetClientSections(string clientId, bool includeEmpty, bool includeHidden)
 		{
 			using (var client = new HttpClient())
 			{
@@ -83,7 +83,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = client.GetAsync(string.Format("api/v1/clients/{0}/Sections", clientId)).Result;
+				var response = client.GetAsync(string.Format("api/v1/clients/{0}/Sections?includeEmpty={1}&includeHidden={2}", clientId, includeEmpty, includeHidden)).Result;
 
 				if (!response.IsSuccessStatusCode)
 					throw new WebApiException("Cannot get Sections", response);

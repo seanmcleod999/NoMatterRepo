@@ -1,4 +1,4 @@
-﻿@model WebApplication7.ViewModels.CategoryProductsVm
+﻿@model NoMatterWebApiModels.ViewModels.CategoryProductsVm
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -9,8 +9,14 @@
 <br/>
 <br/>
 
+<div class="PageNavigationBar">
+@Html.ActionLink("Add Product", "ProductAdd", "Admin", new { categoryId = @Model.Category.CategoryId }, new { @class = "AddLink" })
+&nbsp;    
+@Html.ActionLink("Back to Categories", "SectionCategories", "Admin", new { sectionId = Model.Section.SectionId}, new { @class = "BackLink" })
+</div>
 
-<table>
+
+<table class="table_grid">
     <tr>
         <th>
             Title

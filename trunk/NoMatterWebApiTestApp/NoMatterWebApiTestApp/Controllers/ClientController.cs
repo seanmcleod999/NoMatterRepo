@@ -11,7 +11,7 @@ using System.Web.Security;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
-using WebApplication7.ViewModels;
+using NoMatterWebApiModels.ViewModels;
 
 
 namespace WebApplication7.Controllers
@@ -44,7 +44,7 @@ namespace WebApplication7.Controllers
 
 		public async Task<ActionResult> GetClientSections(string clientId)
 		{
-			var clientSections = await _clientHelper.GetClientSectionsAsync(clientId);
+			var clientSections = await _clientHelper.GetClientSectionsAsync(clientId, true, true);
 
 			return View(clientSections);
 		}

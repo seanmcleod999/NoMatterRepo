@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,12 +11,15 @@ using System.Web.Mvc;
 using System.Web.Security;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper;
+using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
-using WebApplication7.ViewModels;
+using WebApplication7.Models;
+using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers
 {
+	[Authorize]
     public class AdminController : Controller
     {
 	    private IClientHelper _clientHelper;
@@ -23,6 +27,9 @@ namespace WebApplication7.Controllers
 		private ICategoryHelper _categoryHelper;
 		private IProductHelper _productHelper;
 		private IGlobalSettings _globalSettings;
+		private IPictureHelper _pictureHelper;
+		private IPictureUploadSettings _sectionPictureUploadSettings;
+		private IPictureUploadSettings _categoryPictureUploadSettings;
 
 		public AdminController()
 		{
@@ -30,7 +37,10 @@ namespace WebApplication7.Controllers
 			_sectionHelper = new SectionHelper();
 			_categoryHelper = new CategoryHelper();
 			_productHelper = new ProductHelper();
+			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
+			_sectionPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.SectionPicture, _globalSettings);
+			_categoryPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.CategoryPicture, _globalSettings);
 		}
 
 		public AdminController(IClientHelper clientHelper, ISectionHelper sectionHelper, ICategoryHelper categoryHelper, IProductHelper productHelper, IGlobalSettings globalSettings)
@@ -64,34 +74,84 @@ namespace WebApplication7.Controllers
 		}
 
 
-		public async Task<ActionResult> Sections()
+		public async Task<ActionResult> Sections(string clientId = null)
 		{
-			var clientSections = await _clientHelper.GetClientSectionsAsync(_globalSettings.DefaultClientId);
+			if (string.IsNullOrEmpty(clientId)) clientId = _globalSettings.DefaultClientId;
 
-			return View(clientSections);
+			var clientSections = await _clientHelper.GetClientSectionsAsync(_globalSettings.DefaultClientId, true, true);
+
+			var clientSectionsVm = new ClientSectionsVm
+				{
+					ClientId = clientId, 
+					Sections = clientSections
+				};
+
+			return View(clientSectionsVm);
 
 		}
 
-		public ActionResult AddSection()
+		public ActionResult SectionAdd(string clientId)
 		{
-			var addSectionVm = new AddSectionVm
+			var addSectionVm = new AddEditSectionVm
 			{
+
 				Section = new Section()
+					{
+						ClientId = clientId,
+						Hidden = false
+					}
 			};
 
-			return View("AddEditSection", addSectionVm);
+			return View(addSectionVm);
 
 		}
 
 		[HttpPost]
-		public ActionResult AddSection(AddSectionVm addSectionVm)
+		public async Task<ActionResult> SectionAdd(AddEditSectionVm addEditSectionVm)
 		{
+			var token = ((CustomPrincipal)HttpContext.User).Token;
 
+			if (addEditSectionVm.Picture != null) addEditSectionVm.Section.Picture = _pictureHelper.UploadPicture(Image.FromStream(addEditSectionVm.Picture.InputStream), _sectionPictureUploadSettings);
+
+			await _sectionHelper.PostSectionAsync(addEditSectionVm.Section, token);
+
+			return RedirectToAction("Sections");
+		}
+
+		public async Task<ActionResult> SectionEdit(string sectionId)
+		{
+			var section = await _sectionHelper.GetSectionAsync(sectionId);
+
+			var addSectionVm = new AddEditSectionVm
+			{
+				Section = section
+			};
+
+			return View(addSectionVm);
+
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> SectionEdit(AddEditSectionVm addEditSectionVm)
+		{
+			var token = ((CustomPrincipal)HttpContext.User).Token;
+
+			if (addEditSectionVm.Picture != null) addEditSectionVm.Section.Picture = _pictureHelper.UploadPicture(Image.FromStream(addEditSectionVm.Picture.InputStream), _sectionPictureUploadSettings);
+
+			await _sectionHelper.UpdateSectionAsync(addEditSectionVm.Section, token);
 
 			return RedirectToAction("Sections");
 
 		}
 
+		public async Task<ActionResult> SectionDelete(string sectionId)
+		{
+			var token = ((CustomPrincipal)HttpContext.User).Token;
+
+			await _sectionHelper.DeleteSectionAsync(sectionId, token);
+
+			return RedirectToAction("Sections");
+		}
 
 		public async Task<ActionResult> SectionCategories(string sectionId)
 		{
@@ -105,52 +165,66 @@ namespace WebApplication7.Controllers
 					Categories = sectionCategories
 				};
 
-			return View(sectionCategoriesVm);
+			return View("Categories", sectionCategoriesVm);
 
 		}
 
-		public ActionResult AddCategory(string sectionId)
+		public ActionResult CategoryAdd(string sectionId)
 		{
 			var addCategoryVm = new AddEditCategoryVm
 			{
-				SectionId = sectionId,
 				Category = new Category()
+					{
+						SectionId = sectionId
+					}
 			};
 
-			return View("AddEditCategory", addCategoryVm);
+			return View("CategoryAdd", addCategoryVm);
 
 		}
 
 		[HttpPost]
-		public ActionResult AddCategory(AddEditCategoryVm addCategoryVm)
+		public async Task<ActionResult> CategoryAdd(AddEditCategoryVm addCategoryVm)
 		{
+			var token = ((CustomPrincipal)HttpContext.User).Token;
 
+			if (addCategoryVm.Picture != null) addCategoryVm.Category.Picture = _pictureHelper.UploadPicture(Image.FromStream(addCategoryVm.Picture.InputStream), _categoryPictureUploadSettings);
 
-			return RedirectToAction("SectionCategories", new {sectionId = addCategoryVm.SectionId});
+			await _categoryHelper.PostCategoryAsync(addCategoryVm.Category, token);
+
+			return RedirectToAction("SectionCategories", new {sectionId = addCategoryVm.Category.SectionId});
 
 		}
 
-		public async Task<ActionResult> EditCategory(string categoryId)
+		public async Task<ActionResult> CategoryEdit(string categoryId)
 		{
 			var category = await _categoryHelper.GetCategoryAsync(categoryId);
 
 			var addCategoryVm = new AddEditCategoryVm
 			{
-				SectionId = category.SectionId,
 				Category = category
 			};
 
-			return View("AddEditCategory", addCategoryVm);
+			return View("CategoryEdit", addCategoryVm);
 
 		}
 
 		[HttpPost]
-		public ActionResult EditCategory(AddEditCategoryVm addCategoryVm)
+		public async Task<ActionResult> CategoryEdit(AddEditCategoryVm addCategoryVm)
 		{
+			//await _categoryHelper.UpdateCategory(addCategoryVm.Category);
 
+			return RedirectToAction("SectionCategories", new { sectionId = addCategoryVm.Category.SectionId });
 
-			return RedirectToAction("SectionCategories", new { sectionId = addCategoryVm.SectionId });
+		}
 
+		public async Task<ActionResult> CategoryDelete(string categoryId, string sectionId)
+		{
+			var token = ((CustomPrincipal)HttpContext.User).Token;
+
+			await _categoryHelper.DeleteCategoryAsync(categoryId, token);
+
+			return RedirectToAction("SectionCategories", new { sectionId = sectionId} );
 		}
 
 		public async Task<ActionResult> CategoryProducts(string categoryId)

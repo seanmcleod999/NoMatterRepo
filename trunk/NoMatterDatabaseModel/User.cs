@@ -17,6 +17,7 @@ namespace NoMatterDatabaseModel
         public User()
         {
             this.Orders = new HashSet<Order>();
+            this.UserRoles = new HashSet<UserRole>();
         }
     
         public int UserId { get; set; }
@@ -40,5 +41,6 @@ namespace NoMatterDatabaseModel
     
         public virtual Client Client { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }

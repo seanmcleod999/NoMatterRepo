@@ -12,7 +12,7 @@ using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using WebApplication7.Logging;
-using WebApplication7.ViewModels;
+using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers
 {

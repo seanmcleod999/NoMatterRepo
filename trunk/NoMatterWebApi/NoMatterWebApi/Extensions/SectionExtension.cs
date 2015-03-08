@@ -11,9 +11,29 @@ namespace NoMatterWebApi.Extensions
 		{
 			return new NoMatterWebApiModels.Models.Section
 			{
+				ClientId = section.Client.ClientUUID.ToString(),
 				SectionId = section.SectionUUID.ToString(),
 				SectionName = section.SectionName,
-				CategoryCount = section.Categories.Count
+				SectionDescription = section.SectionDescription,
+				SectionOrder = section.SectionOrder,
+				Picture = section.Picture,
+				Hidden = section.Hidden,
+				FullCategoryCount = section.Categories.Count,
+				VisibleCategoryCount = section.Categories.Count(x => !x.Hidden) 
+			};
+		}
+
+		public static NoMatterDatabaseModel.Section ToDatabaseSection(this  NoMatterWebApiModels.Models.Section section, int clientId)
+		{
+			return new NoMatterDatabaseModel.Section
+			{
+				ClientId = clientId,
+				SectionName = section.SectionName,
+				SectionDescription = section.SectionDescription,
+				SectionOrder = section.SectionOrder,
+				Hidden = section.Hidden,
+				Picture = section.Picture
+				
 			};
 		}
 	}

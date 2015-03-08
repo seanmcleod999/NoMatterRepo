@@ -207,32 +207,19 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\AddEditCategoryVm.cs" />
-    <Compile Include="ViewModels\AddProductVm.cs" />
-    <Compile Include="ViewModels\AddSectionVm.cs" />
-    <Compile Include="ViewModels\CategoryProductsVm.cs" />
-    <Compile Include="ViewModels\CategoryShopVm.cs" />
-    <Compile Include="ViewModels\CheckoutPostageVm.cs" />
-    <Compile Include="ViewModels\CheckoutSummaryVm.cs" />
-    <Compile Include="ViewModels\CheckoutVm.cs" />
-    <Compile Include="ViewModels\ClientSettingsVm.cs" />
-    <Compile Include="ViewModels\EditProductVm.cs" />
-    <Compile Include="ViewModels\GlobalSettingsVm.cs" />
-    <Compile Include="ViewModels\NewProductVm.cs" />
-    <Compile Include="ViewModels\SectionCategoriesVm.cs" />
-    <Compile Include="ViewModels\UserLoginVm.cs" />
-    <Compile Include="ViewModels\ViewCategoryProductsVm.cs" />
-    <Compile Include="ViewModels\ViewClientProducts.cs" />
-    <Compile Include="ViewModels\ViewGoalVm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ViewModels\ViewProductVm.cs" />
     <Compile Include="Views\Goal\CashoutFinishModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\icon_add.png" />
+    <Content Include="Content\Images\icon_back.png" />
+    <Content Include="Content\Images\icon_delete.png" />
+    <Content Include="Content\Images\icon_edit.png" />
     <Content Include="Content\Images\icon_facebooklogin.png" />
+    <Content Include="Content\Images\icon_next.png" />
+    <Content Include="Content\Images\icon_previous.png" />
+    <Content Include="Content\Images\icon_view.png" />
     <Content Include="Content\Images\payfast_icon.png" />
     <Content Include="Content\Images\ReservedLayer.png" />
     <Content Include="Content\Images\SaleLayer.png" />
@@ -297,11 +284,13 @@
     <Content Include="Views\Checkout\PayfastCancelPayment.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\Admin\Sections.cshtml" />
-    <Content Include="Views\Admin\SectionCategories.cshtml" />
+    <Content Include="Views\Admin\Categories.cshtml" />
     <Content Include="Views\Admin\CategoryProducts.cshtml" />
-    <Content Include="Views\Admin\AddEditSection.cshtml" />
-    <Content Include="Views\Admin\AddEditCategory.cshtml" />
+    <Content Include="Views\Admin\SectionAdd.cshtml" />
+    <Content Include="Views\Admin\CategoryAdd.cshtml" />
     <Content Include="Views\Admin\AddProduct.cshtml" />
+    <Content Include="Views\Admin\SectionEdit.cshtml" />
+    <Content Include="Views\Admin\CategoryEdit.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
@@ -364,6 +353,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\CategoryImages\" />
+    <Folder Include="Content\SectionImages\" />
     <Folder Include="Content\ShopImages\" />
     <Folder Include="Content\SliderImages\" />
   </ItemGroup>

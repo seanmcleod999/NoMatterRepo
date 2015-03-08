@@ -6,6 +6,9 @@
 
   <scriptValues outputFile="insert.sql">
        <table name="DiscountType" />
+       <table name="Role" />
+       <table name="PaymentType" />
+       <table name="Globalsetting" />
   </scriptValues>
 
 

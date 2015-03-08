@@ -12,7 +12,7 @@ namespace NoMatterWebApi.DAL
 		Task<Client> GetClientAsync(int clientId);
 		Task<Client> GetClientAsync(Guid clientUuid);
 		Task<List<Client>> GetClientsAsync();
-		Task<List<Section>> GetClientSectionsAsync(Guid clientUuid);
+		Task<List<Section>> GetClientSectionsAsync(Guid clientUuid, bool includeHidden);
 		Task<List<Setting>> GetClientSettingsAsync(Guid clientUuid);
 		Task<List<ClientPaymentType>> GetClientPaymentTypesAsync(Guid clientUuid);
 		Task<List<ClientDeliveryOption>> GetClientDeliveryOptionsAsync(Guid clientUuid);
@@ -49,11 +49,18 @@ namespace NoMatterWebApi.DAL
 			return clients;
 		}
 
-		public async Task<List<Section>> GetClientSectionsAsync(Guid clientUuid)
+		public async Task<List<Section>> GetClientSectionsAsync(Guid clientUuid, bool includeHidden)
 		{
-			var sections = await databaseConnection.Sections.Include("Categories").Where(x => x.Client.ClientUUID == clientUuid && x.Categories.Any()).ToListAsync();
+			var sections = databaseConnection.Sections.Include("Categories").Where(x => x.Client.ClientUUID == clientUuid);
 
-			return sections;
+			if (!includeHidden)
+			{
+				sections = sections.Where(x => !x.Hidden);
+			}
+
+			var sectionsDb = await sections.OrderBy(x => x.SectionOrder).ToListAsync();
+
+			return sectionsDb;
 		}
 
 		public async Task<List<Setting>> GetClientSettingsAsync(Guid clientUuid)

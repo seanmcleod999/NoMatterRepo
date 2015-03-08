@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,10 +10,24 @@ namespace NoMatterWebApiModels.Models
 	{
 		public string SectionId { get; set; }
 
+		public string ClientId { get; set; }
+
+		[Required(ErrorMessage = "required")]
+		[StringLength(50, ErrorMessage = "Must be under 50 characters")]
 		public string SectionName { get; set; }
 
-		public int CategoryCount { get; set; }
+		public string SectionDescription { get; set; }
 
-		//public bool Enabled { get; set; }
+		[Range(0,100)]
+		[Required(ErrorMessage = "required")]
+		public short SectionOrder { get; set; }
+
+		public string Picture { get; set; }
+
+		public int FullCategoryCount { get; set; }
+
+		public int VisibleCategoryCount { get; set; }
+
+		public bool Hidden { get; set; }
 	}
 }
