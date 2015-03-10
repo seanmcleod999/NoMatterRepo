@@ -175,6 +175,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\ClientImages\" />
     <Folder Include="ResultCodes\" />
     <Folder Include="Views\Product\" />
   </ItemGroup>
@@ -211,13 +212,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\ClientAdminController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Clients2Controller.cs" />
     <Compile Include="Controllers\SuperuserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\V1\CartController.cs" />
     <Compile Include="Controllers\V1\CategoryController.cs" />
     <Compile Include="Controllers\V1\ClientController.cs" />
+    <Compile Include="Controllers\V1\ImagesController.cs" />
     <Compile Include="Controllers\V1\OrderController.cs" />
     <Compile Include="Controllers\V1\GlobalController.cs" />
     <Compile Include="Controllers\V1\ProductController.cs" />
@@ -270,6 +272,8 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\icon_facebooklogin.png" />
+    <Content Include="Content\images\nomatter.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -329,12 +333,12 @@
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Web.Debug.config">
+    <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
+    </None>
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-    </Content>
+    </None>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />

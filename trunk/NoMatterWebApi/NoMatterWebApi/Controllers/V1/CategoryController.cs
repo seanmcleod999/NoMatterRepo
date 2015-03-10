@@ -50,7 +50,7 @@ namespace NoMatterWebApi.Controllers.V1
 		[HttpPost]
 		[Route("{categoryid}/products")]
 		[ResponseType(typeof(Product))]
-		public async Task<IHttpActionResult> AddProduct(string categoryid, NewProduct model)
+		public async Task<IHttpActionResult> AddProduct(string categoryid, Product model)
 		{
 			//TODO: make sure the user can post to this category
 

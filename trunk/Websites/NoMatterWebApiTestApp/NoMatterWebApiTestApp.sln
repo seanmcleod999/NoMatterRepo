@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMatterWebApiTestApp", "NoMatterWebApiTestApp\NoMatterWebApiTestApp.csproj", "{E821AFEC-EB95-4961-A105-299731A0C441}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMatterWebApiWebHelper", "..\NoMatterWebApiWebHelper\NoMatterWebApiWebHelper.csproj", "{4F3E76B1-CD94-4634-A510-616F51C7A06C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMatterWebApiModels", "..\..\NoMatterWebApiModels\NoMatterWebApiModels.csproj", "{61B3D61B-1EF7-4553-99F3-9ECF07A087AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{08308BA8-F726-4D47-B9A1-EFFD17235354}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E821AFEC-EB95-4961-A105-299731A0C441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E821AFEC-EB95-4961-A105-299731A0C441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E821AFEC-EB95-4961-A105-299731A0C441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E821AFEC-EB95-4961-A105-299731A0C441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F3E76B1-CD94-4634-A510-616F51C7A06C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F3E76B1-CD94-4634-A510-616F51C7A06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F3E76B1-CD94-4634-A510-616F51C7A06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F3E76B1-CD94-4634-A510-616F51C7A06C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61B3D61B-1EF7-4553-99F3-9ECF07A087AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B3D61B-1EF7-4553-99F3-9ECF07A087AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B3D61B-1EF7-4553-99F3-9ECF07A087AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B3D61B-1EF7-4553-99F3-9ECF07A087AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = ..\packages\Unity.2.1.505.0\lib\NET35;..\packages\Unity.Interception.2.1.505.0\lib\NET35;..\packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35;..\packages\EnterpriseLibrary.Logging.5.0.505.1\lib\NET35
+	EndGlobalSection
+EndGlobal

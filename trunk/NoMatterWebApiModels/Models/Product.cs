@@ -62,6 +62,8 @@ namespace NoMatterWebApiModels.Models
 		[Display(Name = "Release Date")]
 		public DateTime ReleaseDate { get; set; }
 
+		public string ViewProductUrl { get; set; }
+
 		public DiscountDetails DiscountDetails { get; set; }
 
 		public RelatedProductDetails RelatedProductDetails { get; set; }

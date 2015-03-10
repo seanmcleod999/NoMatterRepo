@@ -47,6 +47,8 @@
     <Compile Include="Models\ClientDeliveryOption.cs" />
     <Compile Include="Models\ClientPaymentType.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\UploadImageModel.cs" />
+    <Compile Include="Models\UploadImageResponse.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\CreateOrUpdateUserResult.cs" />
@@ -57,7 +59,6 @@
     <Compile Include="Models\DiscountDetails.cs" />
     <Compile Include="Models\FacebookUser.cs" />
     <Compile Include="Models\GlobalSetting.cs" />
-    <Compile Include="Models\NewProduct.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\RelatedProducts.cs" />
     <Compile Include="Models\Section.cs" />
@@ -68,7 +69,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddEditCategoryVm.cs" />
     <Compile Include="ViewModels\AddEditSectionVm.cs" />
-    <Compile Include="ViewModels\AddProductVm.cs" />
     <Compile Include="ViewModels\CategoryProductsVm.cs" />
     <Compile Include="ViewModels\CategoryShopVm.cs" />
     <Compile Include="ViewModels\CheckoutPostageVm.cs" />
@@ -76,13 +76,13 @@
     <Compile Include="ViewModels\CheckoutVm.cs" />
     <Compile Include="ViewModels\ClientSectionsVm.cs" />
     <Compile Include="ViewModels\ClientSettingsVm.cs" />
-    <Compile Include="ViewModels\EditProductVm.cs" />
     <Compile Include="ViewModels\GlobalSettingsVm.cs" />
-    <Compile Include="ViewModels\NewProductVm.cs" />
+    <Compile Include="ViewModels\AddEditProductVm.cs" />
     <Compile Include="ViewModels\SectionCategoriesVm.cs" />
     <Compile Include="ViewModels\UserLoginVm.cs" />
     <Compile Include="ViewModels\ViewCategoryProductsVm.cs" />
-    <Compile Include="ViewModels\ViewClientProducts.cs" />
+    <Compile Include="ViewModels\ViewClientProductsVm.cs" />
+    <Compile Include="ViewModels\ViewClientsVm.cs" />
     <Compile Include="ViewModels\ViewGoalVm.cs" />
     <Compile Include="ViewModels\ViewProductVm.cs" />
   </ItemGroup>

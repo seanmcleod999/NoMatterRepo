@@ -76,7 +76,12 @@ ALTER TABLE [dbo].[UserRole] CHECK CONSTRAINT [FK_UserRole_User]
 GO
 
 
-
+INSERT INTO Role (RoleId, RoleName)
+VALUES (1, 'ClientAdmin')
+GO
+INSERT INTO Role (RoleId, RoleName)
+VALUES (2, 'SuperUser')
+GO
 
 
 
