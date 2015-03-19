@@ -1,0 +1,24 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.ViewShopItemVm
+
+@{
+    var globalSettings = new GlobalSettings();
+}
+@if (Model.RelatedShopItems.Count > 0)
+{
+    <div class="viewItemRelatedItemsHeadingBox">
+         Other similar items...
+    </div>
+      
+    <div class="viewItemRelatedItemsWrapper">
+
+        @foreach (var item in Model.RelatedShopItems.Where(item => !string.IsNullOrEmpty(item.Picture1)))
+        {
+            <div class="viewItemRelatedItem">
+                <a href="@Url.Action("Item", new { id = item.ShopItemId, fromLink = "related", lastId = @Model.LastId })"> <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + item.Picture1)" alt="@item.Description" />        
+                </a>
+            </div>
+        }
+    
+    </div>
+}

@@ -72,13 +72,14 @@
     </Compile>
     <Compile Include="OtherHelpers\GlobalSettingsStaticCache.cs" />
     <Compile Include="OtherHelpers\GlobalSettings.cs" />
-    <Compile Include="OtherHelpers\PictureUploadSettings.cs" />
-    <Compile Include="OtherHelpers\PictureHelper.cs" />
-    <Compile Include="WebApiHelpers\ImageHelper.cs" />
+    <Compile Include="WebApiHelpers\ImageHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="WebApiHelpers\OrderHelper.cs" />
     <Compile Include="WebApiHelpers\ProductHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApiHelpers\SectionHelper.cs" />
+    <Compile Include="OtherHelpers\StaticGlobalSettings.cs" />
     <Compile Include="WebApiHelpers\UserHelper.cs" />
   </ItemGroup>
   <ItemGroup>

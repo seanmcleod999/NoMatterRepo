@@ -1,0 +1,51 @@
+﻿@model SharedLibrary.ViewModels.RegisterUserVm
+
+@{
+    ViewBag.Title = "Register";
+}
+
+
+<div class="pageHeader">register</div>
+    
+<p>
+    Please enter your details to register. 
+</p>
+
+@using (Html.BeginForm())
+{
+        @Html.ValidationSummary(true)
+
+    <div>
+          
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RegisterUserModel.Email)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.RegisterUserModel.Email)
+            @Html.ValidationMessageFor(m => m.RegisterUserModel.Email)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RegisterUserModel.FullName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.RegisterUserModel.FullName)
+            @Html.ValidationMessageFor(m => m.RegisterUserModel.FullName)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(m => m.RegisterUserModel.Password)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(m => m.RegisterUserModel.Password)
+            @Html.ValidationMessageFor(m => m.RegisterUserModel.Password)
+        </div>
+
+        <p>
+            <input type="submit" value="Register" />
+        </p>
+
+    </div>   
+
+}
+    

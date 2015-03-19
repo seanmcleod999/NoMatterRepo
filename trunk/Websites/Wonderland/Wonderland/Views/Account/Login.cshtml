@@ -1,0 +1,38 @@
+﻿@model NoMatterWebApiModels.ViewModels.UserLoginVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Login</h1>
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+
+    <div>
+        
+        <div class="editor-label">
+            Email
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Username, new { style = "width:300px;" })
+            @Html.ValidationMessageFor(m => m.Username)
+        </div>
+
+        <div class="editor-label">
+            Password
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+       
+       
+        <br/>
+        <p>
+            <input type="submit" value="Login" />
+        </p>
+
+    </div>
+}

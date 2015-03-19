@@ -1,0 +1,141 @@
+﻿@model SharedLibrary.ViewModels.DiscountVm
+
+@{
+    ViewBag.Title = "AddDiscount";
+}
+
+<div id="container" class="clearfix">
+        
+<div id="sidebar">
+                                                                        
+    @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}       
+</div>
+        
+<div id="content">
+    
+    <div class="pageHeader">add a discount</div>
+
+    <div class="PageNavigationBar">
+        @Html.ActionLink("Back to List", "Discounts", null, new { @class = "BackLink" })
+    </div>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+
+         <div class="editor-label">
+             @Html.LabelFor(model => model.Discount.DiscountTypeId)
+         </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.Discount.DiscountTypeId, new SelectList(Model.DiscountTypeList, "DiscountTypeId", "DiscountTypeDescription"))                                 
+            @Html.ValidationMessageFor(model => model.Discount.DiscountTypeId)
+        </div>
+        
+        <div class="editor-label">
+                @Html.LabelFor(model => model.Discount.StartDate)
+            </div>
+        <div class="editor-field">
+             @Html.TextBox("Discount.StartDate", Model.Discount.StartDate.ToString("yyyy/MM/dd"), new { style = "width:100px;" })                                   
+        </div>
+        
+        <div class="editor-label">
+                 @Html.LabelFor(model => model.Discount.EndDate)
+            </div>
+        <div class="editor-field">
+            @Html.TextBox("Discount.EndDate", Model.Discount.EndDate.ToString("yyyy/MM/dd"), new { style = "width:100px;" })                                   
+        </div>
+        
+        <div  class="DiscountItemsSelection" >
+            <div class="editor-label">
+                 @Html.LabelFor(model => model.Discount.DiscountAmount)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => Model.Discount.DiscountAmount, new { style = "width:50px;" })                                     
+            </div>
+        </div>
+       <br/>
+        <input type="submit" value="Save" />
+        
+        <input type="hidden" name="SelectedDiscountShopItems" id="SelectedDiscountShopItems" value="" />    
+           
+    }
+    <br/>
+    
+</div>
+    
+</div>
+
+<div id="addShopItemsDialog"></div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#Discount_StartDate").datepicker({ dateFormat: 'yy/mm/dd' });
+        $("#Discount_StartDate").attr("readOnly", true);
+
+        $("#Discount_EndDate").datepicker({ dateFormat: 'yy/mm/dd' });
+        $("#Discount_EndDate").attr("readOnly", true);
+
+        $(".DiscountItemsSelection").hide();
+
+    });
+
+
+    $("#Discount_DiscountTypeId").change(function () {
+ 
+        if ($("#Discount_DiscountTypeId").val() == 2 || $("#Discount_DiscountTypeId").val() == 3) {
+
+            $(".DiscountItemsSelection").show(500);
+
+        } else {
+            $(".DiscountItemsSelection").hide(500);
+        }
+    });
+
+    function addShopItems() {
+
+        $.ajax({
+            type: "GET",
+            url: encodeURI('@Url.Action("GetDiscountShopItemChoices", "Discount")'),
+            cache: false,
+            dataType: 'html',
+            error: function () {
+                alert('Oops, there has been an error. Please notify your Support Technician.');
+            },
+            success: function (data) {
+                $("#addShopItemsDialog").html(data);
+            },
+            complete: function () {
+
+                $('#addShopItemsDialog').dialog({
+                    title: "Select Products for discount",
+                    modal: true,
+                    width: 600,
+                    height: 580,
+                    resizable: false,
+                    close: function (event, ui) { $("#addShopItemsDialog").html(""); },
+                    buttons: {
+                        "Save": function () {
+
+                            var checkedString = $('[name="ShopItemCheckBox"]:checked').map(function () { return this.value; }).get().join(',');
+
+                            $("#SelectedDiscountShopItems").val(checkedString);
+
+                            $(this).dialog('close');
+                            $('form#myForm').submit();
+
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+</script>

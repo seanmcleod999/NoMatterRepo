@@ -1,0 +1,26 @@
+﻿@model SharedLibrary.ViewModels.ViewShopItemVm
+
+<div class="viewShopItemPagingControl">
+
+   
+
+    @if (Model.ShopItemPagingDetails.PreviousShopItemId != 0)
+    {
+         @*@: <a href="@Url.Action("Item", new { id = Model.ShopItemPagingDetails.PreviousShopItemId, fromLink = "previous", lastId = @Model.LastId, category=Model.LastCatgeory })"><img src="@Url.Content("~/Content/images/icon_previous.png")" alt="Previous" />previous&nbsp;</a>*@
+    
+     @Html.ActionLink("previous", "Item", new { id = Model.ShopItemPagingDetails.PreviousShopItemId, fromLink = "previous", lastId = @Model.LastId, category=Model.LastCatgeory  }, new { @class = "PreviousLink" })
+    
+    }
+
+
+    @if (Model.ShopItemPagingDetails.NextShopItemId > 0)
+    {
+         @*@: <a href="@Url.Action("Item", new { id = Model.ShopItemPagingDetails.NextShopItemId, fromLink = "next", lastId = @Model.LastId, category=Model.LastCatgeory })">next<img src="@Url.Content("~/Content/images/icon_next.png")" alt="Next" /></a>*@
+    
+             @Html.ActionLink("next", "Item", new { id = Model.ShopItemPagingDetails.PreviousShopItemId, fromLink = "next", lastId = @Model.LastId, category=Model.LastCatgeory  }, new { @class = "NextLink" })
+    
+    }
+    
+    @* (Item @Model.ShopItemPagingDetails.CurrentItemNumber of @Model.ShopItemPagingDetails.ItemCount)*@
+
+</div>

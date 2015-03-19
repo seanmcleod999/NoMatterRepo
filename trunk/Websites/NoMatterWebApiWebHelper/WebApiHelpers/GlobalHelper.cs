@@ -41,7 +41,9 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = client.GetAsync("api/v1/globals/settings").Result;
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot get global Settings", response);
+				{
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 
 				var globalSettings = response.Content.ReadAsAsync<List<GlobalSetting>>().Result;
 

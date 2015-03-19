@@ -1,0 +1,98 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.AddEditCategoryVm
+
+@{
+    ViewBag.Title = "Category Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.env.isCompatible = true;
+
+    $(function () {
+        CKEDITOR.config.height = 100;
+    });
+</script>
+
+<h1>Edit Category</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to categories", "SectionCategories", "Admin", new { clientId = Model.Section.ClientId, sectionId = Model.Category.SectionId}, new { @class = "BackLink" })
+</div>
+
+@using (Html.BeginForm("CategoryEdit", "Admin", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Section.ClientId)
+    @Html.HiddenFor(model => model.Category.SectionId)
+    @Html.HiddenFor(model => model.Category.CategoryId)
+    @Html.HiddenFor(model => model.Category.Picture)
+
+   
+    <div class="editor-label">
+       Name
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Category.CategoryName, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.Category.CategoryName)
+    </div>
+    
+     <div class="editor-label">
+        Description
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.Category.CategoryDescription, new {style = "width:600px;"})
+        @Html.ValidationMessageFor(model => model.Category.CategoryDescription)
+        <script>
+                     CKEDITOR.replace('Category_CategoryDescription');
+        </script>
+    </div>
+    
+    <div class="editor-label">
+         Order
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Category.CategoryOrder, new {style = "width:100px;"})
+        @Html.ValidationMessageFor(model => model.Category.CategoryOrder)
+    </div>
+    
+     <div class="editor-label">
+         Hidden
+    </div>
+    <div class="editor-field">
+        @Html.CheckBoxFor(model => model.Category.Hidden)
+        @Html.ValidationMessageFor(model => model.Category.Hidden)
+    </div>
+    
+     <div class="editor-label">
+        Picture
+    </div>
+    <div class="editor-field">
+         @Html.TextBoxFor(m => m.Picture, new { type = "file", @class="form-control" })
+         @Html.ValidationMessageFor(m => m.Picture)
+    </div>
+   
+    <br/>
+    <p>
+        <input type="submit" value="Save"  class="btn btn-default"/> &nbsp; @Html.ActionLink("cancel", "SectionCategories", "Admin", new { clientId = Model.Section.ClientId, sectionId = Model.Category.SectionId }, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+    </p>
+    
+    <br/>
+    if (!string.IsNullOrEmpty(Model.Category.Picture))
+    {
+          <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Category.Picture?w=100"/>
+    }
+    else
+    {
+        <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
+    }
+
+}
+
+
+
+
+
+

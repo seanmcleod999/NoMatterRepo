@@ -16,7 +16,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		{
 			if (HttpContext.Current.Session["section-" + sectionId] == null)
 			{
-				var categories = await sectionHelper.GetSectionCategoriesAsync(sectionId);
+				var categories = await sectionHelper.GetSectionCategoriesAsync(sectionId, false, false);
 
 				HttpContext.Current.Session["section-" + sectionId] = categories;
 			}
@@ -30,7 +30,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 			if (HttpContext.Current.Session["section-" + sectionId] == null)
 			{
-				categories = await sectionHelper.GetSectionCategoriesAsync(sectionId);
+				categories = await sectionHelper.GetSectionCategoriesAsync(sectionId, false, false);
 
 				HttpContext.Current.Session["section-" + sectionId] = categories;
 			}

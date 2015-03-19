@@ -18,7 +18,7 @@ namespace NoMatterWebApi.Extensions
 				SectionOrder = section.SectionOrder,
 				Picture = section.Picture,
 				Hidden = section.Hidden,
-				FullCategoryCount = section.Categories.Count,
+				FullCategoryCount = section.Categories.Count(x => !x.Conditional),
 				VisibleCategoryCount = section.Categories.Count(x => !x.Hidden) 
 			};
 		}

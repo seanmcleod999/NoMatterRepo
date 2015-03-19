@@ -1,0 +1,63 @@
+﻿@model SharedLibrary.ViewModels.FaqVm
+
+@{
+    ViewBag.Title = "Edit Faq";
+}
+
+ <script src="@Url.Content("~/Scripts/jquery.wysiwyg.js")" type="text/javascript"></script>
+
+    <div class="pageHeader">edit faq</div>
+    <br/>
+@using (Html.BeginForm())
+{
+
+    @Html.HiddenFor(model => model.Faq.FaqId)
+
+     <table>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Faq.Heading)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Faq.Heading)
+                @Html.ValidationMessageFor(model => model.Faq.Heading)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Description)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+            </td>
+        </tr>   
+        @* <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Description)
+            </td>
+            <td>
+                @Html.TextAreaFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+            </td>
+        </tr>   *@
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Faq.Order)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Faq.Order)
+                @Html.ValidationMessageFor(model => model.Faq.Order)
+            </td>
+        </tr>
+    </table>
+    
+    <input type="submit" value="Save" />
+
+}
+
+<script type="text/javascript">
+//    $(function () {
+//        $('#Description').wysiwyg();
+//    });
+</script>

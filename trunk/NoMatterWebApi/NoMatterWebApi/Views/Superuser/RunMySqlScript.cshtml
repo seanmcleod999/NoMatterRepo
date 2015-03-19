@@ -1,13 +1,16 @@
 ﻿@model NoMatterWebApi.ViewModels.RunMySqlScriptVm
 
 @{
-    ViewBag.Title = "AddDiscount";
+    ViewBag.Title = "Run Sql Script";
 }
 
-<h2>Run MySql Script</h2>
+<h2>Run Sql Script</h2>
 
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to superuser", "Index", "Superuser", null, new { @class = "BackLink" })
+</div>
 
- @using (Html.BeginForm())
+@using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
 
@@ -16,7 +19,7 @@
     Script
     </div>
     <div class="editor-field">
-        @Html.TextAreaFor(m => m.Script, new {style = "width: 500px; height:200px;"})
+        @Html.TextAreaFor(m => m.Script, new {style = "width: 800px; height:400px;"})
     </div>
      
     <input type="submit" value="Run script" />

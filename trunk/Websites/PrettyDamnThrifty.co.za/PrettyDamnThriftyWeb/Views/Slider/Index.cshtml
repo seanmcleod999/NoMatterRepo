@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SharedLibrary.Services.SliderService.Slider>
+
+@{
+    ViewBag.Title = "Sliders";
+}
+
+<div id="container" class="clearfix">
+        
+    <div id="sidebar">
+                                                                        
+         @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}        
+    </div>
+        
+<div id="content">
+    
+    <div class="pageHeader">sliders</div>
+    
+    
+     <div class="PageNavigationBar">
+        @Html.ActionLink("New Slider", "SliderAdd", "Slider", null, new { @class = "AddLink" })
+      </div>
+
+    <table class="table_grid">
+        <tr>
+            <th>
+                Slider Name
+            </th>
+            
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SliderName)
+                </td>
+                
+                <td>
+                    @Html.ActionLink("Edit", "SliderEdit", new { id = item.SliderId }, new { @class = "EditLink" }) 
+
+                </td>
+                    
+          
+            </tr>
+        }
+
+    </table>
+    <br/><br/>
+
+</div>
+</div>

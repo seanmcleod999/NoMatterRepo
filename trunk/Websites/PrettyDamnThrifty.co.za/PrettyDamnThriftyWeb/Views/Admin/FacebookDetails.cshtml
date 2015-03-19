@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SharedLibrary.Models.FacebookAlbum>
+
+@{
+    ViewBag.Title = "FacebookDetails";
+}
+
+<h2>Facebook Details</h2>
+
+<b>Facebook Albums</b>
+<br />
+<table class="table_grid">
+<tr>
+    <th class="th_grid">
+        Album Id
+    </th>
+    <th  class="th_grid">
+        Album Name
+    </th>
+    <th class="th_grid">
+        Access
+    </th>
+    <th class="th_grid">
+        Items
+    </th>
+</tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <td  class="td_grid">
+            @item.AlbumId
+        </td>
+        <td  class="td_grid">
+            @item.AlbumName
+        </td>
+        <td  class="td_grid">
+            @item.Access
+        </td>
+        <td  class="td_grid">
+            @item.ItemCount.ToString()
+        </td>
+    </tr>
+
+}
+</table>

@@ -25,7 +25,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		{
 			var clientHelper = new ClientHelper();
 
-			var clientId = ConfigurationManager.AppSettings["DefaultClientId"];
+			var clientId = ConfigurationManager.AppSettings["SiteClientId"];
 
 			_clientSections = clientHelper.GetClientSections(clientId, false, false);
 		}

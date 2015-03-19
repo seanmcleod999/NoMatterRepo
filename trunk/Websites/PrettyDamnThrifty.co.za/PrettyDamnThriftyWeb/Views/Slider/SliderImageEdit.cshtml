@@ -1,0 +1,90 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.SliderImageVm
+
+@{
+    ViewBag.Title = "PictureGridEdit";
+
+    var globalSettings = new GlobalSettings();
+}
+
+<div class="pageHeader">edit home page image</div>
+    <br/>
+
+<div>
+    @Html.ActionLink("Back to List", "SliderEdit", new {id = Model.SliderPicture.SliderId}, new { @class = "BackLink" })
+</div>
+<br />
+
+@using (Html.BeginForm("SliderImageEdit", "Slider", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.SliderPicture.SliderId)
+    @Html.HiddenFor(model => model.SliderPicture.SliderPictureId)
+    @Html.HiddenFor(model => model.SliderPicture.PicturePath)
+  
+    <table>
+         <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                Caption
+            </td>
+            <td>
+                @Html.TextAreaFor(model => model.SliderPicture.Notes)
+                @Html.ValidationMessageFor(model => model.SliderPicture.Notes)
+            </td>
+        </tr>
+        
+            <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.SliderPicture.Order)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.SliderPicture.Order)
+                @Html.ValidationMessageFor(model => model.SliderPicture.Order)
+            </td
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.SliderPicture.Hidden)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.SliderPicture.Hidden)
+                @Html.ValidationMessageFor(model => model.SliderPicture.Hidden)
+
+            </td>
+        </tr>
+         <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.SliderPicture.Url)
+            </td>
+            <td>
+                 @Html.TextBoxFor(model => model.SliderPicture.Url, new { style = "width:300px;" })
+                 @Html.ValidationMessageFor(model => model.SliderPicture.Url)
+
+            </td>
+        </tr>
+           
+    </table>
+
+    <p>
+        <input type="submit" value="Save" />
+    </p>
+    
+     <br />
+     <img src="@Url.Content(globalSettings.SliderImagesPath + "thumb-" + Model.SliderPicture.PicturePath)" alt="View Image" />
+     
+    
+
+}
+
+
+

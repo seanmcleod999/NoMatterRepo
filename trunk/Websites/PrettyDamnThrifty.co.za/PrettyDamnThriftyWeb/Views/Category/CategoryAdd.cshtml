@@ -1,0 +1,99 @@
+﻿@model SharedLibrary.ViewModels.CategoryVm
+
+@{
+    ViewBag.Title = "Category Add";
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.css")" />
+<script type="text/javascript" src="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.min.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Category_CategoryDescription").jqte();
+    })
+</script>
+
+   
+<div class="pageHeader">Category Add</div>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("Back to List", "Index", "Category", null, new { @class = "BackLink" })
+</div>
+    
+    
+    @using (Html.BeginForm("CategoryAdd", "Category", FormMethod.Post, new { enctype = "multipart/form-data", name = "myForm", id = "myForm" }))
+    {
+        @Html.ValidationSummary(true)
+
+         <div class="editor-label">
+         @Html.LabelFor(m => m.Category.SectionId)
+     </div>
+     <div class="editor-field">
+         @Html.DropDownListFor(m => m.Category.SectionId, new SelectList(Model.Sections, "SectionId", "SectionName"))  
+         @Html.ValidationMessageFor(m => m.Category.SectionId)
+     </div>
+
+    <div class="editor-label">
+          Category Name
+    </div>
+    <div class="editor-field">
+         @Html.TextBoxFor(model => model.Category.CategoryName)
+         @Html.ValidationMessageFor(model => model.Category.CategoryName)
+    </div>
+    
+     <div class="editor-label">
+           Description
+    </div>
+    <div class="editor-field">
+         @Html.TextAreaFor(model => model.Category.CategoryDescription, new { style = "width:500px;" })
+         @Html.ValidationMessageFor(model => model.Category.CategoryDescription)
+    </div>      
+   
+    <div class="editor-label">
+         @Html.LabelFor(model => model.Category.Order)
+    </div>
+    <div class="editor-field">
+         @Html.TextBoxFor(model => model.Category.Order)
+         @Html.ValidationMessageFor(model => model.Category.Order)
+    </div>  
+          <br/>             
+    <table>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Category.Hidden)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Category.Hidden)
+                @Html.ValidationMessageFor(model => model.Category.Hidden)
+
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+               &nbsp;
+            </td>
+            <td>
+           
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File)
+            </td>
+        </tr>        
+    </table>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+
+    }
+
+
+    
+

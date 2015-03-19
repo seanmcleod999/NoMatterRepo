@@ -1,0 +1,74 @@
+﻿@model NoMatterWebApiModels.ViewModels.CheckoutPostageVm
+
+@{
+    ViewBag.Title = "Postage";
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Postage</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+            
+    @Html.HiddenFor(m=>m.UserId)      
+         
+    if (Model.DeliveryOptions.Any())
+    {
+       <div class="PaymentTypeHeader">
+        <table>
+            @foreach (var deliveryOption in Model.DeliveryOptions)
+            {                                     
+                <tr>
+                    <td>
+                        @if (deliveryOption.Selected)
+                        {
+                            <input type="radio" name="DeliveryOption" value="@deliveryOption.ClientDeliveryOptionId" checked="checked" />
+                        }
+                        else
+                        {
+                            <input type="radio" name="DeliveryOption" value="@deliveryOption.ClientDeliveryOptionId" />                                          
+                        }
+                    </td>
+                    <td align="left">
+                        
+                        @deliveryOption.Description - R @deliveryOption.DeliveryAmount
+                        
+                    </td>
+                    <td>
+                                        
+                                        
+                    </td>
+                </tr>        
+            }  
+        </table>            
+    </div> 
+    }
+    else
+    {
+        @:No postage options defined!
+    }
+        
+    <br/>
+    
+    <div class="formInputControlWrapper">
+        <div class="editor-label">
+            @Html.LabelFor(m => m.OrderComments)
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(m => m.OrderComments)
+            @Html.ValidationMessageFor(m => m.OrderComments)
+        </div>
+    </div>
+        
+
+    
+    <br/>
+    <p>
+        <input type="submit" class="btn btn-default" value="Continue to next step" />
+    </p>         
+      
+}
+    
+

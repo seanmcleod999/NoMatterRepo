@@ -1,0 +1,35 @@
+﻿@model IEnumerable<PrettyDamnThriftyWeb.Models.FacebookAccount>
+
+@{
+    ViewBag.Title = "FacebookAuthorised";
+}
+
+<h2>Facebook Authorised</h2>
+
+Thanks your Facebook was authorised.
+<br /><br />
+
+<b>Facebook Accounts</b>
+<br />
+<table class="table_grid">
+<tr>
+    <th class="th_grid">
+        Name
+    </th>
+    <th  class="th_grid">
+        AccessToken
+    </th>
+</tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <td  class="td_grid">
+            @item.Name
+        </td>
+        <td  class="td_grid">
+            @item.Accesstoken
+        </td>      
+    </tr>
+
+}
+</table>

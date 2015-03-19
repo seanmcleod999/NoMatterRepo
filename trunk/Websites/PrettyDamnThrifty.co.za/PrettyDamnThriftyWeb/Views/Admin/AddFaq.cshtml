@@ -1,0 +1,44 @@
+﻿@model SharedLibrary.ViewModels.FaqVm
+
+@{
+    ViewBag.Title = "AddFaq";
+}
+
+<h2>Add Faq</h2>
+
+@using (Html.BeginForm())
+{
+     <table>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Faq.Heading)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Faq.Heading)
+                @Html.ValidationMessageFor(model => model.Faq.Heading)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Description)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+            </td>
+        </tr>   
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Faq.Order)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Faq.Order)
+                @Html.ValidationMessageFor(model => model.Faq.Order)
+            </td>
+        </tr>
+    </table>
+    
+    <input type="submit" value="Save" />
+
+}
+

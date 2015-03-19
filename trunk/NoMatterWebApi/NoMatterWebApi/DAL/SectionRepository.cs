@@ -11,11 +11,13 @@ namespace NoMatterWebApi.DAL
 
 	public interface ISectionRepository
 	{
-		Task AddSectionAsync(Section section);
+		Task<int> AddSectionAsync(Section section);
 		Task UpdateSectionAsync(Section sectionDb, NoMatterWebApiModels.Models.Section section);
 		Task<Section> GetSectionAsync(Guid sectionUuid);
-		Task<List<Category>> GetSectionCategoriesAsync(Guid sectionUuid);
+		Task<List<Section>> GetClientSectionsAsync(Guid clientUuid, bool includeHidden);
+		
 		Task DeleteSectionAsync(Guid sectionUuid);
+		
 	}
 
 	public class SectionRepository : ISectionRepository
@@ -27,11 +29,13 @@ namespace NoMatterWebApi.DAL
 			this.databaseConnection = databaseConnection;
 		}
 
-		public async Task AddSectionAsync(Section section)
+		public async Task<int> AddSectionAsync(Section section)
 		{
 			section.SectionUUID = Guid.NewGuid();
 			databaseConnection.Sections.Add(section);
 			await databaseConnection.SaveChangesAsync();
+
+			return section.SectionId;
 		}
 
 		public async Task UpdateSectionAsync(Section sectionDb, NoMatterWebApiModels.Models.Section section)
@@ -55,18 +59,7 @@ namespace NoMatterWebApi.DAL
 			return section;
 		}
 
-		public async Task<List<Category>> GetSectionCategoriesAsync(Guid sectionUuid)
-		{
-			var categories = await databaseConnection.Categories
-				.Include("Section")
-				.Include("Products")
-				.Where(x => x.Section.SectionUUID == sectionUuid && !x.Hidden)
-				.OrderBy(x=>x.CategoryOrder)
-				.ToListAsync();
-
-			return categories;
-		}
-
+		
 		public async Task DeleteSectionAsync(Guid sectionUuid)
 		{
 			var section = await databaseConnection.Sections.Where(x => x.SectionUUID == sectionUuid).SingleOrDefaultAsync();
@@ -74,6 +67,20 @@ namespace NoMatterWebApi.DAL
 			databaseConnection.Sections.Remove(section);
 			await databaseConnection.SaveChangesAsync();
 
+		}
+
+		public async Task<List<Section>> GetClientSectionsAsync(Guid clientUuid, bool includeHidden)
+		{
+			var sections = databaseConnection.Sections.Include("Categories").Where(x => x.Client.ClientUUID == clientUuid);
+
+			if (!includeHidden)
+			{
+				sections = sections.Where(x => !x.Hidden);
+			}
+
+			var sectionsDb = await sections.OrderBy(x => x.SectionOrder).ToListAsync();
+
+			return sectionsDb;
 		}
 
 		public void Save()

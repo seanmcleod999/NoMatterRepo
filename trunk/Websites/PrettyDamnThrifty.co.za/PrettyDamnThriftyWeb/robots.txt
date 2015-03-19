@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /Admin/
+Disallow: /ShopAdmin/
+Disallow: /Account/
+Disallow: /ShoppingCart/
+Disallow: /Shop/ViewCart/
+Disallow: /Shop/AddToCart/
+Disallow: /Shop/RemoveFromCart/

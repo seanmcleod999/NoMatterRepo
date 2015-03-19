@@ -1,0 +1,187 @@
+﻿@model SharedLibrary.ViewModels.ShopItemVm
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.css")" />
+<script type="text/javascript" src="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.min.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#ShopItem_ReleaseDate").datepicker({ dateFormat: 'yy-mm-dd' });
+        $("#ShopItem_ReleaseDate").attr("readOnly", true);
+
+        $("#ShopItem_Notes").jqte();
+    })
+</script>
+
+<div class="pageHeader">Capture a new Product</div>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "BackLink" })
+</div>
+
+
+@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.CategoryId)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.ShopItem.CategoryId, new SelectList(Model.Categories, "CategoryId", "CategoryName"), "-- Please Select --")
+        @Html.ValidationMessageFor(model => model.ShopItem.CategoryId)
+    </div>
+
+    <div class="editor-label">
+        Title
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ShopItem.Description, new { style = "width:300px;" })
+        @Html.ValidationMessageFor(model => model.ShopItem.Description)
+    </div>
+    
+    <div class="editor-label">
+        Description
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.ShopItem.Notes, new { style = "width:500px;" })
+    </div>
+    
+    <div class="editor-label">
+        Hidden Notes
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ShopItem.AdminNotes, new { style = "width:300px;" })
+    </div>
+    
+    <div class="editor-label">
+        Key Words
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ShopItem.Keywords, new { style = "width:300px;" })
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.Price)
+    </div>
+    <div class="editor-field">
+        @Html.TextBox("ShopItem.Price", Model.ShopItem.Price.ToString("0"), new { style = "width:80px;" }) 
+        @Html.ValidationMessageFor(model => model.ShopItem.Price)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.Size)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.ShopItem.Size, null, new { style = "width:60px" })
+        @Html.ValidationMessageFor(model => model.ShopItem.Size)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.ReleaseDate)
+    </div>
+    <div class="editor-field">
+        @Html.TextBox("ShopItem.ReleaseDate", Model.ShopItem.ReleaseDate.Value.ToShortDateString(), new { style = "width:100px;" }) 
+        @Html.ValidationMessageFor(model => model.ShopItem.ReleaseDate)
+    </div>
+    <br/>
+    <table>                      
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.ShopItem.Hidden)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.ShopItem.Hidden)
+                @Html.ValidationMessageFor(model => model.ShopItem.Hidden)
+
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.ShopItem.Reserved)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.ShopItem.Reserved)
+                @Html.ValidationMessageFor(model => model.ShopItem.Reserved)
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                   
+
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File2)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File2, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File2)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File3)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File3, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File3)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File4)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File4, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File4)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File5)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File5, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File5)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.FileSocialMedia)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.FileSocialMedia, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.FileSocialMedia)
+            </td>
+        </tr>
+              
+    </table>
+
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+
+}
+
+    
+
+

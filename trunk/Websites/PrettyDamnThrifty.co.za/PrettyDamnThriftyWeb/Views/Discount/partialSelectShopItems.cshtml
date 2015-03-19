@@ -1,0 +1,70 @@
+﻿
+@using SharedLibrary.Helpers
+@model IEnumerable<SharedLibrary.Services.ProductService.ShopItemDisplay>
+
+@{
+    var globalSettings = new GlobalSettings();
+}
+
+<table class="table_grid">
+    <tr>
+        <th>
+                  
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Sold
+        </th>      
+        <th>
+            Res.
+        </th>
+        <th>
+            Hid.
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td  class="td_grid" >
+                <input type="checkbox" name="ShopItemCheckBox" value="@item.ShopItemId" />
+            </td>
+                   
+
+            <td  class="td_grid" >
+                @if (!string.IsNullOrEmpty(item.Picture1))
+                {
+                    <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + item.Picture1)" alt="View Image" height="40" />
+                } 
+            
+            </td>
+
+            <td class="td_grid">
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td class="td_grid">
+                R @String.Format("{0:0}", @item.Price)
+            </td>
+            <td class="td_grid">
+                @Html.DisplayFor(modelItem => item.Sold)
+            </td>
+            <td class="td_grid">
+                @Html.DisplayFor(modelItem => item.Reserved)
+            </td>
+            <td class="td_grid">
+                @Html.DisplayFor(modelItem => item.Hidden)
+            </td>
+                              
+        </tr>
+    }
+
+</table>
+

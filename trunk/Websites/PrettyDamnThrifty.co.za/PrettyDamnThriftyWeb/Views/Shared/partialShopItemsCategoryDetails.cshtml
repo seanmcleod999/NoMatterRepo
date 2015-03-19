@@ -1,0 +1,24 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.Services.CategoryService.Category
+
+@{
+    var globalSettings = new GlobalSettings();
+}
+
+@if (!string.IsNullOrEmpty(Model.CategoryDescription) || !string.IsNullOrWhiteSpace(Model.Picture))
+{ 
+    <div class="itemListCategoryDetailsWrapper">
+                
+        <div class="itemListCategoryDescription">
+             @Html.Raw(@Model.CategoryDescription)
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Picture))
+        {
+            <div class="itemListCategoryPicture">
+                <img src="@Url.Content(globalSettings.CategoryImagesPath + Model.Picture)" alt="@Model.CategoryName" /> 
+            </div>
+        }
+                    
+    </div>
+}

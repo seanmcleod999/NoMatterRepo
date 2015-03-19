@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -18,7 +19,8 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 		Task<List<Product>> GetClientProductsAsync(string clientId, string productStatus, string categoryId);
 		Task<Product> GetProductAsync(string productId);
 		Task<Product> GetProductNoRelatedProductsAsync(string productId);
-		Task<Product> UpdateProductAsync(Product product, string token);
+		
+		Task<Product> UpdateProductAsync(string clientId, Product product, string token);
 		Task DeleteProductAsync(string productId, string token);
 	}
 
@@ -47,7 +49,9 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/products?status={1}&categoryId={2}", clientId, productStatus, categoryId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot get Products", response);
+				{
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 
 				var products = await response.Content.ReadAsAsync<List<Product>>();
 
@@ -64,14 +68,14 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = await client.GetAsync(string.Format("api/v1/products/{0}", productId));
+				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/products/{1}", _globalSettings.SiteClientId, productId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot get Product", response);	
+				{
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 
-				var product = await response.Content.ReadAsAsync<Product>();
-
-				return product;
+				return await response.Content.ReadAsAsync<Product>();
 			
 			}
 		}
@@ -84,18 +88,21 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = await client.GetAsync(string.Format("api/v1/products/{0}?relatedProducts=false", productId));
+				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/products/{1}?relatedProducts=false", _globalSettings.SiteClientId, productId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot get Product", response);	
+				{
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 
-				var product = await response.Content.ReadAsAsync<Product>();
-				return product;
+				return await response.Content.ReadAsAsync<Product>();
 				
 			}
 		}
 
-		public async Task<Product> UpdateProductAsync(Product product, string token)
+
+
+		public async Task<Product> UpdateProductAsync(string clientId, Product product, string token)
 		{
 			using (var client = new HttpClient())
 			{
@@ -105,13 +112,14 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 
 				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
 
-				var response = await client.PostAsJsonAsync(String.Format("api/v1/products/{0}", product.ProductId), product);
+				var response = await client.PostAsJsonAsync(String.Format("api/v1/clients/{0}/products/{1}", clientId, product.ProductId), product);
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot update Product", response);	
+				{
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 
-				var responseProduct = await response.Content.ReadAsAsync<Product>();
-				return responseProduct;
+				return await response.Content.ReadAsAsync<Product>();
 							
 			}
 		}
@@ -126,10 +134,12 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 
 				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
 
-				var response = await client.DeleteAsync(string.Format("api/v1/products/{0}", productId));
+				var response = await client.DeleteAsync(string.Format("api/v1/clients/{0}/products/{1}", _globalSettings.SiteClientId, productId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot delete Product", response);
+				{
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 			}
 		}
 	}

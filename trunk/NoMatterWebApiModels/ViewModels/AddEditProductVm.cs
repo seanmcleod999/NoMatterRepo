@@ -7,7 +7,9 @@ namespace NoMatterWebApiModels.ViewModels
 {
 	public class AddEditProductVm
 	{
-		public string CategoryId { get; set; }
+		public Section Section { get; set; }
+
+		public Category Category { get; set; }
 
 		public Product Product { get; set; }
 

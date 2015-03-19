@@ -11,11 +11,25 @@ namespace NoMatterWebApi.Extensions
 		{
 			return new NoMatterWebApiModels.Models.ClientSetting
 			{
+				SettingId = setting.SettingId,
 				SettingName = setting.SettingName,
 				SettingType = setting.SettingType,
 				StringValue = setting.StringValue,
 				IntValue = setting.IntValue
 
+			};
+		}
+
+		public static NoMatterDatabaseModel.Setting ToDatabaseClientSetting(this  NoMatterWebApiModels.Models.ClientSetting clientSetting, int clientId)
+		{
+			return new NoMatterDatabaseModel.Setting
+			{
+				SettingId = clientSetting.SettingId,
+				ClientId = clientId,
+				SettingName = clientSetting.SettingName,
+				StringValue = clientSetting.StringValue,
+				IntValue = clientSetting.IntValue,
+				SettingType = (byte) (clientSetting.StringValue != null ? 1 : 2)
 			};
 		}
 	}

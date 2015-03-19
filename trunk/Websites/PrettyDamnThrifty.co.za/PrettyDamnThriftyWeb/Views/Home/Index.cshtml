@@ -1,0 +1,32 @@
+﻿@using SharedLibrary.Helpers
+@using SharedLibrary.Services.SliderService
+@model SharedLibrary.ViewModels.HomeVm
+
+@{
+    var globalSettings = new GlobalSettings();
+    ViewBag.Title = globalSettings.SiteHomePageTitle;
+    ViewBag.MetaDescription = globalSettings.SiteMetaDescription;
+   
+     var text = StringTemplateHelper.GetStringTemplateText("HomePage");
+}
+
+    @{Html.RenderPartial("partialMobileMenu");}  
+
+@if (!string.IsNullOrEmpty(text))
+{
+    <div class="homePageText">
+    @Html.Raw(text)
+    </div>
+}
+
+<div class="homePagePictures">
+
+    @{Html.RenderPartial("partialPictureSlider", SliderStaticCache.GetSlider("ThriftHome"));}
+    
+    @{Html.RenderPartial("partialPictureSlider", SliderStaticCache.GetSlider("VintageHome"));}
+
+</div>
+
+<script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>
+
+

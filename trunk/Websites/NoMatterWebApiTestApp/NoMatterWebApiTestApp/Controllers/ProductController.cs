@@ -24,16 +24,12 @@ namespace WebApplication7.Controllers
     public class ProductController : Controller
     {
 		private IProductHelper _productHelper;
-		private IPictureHelper _pictureHelper;
 		private IGlobalSettings _globalSettings;
-		private IPictureUploadSettings _productPictureUploadSettings;
 
 		public ProductController()
 		{
 			_productHelper = new ProductHelper();
-			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
-			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ProductPicture, _globalSettings);
 		}
 
         public async Task<ActionResult> ViewProduct(string productId)
@@ -48,25 +44,5 @@ namespace WebApplication7.Controllers
 			return View(viewProductVm);
         }
 
-		
-
-		[Authorize]
-		public async Task<ActionResult> DeleteProduct(string productId, string clientId)
-		{
-			try
-			{
-				var token = ((CustomPrincipal)HttpContext.User).Token;
-
-				await _productHelper.DeleteProductAsync(productId, token);
-
-				return RedirectToAction("GetCategoryProducts", "Category", new { clientId = clientId });
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				throw;
-			}
-			
-		}
     }
 }

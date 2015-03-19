@@ -58,6 +58,12 @@
     <Reference Include="GoogleAPI.UrlShortener">
       <HintPath>..\..\Libs\Google URL Shortener\GoogleAPI.UrlShortener.dll</HintPath>
     </Reference>
+    <Reference Include="ImageResizer">
+      <HintPath>..\..\Packages\ImageResizer.3.4.3\lib\ImageResizer.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageResizer.Mvc">
+      <HintPath>..\..\Packages\ImageResizer.Mvc.3.4.3\lib\ImageResizer.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -180,6 +186,8 @@
     <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionResults\CustomBadRequest.cs" />
+    <Compile Include="ApiResultCode.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -214,12 +222,13 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Clients2Controller.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\SuperuserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\V1\CartController.cs" />
     <Compile Include="Controllers\V1\CategoryController.cs" />
     <Compile Include="Controllers\V1\ClientController.cs" />
-    <Compile Include="Controllers\V1\ImagesController.cs" />
+    <Compile Include="Controllers\V1\ImageController.cs" />
     <Compile Include="Controllers\V1\OrderController.cs" />
     <Compile Include="Controllers\V1\GlobalController.cs" />
     <Compile Include="Controllers\V1\ProductController.cs" />
@@ -238,13 +247,19 @@
     <Compile Include="Extensions\ClientExtension.cs" />
     <Compile Include="Extensions\ClientPaymentTypeExtension.cs" />
     <Compile Include="Extensions\ClientSettingExtension.cs" />
+    <Compile Include="Extensions\ClientPagesExtension.cs" />
     <Compile Include="Extensions\GlobalSettingExtension.cs" />
     <Compile Include="Extensions\OrderExtension.cs" />
     <Compile Include="Extensions\ProductExtension.cs" />
     <Compile Include="Extensions\SectionExtension.cs" />
     <Compile Include="Extensions\UserExtension.cs" />
-    <Compile Include="Helpers\GeneralHelper.cs" />
-    <Compile Include="Helpers\GlobalSettings.cs" />
+    <Compile Include="Helpers\WebApiGeneralHelper.cs" />
+    <Compile Include="Helpers\WebApiGlobalSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Helpers\ImageDeleteHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Logging\LogCategory.cs" />
     <Compile Include="Logging\Logger.cs" />
@@ -252,7 +267,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CartProduct.cs" />
-    <Compile Include="Models\CustomPrincipal.cs" />
     <Compile Include="Models\FacebookUser.cs" />
     <Compile Include="Models\NewSection.cs" />
     <Compile Include="Models\NewUser.cs" />
@@ -268,15 +282,136 @@
   <ItemGroup>
     <Content Include="App_Data\NoMatterWebApi.XML" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="ckeditor\adapters\jquery.js" />
+    <Content Include="ckeditor\build-config.js" />
+    <Content Include="ckeditor\ckeditor.js" />
+    <Content Include="ckeditor\config.js" />
+    <Content Include="ckeditor\contents.css" />
+    <Content Include="ckeditor\lang\af.js" />
+    <Content Include="ckeditor\lang\ar.js" />
+    <Content Include="ckeditor\lang\bg.js" />
+    <Content Include="ckeditor\lang\bn.js" />
+    <Content Include="ckeditor\lang\bs.js" />
+    <Content Include="ckeditor\lang\ca.js" />
+    <Content Include="ckeditor\lang\cs.js" />
+    <Content Include="ckeditor\lang\cy.js" />
+    <Content Include="ckeditor\lang\da.js" />
+    <Content Include="ckeditor\lang\de.js" />
+    <Content Include="ckeditor\lang\el.js" />
+    <Content Include="ckeditor\lang\en-au.js" />
+    <Content Include="ckeditor\lang\en-ca.js" />
+    <Content Include="ckeditor\lang\en-gb.js" />
+    <Content Include="ckeditor\lang\en.js" />
+    <Content Include="ckeditor\lang\eo.js" />
+    <Content Include="ckeditor\lang\es.js" />
+    <Content Include="ckeditor\lang\et.js" />
+    <Content Include="ckeditor\lang\eu.js" />
+    <Content Include="ckeditor\lang\fa.js" />
+    <Content Include="ckeditor\lang\fi.js" />
+    <Content Include="ckeditor\lang\fo.js" />
+    <Content Include="ckeditor\lang\fr-ca.js" />
+    <Content Include="ckeditor\lang\fr.js" />
+    <Content Include="ckeditor\lang\gl.js" />
+    <Content Include="ckeditor\lang\gu.js" />
+    <Content Include="ckeditor\lang\he.js" />
+    <Content Include="ckeditor\lang\hi.js" />
+    <Content Include="ckeditor\lang\hr.js" />
+    <Content Include="ckeditor\lang\hu.js" />
+    <Content Include="ckeditor\lang\id.js" />
+    <Content Include="ckeditor\lang\is.js" />
+    <Content Include="ckeditor\lang\it.js" />
+    <Content Include="ckeditor\lang\ja.js" />
+    <Content Include="ckeditor\lang\ka.js" />
+    <Content Include="ckeditor\lang\km.js" />
+    <Content Include="ckeditor\lang\ko.js" />
+    <Content Include="ckeditor\lang\ku.js" />
+    <Content Include="ckeditor\lang\lt.js" />
+    <Content Include="ckeditor\lang\lv.js" />
+    <Content Include="ckeditor\lang\mk.js" />
+    <Content Include="ckeditor\lang\mn.js" />
+    <Content Include="ckeditor\lang\ms.js" />
+    <Content Include="ckeditor\lang\nb.js" />
+    <Content Include="ckeditor\lang\nl.js" />
+    <Content Include="ckeditor\lang\no.js" />
+    <Content Include="ckeditor\lang\pl.js" />
+    <Content Include="ckeditor\lang\pt-br.js" />
+    <Content Include="ckeditor\lang\pt.js" />
+    <Content Include="ckeditor\lang\ro.js" />
+    <Content Include="ckeditor\lang\ru.js" />
+    <Content Include="ckeditor\lang\si.js" />
+    <Content Include="ckeditor\lang\sk.js" />
+    <Content Include="ckeditor\lang\sl.js" />
+    <Content Include="ckeditor\lang\sq.js" />
+    <Content Include="ckeditor\lang\sr-latn.js" />
+    <Content Include="ckeditor\lang\sr.js" />
+    <Content Include="ckeditor\lang\sv.js" />
+    <Content Include="ckeditor\lang\th.js" />
+    <Content Include="ckeditor\lang\tr.js" />
+    <Content Include="ckeditor\lang\tt.js" />
+    <Content Include="ckeditor\lang\ug.js" />
+    <Content Include="ckeditor\lang\uk.js" />
+    <Content Include="ckeditor\lang\vi.js" />
+    <Content Include="ckeditor\lang\zh-cn.js" />
+    <Content Include="ckeditor\lang\zh.js" />
+    <Content Include="ckeditor\plugins\about\dialogs\about.js" />
+    <Content Include="ckeditor\plugins\about\dialogs\hidpi\logo_ckeditor.png" />
+    <Content Include="ckeditor\plugins\about\dialogs\logo_ckeditor.png" />
+    <Content Include="ckeditor\plugins\clipboard\dialogs\paste.js" />
+    <Content Include="ckeditor\plugins\dialog\dialogDefinition.js" />
+    <Content Include="ckeditor\plugins\icons.png" />
+    <Content Include="ckeditor\plugins\icons_hidpi.png" />
+    <Content Include="ckeditor\plugins\link\dialogs\anchor.js" />
+    <Content Include="ckeditor\plugins\link\dialogs\link.js" />
+    <Content Include="ckeditor\plugins\link\images\anchor.png" />
+    <Content Include="ckeditor\plugins\link\images\hidpi\anchor.png" />
+    <Content Include="ckeditor\skins\moono\dialog.css" />
+    <Content Include="ckeditor\skins\moono\dialog_ie.css" />
+    <Content Include="ckeditor\skins\moono\dialog_ie7.css" />
+    <Content Include="ckeditor\skins\moono\dialog_ie8.css" />
+    <Content Include="ckeditor\skins\moono\dialog_iequirks.css" />
+    <Content Include="ckeditor\skins\moono\editor.css" />
+    <Content Include="ckeditor\skins\moono\editor_gecko.css" />
+    <Content Include="ckeditor\skins\moono\editor_ie.css" />
+    <Content Include="ckeditor\skins\moono\editor_ie7.css" />
+    <Content Include="ckeditor\skins\moono\editor_ie8.css" />
+    <Content Include="ckeditor\skins\moono\editor_iequirks.css" />
+    <Content Include="ckeditor\skins\moono\icons.png" />
+    <Content Include="ckeditor\skins\moono\icons_hidpi.png" />
+    <Content Include="ckeditor\skins\moono\images\arrow.png" />
+    <Content Include="ckeditor\skins\moono\images\close.png" />
+    <Content Include="ckeditor\skins\moono\images\hidpi\close.png" />
+    <Content Include="ckeditor\skins\moono\images\hidpi\lock-open.png" />
+    <Content Include="ckeditor\skins\moono\images\hidpi\lock.png" />
+    <Content Include="ckeditor\skins\moono\images\hidpi\refresh.png" />
+    <Content Include="ckeditor\skins\moono\images\lock-open.png" />
+    <Content Include="ckeditor\skins\moono\images\lock.png" />
+    <Content Include="ckeditor\skins\moono\images\refresh.png" />
+    <Content Include="ckeditor\styles.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\icon.ico" />
+    <Content Include="Content\images\icon_add.png" />
+    <Content Include="Content\images\icon_back.png" />
+    <Content Include="Content\images\icon_delete.png" />
+    <Content Include="Content\images\icon_edit.png" />
     <Content Include="Content\images\icon_facebooklogin.png" />
+    <Content Include="Content\images\icon_next.png" />
+    <Content Include="Content\images\icon_previous.png" />
+    <Content Include="Content\images\icon_view.png" />
     <Content Include="Content\images\nomatter.jpg" />
+    <Content Include="Content\images\ReservedLayer.png" />
+    <Content Include="Content\images\SaleLayer.png" />
+    <Content Include="Content\images\SaleLayer2.png" />
+    <Content Include="Content\images\SaleLayerLarge.png" />
+    <Content Include="Content\images\SaleLayerLarge2.png" />
+    <Content Include="Content\images\SoldLayer.png" />
+    <Content Include="Content\images\SoldLayer2.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\noimage.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
@@ -303,11 +438,20 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
+    <Content Include="ckeditor\CHANGES.md" />
+    <Content Include="ckeditor\LICENSE.md" />
+    <Content Include="ckeditor\README.md" />
+    <Content Include="ckeditor\skins\moono\readme.md" />
     <None Include="Properties\PublishProfiles\NoMatter FTP.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\npm.js" />
@@ -330,6 +474,26 @@
     <Content Include="Views\Clients2\Details.cshtml" />
     <Content Include="Views\Clients2\Edit.cshtml" />
     <Content Include="Views\Clients2\Index.cshtml" />
+    <Content Include="Views\Account\LoginSuccess.cshtml" />
+    <Content Include="Views\Account\UserLogin.cshtml" />
+    <Content Include="Views\Admin\Categories.cshtml" />
+    <Content Include="Views\Admin\CategoryAdd.cshtml" />
+    <Content Include="Views\Admin\CategoryEdit.cshtml" />
+    <Content Include="Views\Admin\CategoryProducts.cshtml" />
+    <Content Include="Views\Admin\Clients.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\ProductAdd.cshtml" />
+    <Content Include="Views\Admin\ProductEdit.cshtml" />
+    <Content Include="Views\Admin\SectionAdd.cshtml" />
+    <Content Include="Views\Admin\SectionEdit.cshtml" />
+    <Content Include="Views\Admin\Sections.cshtml" />
+    <Content Include="Views\Admin\ViewProduct.cshtml" />
+    <Content Include="Views\Admin\ClientPages.cshtml" />
+    <Content Include="Views\Admin\ClientPageEdit.cshtml" />
+    <Content Include="Views\Admin\ClientPageAdd.cshtml" />
+    <Content Include="Views\Admin\ClientSettings.cshtml" />
+    <Content Include="Views\Admin\ClientSettingEdit.cshtml" />
+    <Content Include="Views\Admin\ClientSettingAdd.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
@@ -367,6 +531,10 @@
     <ProjectReference Include="..\..\NoMatterWebApiModels\NoMatterWebApiModels.csproj">
       <Project>{61b3d61b-1ef7-4553-99f3-9ecf07a087ab}</Project>
       <Name>NoMatterWebApiModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Websites\NoMatterWebApiWebHelper\NoMatterWebApiWebHelper.csproj">
+      <Project>{4f3e76b1-cd94-4634-a510-616f51c7a06c}</Project>
+      <Name>NoMatterWebApiWebHelper</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

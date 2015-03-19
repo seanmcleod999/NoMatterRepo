@@ -1,0 +1,60 @@
+﻿@model IEnumerable<SharedLibrary.DatabaseModel.enquiry>
+
+@{
+    ViewBag.Title = "View Enquiries";
+}
+
+
+<div class="pageHeader">view enquiries</div>
+    <br/>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "BackLink" })
+</div>
+<br/>
+<table class="table_grid" width="100%">
+<tr>
+
+    <th   class="th_grid">
+        Name
+    </th>
+    <th class="th_grid">
+        Email
+    </th>
+    <th class="th_grid">
+        Contact Number
+    </th>
+    <th class="th_grid">
+        Date Created
+    </th>
+    <th class="th_grid">
+        Message
+    </th>
+      
+</tr>
+
+
+@foreach (var item in Model)
+{
+ <tr>
+        <td class="td_grid">
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td  class="td_grid">
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+                <td  class="td_grid">
+           @Html.DisplayFor(modelItem => item.ContactNumber)
+        </td>
+        <td class="td_grid">
+            @item.DateCreated.ToShortDateString()
+        </td>
+        <td class="td_grid" width="400px">
+            @item.Message
+        </td>            
+    </tr>     
+        
+}
+     
+</table> 
+<br/>

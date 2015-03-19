@@ -11,5 +11,9 @@ namespace NoMatterWebApiModels.Models
 
 		public string ClientName { get; set; }
 
+		public bool Enabled { get; set; }
+
+		public string Logo { get; set; }
+
 	}
 }

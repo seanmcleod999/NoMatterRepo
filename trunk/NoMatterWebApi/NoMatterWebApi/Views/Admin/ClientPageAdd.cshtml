@@ -1,0 +1,62 @@
+﻿@model NoMatterWebApiModels.ViewModels.ClientPageVm
+
+
+@{
+    ViewBag.Title = "Client Page Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.env.isCompatible = true;
+   
+    $(function () {  
+        CKEDITOR.config.height = 500;
+    });
+</script>
+
+<h1>Edit Client Page</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to pages", "ClientPages", "Admin", new {clientId = @Model.Client.ClientId}, new { @class = "BackLink" })
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Client.ClientId)
+
+   
+    <div class="editor-label">
+        Page Name
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ClientPage.PageName, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.ClientPage.PageName)
+    </div>
+    
+     <div class="editor-label">
+        Page Text
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.ClientPage.PageText, new {style = "width:600px;"})
+        @Html.ValidationMessageFor(model => model.ClientPage.PageText)
+        <script>
+            CKEDITOR.replace('ClientPage_PageText');
+        </script>
+    </div>
+ 
+    <br/>
+    <p>
+        <input type="submit" value="Save" class="btn btn-default" /> &nbsp;@Html.ActionLink("cancel", "ClientPages", "Admin", new { clientId = Model.Client.ClientId }, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+    </p>
+
+}
+
+
+
+
+
+
+

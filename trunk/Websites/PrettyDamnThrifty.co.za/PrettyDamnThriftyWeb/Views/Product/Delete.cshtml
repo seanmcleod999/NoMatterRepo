@@ -1,0 +1,55 @@
+﻿@model SharedLibrary.ViewModels.ShopItemVm
+
+@using SharedLibrary.Helpers
+
+@{
+    ViewBag.Title = "Delete";
+
+    var globalSettings = new GlobalSettings();
+    
+}
+
+<h2>Delete a Product</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+
+    <div class="display-field">
+        <b>@Html.DisplayFor(model => model.ShopItem.Description)</b>
+    </div>
+
+
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ShopItem.DateCreated)
+    </div>
+    <br />
+   <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture1)" alt="View Image" height=200 />
+
+   @if (!string.IsNullOrEmpty(Model.ShopItem.Picture2))
+     {
+        <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture2)" alt="View Image" height=150 />
+     }
+     
+     @if (!string.IsNullOrEmpty(Model.ShopItem.Picture3))
+     {
+        <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture3)" alt="View Image" height=150 />
+     }
+     
+      @if (!string.IsNullOrEmpty(Model.ShopItem.Picture4))
+     {
+        <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture4)" alt="View Image" height=150 />
+     }
+     
+     @if (!string.IsNullOrEmpty(Model.ShopItem.Picture5))
+     {
+        <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture5)" alt="View Image" height=150 />
+     }
+
+
+@using (Html.BeginForm()) {
+    
+    @Html.HiddenFor(x=>x.ShopItem.ShopItemId)
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

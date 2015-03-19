@@ -12,30 +12,31 @@
 
 <h3>@Model.Product.Title </h3>
 
-<img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture1)" width="200px"/>
+<img src="@Model.Product.Picture1?w=200"/>
 
 @if (!string.IsNullOrEmpty(Model.Product.Picture2))
 {
-    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture2)" width="100px"/>
+    <img src="@Model.Product.Picture2?w=100" />
 }
 
 @if (!string.IsNullOrEmpty(Model.Product.Picture3))
 {
-    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture3)" width="100px"/>
+    <img src="@Model.Product.Picture3?w=100"/>
 }
 
 @if (!string.IsNullOrEmpty(Model.Product.Picture4))
 {
-    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture4)" width="100px"/>
+    <img src="@Model.Product.Picture4?w=100"/>
 }
 
 @if (!string.IsNullOrEmpty(Model.Product.Picture5))
 {
-    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.Picture5)" width="100px"/>
+    <img src="@Model.Product.Picture5?w=100"/>
 }
+
 @if (!string.IsNullOrEmpty(Model.Product.PictureOther))
 {
-    <img src="@Url.Content(globalSettings.ShopImagesPath + Model.Product.PictureOther)" width="100px"/>
+    <img src="@Model.Product.PictureOther?w=100" />
 }
 
 <br/><br/>

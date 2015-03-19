@@ -1,7 +1,10 @@
 ﻿
 using System.Collections.Generic;
-
+using System.Net;
+using System.Net.Http;
 using System.Web.Mvc;
+using NoMatterWebApiModels.Models;
+using NoMatterWebApiWebHelper.Exceptions;
 
 namespace NoMatterWebApiWebHelper.OtherHelpers
 {
@@ -25,6 +28,43 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 			return suburbs;
 
+		}
+
+		public static int? ExtractWebApiFailedResultCode(HttpResponseMessage response)
+		{
+			if (response.StatusCode == HttpStatusCode.BadRequest)
+			{
+				var resultContentErrorModel = response.Content.ReadAsAsync<WebApiErrorModel>().Result;
+				return resultContentErrorModel.Code;
+			}
+
+			return null;
+
+		}
+
+		public static void HandleWebApiFailedResult(HttpResponseMessage response)
+		{
+			if (response.StatusCode == HttpStatusCode.BadRequest)
+			{
+				var resultContentErrorModel = response.Content.ReadAsAsync<WebApiErrorModel>().Result;
+				throw new WebApiException(resultContentErrorModel.Text, response);
+			}
+			else
+			{
+				throw new WebApiException(response);
+			}
+			
+		}
+
+		public static WebApiResult HandleWebApiSuccessfulResult(object resultObject)
+		{
+			var webApiResult = new WebApiResult
+			{
+				ResultCode = 0,
+				ResultObject = resultObject
+			};
+
+			return webApiResult;
 		}
 	}
 }

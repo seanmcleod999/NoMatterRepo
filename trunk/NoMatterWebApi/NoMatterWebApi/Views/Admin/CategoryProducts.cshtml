@@ -1,0 +1,100 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.CategoryProductsVm
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Products</h1>
+
+Client: <b>@Model.Client.ClientName</b><br/>
+Section: <b>@Model.Section.SectionName</b><br/>
+Category: <b>@Model.Category.CategoryName</b><br/><br/>
+
+<div class="PageNavigationBar">
+@Html.ActionLink("add product", "ProductAdd", "Admin", new { clientId = Model.Section.ClientId, categoryId = @Model.Category.CategoryId }, new { @class = "AddLink" })
+&nbsp;    
+@Html.ActionLink("back to categories", "SectionCategories", "Admin", new { clientId = Model.Section.ClientId, sectionId = Model.Section.SectionId}, new { @class = "BackLink" })
+</div>
+
+
+<table class="table_grid">
+    <tr>
+        <th>
+            
+        </th>
+        <th>
+            Title
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Size
+        </th>
+        <th>
+            Hidden
+        </th>
+        <th>
+            Reserved
+        </th>
+        <th>
+            Sold
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+
+@foreach (var product in Model.CategoryProducts)
+{
+    <tr>
+        <td>
+            <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=30"/>
+        </td>
+        <td>
+            @product.Title
+        </td>
+        <td>
+            R @String.Format("{0:0}", @product.Price)
+        </td>
+        <td>
+            @product.Size
+        </td>
+        <td>
+             @Html.DisplayFor(modelItem => product.Hidden)
+        </td>
+        <td>
+             @Html.DisplayFor(modelItem => product.Reserved)
+        </td>
+        <td>
+             @Html.DisplayFor(modelItem => product.Sold)
+        </td>
+        
+          
+        <td>
+            @Html.ActionLink("edit", "ProductEdit", "Admin", new { clientId = @Model.Section.ClientId, productId = @product.ProductId }, null)
+        </td>
+        <td>
+            @Html.ActionLink("view", "ViewProduct", "Admin", new { clientId = @Model.Section.ClientId, productId = @product.ProductId }, null)
+        </td>
+         <td>
+            @Html.ActionLink("delete", "DeleteProduct", "Admin", new {clientId = @Model.Section.ClientId, productId = @product.ProductId, categoryId = @Model.Category.CategoryId },  new { onclick = "return confirm('Are you sure you wish to delete this product? Note that this will also delete the products history.');" })
+        </td>
+
+       
+    </tr>
+    
+    
+}
+     
+</table>
+
+
+

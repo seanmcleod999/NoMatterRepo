@@ -1,0 +1,33 @@
+﻿@model SharedLibrary.DatabaseModel.stringtemplate
+
+@{
+    ViewBag.Title = "Index";
+}
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.css")" />
+<script type="text/javascript" src="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.min.js")"></script>
+
+            
+    @using (Html.BeginForm())
+    {
+        @Html.TextBoxFor(model => model.StringTemplateId)
+        <br /><br />
+
+        @Html.TextAreaFor(model => model.StringTemplateText)
+    
+        <input type="submit" value="Save" />
+        <br /><br />
+    }
+          
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+
+        $(document).ready(function () {
+            $("textarea").jqte();
+        });
+        
+    });
+
+</script>
+

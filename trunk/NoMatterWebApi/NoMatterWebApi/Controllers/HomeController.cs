@@ -18,7 +18,7 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public HomeController()
 		{
-			_generalHelper = new GeneralHelper();		
+			_generalHelper = new WebApiGeneralHelper();		
 		}
 
 		public HomeController(IGeneralHelper facebookHelper)

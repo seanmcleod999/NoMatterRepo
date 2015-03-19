@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using NoMatterDatabaseModel;
+using NoMatterWebApi.ActionResults;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
@@ -21,7 +22,7 @@ namespace NoMatterWebApi.Controllers.V1
 		
 		private ICartRepository _cartRepository;
 		private IProductRepository _productRepository;
-		private IGeneralHelper _generalHelper;
+		private IWebApiGlobalSettings _webApiGlobalSettings;
 		
 
 		public CartController()
@@ -30,15 +31,16 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_cartRepository = new CartRepository(databaseEntity);
 			_productRepository = new ProductRepository(databaseEntity);
-			_generalHelper = new GeneralHelper();
+			_webApiGlobalSettings = new WebApiGlobalSettings();
 			
 			
 		}
 
-		public CartController(ICartRepository cartRepository, IProductRepository productRepository, IGeneralHelper generalHelper)
+		public CartController(ICartRepository cartRepository, IProductRepository productRepository, IWebApiGlobalSettings webApiGlobalSettings)
 		{
+			_cartRepository = cartRepository;
 			_productRepository = productRepository;
-			_generalHelper = generalHelper;
+			_webApiGlobalSettings = webApiGlobalSettings;
 		}
 
 		// GET api/v1/cart/{cartId}
@@ -82,7 +84,7 @@ namespace NoMatterWebApi.Controllers.V1
 				{
 					var product = await _productRepository.GetProductAsync(new Guid(model.ProductId));
 
-					if (product == null) return BadRequest("ProductNotFound");
+					if (product == null) return new CustomBadRequest(Request, ApiResultCode.ProductNotFound);
 
 					cartProduct = new CartProduct
 					{

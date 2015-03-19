@@ -1,0 +1,96 @@
+﻿@using SharedLibrary.Helpers
+
+@model SharedLibrary.ViewModels.PostToTwitterVm
+
+@{
+    ViewBag.Title = "PostToTwitter";
+    
+    var globalSettings = new GlobalSettings();
+
+}
+
+<div class="pageHeader">post to twitter</div>
+<br/>
+
+
+<img class="facebookPostImages socialMediaImageSelected" src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture1)" src2="@Model.ShopItem.Picture1" alt="View Image" height="80" />
+
+@if (!string.IsNullOrEmpty(Model.ShopItem.Picture2))
+{
+    <img class="facebookPostImages" src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture2)" src2="@Model.ShopItem.Picture2" alt="View Image" height="80" />   
+}
+
+@if (!string.IsNullOrEmpty(Model.ShopItem.Picture3))
+{
+    <img class="facebookPostImages" src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture3)" src2="@Model.ShopItem.Picture3" alt="View Image" height="80" />   
+}
+
+@if (!string.IsNullOrEmpty(Model.ShopItem.Picture4))
+{
+    <img class="facebookPostImages" src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture4)" src2="@Model.ShopItem.Picture4" alt="View Image" height="80" />   
+}
+
+@if (!string.IsNullOrEmpty(Model.ShopItem.Picture5))
+{
+    <img class="facebookPostImages" src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture5)" src2="@Model.ShopItem.Picture5" alt="View Image" height="80" />   
+}
+
+@if (!string.IsNullOrEmpty(Model.ShopItem.PictureSocialMedia))
+{
+    <img class="facebookPostImages" src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.PictureSocialMedia)" src2="@Model.ShopItem.PictureSocialMedia" alt="View Image" height="80" />   
+}
+
+<br/><br/>
+
+@using (Html.BeginForm("PostToTwitter", "Product", FormMethod.Post, new { id = "PostForm" }))
+{
+    @Html.ValidationSummary(true)
+  
+    
+      @Html.TextAreaFor(m => m.TweetText, new { style = "max-width:600px; width: 98%; height:150px" })                 
+            @Html.ValidationMessageFor(m => m.TweetText)
+            <br />
+        <input type="text" name="count" id="count" value="10" style="width:50px" />  @:(Max 140)
+        <input type="hidden" name="shopItemId" value="@Model.ShopItem.ShopItemId" />
+         <input type="hidden" name="picturePath" id="picturePath" value="@Model.ShopItem.Picture1" />  
+    
+     <br/><br/>
+    <input type="submit" value="Post to Twitter" /> @Html.ActionLink("cancel", "Edit", new { id = Model.ShopItem.ShopItemId }) 
+    <br /><br />
+
+}
+
+<script type="text/javascript">
+
+
+    $("#TweetText").keyup(function () {
+        $("#count").val($(this).val().length);
+    });
+
+
+    $(function () {
+
+        jQuery.validator.unobtrusive.parse("form");
+
+        $("#count").val($("#TweetText").val().length);
+
+
+        $('img.facebookPostImages').click(function () {
+
+            $('img.facebookPostImages').removeClass('socialMediaImageSelected');
+
+            $(this).addClass('socialMediaImageSelected');
+
+            $('#picturePath').val($(this).attr("src2"));
+
+        });
+
+        jQuery.validator.unobtrusive.parse("form");
+
+
+
+    });
+
+   
+</script>
+

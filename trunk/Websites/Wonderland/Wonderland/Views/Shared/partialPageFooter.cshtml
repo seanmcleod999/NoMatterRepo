@@ -1,0 +1,66 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+
+
+@{
+    var globalSettings = new GlobalSettings();
+    var currentUser = new CurrentUser(); 
+}
+
+
+<div class="footerRow">
+    
+    <div class="footerWrapper">
+
+        <div class="footerLinkCol1">
+            
+            <div class="footerLinks">       
+                <ul>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>                       
+                    <li>@Html.ActionLink("Contact", "ContactUs", "Home")</li> 
+                    @if (currentUser.IsLoggedIn())
+                    {
+                         <li>@Html.ActionLink("Logoff", "LogOff", "Account")</li> 
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Login", "Login", "Account")</li> 
+                    }   
+                    
+                    @if (currentUser.IsAdmin())
+                    {
+                        <li>@Html.ActionLink("Admin", "Index", "Admin")</li> 
+                    }           
+                </ul>                
+            </div> 
+        </div>
+
+        <div class="footerLinkCol2">                        
+            <div class="footerLinks">       
+                <ul>
+                    <li>@Html.ActionLink("Shipping", "Shipping", "Home")</li>
+                    <li>@Html.ActionLink("Returns", "Returns", "Home")</li>
+                    <li>@Html.ActionLink("Payments", "Payments", "Home")</li>                       
+                    <li>@Html.ActionLink("Size guide", "SizingGuide", "Home")</li>                  
+                </ul>                
+            </div>           
+        </div>
+
+        <div class="footerLinkCol3">
+            <div class="footerLinks">       
+                <ul>
+                    @*<li><a href="@StaticGlobalSettings.FacebookPageUrl" target="_blank">Facebook</a></li>
+                    <li><a href="@StaticGlobalSettings.TwitterUrl" target="_blank">Twitter</a></li>
+                    <li><a href="@StaticGlobalSettings.InstagramUrl" target="_blank">Instagram</a></li>                       
+                    <li><a href="@StaticGlobalSettings.PintrestUrl" target="_blank">Pintrest</a></li>  
+                     <li><a href="@StaticGlobalSettings.GooglePlusUrl" target="_blank">Google+</a></li>   *@         
+                </ul>                
+            </div>      
+        </div>
+        
+    </div>
+    
+</div>
+
+<div class="footerAllRightsReserved">
+ All Rights Reserved © @DateTime.Now.Year @StaticGlobalSettings.SiteNameFriendly   
+</div>

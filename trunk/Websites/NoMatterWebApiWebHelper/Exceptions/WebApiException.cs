@@ -14,7 +14,14 @@ namespace NoMatterWebApiWebHelper.Exceptions
 		//public bool HasExplicitMessage { get; private set; }
 
 		public WebApiException(string errorMessage, HttpResponseMessage response) :
-			base("ErrorMessage: " + errorMessage + ". StatusCode: " + response.StatusCode + ". Reason: " + response.ReasonPhrase)
+			base("ErrorMessage: " + errorMessage + ". Reason: " + response.ReasonPhrase)
+		{
+			//ResultCode = resultCode;
+			//HasExplicitMessage = false;
+		}
+
+		public WebApiException(HttpResponseMessage response) :
+			base("Error: " + response.ReasonPhrase + ". RequestMessage: " + response.RequestMessage)
 		{
 			//ResultCode = resultCode;
 			//HasExplicitMessage = false;

@@ -23,7 +23,7 @@ namespace NoMatterWebApi.Extensions
 				TotalAmount = order.TotalAmount + order.ClientDeliveryOption.DeliveryAmount,
 				OrderStatusId = order.OrderStatusId,
 				Paid = order.Paid,
-				Products = order.OrderProducts.Select(x=>x.Product.ToDomainProduct()).ToList(),
+				Products = order.OrderProducts.Select(x => x.Product.ToDomainProduct()).ToList(),
 				User = order.User.ToDomainUser()
 			};
 		}

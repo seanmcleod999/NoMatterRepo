@@ -7,20 +7,24 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using NoMatterDatabaseModel;
+using NoMatterWebApi.ActionResults;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
+using NoMatterWebApiWebHelper.WebApiHelpers;
 using Product = NoMatterWebApiModels.Models.Product;
 
 namespace NoMatterWebApi.Controllers.V1
 {
-	[RoutePrefix("api/v1/products")]
+	//[RoutePrefix("api/v1/products")]
 	public class ProductController : ApiController
 	{
 		private IProductRepository _productRepository;
-		//private ICategoryRepository _categoryRepository;
+		private IWebApiGlobalSettings _webApiGlobalSettings;
+		private IImageDeleteHelper _imageDeleteHelper;
+		
 		//private IGeneralHelper _generalHelper;
 
 		public ProductController()
@@ -28,22 +32,26 @@ namespace NoMatterWebApi.Controllers.V1
 			var databaseEntity = new DatabaseEntities();
 
 			_productRepository = new ProductRepository(databaseEntity);
+			_imageDeleteHelper = new ImageDeleteHelper();
 			//_categoryRepository = new CategoryRepository(databaseEntity);
 			//_generalHelper = new GeneralHelper();
+
+			_webApiGlobalSettings = new WebApiGlobalSettings();
 		}
 
-		public ProductController(IProductRepository productRepository)
+		public ProductController(IProductRepository productRepository, IImageDeleteHelper imageDeleteHelper)
 		{
 			_productRepository = productRepository;
+			_imageDeleteHelper = new ImageDeleteHelper();
 			//_categoryRepository = categoryRepository;
 			//_generalHelper = generalHelper;
 		}
 
 		// GET api/v1/products/{productId}?relatedProducts=false
 		[HttpGet]
-		[Route("{productId}")]
+		[Route("api/v1/clients/{clientId}/products/{productId}")]
 		[ResponseType(typeof(Product))]
-		public async Task<IHttpActionResult> GetProduct(string productId, bool relatedProducts = true)
+		public async Task<IHttpActionResult> GetProductAsync(string clientId, string productId, bool relatedProducts = true)
 		{
 			try
 			{
@@ -86,9 +94,9 @@ namespace NoMatterWebApi.Controllers.V1
 
 		// POST api/v1/products/{productId}
 		[HttpPost]
-		[Route("{productId}")]
+		[Route("api/v1/clients/{clientId}/products/{productId}")]
 		[ResponseType(typeof(Product))]
-		public async Task<IHttpActionResult> UpdateProduct(string productId, Product model)
+		public async Task<IHttpActionResult> UpdateProductAsync(string clientId, string productId, Product model)
 		{
 			try
 			{
@@ -154,12 +162,26 @@ namespace NoMatterWebApi.Controllers.V1
 
 		// DELETE api/v1/products/{productId}
 		[HttpDelete]
-		[Route("{productId}")]
-		public async Task<IHttpActionResult> DeleteProduct(string productId)
+		[Route("api/v1/clients/{clientId}/products/{productId}")]
+		public async Task<IHttpActionResult> DeleteProductAsync(string clientId, string productId)
 		{
 			try
 			{
-				await _productRepository.DeleteProductAsync(new Guid(productId));
+				//Need to delete all the images for this product
+				var product = await _productRepository.GetProductAsync(new Guid(productId));
+
+				if (product == null) return new CustomBadRequest(Request, ApiResultCode.ProductNotFound);
+
+				var imagesPath = System.Web.HttpContext.Current.Server.MapPath("~\\images") + "/";
+
+				if (!string.IsNullOrEmpty(product.Picture1)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture1);
+				if (!string.IsNullOrEmpty(product.Picture2)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture2);
+				if (!string.IsNullOrEmpty(product.Picture3)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture3);
+				if (!string.IsNullOrEmpty(product.Picture4)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture4);
+				if (!string.IsNullOrEmpty(product.Picture5)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture5);
+				if (!string.IsNullOrEmpty(product.PictureOther)) _imageDeleteHelper.DeleteImage(imagesPath + product.PictureOther);
+
+				await _productRepository.DeleteProductAsync(product);
 
 				return Ok();
 			}
@@ -169,7 +191,5 @@ namespace NoMatterWebApi.Controllers.V1
 				return InternalServerError(ex);
 			}
 		}
-
-
 	}
 }

@@ -8,7 +8,7 @@ namespace NoMatterWebApiModels.ViewModels
 {
 	public class ClientSettingsVm
 	{
-		public string ClientId { get; set; }
+		public Client Client { get; set; }
 
 		public List<ClientSetting> ClientSettings { get; set; }
 	}

@@ -1,0 +1,33 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.Models.ShoppingCartDetails
+
+@{
+    ViewBag.Title = "Your Cart";
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Your Cart</h1>
+
+
+
+@foreach (var product in Model.Products)
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=50" />
+    @:&nbsp; &nbsp;
+    @product.Title  
+    @:&nbsp; &nbsp;  
+    @:R @product.DiscountDetails.DiscountedPrice
+    @:&nbsp; &nbsp; 
+    
+    @Html.ActionLink("Remove from cart", "RemoveProductFromCart", "Cart", new { productId = @product.ProductId }, new { @class = "RemoveFromCartLink" })
+    <br/><br/>
+}
+
+Total: R @Model.TotalAmount
+
+<br/><br/>
+
+<br/>
+  @Html.ActionLink("Checkout", "Index", "Checkout", null, new {@class="btn btn-default"})
+<br/><br/>

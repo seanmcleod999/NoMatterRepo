@@ -1,0 +1,81 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.Services.SliderService.Slider
+
+@{
+    var globalSettings = new GlobalSettings();
+}
+
+@if (Model.SliderPictures.Count > 1)
+{
+    
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/bxslider/jquery.bxslider.css")" />
+    <script type="text/javascript" src="@Url.Content("~/bxslider/jquery.bxslider.min.js")"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('#bxslider-@Model.SliderId').show().bxSlider({
+                slideWidth: '@Model.SlideWidth',
+                minSlides: '@Model.MinSlides',
+                maxSlides: '@Model.MaxSlides',
+                moveSlides: 1,
+                slideMargin: 0,
+                controls: String('@Model.ShowNextPrevControls') == "true",
+                auto: String('@Model.AutoScroll') == "true",
+                pause: '@Model.AutoScrollTime',
+                pager: false,
+                captions: true,
+                preloadImages: 'visible',
+                touchEnabled: String('@Model.TouchEnabled') == "true",
+                adaptiveHeight: true
+                //autoHover: true
+            });
+        });
+
+    </script>
+
+
+    <div id="bxslider-@Model.SliderId" style="display: none">
+        @foreach (var item in Model.SliderPictures.OrderBy(x => x.Order))
+        {
+            if (!string.IsNullOrEmpty(item.PicturePath))
+            {
+                <div style="padding: @Model.ImagePaddingString"><a href="@item.Url"><img src="@Url.Content(globalSettings.SliderImagesPath + item.PicturePath)" title="@item.Notes" /></a></div>
+            }
+        }
+    </div>
+}
+else if (Model.SliderPictures.Count == 1)
+{
+    var maxwidth = @Model.SlideWidth + "px";
+    var padding = @Model.ImagePadding + "px";
+    
+    <div class="sliderSinglePicture" style="Padding: @padding">
+        
+        @if (!string.IsNullOrEmpty(Model.SliderPictures[0].Url))
+        {
+            <a href="@Model.SliderPictures[0].Url" >       
+                <img src="@Url.Content(globalSettings.SliderImagesPath + Model.SliderPictures[0].PicturePath)" title="@Model.SliderPictures[0].Notes" style="max-width: @maxwidth;"/>
+            </a>
+        }
+        else
+        {
+            <img src="@Url.Content(globalSettings.SliderImagesPath + Model.SliderPictures[0].PicturePath)" title="@Model.SliderPictures[0].Notes" style="max-width: @maxwidth;"/>
+        }
+        
+        
+        @if (!string.IsNullOrEmpty(@Model.SliderPictures[0].Notes))
+        {
+            <div class="sliderSinglePictureText">
+            
+                @Model.SliderPictures[0].Notes
+
+            </div>  
+            
+        }
+       
+    </div>
+}
+
+   

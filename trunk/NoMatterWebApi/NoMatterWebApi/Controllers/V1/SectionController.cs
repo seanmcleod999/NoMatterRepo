@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using NoMatterDatabaseModel;
+using NoMatterWebApi.ActionResults;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Logging;
@@ -17,13 +18,14 @@ using Section = NoMatterWebApiModels.Models.Section;
 namespace NoMatterWebApi.Controllers.V1
 {
 	//[Authorize]
-	[RoutePrefix("api/v1/sections")]
+	//[RoutePrefix("api/v1/sections")]
 	public class SectionController : ApiController
 	{
 
 		private ISectionRepository _sectionRepository;
 		private ICategoryRepository _categoryRepository;
 		private IUserRepository _userRepository;
+		private IClientRepository _clientRepository;
 
 
 		public SectionController()
@@ -33,35 +35,38 @@ namespace NoMatterWebApi.Controllers.V1
 			_sectionRepository = new SectionRepository(databaseEntity);
 			_categoryRepository = new CategoryRepository(databaseEntity);
 			_userRepository = new UserRepository(databaseEntity);
+			_clientRepository = new ClientRepository(databaseEntity);
 		}
 
-		public SectionController(ISectionRepository sectionRepository, ICategoryRepository categoryRepository, IUserRepository userRepository)
+		public SectionController(ISectionRepository sectionRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IClientRepository clientRepository)
 		{
 			_sectionRepository = sectionRepository;
 			_categoryRepository = categoryRepository;
 			_userRepository = userRepository;
+			_clientRepository = clientRepository;
 		}
 
 		
 
 		// GET api/v1/sections/{sectionUuid}
-		[Route("{sectionUuid}")]
+		[Route("api/v1/clients/{clientId}/sections/{sectionId}")]
 		[ResponseType(typeof(List<Section>))]
-		public async Task<IHttpActionResult> GetSection(string sectionUuid)
+		public async Task<IHttpActionResult> GetSectionAsync(string clientId, string sectionId)
 		{
 
-			var sectionDb = await _sectionRepository.GetSectionAsync(new Guid(sectionUuid));
+			var sectionDb = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
 
 			var section = sectionDb.ToDomainSection();
 
 			return Ok(section);
 		}
 
-		// POST api/v1/sections/{sectionId}/categories
+
+		// POST api/v1/sections
+		[HttpPut]
 		[Authorize]
-		[HttpPost]
-		[Route("{sectionId}/categories")]
-		public async Task<IHttpActionResult> AddSectionCategory(string sectionId, Category category)
+		[Route("api/v1/clients/{clientId}/sections/{sectionId}")]
+		public async Task<IHttpActionResult> UpdateSectionAsync(string clientId, string sectionId, Section section)
 		{
 			//TODO: make sure the user can post to this category
 
@@ -69,16 +74,19 @@ namespace NoMatterWebApi.Controllers.V1
 			{
 				var userToken = User.Identity.Name;
 
-				var user = await _userRepository.GetClientUserByTokenAsync(userToken);
+				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
+				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
 
-				var section = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				if (user.ClientId != section.Client.ClientId) return BadRequest("User does not have access to this section");
+				var sectionDb = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
+				if (sectionDb == null) return new CustomBadRequest(Request, ApiResultCode.SectionNotFound);
 
-				NoMatterDatabaseModel.Category categoryDb = category.ToDatabaseCategory(section.SectionId);
+				if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				//Save the section
-				await _categoryRepository.AddCategoryAsync(categoryDb);
+				//Update the section
+				await _sectionRepository.UpdateSectionAsync(sectionDb, section);
 
 				return Ok();
 
@@ -90,26 +98,25 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// GET api/v1/sections/{sectionUuid}/categories
-		[Route("{sectionId}/categories")]
-		[ResponseType(typeof(List<Category>))]
-		public async Task<IHttpActionResult> GetSectionCategories(string sectionId)
-		{
-
-			var categoriesDb = await _sectionRepository.GetSectionCategoriesAsync(new Guid(sectionId));
-
-			var categories = categoriesDb.Select(x => x.ToDomainCategory()).ToList();
-
-			return Ok(categories);
-		}
-
 		// DELETE api/v1/sections/{sectionId}
 		[HttpDelete]
-		[Route("{sectionId}")]
-		public async Task<IHttpActionResult> DeleteSection(string sectionId)
+		[Route("api/v1/clients/{clientId}/sections/{sectionId}")]
+		public async Task<IHttpActionResult> DeleteSectionAsync(string clientId, string sectionId)
 		{
 			try
 			{
+				var sectionCategories = await _categoryRepository.GetSectionCategoriesAsync(new Guid(sectionId), true);
+
+				//Delete the default Latest Items and Sale categories
+				foreach (var category in sectionCategories)
+				{
+					if (category.ActionName == "Latest" || category.ActionName == "Sale")
+					{
+						//Delete latest item and sale categories
+						await _categoryRepository.DeleteCategoryAsync(category.CategoryUUID);
+					}
+				}
+
 				await _sectionRepository.DeleteSectionAsync(new Guid(sectionId));
 
 				return Ok();
@@ -121,52 +128,58 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		//// POST api/v1/sections>
-		//[Authorize]
-		//[Route("{clientUuid}/sections")]
-		//[ResponseType(typeof(Section))]
-		//[HttpPost]
-		//public async Task<IHttpActionResult> PostClientSection(NewSection model)
-		//{
-		//	var section = new Section() { SectionId = "1", SectionName = "Test1" };
+		// GET api/v1/sections/{sectionUuid}/categories
+		[Route("api/v1/clients/{clientId}/sections/{sectionId}/categories")]
+		[ResponseType(typeof(List<Category>))]
+		public async Task<IHttpActionResult> GetSectionCategoriesAsync(string clientId, string sectionId, bool includeEmpty = false, bool includeHidden = false)
+		{
 
-		//	return Ok(section);
-		//}
+			var categoriesDb = await _categoryRepository.GetSectionCategoriesAsync(new Guid(sectionId), includeHidden);
 
+			var categories = categoriesDb.Select(x => x.ToDomainCategory()).ToList();
+
+			if (!includeEmpty)
+			{
+				categories = categories.Where(x => x.VisibleProductCount > 0 || x.Conditional).ToList();
+			}
+
+			return Ok(categories);
+		}
+
+		// POST api/v1/sections/{sectionId}/categories
+		[Authorize]
+		[HttpPost]
+		[Route("api/v1/clients/{clientId}/sections/{sectionId}/categories")]
+		public async Task<IHttpActionResult> AddSectionCategory(string clientId, string sectionId, Category category)
+		{
+			//TODO: make sure the user can post to this category
+
+			try
+			{
+				var userToken = User.Identity.Name;
+
+				var user = await _userRepository.GetClientUserByTokenAsync(userToken);
+
+				var section = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
+
+				if (section == null) return new CustomBadRequest(Request, ApiResultCode.SectionNotFound);
+
+				if (user.ClientId != null && user.ClientId != section.Client.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+				NoMatterDatabaseModel.Category categoryDb = category.ToDatabaseCategory(section.SectionId);
+
+				//Save the section
+				await _categoryRepository.AddSectionCategoryAsync(categoryDb);
+
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
 		
-
-		//// GET api/v1/sections/{sectionid}/categories-for-display
-		//[Route("{sectionid}/categories")]
-		//[ResponseType(typeof(List<Section>))]
-		//public async Task<IHttpActionResult> GetSectionCategories()
-		//{
-		//	//Need to get bearer token, and lookup the user so we know which client the user is from
-
-		//	var sections = new List<Section>
-		//		{
-		//			new Section() {SectionId = "1", SectionName = "Test1"},
-		//			new Section() {SectionId = "2", SectionName = "Test2"},
-		//			new Section() {SectionId = "3", SectionName = "Test3"}
-		//		};
-
-		//	return Ok(sections);
-		//}
-
-		//// GET api/v1/sections/{sectionid}/categories-for-edit
-		//[Route("{sectionid}/categories-for-edit")]
-		//[ResponseType(typeof(List<Section>))]
-		//public async Task<IHttpActionResult> GetSectionCategoriesEdit()
-		//{
-		//	//Need to get bearer token, and lookup the user so we know which client the user is from
-
-		//	var sections = new List<Section>
-		//		{
-		//			new Section() {SectionId = "1", SectionName = "Test1"},
-		//			new Section() {SectionId = "2", SectionName = "Test2"},
-		//			new Section() {SectionId = "3", SectionName = "Test3"}
-		//		};
-
-		//	return Ok(sections);
-		//}
 	}
 }

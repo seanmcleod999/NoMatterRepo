@@ -10,6 +10,8 @@ namespace NoMatterWebApiModels.Models
 	{
 		public string ClientPaymentTypeId { get; set; }
 
+		public short PaymentTypeId { get; set; }
+
 		public string PaymentTypeName { get; set; }
 
 		public string PaymentTypeDetails { get; set; }

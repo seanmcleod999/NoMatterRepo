@@ -92,20 +92,17 @@ namespace NoMatterWebApi.Controllers.v1
 
 				var myConn = new SqlConnection(s_ConnectionString);
 
-				var myCmd = new SqlCommand(query, myConn);
-				//MySqlDataReader myReader;
+				ExecuteBatchNonQuery(query, myConn);
 
-				myConn.Open();
+				//var myCmd = new SqlCommand(query, myConn);;
 
-				runMySqlScriptVm.ScriptExecuted = true;
+				//myConn.Open();
 
-				myCmd.ExecuteNonQuery();     // Here our query will be executed and data saved into the database.
+				//runMySqlScriptVm.ScriptExecuted = true;
 
-				//while (myReader.Read())
-				//{
-				//}
+				//myCmd.ExecuteNonQuery();     
+
 				myConn.Close();
-
 
 				runMySqlScriptVm.Success = true;
 
@@ -120,6 +117,34 @@ namespace NoMatterWebApi.Controllers.v1
 				return View("RunMySqlScript", runMySqlScriptVm);
 			}
 
+		}
+
+		private void ExecuteBatchNonQuery(string sql, SqlConnection conn)
+		{
+			string sqlBatch = string.Empty;
+			SqlCommand cmd = new SqlCommand(string.Empty, conn);
+			conn.Open();
+			sql += "\nGO";   // make sure last batch is executed.
+			try
+			{
+				foreach (string line in sql.Split(new string[2] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
+				{
+					if (line.ToUpperInvariant().Trim() == "GO")
+					{
+						cmd.CommandText = sqlBatch;
+						cmd.ExecuteNonQuery();
+						sqlBatch = string.Empty;
+					}
+					else
+					{
+						sqlBatch += line + "\n";
+					}
+				}
+			}
+			finally
+			{
+				conn.Close();
+			}
 		}
 
 		

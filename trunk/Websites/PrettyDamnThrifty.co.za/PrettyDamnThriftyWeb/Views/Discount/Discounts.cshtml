@@ -1,0 +1,98 @@
+﻿@model SharedLibrary.ViewModels.DiscountsVm
+
+@{
+    ViewBag.Title = "Discounts";
+}
+
+<div id="container" class="clearfix">
+        
+    <div id="sidebar">
+                                                                        
+        @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}   
+    </div>
+        
+    <div id="content">
+        
+        <div class="pageHeader">discounts</div>
+
+        <div class="PageNavigationBar">
+          @Html.ActionLink("Add a Discount", "AddDiscount", null, new { @class = "AddLink" }) 
+        </div>
+    
+    <table class="table_grid" >
+    <tr>
+
+    <th   class="th_grid">
+        Start Date
+    </th>
+    <th class="th_grid">
+        End Date
+    </th>
+    <th class="th_grid">
+        Discount Type
+    </th>
+    <th class="th_grid">
+        Products Affected
+    </th>
+    <th class="th_grid">
+        Discount Amount
+    </th>
+    <th class="th_grid">
+        
+    </th>
+        <th class="th_grid">
+        
+    </th>
+      
+</tr>
+
+
+@foreach (var item in Model.Discounts)
+{
+ <tr>
+     <td class="td_grid">
+          @item.StartDate.ToShortDateString()
+     </td>
+     <td  class="td_grid">
+          @item.EndDate.ToShortDateString()
+     </td>
+     <td  class="td_grid">
+         @Html.DisplayFor(modelItem => item.DiscountTypeDescription)
+     </td>
+     
+     <td class="td_grid">
+         @if(item.DiscountTypeId != 1)
+         {
+            @item.DiscountShopItems.Count
+         }
+     </td>
+
+     <td class="td_grid">
+         @if (item.DiscountTypeId != 1)
+         {
+             @item.DiscountAmount
+         }
+     </td>
+        
+     <td class="td_grid">
+         @Html.ActionLink("Edit", "EditDiscount", new { id = item.DiscountId }, new { @class = "EditLink" }) 
+     </td>
+       
+     <td class="td_grid">
+        @Html.ActionLink("Delete", "DeleteDiscount", new { id = item.DiscountId }, new { @class = "DeleteLink", onclick = "return confirm('Are you sure you want to delete?')" }) 
+     </td>
+           
+ </tr>     
+        
+}
+     
+</table> 
+
+    <br />
+    
+    </div>
+    
+</div>
+
+
+

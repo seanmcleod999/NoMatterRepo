@@ -1,0 +1,97 @@
+﻿@model SharedLibrary.ViewModels.EditUserVm
+
+@{
+    ViewBag.Title = "YourProfile";
+}
+
+
+
+    <div class="pageHeader">update your profile</div>
+    <br/>
+    @Html.ValidationSummary(true)
+
+@using (Html.BeginForm())
+{
+       
+     @Html.HiddenFor(x=>x.User.UserId)
+
+     <div class="editor-label">
+        @Html.LabelFor(m => m.User.Email)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.User.Email)
+        @Html.ValidationMessageFor(m => m.User.Email)
+    </div>
+    
+     <div class="editor-label">
+        @Html.LabelFor(m => m.User.Fullname)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.User.Fullname)
+        @Html.ValidationMessageFor(m => m.User.Fullname)
+    </div>
+    
+     <div class="editor-label">
+        @Html.LabelFor(m => m.User.ContactNumber)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.User.ContactNumber)
+        @Html.ValidationMessageFor(m => m.User.ContactNumber)
+    </div>
+    
+     <div class="editor-label">
+        @Html.LabelFor(m => m.User.Address)
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(m => m.User.Address)
+        @Html.ValidationMessageFor(m => m.User.Address)
+    </div>
+    
+         <div class="editor-label">
+        @Html.LabelFor(m => m.User.City)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.User.City)
+        @Html.ValidationMessageFor(m => m.User.City)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(m => m.User.PostalCode)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.User.PostalCode)
+        @Html.ValidationMessageFor(m => m.User.PostalCode)
+    </div>
+    
+      <div class="editor-label">
+        @Html.LabelFor(m => m.User.Province)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.User.Province)
+        @Html.ValidationMessageFor(m => m.User.Province)
+    </div>
+    
+      <div class="editor-label">
+        @Html.LabelFor(m => m.User.Country)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.User.Country)
+        @Html.ValidationMessageFor(m => m.User.Country)
+    </div>
+    
+    <br />
+    <input type="submit" value="Save" />
+    <br />
+    
+    if (Model.UpdateSuccess)
+    {
+        <div class="UserSuccessNotification">
+            Thank you, your details were successfully saved.
+        </div>       
+    }
+    <br/>
+}
+
+
+
+

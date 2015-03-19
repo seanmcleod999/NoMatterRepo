@@ -1,0 +1,23 @@
+﻿@using SharedLibrary.Helpers
+@{
+    ViewBag.Title = "Returns";
+}
+
+<script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>
+
+@{Html.RenderPartial("partialMobileMenu");}  
+
+<div class="pageHeader">Returns</div>
+<br />
+<a href="javascript: history.go(-1)" class="BackLink">back</a>
+<br/><br/>
+    
+@{   
+    var text = StringTemplateHelper.GetStringTemplateText("Returns");
+}
+
+
+@Html.Raw(text)
+  
+<script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>
+

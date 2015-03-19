@@ -481,7 +481,7 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
-        <member name="M:NoMatterWebApi.Controllers.V1.ImagesController.UploadImageAsync(NoMatterWebApiModels.Models.UploadImageModel)">
+        <member name="M:NoMatterWebApi.Controllers.V1.ImageController.UploadImageAsync(System.String,System.String)">
             <summary>
             Upload an image and get the unique image identifier
             </summary>

@@ -9,6 +9,8 @@ namespace NoMatterWebApiModels.Models
 	{
 		public string Id { get; set; }
 
+		public string ClientId { get; set; }
+
 		public string Email { get; set; }
 
 		public string Fullname { get; set; }
@@ -16,6 +18,8 @@ namespace NoMatterWebApiModels.Models
 		public TokenDetails TokenDetails { get; set; }
 
 		public string FacebookToken { get; set; }
+
+		public string UserRoles { get; set; }
 
 
 	}

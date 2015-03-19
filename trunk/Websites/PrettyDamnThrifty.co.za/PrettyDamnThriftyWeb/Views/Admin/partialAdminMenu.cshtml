@@ -1,0 +1,60 @@
+﻿@using SharedLibrary.Models
+
+ <script type="text/javascript">
+            $(document).ready(function () {
+                $("#my-menu").mmenu({
+                    classes: "mm-light mm-zoom-menu mm-zoom-panels"
+ 
+                });
+                $("#my-button").click(function () {
+                    $("#my-menu").trigger("open.mm");
+                });
+            });
+</script>
+
+@{
+    var _currentUser = new CurrentUser();
+}
+<div class="adminLinks">       
+    <ul>
+         <li>@Html.ActionLink("Admin Home", "Index", "Admin")</li>
+        <li>@Html.ActionLink("Categories", "Index", "Category")</li>
+        <li>@Html.ActionLink("Products", "Index", "Product")</li>                       
+        <li>@Html.ActionLink("Discounts", "Discounts", "Discount")</li>
+        <li>@Html.ActionLink("Features", "Features", "Feature")</li>
+        <li>@Html.ActionLink("Orders", "ViewOrders", "Order")</li>
+        <li>@Html.ActionLink("Enquiries", "ViewEnquiries", "Admin")</li>    
+        <li>@Html.ActionLink("Page Text", "PagesText", "Admin")</li>
+        <li>@Html.ActionLink("Sliders", "Index", "Slider")</li>
+        <li>@Html.ActionLink("Users", "ViewUsers", "Account")</li>
+        <li>@Html.ActionLink("Clear Cache", "ClearCache", "Admin")</li>
+       @* <li>@Html.ActionLink("Stats", "Index", "Stats")</li>*@
+        @if (_currentUser.IsSuperuser())
+        {
+            <li>@Html.ActionLink("Superuser", "Index", "SuperUser")</li>
+        }   
+    </ul>                
+</div>
+
+   
+
+<nav id="my-menu">      
+    <ul>
+         <li>@Html.ActionLink("Admin Home", "Index", "Admin")</li>
+        <li>@Html.ActionLink("Categories", "Index", "Category")</li>
+        <li>@Html.ActionLink("Products", "Index", "Product")</li>                       
+        <li>@Html.ActionLink("Discounts", "Discounts", "Discount")</li>
+        <li>@Html.ActionLink("Features", "Features", "Feature")</li>
+        <li>@Html.ActionLink("Orders", "ViewOrders", "Order")</li>
+        <li>@Html.ActionLink("Enquiries", "ViewEnquiries", "Admin")</li>    
+        <li>@Html.ActionLink("Page Text", "PagesText", "Admin")</li>
+        <li>@Html.ActionLink("About Us", "EditAboutUs", "Admin")</li>
+        <li>@Html.ActionLink("Sliders", "Index", "Slider")</li>
+        <li>@Html.ActionLink("Users", "ViewUsers", "Account")</li>
+        <li>@Html.ActionLink("Clear Cache", "ClearCache", "Admin")</li>
+        @if (_currentUser.IsSuperuser())
+        {
+            <li>@Html.ActionLink("Superuser", "Index", "SuperUser")</li>
+        }     
+    </ul>                
+</nav>

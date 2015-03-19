@@ -11,6 +11,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
+using NoMatterWebApiModels.Models;
 
 namespace NoMatterWebApi
 {
@@ -48,20 +49,19 @@ namespace NoMatterWebApi
 					//Get all the stored user data
 					string userData = auth.UserData;
 
-					//var userDataArray = userData.Split(',');
+					var userDataArray = userData.Split(';');
 
-					//Get the userId
-					//var userDetails = userDataArray[0].Split(',');
-
-					//var profileUuid = userDataArray[0];
-					//var token = userDataArray[1];
+					var profileId = userDataArray[0];
+					var clientId = userDataArray[1];
+					var token = userDataArray[2];
+					var userRoles = userDataArray[3];
 
 
 					//Get the roles
 					//var roles = "";
 					//if (userDataArray.Count() > 1) roles = userDataArray[1];
 
-					var principal = new CustomPrincipal(new GenericIdentity(auth.Name), userData);
+					var principal = new CustomPrincipal(new GenericIdentity(auth.Name), profileId, clientId, token, userRoles);
 
 					Context.User = Thread.CurrentPrincipal = principal;
 				}

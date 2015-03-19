@@ -38,6 +38,7 @@
           <Property Name="ClientUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ClientName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
+          <Property Name="Logo" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="ClientDeliveryOption">
           <Key>
@@ -49,6 +50,15 @@
           <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="OptionOrder" Type="tinyint" Nullable="false" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientPage">
+          <Key>
+            <PropertyRef Name="ClientPageId" />
+          </Key>
+          <Property Name="ClientPageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PageName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="PageText" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -215,7 +225,7 @@
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="ClientId" Type="int" />
           <Property Name="UserUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CredentialTypeId" Type="tinyint" Nullable="false" />
           <Property Name="Identifier" Type="varchar" MaxLength="100" Nullable="false" />
@@ -242,7 +252,9 @@
           <Property Name="RoleId" Type="smallint" Nullable="false" />
         </EntityType>
         <Association Name="FK_CartProduct_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="CartProduct" Type="Self.CartProduct" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
@@ -285,6 +297,18 @@
               <PropertyRef Name="ClientId" />
             </Principal>
             <Dependent Role="Enquiry">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientPage_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientPage" Type="Self.ClientPage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientPage">
               <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
@@ -494,6 +518,7 @@
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientDeliveryOption" EntityType="Self.ClientDeliveryOption" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientPage" EntityType="Self.ClientPage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientPaymentType" EntityType="Self.ClientPaymentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscountProduct" EntityType="Self.DiscountProduct" Schema="dbo" store:Type="Tables" />
@@ -525,6 +550,10 @@
           <AssociationSet Name="FK_ClientEnquiry_Client" Association="Self.FK_ClientEnquiry_Client">
             <End Role="Client" EntitySet="Client" />
             <End Role="Enquiry" EntitySet="Enquiry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientPage_Client" Association="Self.FK_ClientPage_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ClientPage" EntitySet="ClientPage" />
           </AssociationSet>
           <AssociationSet Name="FK_ClientPaymentType_Client" Association="Self.FK_ClientPaymentType_Client">
             <End Role="Client" EntitySet="Client" />
@@ -638,6 +667,8 @@
           <NavigationProperty Name="Sections" Relationship="Self.FK_Section_Section" FromRole="Client" ToRole="Section" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_Client" FromRole="Client" ToRole="User" />
           <NavigationProperty Name="ClientDeliveryOptions" Relationship="DatabaseModel.FK_ClientDeliveryOption_Client1" FromRole="Client" ToRole="ClientDeliveryOption" />
+          <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClientPages" Relationship="DatabaseModel.FK_ClientPage_Client" FromRole="Client" ToRole="ClientPage" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -821,7 +852,7 @@
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="ClientId" Type="Int32" />
           <Property Name="UserUUID" Type="Guid" Nullable="false" />
           <Property Name="CredentialTypeId" Type="Byte" Nullable="false" />
           <Property Name="Identifier" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
@@ -939,7 +970,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_User_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Client">
@@ -1115,6 +1146,11 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserRole" EntitySet="UserRoles" />
           </AssociationSet>
+          <EntitySet Name="ClientPages" EntityType="DatabaseModel.ClientPage" />
+          <AssociationSet Name="FK_ClientPage_Client" Association="DatabaseModel.FK_ClientPage_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientPage" EntitySet="ClientPages" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
           <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
@@ -1231,6 +1267,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ClientPage">
+          <Key>
+            <PropertyRef Name="ClientPageId" />
+          </Key>
+          <Property Name="ClientPageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="PageText" Type="String" Nullable="true" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_ClientPage_Client" FromRole="ClientPage" ToRole="Client" />
+          <Property Name="PageName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_ClientPage_Client">
+          <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DatabaseModel.ClientPage" Role="ClientPage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientPage">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1267,6 +1325,7 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="DatabaseModel.Client">
               <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="ClientUUID" ColumnName="ClientUUID" />
                 <ScalarProperty Name="ClientName" ColumnName="ClientName" />
@@ -1488,6 +1547,16 @@
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientPages">
+            <EntityTypeMapping TypeName="DatabaseModel.ClientPage">
+              <MappingFragment StoreEntitySet="ClientPage">
+                <ScalarProperty Name="PageName" ColumnName="PageName" />
+                <ScalarProperty Name="PageText" ColumnName="PageText" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ClientPageId" ColumnName="ClientPageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

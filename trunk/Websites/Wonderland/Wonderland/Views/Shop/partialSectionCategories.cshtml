@@ -1,0 +1,16 @@
+﻿
+                       
+<div class="categoryListWrapper">                                                             
+    <ul>                
+        @{
+                      
+            foreach (var category in Model.Categories)
+            {
+                <li>@Html.ActionLink((string)category.CategoryName, "Category", "Shop", new { id = @category.CategoryId }, new { @class = "" })</li>
+            }
+         
+        }
+                               
+    </ul>
+</div> 
+

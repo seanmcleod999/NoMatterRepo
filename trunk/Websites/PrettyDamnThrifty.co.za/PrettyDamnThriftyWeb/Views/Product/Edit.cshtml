@@ -1,0 +1,460 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.ShopItemVm
+
+@{
+    ViewBag.Title = "Edit";
+
+    var globalSettings = new GlobalSettings();
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.css")" />
+<script type="text/javascript" src="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.min.js")"></script>
+
+
+<div class="pageHeader">Edit Product</div>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "BackLink" })  &nbsp;&nbsp; @Html.ActionLink("Preview Product", "Item", "Shop", new { id = Model.ShopItem.ShopItemId }, new { @class = "ViewLink" })
+</div>
+
+
+@using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data", name = "myForm", id = "myForm" }))
+{ 
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.ShopItem.ShopItemId)
+    @Html.HiddenFor(model => model.ShopItem.FacebookPostId)
+
+    @Html.HiddenFor(model => model.ShopItem.Picture1)
+    @Html.HiddenFor(model => model.ShopItem.Picture2)
+    @Html.HiddenFor(model => model.ShopItem.Picture3)
+    @Html.HiddenFor(model => model.ShopItem.Picture4)
+    @Html.HiddenFor(model => model.ShopItem.Picture5)
+    @Html.HiddenFor(model => model.ShopItem.PictureSocialMedia)
+
+    @Html.HiddenFor(model => model.Picture1Deleted)
+    @Html.HiddenFor(model => model.Picture2Deleted)
+    @Html.HiddenFor(model => model.Picture3Deleted)
+    @Html.HiddenFor(model => model.Picture4Deleted)
+    @Html.HiddenFor(model => model.Picture5Deleted)
+    @Html.HiddenFor(model => model.PictureSocialMediaDeleted)
+   
+    
+     <div class="EditShopItemPictures">
+        <br />
+        <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture1)" alt="View Image" height=150 /> <a id="clearPicture1" href="#">x</a>&nbsp;
+     
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture2))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture2)" alt="View Image" height=100 />  @:<a id="clearPicture2" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture3))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture3)" alt="View Image" height=100 />   @:<a id="clearPicture3" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture4))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture4)" alt="View Image" height=100 />  @:<a id="clearPicture4" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture5))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture5)" alt="View Image" height=100 />  @:<a id="clearPicture5" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.PictureSocialMedia))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.PictureSocialMedia)" alt="View Image" height=80 />  @:<a id="clearPictureSocialMedia" href="#">x</a>&nbsp;
+        }
+         <br /><br />
+    </div>
+
+      <div class="EditShopItemDetails">  
+
+     <div class="editor-label">
+         @Html.LabelFor(model => model.ShopItem.CategoryId)
+     </div>
+     <div class="editor-field">
+         @Html.DropDownListFor(model => model.ShopItem.CategoryId, new SelectList(Model.Categories, "CategoryId", "CategoryName"), "-- Please Select --")
+         @Html.ValidationMessageFor(model => model.ShopItem.CategoryId)
+     </div>
+
+    <div class="editor-label">
+         Title
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ShopItem.Description, new { style = "width:300px;" })
+        @Html.ValidationMessageFor(model => model.ShopItem.Description)
+    </div>
+    
+    <div class="editor-label">
+        Description
+    </div>
+          <div class="editor-field">
+              @Html.TextAreaFor(model => model.ShopItem.Notes, new { style = "width:500px;" })
+          </div>
+          
+    <div class="editor-label">
+        Hidden Notes
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ShopItem.AdminNotes, new { style = "width:300px;" })
+    </div>
+    
+          <div class="editor-label">
+        Key Words
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ShopItem.Keywords, new { style = "width:300px;" })
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.Price)
+    </div>
+    <div class="editor-field">
+        @Html.TextBox("ShopItem.Price", Model.ShopItem.Price.ToString("0"), new { style = "width:80px;" }) 
+        @Html.ValidationMessageFor(model => model.ShopItem.Price)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.Size)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.ShopItem.Size, null, new { style = "width:60px" })
+        @Html.ValidationMessageFor(model => model.ShopItem.Size)
+    </div>
+
+     <div class="editor-label">
+         @Html.LabelFor(model => model.ShopItem.DateCreated)
+    </div>
+          <div class="editor-field">
+              @Html.TextBox("ShopItem.DateCreated", Model.ShopItem.DateCreated.ToString("yyyy/MM/dd"), new { style = "width:100px;" }) 
+          </div>
+          
+           <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.ReleaseDate)
+    </div>
+    <div class="editor-field">
+        @if (Model.ShopItem.ReleaseDate != null)
+        {
+            @Html.TextBox("ShopItem.ReleaseDate", Model.ShopItem.ReleaseDate.Value.ToString("yyyy/MM/dd"), new { style = "width:100px;" })
+        }
+        else
+        {
+            @Html.TextBox("ShopItem.ReleaseDate", Model.ShopItem.ReleaseDate, new { style = "width:100px;" })  
+        }
+    </div>
+    
+          <div class="editor-label">
+        @Html.LabelFor(model => model.ShopItem.DateSold)
+    </div>
+    <div class="editor-field">
+        @if (Model.ShopItem.DateSold != null)
+        {
+            @Html.TextBox("ShopItem.DateSold", Model.ShopItem.DateSold.Value.ToString("yyyy/MM/dd"), new { style = "width:100px;" })  @:<a id="clearDate" href="#">x</a>
+        }
+        else
+        {
+            @Html.TextBox("ShopItem.DateSold", Model.ShopItem.DateSold, new { style = "width:100px;" })  
+        }
+    </div>
+    
+
+    <br /> 
+    
+   
+    
+
+<table border="0"> 
+      
+                                                                   
+    <tr>
+        <td valign=top>
+            @Html.LabelFor(model => model.ShopItem.Hidden)
+        </td>
+        <td>
+            @Html.EditorFor(model => model.ShopItem.Hidden)
+            @Html.ValidationMessageFor(model => model.ShopItem.Hidden)
+
+        </td>
+    </tr>
+    
+    <tr>
+        <td valign=top>
+            @Html.LabelFor(model => model.ShopItem.Reserved)
+        </td>
+        <td>
+            @Html.EditorFor(model => model.ShopItem.Reserved)
+            @Html.ValidationMessageFor(model => model.ShopItem.Reserved)
+
+        </td>
+    </tr>
+    
+    <tr>
+        <td valign=top>
+             Short Url&nbsp;&nbsp;
+        </td>
+        <td>
+            @if (string.IsNullOrEmpty(Model.ShopItem.ItemShortUrl))
+            {
+            @Html.TextBox("ShopItem.ItemShortUrl", Model.ShopItem.ItemShortUrl, new { style = "width:200px;" })   <a href="javascript:generateShortUrl(@Model.ShopItem.ShopItemId);" class="MapLink">Generate</a>
+            }
+            else
+            {
+            <b>@Model.ShopItem.ItemShortUrl</b>
+            @Html.HiddenFor(model => model.ShopItem.ItemShortUrl)
+            } 
+
+        </td>
+    </tr>               
+</table>
+    <table>   
+    <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                   
+
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.File)
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.File, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File)
+            </td>
+        </tr>
+        <tr>
+                <td valign=top>
+                    @Html.LabelFor(model => model.File2)
+                </td>
+                <td >
+                    @Html.TextBoxFor(m => m.File2, new { type = "file" })
+                    @Html.ValidationMessageFor(m => m.File2)
+                </td>
+            </tr>
+            <tr>
+                <td valign=top>
+                    @Html.LabelFor(model => model.File3)
+                </td>
+                <td >
+                    @Html.TextBoxFor(m => m.File3, new { type = "file" })
+                    @Html.ValidationMessageFor(m => m.File3)
+                </td>
+            </tr> 
+            <tr>
+                <td valign=top>
+                    @Html.LabelFor(model => model.File4)
+                </td>
+                <td >
+                    @Html.TextBoxFor(m => m.File4, new { type = "file" })
+                    @Html.ValidationMessageFor(m => m.File4)
+                </td>
+            </tr>
+            <tr>
+                <td valign=top>
+                    @Html.LabelFor(model => model.File5)
+                </td>
+                <td >
+                    @Html.TextBoxFor(m => m.File5, new { type = "file" })
+                    @Html.ValidationMessageFor(m => m.File5)
+                </td>
+            </tr>   
+            <tr>
+                <td valign=top>
+                    @Html.LabelFor(model => model.FileSocialMedia)
+                </td>
+                <td >
+                    @Html.TextBoxFor(m => m.FileSocialMedia, new { type = "file" })
+                    @Html.ValidationMessageFor(m => m.FileSocialMedia)
+                </td>
+            </tr>
+                    
+    </table>
+    <br />            
+    <input type="submit" value="Save" /> &nbsp;&nbsp; @Html.ActionLink("Preview", "Item", "Shop", new { id = Model.ShopItem.ShopItemId }, new { @class = "ViewLink" }) &nbsp;&nbsp; @Html.ActionLink("Delete", "Delete", new { id = Model.ShopItem.ShopItemId }, new { @class = "DeleteLink" }) 
+    <br /><br />
+   
+    </div>
+
+    <div class="EditShopItemPictures">
+        <br />
+        <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture1)" alt="View Image" height=150 /> <a id="clearPicture1" href="#">x</a>&nbsp;
+     
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture2))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture2)" alt="View Image" height=100 />  @:<a id="clearPicture2" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture3))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture3)" alt="View Image" height=100 />   @:<a id="clearPicture3" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture4))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture4)" alt="View Image" height=100 />  @:<a id="clearPicture4" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Picture5))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture5)" alt="View Image" height=100 />  @:<a id="clearPicture5" href="#">x</a>&nbsp;
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ShopItem.PictureSocialMedia))
+        {
+            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.PictureSocialMedia)" alt="View Image" height=80 />  @:<a id="clearPictureSocialMedia" href="#">x</a>&nbsp;
+        }
+        
+    </div>
+    
+    <br />
+    
+
+
+        if (globalSettings.FacebookPostingEnabled == true)
+        { 
+     
+        <br /> 
+            if (!string.IsNullOrEmpty(Model.ShopItem.FacebookPostId))
+            {
+            @:Posted To Facebook: <b>Yes</b>
+            <br />
+            @Html.ActionLink("RePost to Facebook", "PostToFacebook", new { id = Model.ShopItem.ShopItemId }) 
+            }
+            else
+            {
+            @:Posted To Facebook: <font color="red"><b>No</b></font>
+            <br />
+        
+            @Html.ActionLink("Post to Facebook", "PostToFacebook", new { id = Model.ShopItem.ShopItemId }) 
+    
+            }
+
+        }
+
+        if (globalSettings.TwitterPostingEnabled == true)
+        {
+        <br /> <br />
+            if (!string.IsNullOrEmpty(Model.ShopItem.TwitterPostId))
+            {
+            @:Posted To Twitter: <b>Yes</b>
+            <br />
+            @Html.ActionLink("RePost to Twitter", "PostToTwitter", new { id = Model.ShopItem.ShopItemId })
+            }
+            else
+            {
+            @:Posted To Twitter: <font color="red"><b>No</b></font>
+            <br />  
+            @Html.ActionLink("Post to Twitter", "PostToTwitter", new { id = Model.ShopItem.ShopItemId }) 
+            }
+        }
+    <br />
+    <div id="progressIndicator" class="progressIndicator">
+        <img src="@Url.Content("~/Content/images/rotation.gif")" alt="Progress" />  
+    </div>
+
+}
+    <br />
+
+
+<script type="text/javascript">
+
+
+function selectPropertyLink() {
+        $("#selectPropertyDialog").dialog("open");
+    }
+
+$(document).ready(function () {
+    
+    $("#ShopItem_Notes").jqte();
+
+    $("#ShopItem_DateSold").datepicker({ dateFormat: 'yy/mm/dd' });
+        $("#ShopItem_DateSold").attr("readOnly", true);
+
+        //$("#ShopItem_DateCreated").datepicker({ dateFormat: 'yy/mm/dd' });
+        $("#ShopItem_DateCreated").attr("readOnly", true);
+    
+        $("#ShopItem_ReleaseDate").datepicker({ dateFormat: 'yy/mm/dd' });
+        $("#ShopItem_ReleaseDate").attr("readOnly", true);
+
+        $("a#clearDate").bind("click", function (e) {
+            if (confirm('Are you sure you want to delete this date?')) {
+                $(this).closest('div').find('input:text').val('');
+            }
+        });
+
+        $("a#clearPicture1").bind("click", function (e) {
+            if (confirm('Are you sure you want to delete this picture? Please remember to Save afterwards.')) {
+                $("#Picture1Deleted").val($("#ShopItem_Picture1").val());
+                $("#ShopItem_Picture1").val('');
+            }
+        });
+
+        $("a#clearPicture2").bind("click", function (e) {
+            if (confirm('Are you sure you want to delete this picture? Please remember to Save afterwards.')) {
+                $("#Picture2Deleted").val($("#ShopItem_Picture2").val());
+                $("#ShopItem_Picture2").val('');
+            }
+        });
+
+        $("a#clearPicture3").bind("click", function (e) {
+            if (confirm('Are you sure you want to delete this picture? Please remember to Save afterwards.')) {
+                $("#Picture3Deleted").val($("#ShopItem_Picture3").val());
+                $("#ShopItem_Picture3").val('');
+            }
+        });
+
+        $("a#clearPicture4").bind("click", function (e) {
+            if (confirm('Are you sure you want to delete this picture? Please remember to Save afterwards.')) {
+                $("#Picture4Deleted").val($("#ShopItem_Picture4").val());
+                $("#ShopItem_Picture4").val('');
+            }
+        });
+
+        $("a#clearPicture5").bind("click", function (e) {
+            if (confirm('Are you sure you want to delete this picture? Please remember to Save afterwards.')) {
+                $("#Picture5Deleted").val($("#ShopItem_Picture5").val());
+                $("#ShopItem_Picture5").val('');
+            }
+        });
+    
+        $("a#clearPictureSocialMedia").bind("click", function (e) {
+            if (confirm('Are you sure you want to delete this picture? Please remember to Save afterwards.')) {
+                $("#PictureSocialMediaDeleted").val($("#ShopItem_PictureSocialMedia").val());
+                $("#ShopItem_PictureSocialMedia").val('');
+            }
+        });
+
+    });
+
+      
+    function generateShortUrl(id) {
+
+        $.ajax({
+            type: "GET",
+            url: encodeURI('@Url.Action("GenerateShortUrl", "Product")' + "?id=" + id),
+            cache: false,
+            //dataType: 'html',
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('Oops, there has been an error. Please notify your Support Technician.');
+            },
+            success: function (data, textStatus, XMLHttpRequest) {
+
+                //alert(data);
+                $("#ShopItem_ItemShortUrl").val(data);
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            }
+        });
+
+    }
+
+</script>
+

@@ -1,0 +1,42 @@
+﻿
+@using SharedLibrary.Helpers
+@using SharedLibrary.Models
+
+
+ <script type="text/javascript">
+            $(document).ready(function () {
+                $("#my-menu").mmenu({
+                    classes: "mm-light mm-zoom-menu mm-zoom-panels",
+                    header: true
+                });
+                
+                $("#my-button").click(function () {
+                    $("#my-menu").trigger("open.mm");
+                });
+            });
+</script>
+                       
+<div class="categoryListWrapper">                                                             
+    <ul>                
+        @{
+            var categories = CategoryStaticCache.GetCategories((short)Session["SectionId"]);
+
+            foreach (var category in categories)
+            {       
+                <li>@Html.ActionLink(category.CategoryName, category.ParameterValue, category.ControllerName)</li>
+            }
+        }
+        
+         <li>&nbsp; </li>
+        @switch ((short)Session["SectionId"])
+        {
+            case 1:
+                <li class="Spacer">@Html.ActionLink("VINTAGE SHOP", "Latest", "VintageShop")</li>
+                break;
+            case 2:
+                <li class="Spacer">@Html.ActionLink("THRIFT SHOP", "Latest", "Shop")</li>
+                break;
+        }                    
+    </ul>
+</div> 
+

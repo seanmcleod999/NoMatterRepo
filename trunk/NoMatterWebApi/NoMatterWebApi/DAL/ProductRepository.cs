@@ -14,7 +14,7 @@ namespace NoMatterWebApi.DAL
 		Task<Product> GetProductAsync(Guid productUuid);
 		Task<int> AddProductAsync(Product product);
 		Task UpdateProductAsync(Product product);
-		Task DeleteProductAsync(Guid productUuid);
+		Task DeleteProductAsync(Product product);
 		Task<List<Product>> GetRelatedProductsByKeywordsAsync(Guid productUuid, List<string> keywords, int relatedItemsCount);
 	}
 
@@ -72,9 +72,9 @@ namespace NoMatterWebApi.DAL
 
 		}
 
-		public async Task DeleteProductAsync(Guid productUuid)
+		public async Task DeleteProductAsync(Product product)
 		{
-			var product = await databaseConnection.Products.Where(x => x.ProductUUID == productUuid).SingleOrDefaultAsync();
+			//var product = await databaseConnection.Products.Where(x => x.ProductUUID == productUuid).SingleOrDefaultAsync();
 
 			databaseConnection.Products.Remove(product);
 			await databaseConnection.SaveChangesAsync();

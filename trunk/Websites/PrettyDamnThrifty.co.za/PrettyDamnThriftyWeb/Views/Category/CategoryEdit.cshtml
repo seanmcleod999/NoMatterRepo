@@ -1,0 +1,126 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.CategoryVm
+
+@{
+    ViewBag.Title = "Category Edit";
+
+    var globalSettings = new GlobalSettings();
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.css")" />
+<script type="text/javascript" src="@Url.Content("~/RichTextEditor/jquery-te-1.4.0.min.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Category_CategoryDescription").jqte();
+    })
+</script>
+    
+
+<div class="pageHeader">Category Edit</div>
+   
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("Back to List", "Index", "Category", null, new { @class = "BackLink" })
+</div>
+
+
+@using (Html.BeginForm("CategoryEdit", "Category", FormMethod.Post, new { enctype = "multipart/form-data", name = "myForm", id = "myForm" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Category.CategoryId)
+
+    @Html.HiddenFor(model => model.Category.Picture)
+  
+    <br/>
+    @:Type: <b>@Model.Category.SectionName</b>
+
+    <div class="editor-label">
+          Category Name
+    </div>
+    <div class="editor-field">
+         @Html.TextBoxFor(model => model.Category.CategoryName)
+         @Html.ValidationMessageFor(model => model.Category.CategoryName)
+    </div>
+    
+     <div class="editor-label">
+           Description
+    </div>
+    <div class="editor-field">
+         @Html.TextBoxFor(m => m.Category.CategoryDescription, null, new { style = "width:400px;" })
+         @Html.ValidationMessageFor(model => model.Category.CategoryDescription)
+    </div>      
+   
+    <div class="editor-label">
+         @Html.LabelFor(model => model.Category.Order)
+    </div>
+    <div class="editor-field">
+         @Html.TextBoxFor(model => model.Category.Order)
+         @Html.ValidationMessageFor(model => model.Category.Order)
+    </div>  
+          <br/>             
+    <table>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Category.Hidden)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Category.Hidden)
+                @Html.ValidationMessageFor(model => model.Category.Hidden)
+
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+               &nbsp;
+            </td>
+            <td>
+           
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.File)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.File, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File)
+            </td>
+        </tr>        
+    </table>
+
+    <p>
+        <input type="submit" value="Save" />
+        
+        @if (Model.Category.ShopItemCount == 0 && Model.Category.Conditional == false)
+        {
+            @:&nbsp; &nbsp; @Html.ActionLink("Delete", "CategoryDelete", new { id = Model.Category.CategoryId }, new { @class = "DeleteLink", onclick = "return confirm('Are you sure you want to delete?')" }) 
+        }
+
+    </p>
+   
+   
+    if (!string.IsNullOrEmpty(Model.Category.Picture))
+    {
+        <img src="@Url.Content(globalSettings.CategoryImagesPath + Model.Category.Picture)" alt="View Image" height=100 />  @:<a id="clearPicture" href="#">x</a>&nbsp;
+    }
+            
+    <br/><br/>
+}
+         
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("a#clearPicture").bind("click", function(e) {
+            if (confirm('Are you sure you want to delete this picture? Please remember to Save afterwards.')) {
+                $("#Category_Picture").val('');
+            }
+        });
+    })
+</script>
+
+
+

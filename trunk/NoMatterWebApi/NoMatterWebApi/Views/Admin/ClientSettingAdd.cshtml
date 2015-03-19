@@ -1,0 +1,61 @@
+﻿@model NoMatterWebApiModels.ViewModels.ClientSettingVm
+
+
+@{
+    ViewBag.Title = "Client Setting Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Add Client Setting</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to pages", "ClientSettings", "Admin", new {clientId = @Model.Client.ClientId}, new { @class = "BackLink" })
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Client.ClientId)
+
+   
+    <div class="editor-label">
+        Setting Name
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ClientSetting.SettingName, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.ClientSetting.SettingName)
+    </div>
+    
+     <div class="editor-label">
+        String Value
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ClientSetting.StringValue, new {style = "width:500px;"})
+        @Html.ValidationMessageFor(model => model.ClientSetting.StringValue)
+
+    </div>
+    
+     <div class="editor-label">
+        Int Value
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ClientSetting.IntValue, new {style = "width:200px;"})
+        @Html.ValidationMessageFor(model => model.ClientSetting.IntValue)
+
+    </div>
+ 
+    <br/>
+    <p>
+        <input type="submit" value="Save" class="btn btn-default" /> &nbsp;@Html.ActionLink("cancel", "ClientSettings", "Admin", new { clientId = Model.Client.ClientId }, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+    </p>
+
+}
+
+
+
+
+
+
+

@@ -45,7 +45,8 @@ CREATE TABLE [dbo].[Client](
 	[ClientId] [int] IDENTITY(1,1) NOT NULL,
 	[ClientUUID] [uniqueidentifier] NOT NULL,
 	[ClientName] [varchar](50) NOT NULL,
-	[Enabled] [bit] NOT NULL
+	[Enabled] [bit] NOT NULL,
+	[Logo] [varchar](50) NULL
 ) ON [PRIMARY]
 GO
 
@@ -301,7 +302,7 @@ GO
 
 CREATE TABLE [dbo].[User](
 	[UserId] [int] IDENTITY(1,1) NOT NULL,
-	[ClientId] [int] NOT NULL,
+	[ClientId] [int] NULL,
 	[UserUUID] [uniqueidentifier] NOT NULL,
 	[CredentialTypeId] [tinyint] NOT NULL,
 	[Identifier] [varchar](100) NOT NULL,
@@ -482,6 +483,7 @@ GO
 
 ALTER TABLE [dbo].[CartProduct]  WITH CHECK ADD  CONSTRAINT [FK_CartProduct_Product] FOREIGN KEY([ProductId])
 REFERENCES [Product] ([ProductId])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[CartProduct] CHECK CONSTRAINT [FK_CartProduct_Product]

@@ -21,7 +21,7 @@ namespace NoMatterDatabaseModel
         }
     
         public int UserId { get; set; }
-        public int ClientId { get; set; }
+        public Nullable<int> ClientId { get; set; }
         public System.Guid UserUUID { get; set; }
         public byte CredentialTypeId { get; set; }
         public string Identifier { get; set; }

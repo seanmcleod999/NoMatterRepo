@@ -66,6 +66,9 @@
     <Compile Include="ClientDeliveryOption.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ClientPage.cs">
+      <DependentUpon>DatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ClientPaymentType.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>

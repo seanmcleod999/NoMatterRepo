@@ -11,12 +11,13 @@ namespace NoMatterWebApi.DAL
 	public interface ICategoryRepository
 	{
 		Task<Category> GetCategoryAsync(int categoryId);
-		Task<Category> GetCategoryAsync(Guid categoryUuid);
-		Task<string> AddCategoryAsync(Category category);
-		Task UpdateCategoryAsync(Category category);
+		Task<Category> GetCategoryAsync(Guid clientUuid, Guid categoryUuid);
+		Task<string> AddSectionCategoryAsync(Category category);
+		Task UpdateCategoryAsync(Category categoryDb, NoMatterWebApiModels.Models.Category category);
 		Task DeleteCategoryAsync(Guid categoryUuid);
 		Task<List<Product>> GetCategoryProductsAsync(Guid categoryUuid);
 		Task<List<Product>> GetCategoryProductsByTypeAsync(int sectionId, int categoryId, string type);
+		Task<List<Category>> GetSectionCategoriesAsync(Guid sectionUuid, bool includeHidden);
 	}
 
 	public class CategoryRepository : ICategoryRepository
@@ -28,6 +29,24 @@ namespace NoMatterWebApi.DAL
 			this.databaseConnection = databaseConnection;
 		}
 
+		public async Task<List<Category>> GetSectionCategoriesAsync(Guid sectionUuid, bool includeHidden)
+		{
+			var categories = databaseConnection.Categories
+				.Include("Section")
+				.Include("Products")
+				.Where(x => x.Section.SectionUUID == sectionUuid);
+
+			if (!includeHidden)
+			{
+				categories = categories.Where(x => !x.Hidden);
+			}
+
+			var categoriesDb = await categories.OrderBy(x => x.CategoryOrder).ToListAsync();
+
+			return categoriesDb;
+
+		}
+
 		public async Task<Category> GetCategoryAsync(int categoryId)
 		{
 			var category = await databaseConnection.Categories.SingleOrDefaultAsync(x => x.CategoryId == categoryId);
@@ -35,14 +54,14 @@ namespace NoMatterWebApi.DAL
 			return category;
 		}
 
-		public async Task<Category> GetCategoryAsync(Guid categoryUuid)
+		public async Task<Category> GetCategoryAsync(Guid clientUuid, Guid categoryUuid)
 		{
-			var category = await databaseConnection.Categories.SingleOrDefaultAsync(x => x.CategoryUUID == categoryUuid);
+			var category = await databaseConnection.Categories.SingleOrDefaultAsync(x => x.Section.Client.ClientUUID == clientUuid && x.CategoryUUID == categoryUuid);
 
 			return category;
 		}
 
-		public async Task<string> AddCategoryAsync(Category category)
+		public async Task<string> AddSectionCategoryAsync(Category category)
 		{
 			category.CategoryUUID = Guid.NewGuid();
 			
@@ -54,9 +73,16 @@ namespace NoMatterWebApi.DAL
 
 		}
 
-		public async Task UpdateCategoryAsync(Category category)
+		public async Task UpdateCategoryAsync(Category categoryDb, NoMatterWebApiModels.Models.Category category)
 		{
-			databaseConnection.Categories.Attach(category);
+
+			databaseConnection.Categories.Attach(categoryDb);
+
+			categoryDb.CategoryName = category.CategoryName;
+			categoryDb.CategoryDescription = category.CategoryDescription;
+			categoryDb.CategoryOrder = category.CategoryOrder;
+			categoryDb.Hidden = category.Hidden;
+			categoryDb.Picture = category.Picture;
 
 			await databaseConnection.SaveChangesAsync();
 

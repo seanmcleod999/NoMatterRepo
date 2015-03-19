@@ -14,7 +14,6 @@ using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
-using WebApplication7.Models;
 using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers

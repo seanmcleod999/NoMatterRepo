@@ -17,7 +17,6 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 			if (_globalSettings == null) LoadGlobalSettingsCache();
 		}
 
-
 		public static void LoadGlobalSettingsCache()
 		{
 			var globalHelper = new GlobalHelper();
@@ -29,7 +28,6 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		{
 			return _globalSettings;
 		}
-
 
 		public static string GetStringSetting(string settingName)
 		{

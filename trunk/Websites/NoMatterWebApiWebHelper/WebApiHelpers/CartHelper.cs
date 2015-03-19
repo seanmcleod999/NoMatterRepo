@@ -45,7 +45,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.GetAsync(string.Format("api/v1/cart/{0}", cartId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot get Category", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 
 				var shoppingCartDetails = await response.Content.ReadAsAsync<ShoppingCartDetails>();
 
@@ -70,7 +70,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.PostAsJsonAsync(String.Format("api/v1/cart/{0}", cartId), addProductToCartModel);
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Error adding product to cart", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 
 				var responseProduct = await response.Content.ReadAsAsync<Product>();
 
@@ -89,7 +89,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.DeleteAsync(string.Format("api/v1/cart/{0}/Product/{1}", cartId, productId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot delete Product from cart", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.DeleteAsync(string.Format("api/v1/cart/{0}", cartId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot empty cart", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 			}
 		}
 	}

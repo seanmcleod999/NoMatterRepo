@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using NoMatterDatabaseModel;
+using NoMatterWebApi.ActionResults;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Enums;
 using NoMatterWebApi.Extensions;
@@ -29,6 +30,7 @@ namespace NoMatterWebApi.Controllers.V1
 		private ICartRepository _cartRepository;
 		private IUserRepository _userRepository;
 		private IGeneralHelper _generalHelper;
+		private IWebApiGlobalSettings _webApiGlobalSettings;
 
 		public UserController()
 		{
@@ -38,7 +40,8 @@ namespace NoMatterWebApi.Controllers.V1
 			_clientRepository = new ClientRepository(databaseEntity);
 			_cartRepository = new CartRepository(databaseEntity);
 			_userRepository = new UserRepository(databaseEntity);
-			_generalHelper = new GeneralHelper();
+			_generalHelper = new WebApiGeneralHelper();
+			_webApiGlobalSettings = new WebApiGlobalSettings();
 		}
 
 		public UserController(IClientRepository clientRepository, IOrderRepository orderRepository, ICartRepository cartRepository, IUserRepository userRepository, IGeneralHelper facebookHelper)
@@ -74,10 +77,10 @@ namespace NoMatterWebApi.Controllers.V1
 				var passwordSalt = PasswordHelper.CreateSalt();
 
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientUuid));
-				if (clientDb == null) return BadRequest("Client Not Found");
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
 				var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
-				if (userDb != null) return BadRequest("User Already Exists");
+				if (userDb != null) return new CustomBadRequest(Request, ApiResultCode.UserAlreadyExists);
 
 				if (string.IsNullOrEmpty(model.FacebookToken))
 				{
@@ -133,24 +136,38 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// POST api/v1/clients/{id}/users>
-		[Route("{clientUuid}/users/authenticate")]
+		// POST api/v1/clients/{clientId}/users>
+		[Route("{clientId}/users/authenticate")]
 		[ResponseType(typeof(UserAuthenticatedResult))]
 		[HttpPost]
-		public async Task<IHttpActionResult> AuthenticateUser(string clientUuid, UserAuthenticateModel model)
+		public async Task<IHttpActionResult> AuthenticateUser(string clientId, UserAuthenticateModel model)
 		{
 			User userDb;
+
+			Guid? clientUuid = null;
+
+			if (clientId != "sys") clientUuid = new Guid(clientId);
 
 			if (!string.IsNullOrEmpty(model.FacebookToken))
 			{
 				//Facebook User.. need to validate the token etc
 				var facebookUser = await _generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
 
-				userDb = await _userRepository.GetClientUserByFacebookIdAsync(new Guid(clientUuid), facebookUser.Id);
+				userDb = await _userRepository.GetClientUserByFacebookIdAsync(clientUuid, facebookUser.Id);
+
+				if (userDb == null)
+				{
+					return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
+				}
 			}
 			else
 			{
-				userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
+				userDb = await _userRepository.GetClientUserByEmailAsync(clientUuid, model.Email);
+
+				if (userDb == null)
+				{
+					return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
+				}
 
 				var dBytes = userDb.Password;
 				var enc = new UTF8Encoding();
@@ -159,21 +176,20 @@ namespace NoMatterWebApi.Controllers.V1
 
 				if (strDbPassword != PasswordHelper.CreatePasswordHash(model.Password, userDb.PasswordSalt))
 				{
-					return BadRequest("Authentication Failed");
+					return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
 				}
 			}		
 
-			if (userDb == null)
-			{
-				return BadRequest("Authentication Failed");
-			}
+			var userRoles = String.Join(",", userDb.UserRoles.Select(x=>x.Role.RoleName));
 
 			//Return the user details and token etc
 			var userAuthenticated = new UserAuthenticatedResult()
 			{
 				Id = userDb.UserUUID.ToString(),
+				ClientId = userDb.Client != null ? userDb.Client.ClientUUID.ToString() : null,
 				Fullname = userDb.FullName,
 				Email = userDb.Email,
+				UserRoles = userRoles,
 				TokenDetails = new TokenDetails()
 				{
 					Token = userDb.PasswordSalt
@@ -195,7 +211,7 @@ namespace NoMatterWebApi.Controllers.V1
 				string userId;
 
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientUuid));
-					if (clientDb == null) return BadRequest("Client Not Found");
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
 				var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
 
@@ -261,14 +277,14 @@ namespace NoMatterWebApi.Controllers.V1
 			{
 	
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
-				if (clientDb == null) return BadRequest("Client Not Found");
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
 				var userDb = await _userRepository.GetUserByUuidAsync(new Guid(userId));
-				if (userDb == null) return BadRequest("User Not Found");
+				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
 
 				var clientDeliveryOption = await _clientRepository.GetClientDeliveryOptionAsync(Convert.ToInt16(model.ClientDeliveryOptionId));
 
-				if (userDb.Client.ClientUUID != clientDb.ClientUUID) return BadRequest("User does not belong to client");
+				if (userDb.Client.ClientUUID != clientDb.ClientUUID) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
 				var cartProductsDb = await _cartRepository.GetCartProductsAsync(model.CartId);
 

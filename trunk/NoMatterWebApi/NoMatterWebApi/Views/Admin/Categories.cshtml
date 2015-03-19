@@ -1,0 +1,102 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.SectionCategoriesVm
+
+
+@{
+    ViewBag.Title = "Categories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Categories</h1>
+
+Client: <b>@Model.Client.ClientName</b><br/>
+Section: <b>@Model.Section.SectionName</b><br/><br/>
+
+<div class="PageNavigationBar">
+@Html.ActionLink("add category", "CategoryAdd", "Admin", new { clientId = @Model.Section.ClientId, sectionId = @Model.Section.SectionId }, new { @class = "AddLink" })
+&nbsp;    
+@Html.ActionLink("back to sections", "Sections", "Admin", new { clientId = Model.Section.ClientId}, new { @class = "BackLink" })
+</div>
+
+<table class="table_grid">
+    <tr>
+        <th>
+            
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Order
+        </th>
+        <th>
+            Hidden
+        </th>
+        <th>
+            Products
+        </th>
+        <th>
+            Visible Products
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+
+@foreach (var category in Model.Categories)
+{
+    <tr>
+        <td>
+            @if (!string.IsNullOrEmpty(@category.Picture))
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@category.Picture?w=30"/>
+            }
+            else
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=30"/>
+            }  
+        <td>
+            @category.CategoryName
+        </td>
+        <td>
+            @category.CategoryOrder
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => category.Hidden)
+        </td>
+        <td>
+            @category.FullProductCount
+        </td>
+        <td>
+            @category.VisibleProductCount
+        </td>
+        <td>
+            @Html.ActionLink("edit", "CategoryEdit", "Admin", new { clientId = @Model.Section.ClientId, categoryId = @category.CategoryId }, null)
+        </td>
+        <td>
+            @if (!category.Conditional && category.FullProductCount == 0)
+            {
+                @Html.ActionLink("delete", "CategoryDelete", "Admin", new { clientId = @Model.Section.ClientId, categoryId = @category.CategoryId, sectionId = @Model.Section.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this category? Note that you can only delete categories that have no products.');" })
+            }
+            
+        </td>
+        <td>
+            @if (!category.Conditional)
+            {
+                @Html.ActionLink("products", "CategoryProducts", "Admin", new {categoryId = @category.CategoryId, clientId = @Model.Section.ClientId}, null)
+            }
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>
+

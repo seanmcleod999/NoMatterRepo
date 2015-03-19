@@ -1,0 +1,232 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.LoginVm
+
+@{
+    ViewBag.Title = "Login";
+
+    var globalSettings = new GlobalSettings();
+}
+
+<div id="fb-root"></div>
+
+<script type="text/javascript">
+    (function () {
+
+        //Facebook javasripts
+        var e = document.createElement('script'); e.async = true;
+        e.src = document.location.protocol
+            + '//connect.facebook.net/en_US/all.js';
+        document.getElementById('fb-root').appendChild(e);
+    })();
+</script>
+
+@{Html.RenderPartial("partialMobileMenu");}  
+
+<div id="container" class="clearfix">
+    
+    <div class="LoginContentWrapper">
+        
+        @Html.ValidationSummary(true)
+            
+        <div class="LoginPageLoginContent">
+   
+            <div class="pageHeader">Login</div>           
+            <div class="pageSubHeader">Please enter your details below.</div> 
+            
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { name = "frmLogin", id = "frmLogin" }))
+            {
+                    
+                @Html.HiddenFor(x=>x.ReturnUrl)
+                @Html.HiddenFor(x=>x.FromCart)
+                <div>
+                    <div class="formInputControlWrapper">
+                        <div class="editor-label">
+                            @Html.LabelFor(m => m.LoginModel.Email)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.LoginModel.Email, new { style = "width:240px;" })
+                            @Html.ValidationMessageFor(m => m.LoginModel.Email)
+                        </div>
+                    </div>
+                    <div class="formInputControlWrapper">
+                        <div class="editor-label">
+                            @Html.LabelFor(m => m.LoginModel.Password)
+                        </div>
+                        <div class="editor-field">
+                            @Html.PasswordFor(m => m.LoginModel.Password)
+                            @Html.ValidationMessageFor(m => m.LoginModel.Password)
+                        </div>
+                        @Html.ActionLink("forgot my password", "ForgotPassword", "Account")
+                    </div>
+                    <div class="loginPageFormButton">
+                            <a href="javascript:void(0);" class="siteButton" onclick="submitLoginForm();">Login</a> 
+                    </div>
+
+                </div>
+                
+                <div class="loginPageFacebookLogin">
+                    <table>
+                        <tr>
+                            <td>
+                                OR
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" id="fb-auth"><img src="~/Content/images/icon_facebooklogin.png"/></a>
+                            </td>
+                        </tr>
+                    </table>
+                        
+                    <div class="pageSubHeader">*@globalSettings.SiteNameFriendly will not post anything to Facebook.</div>
+                </div>     
+
+                <br/>
+            }
+                
+        </div>
+        
+        <div class="LoginPageRegisterContent">
+            
+            <div class="pageHeader">New to @globalSettings.SiteNameFriendly?</div>
+            <div class="pageSubHeader">You need to register an account to purchase items.</div>
+            
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { name = "frmRegister", id = "frmRegister" }))
+            {
+               
+                @Html.HiddenFor(x=>x.ReturnUrl)
+                @Html.HiddenFor(x=>x.FromCart)
+                <div>
+                    <div class="formInputControlWrapper">
+                        <div class="editor-label">
+                            @Html.LabelFor(m => m.RegisterUserModel.FullName)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.RegisterUserModel.FullName)
+                            @Html.ValidationMessageFor(m => m.RegisterUserModel.FullName)
+                        </div>
+                    </div>
+
+                     <div class="formInputControlWrapper">
+                        <div class="editor-label">
+                            @Html.LabelFor(m => m.RegisterUserModel.Email)
+                        </div>
+                         <div class="editor-field">
+                             @Html.TextBoxFor(m => m.RegisterUserModel.Email, new { style = "width:240px;" })
+                             @Html.ValidationMessageFor(m => m.RegisterUserModel.Email)
+                         </div>
+                     </div>
+                         
+                    <div class="formInputControlWrapper">
+                        <div class="editor-label">
+                            @Html.LabelFor(m => m.RegisterUserModel.Password)
+                        </div>
+                        <div class="editor-field">
+                            @Html.PasswordFor(m => m.RegisterUserModel.Password)
+                            @Html.ValidationMessageFor(m => m.RegisterUserModel.Password)
+                        </div>
+                    </div>
+                    <div class="formInputControlWrapper">
+                         <p>
+                             <a href="javascript:void(0);" class="siteButton" onclick="submitRegisterForm();">Register</a>
+                         </p>
+                    </div>
+
+                </div>   
+
+            }
+          
+        </div>   
+    </div>
+
+
+   @* @if (Model.FromCart)
+    {
+        @:New to @globalSettings.SiteNameFriendly? You need to login or register an account to purchase your items.
+    }
+    else
+    {
+        @:Please enter your email address and password.
+    }*@
+
+
+    
+
+
+  
+
+@*   
+    OR 
+    <br /><br />
+    
+    @if (Model.FromCart)
+    {
+        @Html.ActionLink("Sign up!", "Register", new {fromCheckout = true})
+    }
+    else
+    {
+        @Html.ActionLink("Sign up!", "Register")
+    }
+    
+ 
+    <br/> <br/>
+    
+    Create an account with @globalSettings.SiteName to shop our regularly stocked thrift and vintage shop. With an account you will be able to shop faster, receive exclusive discounts, view your order history, and save items for later in your shopping cart.
+    
+    <br/><br />*@
+          
+</div>  
+
+<script type="text/javascript">
+
+    function submitLoginForm() {
+        $('form#frmLogin').submit();
+    }
+    
+    function submitRegisterForm() {
+        $('form#frmRegister').submit();
+    }
+
+      //Facebook scripts
+      $(document).ready(function () {
+          // Init the SDK upon load
+          window.fbAsyncInit = function () {
+              FB.init({
+                  appId: '@globalSettings.FacebookAppId', // App ID
+                  //channelUrl: '//' + window.location.hostname + '/channel', // Path to your Channel File
+                  scope: 'name,first_name,last_name',
+                  status: true, // check login status
+                  cookie: true, // enable cookies to allow the server to access the session
+                  xfbml: true,  // parse XFBML
+                  oauth: true
+              });
+          };
+
+          var button = document.getElementById('fb-auth');
+          button.onclick = function() {
+              FB.login(function(response) {
+
+                  if (response.authResponse) {
+
+                      var accessToken = response.authResponse.accessToken;
+
+                      var form = document.createElement("form");
+                      form.setAttribute("method", 'post');
+                      form.setAttribute("action", '@Url.Action("FacebookLogin", "Account")');
+
+                      var field = document.createElement("input");
+                      field.setAttribute("type", "hidden");
+                      field.setAttribute("name", 'accessToken');
+                      field.setAttribute("value", accessToken);
+                      form.appendChild(field);
+
+                      document.body.appendChild(form);
+                      form.submit();
+
+                  } else {
+                      //user cancelled login or did not grant authorization
+                  }
+              }, { scope: 'email' });
+          };
+
+      });
+</script>
+     

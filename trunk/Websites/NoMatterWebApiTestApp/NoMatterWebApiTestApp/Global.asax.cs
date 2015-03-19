@@ -9,8 +9,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
+using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper.OtherHelpers;
-using WebApplication7.Models;
 
 namespace WebApplication7
 {

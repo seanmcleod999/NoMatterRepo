@@ -1,0 +1,19 @@
+﻿@model SharedLibrary.ViewModels.ViewLatestShopItemsVm
+
+
+<div class="latestItemListPagingControls">
+    
+    @if (Model.HasPreviousPage)
+    {
+        @Html.ActionLink("previous", "Latest", new { page = Model.PageNumber - 1  }, new { @class = "PreviousLink" })
+  
+    }
+              
+    @if (Model.HasNextPage)
+    {
+        @:&nbsp;&nbsp;
+
+         @Html.ActionLink("next", "Latest", new { page = Model.PageNumber + 1  }, new { @class = "NextLink" })
+    }
+     
+</div>

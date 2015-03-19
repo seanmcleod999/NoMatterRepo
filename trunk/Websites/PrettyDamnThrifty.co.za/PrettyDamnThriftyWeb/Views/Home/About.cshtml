@@ -1,0 +1,28 @@
+﻿@using SharedLibrary.Helpers
+@{
+    ViewBag.Title = "About Us";
+}
+
+<script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>
+
+@{Html.RenderPartial("partialMobileMenu");}  
+
+<div class="pageHeader">About Us</div>
+    <br />
+    <a href="javascript: history.go(-1)" class="BackLink">back</a>
+    <br/><br/>
+
+
+@{   
+     var text = StringTemplateHelper.GetStringTemplateText("AboutPage");
+}
+
+ @Html.Raw(text)
+
+If you would like to contact us, please click @Html.ActionLink("here", "ContactUs", "Home").
+
+    <br /><br />
+    
+   
+
+

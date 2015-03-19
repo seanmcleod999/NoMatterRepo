@@ -1,0 +1,205 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.ViewOrderVm
+
+@{
+    ViewBag.Title = "Order Details";
+
+    var globalSettings = new GlobalSettings();
+}
+
+<div id="container" class="clearfix">
+        
+    <div id="sidebar">
+                                                                        
+        @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}       
+    </div>
+        
+    <div id="content">
+        
+         <div class="pageHeader">order details</div>
+    <br/>
+
+<div>
+    @Html.ActionLink("Back to Orders", "ViewOrders", null, new { @class = "BackLink" })
+</div>
+<br />
+
+@using (Html.BeginForm("OrderDetails", "Order", FormMethod.Post, new { enctype = "multipart/form-data", name = "myForm", id = "myForm" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Order.OrderId)
+
+    foreach (var shopItem in Model.Order.ShopItems)
+    {    
+        <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + shopItem.Picture1)" alt="View Image" height=140 /> 
+    }
+
+    <table  class="table_grid">
+        <tr>
+            <td valign=top  class="td_grid">
+                Order Num
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.OrderId</b>
+            </td>
+        </tr>
+        <tr>
+            <td valign=top class="td_grid">
+                Date Created
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.DateCreated</b>
+            </td>
+        </tr>
+        <tr>
+            <td valign=top class="td_grid">
+                @Html.LabelFor(model => model.Order.Total)
+            </td>
+            <td class="td_grid">
+                <b>R @String.Format("{0:0}", @Model.Order.Total)</b>
+            </td>
+        </tr>
+        <tr>
+            <td valign=top class="td_grid">
+                Shipping
+            </td>
+            <td class="td_grid">
+                <b>R @String.Format("{0:0}", @Model.Order.ShippingAmount)</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="td_grid">
+                &nbsp;
+            </td>
+            <td class="td_grid">
+           
+            </td>
+        </tr>
+       
+        <tr>
+            <td class="td_grid">
+                Full Name
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.Fullname</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="td_grid">
+                Email
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.Email</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="td_grid">
+                Contact Number
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.ContactNumber</b>
+            </td>
+        </tr>
+           <tr>
+            <td class="td_grid">
+                &nbsp;
+            </td>
+            <td class="td_grid">
+           
+            </td>
+        </tr>
+        <tr>
+            <td class="td_grid">
+                Address
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.Address</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="td_grid">
+                Province
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.Province</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="td_grid">
+                City
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.City</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="td_grid">
+                Postal Code
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.PostalCode</b>
+            </td>
+        </tr>
+        
+         <tr>
+            <td class="td_grid">
+                Country
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.User.Country</b>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="td_grid">
+                &nbsp;
+            </td>
+            <td class="td_grid">
+           
+            </td>
+        </tr>
+       
+        <tr>
+            <td valign=top class="td_grid">
+                @Html.LabelFor(model => model.Order.Message)
+            </td>
+            <td class="td_grid">
+                <b>@Model.Order.Message</b>
+            </td>
+        </tr>
+   
+       <tr>
+            <td valign=top class="td_grid">
+                @Html.LabelFor(model => model.Order.CourierName)
+            </td>
+            <td class="td_grid">
+                @Html.TextBoxFor(model => model.Order.CourierName)
+                @Html.ValidationMessageFor(model => model.Order.CourierName)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top class="td_grid">
+                @Html.LabelFor(model => model.Order.TrackingNumber)
+            </td>
+            <td class="td_grid">
+                @Html.TextBoxFor(model => model.Order.TrackingNumber)
+                @Html.ValidationMessageFor(model => model.Order.TrackingNumber)
+            </td>
+        </tr>
+
+    </table>
+    
+    <input type="submit" value="Save" />
+   
+}
+<br/>
+    
+    </div>
+    
+</div>

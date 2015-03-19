@@ -23,12 +23,14 @@ namespace NoMatterDatabaseModel
             this.Sections = new HashSet<Section>();
             this.Users = new HashSet<User>();
             this.ClientDeliveryOptions = new HashSet<ClientDeliveryOption>();
+            this.ClientPages = new HashSet<ClientPage>();
         }
     
         public int ClientId { get; set; }
         public System.Guid ClientUUID { get; set; }
         public string ClientName { get; set; }
         public bool Enabled { get; set; }
+        public string Logo { get; set; }
     
         public virtual ICollection<Enquiry> Enquiries { get; set; }
         public virtual ICollection<ClientPaymentType> ClientPaymentTypes { get; set; }
@@ -37,5 +39,6 @@ namespace NoMatterDatabaseModel
         public virtual ICollection<Section> Sections { get; set; }
         public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<ClientDeliveryOption> ClientDeliveryOptions { get; set; }
+        public virtual ICollection<ClientPage> ClientPages { get; set; }
     }
 }

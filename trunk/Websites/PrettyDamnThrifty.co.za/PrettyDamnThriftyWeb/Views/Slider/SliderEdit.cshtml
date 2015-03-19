@@ -1,0 +1,156 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.SliderVm
+
+@{
+    ViewBag.Title = "PictureGridIndex";
+
+    var globalSettings = new GlobalSettings();
+}
+
+    <div class="pageHeader">slider images - @Model.Slider.SliderName</div>
+    <br/>
+    
+     @Html.ActionLink("Back to Sliders", "Index", "Slider", null, new { @class = "BackLink" })
+     
+     <br/> <br/>
+
+    @using (Html.BeginForm())
+{
+
+        @Html.HiddenFor(x=>x.Slider.SliderId)
+
+    <table>
+        <tr>
+            <td>
+                Slide Width
+            </td>
+            <td>
+                @Html.TextBoxFor(x=>x.Slider.SlideWidth)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Minimum Slides
+            </td>
+            <td>
+                @Html.TextBoxFor(x=>x.Slider.MinSlides)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Maximum Slides
+            </td>
+            <td>
+                 @Html.TextBoxFor(x=>x.Slider.MaxSlides)
+            </td>
+        </tr> 
+         <tr>
+            <td>
+                Show Next/Prev
+            </td>
+            <td>
+                 @Html.EditorFor(x => x.Slider.ShowNextPrevControls)
+            </td>
+         </tr>  
+         
+          <tr>
+            <td>
+                Touch Enabled
+            </td>
+            <td>
+                 @Html.EditorFor(x => x.Slider.TouchEnabled)
+            </td>
+          </tr> 
+          <tr>
+            <td>
+                Auto Scroll
+            </td>
+            <td>
+                 @Html.EditorFor(x=>x.Slider.AutoScroll)
+            </td>
+          </tr> 
+          <tr>
+            <td>
+                Auto Scroll time
+            </td>
+            <td>
+                  @Html.TextBoxFor(x=>x.Slider.AutoScrollTime) milliseconds
+            </td>
+          </tr>    
+          <tr>
+            <td>
+                Image Padding 
+            </td>
+            <td>
+                  @Html.TextBoxFor(x=>x.Slider.ImagePadding) pixels
+            </td>
+         </tr>      
+    </table>
+    
+      <input type="submit" value="Save" />
+}
+
+
+<br/>
+
+<p>
+    @Html.ActionLink("New Image", "SliderImageAdd", new { sliderId = Model.Slider.SliderId }, new { @class = "AddLink" })
+</p>
+
+
+<table class="table_grid">
+    <tr>
+        <th class="th_grid"></th>
+        <th   class="th_grid">
+           Caption
+        </th>
+        <th   class="th_grid">
+           Order
+        </th>
+        <th class="th_grid">
+            Hidden
+        </th>
+        <th class="th_grid"></th>
+        <th class="th_grid"></th>
+    </tr>
+
+@foreach (var item in Model.Slider.SliderPictures)
+{
+    <tr>
+        <td  class="td_grid" >
+        @if (!string.IsNullOrEmpty(item.PicturePath))
+        {
+            <img src="@Url.Content(globalSettings.SliderImagesPath + "thumb-" + item.PicturePath)" alt="View Image" height="40" />
+        } 
+            
+        </td>
+
+        <td class="td_grid">
+            @Html.DisplayFor(modelItem => item.Notes)
+        </td>
+        <td class="td_grid">
+            @Html.DisplayFor(modelItem => item.Order)
+        </td>
+        <td class="td_grid">
+            @Html.DisplayFor(modelItem => item.Hidden)
+        </td>
+        
+        <td class="td_grid">
+            @Html.ActionLink("Edit", "SliderImageEdit", new { id = item.SliderPictureId }, new { @class = "EditLink" }) 
+
+        </td>
+      
+          <td class="td_grid">
+
+            @Html.ActionLink("Delete", "SliderImageDelete", new { id = item.SliderPictureId, slideId = Model.Slider.SliderId }, new { @class = "DeleteLink", onclick = "return confirm('Are you sure you want to delete?')" }) 
+
+        </td>
+          
+    </tr>
+}
+
+</table>
+
+
+
+

@@ -1,0 +1,100 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.ClientSectionsVm
+
+@{
+    ViewBag.Title = "Sections";
+    Layout = "~/Views/Shared/_Layout.cshtml";  
+}
+<h1>Sections</h1>
+
+Client: <b>@Model.Client.ClientName</b><br/><br/>
+
+<div class="PageNavigationBar">
+@Html.ActionLink("add section", "SectionAdd", "Admin", new {clientId = Model.Client.ClientId}, new { @class = "AddLink" })&nbsp;
+    
+@if (User.IsInRole("SuperUser"))
+{       
+    @Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
+}    
+
+</div>
+
+<table class="table_grid">
+    <tr>
+        <th>
+            
+        </th>
+        <th>
+            Section
+        </th>
+        <th>
+            Order
+        </th>
+        <th>
+            Hidden
+        </th>
+        <th>
+            Categories
+        </th>
+        @*<th>
+             Visible Categories
+        </th>*@
+        <th>
+           
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+
+@foreach (var section1 in Model.Sections)
+{
+    <tr>
+        <td>
+            @if (!string.IsNullOrEmpty(@section1.Picture))
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@section1.Picture?w=30"/>
+            }
+            else
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=30"/>
+            }           
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => section1.SectionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => section1.SectionOrder)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => section1.Hidden)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => section1.FullCategoryCount)
+        </td>
+        @* <td>
+           @Html.DisplayFor(modelItem => section1.VisibleCategoryCount)
+        </td>*@
+        <td>
+            @Html.ActionLink("edit", "SectionEdit", "Admin", new { clientId = @Model.Client.ClientId, sectionId = @section1.SectionId }, null)
+        </td>
+        <td>
+            @if (section1.FullCategoryCount == 0)
+            {
+                @Html.ActionLink("delete", "SectionDelete", "Admin", new { clientId = @Model.Client.ClientId, sectionId = @section1.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this section? Note that you can only delete sections that have no categories.');" })
+            }
+            
+        </td>
+        <td>
+            @Html.ActionLink("categories", "SectionCategories", "Admin", new { clientId = @Model.Client.ClientId, sectionId = @section1.SectionId }, null)
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>

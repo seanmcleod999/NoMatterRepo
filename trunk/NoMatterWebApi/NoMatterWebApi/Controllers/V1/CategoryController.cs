@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using NoMatterDatabaseModel;
+using NoMatterWebApi.ActionResults;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
@@ -19,13 +20,16 @@ using Section = NoMatterWebApiModels.Models.Section;
 
 namespace NoMatterWebApi.Controllers.V1
 {
-	[RoutePrefix("api/v1/categories")]
+	//[RoutePrefix("api/v1/categories")]
 	public class CategoryController : ApiController
 	{
-
+		private IUserRepository _userRepository;
 		private IProductRepository _productRepository;
+		private ISectionRepository _sectionRepository;
 		private ICategoryRepository _categoryRepository;
+		private IClientRepository _clientRepository;
 		private IGeneralHelper _generalHelper;
+		private IWebApiGlobalSettings _webApiGlobalSettings;
 		
 
 		public CategoryController()
@@ -34,23 +38,151 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_productRepository = new ProductRepository(databaseEntity);
 			_categoryRepository = new CategoryRepository(databaseEntity);
-			_generalHelper = new GeneralHelper();
-			
+			_sectionRepository = new SectionRepository(databaseEntity);
+			_userRepository = new UserRepository(databaseEntity);
+			_clientRepository = new ClientRepository(databaseEntity);
+			_generalHelper = new WebApiGeneralHelper();
+			_webApiGlobalSettings = new WebApiGlobalSettings();
 			
 		}
 
-		public CategoryController(IProductRepository productRepository, ICategoryRepository categoryRepository, IGeneralHelper generalHelper)
+		public CategoryController(IProductRepository productRepository, ICategoryRepository categoryRepository, ISectionRepository sectionRepository, IClientRepository clientRepository, IGeneralHelper generalHelper)
 		{
 			_productRepository = productRepository;
 			_categoryRepository = categoryRepository;
+			_sectionRepository = sectionRepository;
+			_clientRepository = clientRepository;
 			_generalHelper = generalHelper;
 		}
 
+		
+	
+		// GET api/v1/category/{categoryid}
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/v1/clients/{clientId}/categories/{categoryId}")]
+		[ResponseType(typeof(Category))]
+		public async Task<IHttpActionResult> GetCategoryAsync(string clientId, string categoryid)
+		{
+			try
+			{
+				//TODO: make sure the user can access this category
+				//Need to get bearer token, and lookup the user so we know which client the user is from
+
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryid));
+
+				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
+
+				var category = categoryDb.ToDomainCategory();
+
+				return Ok(category);
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+		// POST api/v1/sections
+		[System.Web.Http.HttpPut]
+		[System.Web.Http.Authorize]
+		[System.Web.Http.Route("api/v1/clients/{clientId}/categories/{categoryId}")]
+		public async Task<IHttpActionResult> UpdateCategoryAsync(string clientId, string categoryId, Category category)
+		{
+			//TODO: make sure the user can post to this category
+
+			try
+			{
+				var userToken = User.Identity.Name;
+
+				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
+				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
+				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
+
+				if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+				//Update the section
+				await _categoryRepository.UpdateCategoryAsync(categoryDb, category);
+
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+		// DELETE api/v1/categories/{categoryid}
+		[System.Web.Http.HttpDelete]
+		[System.Web.Http.Route("api/v1/clients/{clientId}/categories/{categoryId}")]
+		public async Task<IHttpActionResult> DeleteCategoryAsync(string categoryId)
+		{
+			//TODO: make sure the user can delete this category
+
+			try
+			{
+				await _categoryRepository.DeleteCategoryAsync(new Guid(categoryId));
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+		
+
+
+
+		// GET api/v1/category/{categoryid}/products
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.Route("api/v1/clients/{clientId}/categories/{categoryid}/products")]
+		[ResponseType(typeof(List<Product>))]
+		public async Task<IHttpActionResult> GetCategoryProducts(string clientId, string categoryid)
+		{
+			try
+			{	
+				//TODO: make sure the user can get products for this category
+				//Need to get bearer token, and lookup the user so we know which client the user is from
+
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryid));
+
+				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
+
+				var productsDb = await _categoryRepository.GetCategoryProductsByTypeAsync(categoryDb.SectionId, categoryDb.CategoryId, categoryDb.ActionName);
+
+				var products = productsDb.Select(x => x.ToDomainProduct()).ToList();
+
+				//If its he Sale category.. filter out sale items
+				if (categoryDb.ActionName != null && categoryDb.ActionName.ToLower() == "sale")
+				{
+					products = products.Where(x => x.DiscountDetails.Discounted).ToList();
+				}
+
+				return Ok(products);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
 		// POST api/v1/category/{categoryid}/products
-		[HttpPost]
-		[Route("{categoryid}/products")]
+		[System.Web.Http.HttpPost]
+		[System.Web.Http.Route("api/v1/clients/{clientId}/categories/{categoryid}/products")]
 		[ResponseType(typeof(Product))]
-		public async Task<IHttpActionResult> AddProduct(string categoryid, Product model)
+		public async Task<IHttpActionResult> AddCategoryProductAsync(string clientId, string categoryid, Product model)
 		{
 			//TODO: make sure the user can post to this category
 
@@ -60,9 +192,9 @@ namespace NoMatterWebApi.Controllers.V1
 
 				var productUuid = Guid.NewGuid();
 
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryid));
 
-				if (categoryDb == null) return BadRequest("CategoryNotFound");
+				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
 
 				var productDb = new NoMatterDatabaseModel.Product
 				{
@@ -112,84 +244,6 @@ namespace NoMatterWebApi.Controllers.V1
 				//TODO: change to created response
 				return Ok(product.ToDomainProduct());
 
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				return InternalServerError(ex);
-			}
-		}
-	
-		// GET api/v1/category/{categoryid}
-		[HttpGet]
-		[Route("{categoryid}")]
-		[ResponseType(typeof(Category))]
-		public async Task<IHttpActionResult> GetCategory(string categoryid)
-		{
-			try
-			{
-				//TODO: make sure the user can access this category
-				//Need to get bearer token, and lookup the user so we know which client the user is from
-
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
-
-				var category = categoryDb.ToDomainCategory();
-
-				return Ok(category);
-
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				return InternalServerError(ex);
-			}
-		}
-
-		// DELETE api/v1/categories/{categoryid}
-		[HttpDelete]
-		[Route("{categoryId}")]
-		public async Task<IHttpActionResult> DeleteCategory(string categoryId)
-		{
-			try
-			{
-				await _categoryRepository.DeleteCategoryAsync(new Guid(categoryId));
-
-				return Ok();
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				return InternalServerError(ex);
-			}
-		}
-
-		// GET api/v1/category/{categoryid}/products
-		[HttpGet]
-		[Route("{categoryid}/products")]
-		[ResponseType(typeof(List<Product>))]
-		public async Task<IHttpActionResult> GetCategoryProducts(string categoryid)
-		{
-			try
-			{	
-				//TODO: make sure the user can get products for this category
-				//Need to get bearer token, and lookup the user so we know which client the user is from
-
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(categoryid));
-
-				List<NoMatterDatabaseModel.Product> productsDb;
-
-
-				productsDb = await _categoryRepository.GetCategoryProductsByTypeAsync(categoryDb.SectionId, categoryDb.CategoryId, categoryDb.ActionName);
-
-				var products = productsDb.Select(x => x.ToDomainProduct()).ToList();
-
-				//If its he Sale category.. filter out sale items
-				if (categoryDb.ActionName != null && categoryDb.ActionName.ToLower() == "sale")
-				{
-					products = products.Where(x => x.DiscountDetails.Discounted).ToList();
-				}
-
-				return Ok(products);
 			}
 			catch (Exception ex)
 			{

@@ -25,7 +25,7 @@ namespace RedOrange.Controllers
 				var globalSettimgs = new GlobalSettings();
 				var clientHelper = new ClientHelper();
 
-				var sections = clientHelper.GetClientSections(globalSettimgs.DefaultClientId, true, true);
+				var sections = clientHelper.GetClientSections(globalSettimgs.SiteClientId, true, true);
 
 				return View(sections);
 				return View();

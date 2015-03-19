@@ -1,0 +1,165 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.ViewProductVm
+
+@{
+    ViewBag.Title = "View Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<div class="viewItemOuter" itemscope itemtype="http://schema.org/Product"  id="result">
+
+    <div class="viewItemLeft">
+                      
+        <div class="viewItemLeftImageView">
+                                 
+           <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture1?maxwidth=350"/>
+                             
+            @*@if (Model.ShopItem.Sold)
+                {
+                    <div class="viewItemSoldItem"> 
+                        <div class="viewItemSoldItemText">                      
+                            Sold
+                        </div>
+                    </div>  
+                }
+                else if (Model.ShopItem.Reserved)
+                {
+                   <div class="viewItemReservedItem"> 
+                        <div class="viewItemReservedItemText">                      
+                            Reserved
+                        </div>
+                    </div>  
+                }*@
+                
+            @if ((Model.Product.Reserved && Model.Product.DiscountDetails.Discounted) || (Model.Product.DiscountDetails.Discounted))
+            {
+                <div class="viewItemSaleItem">                         
+                </div>
+            }
+         
+        </div>
+            
+        <div class="viewItemLeftThumbnails">       
+
+            @if (!string.IsNullOrEmpty(Model.Product.Picture2) || !string.IsNullOrEmpty(Model.Product.Picture3) || !string.IsNullOrEmpty(Model.Product.Picture4) || !string.IsNullOrEmpty(Model.Product.Picture5))
+            {
+
+                <div id="bx-thumbnails" class="bx-thumbnails">
+                    
+                    <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture1?w=50"/>
+
+                    @if (!string.IsNullOrEmpty(Model.Product.Picture2))
+                    {
+                        <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture2?w=50"/>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Product.Picture3))
+                    {
+                        <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture3?w=50"/>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Product.Picture4))
+                    {
+                        <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture4?w=50"/>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Product.Picture5))
+                    {
+                        <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture5?w=50"/>
+                    }
+    
+                </div>
+            }
+            
+        </div>                                                   
+    </div>
+
+    <div class="viewItemRight">
+                   
+        <div itemprop="name" class="viewItemDescription">            
+            @Model.Product.Title
+        </div>
+           
+
+        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="viewItempPrice">                   
+                
+                
+            @if (Model.Product.DiscountDetails.Discounted)
+            {
+                <strike>R @String.Format("{0:0}", Model.Product.Price) </strike> @:&nbsp;
+                             
+                <span itemprop="price">R @String.Format("{0:0}", Model.Product.DiscountDetails.DiscountedPrice) </span>
+            }
+            else
+            {
+                <span itemprop="price">R @String.Format("{0:0}", @Model.Product.Price) </span>
+            }
+
+        </div>   
+            
+        @if (Model.Product.Size != null)
+        {
+            <div class="viewItemSize">                   
+                Size: @Model.Product.Size
+            </div>                                                     
+        }
+            
+        @if (!string.IsNullOrEmpty(Model.Product.Description))
+        {
+            <div class="viewItemNotes" itemprop="description">
+                @Html.Raw(Model.Product.Description)
+            </div>                 
+        }
+        else
+        {
+            <br /><br />
+        }
+            
+        <div class="ViewItemItemStatus">
+                  
+            @if (@Model.Product.Sold)
+            {
+                <b>Sorry, this item is Sold</b>                  
+            }
+            else if (@Model.Product.Reserved)
+            {
+                <b>Sorry, this item is currently Reserved</b>                
+            }
+            else if (@Model.Product.Hidden)
+            {
+                <b>Sorry, this item is currently Not Available</b>                   
+            }
+            else
+            {                                                                           
+                <a href="javascript:void(0);" class="siteButton" onclick="addToCart(@Model.Product.ProductId);">Add to Cart</a>                                                                                          
+            }  
+            
+            <div class="PageNavigationBar">
+                @Html.ActionLink("Back to Products", "CategoryProducts", "Admin", new { clientId = Model.ClientId, categoryId = Model.Product.CategoryId }, new { @class = "BackLink" })
+            </div>
+                
+        </div>
+              
+    </div>        
+                                          
+</div>
+
+
+<br/><br/>
+@if (Model.Product.RelatedProductDetails.RelatedProducts.Any())
+{
+    <div class="RelatedProductsWrapper">
+        
+        <h4>Related Products</h4>
+
+        @foreach (var product in Model.Product.RelatedProductDetails.RelatedProducts)
+        {
+            <div class="ShopRelatedProduct">
+                <a id="@product.ProductId" href="@Url.Action("ViewProduct", new { productId = product.ProductId, categoryId = Model.FromCategoryId })"> 
+       
+                    <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=100"/>
+                        
+                </a>
+            </div>
+        }
+        
+    </div>
+}
+

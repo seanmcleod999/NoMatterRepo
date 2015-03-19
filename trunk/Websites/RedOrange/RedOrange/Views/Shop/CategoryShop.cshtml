@@ -1,0 +1,55 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.CategoryShopVm
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h1>@Model.Section.SectionName</h1>
+
+@foreach (var category in Model.Categories)
+{
+     @Html.ActionLink((string)category.CategoryName, "CategoryShop", "Shop", new { categoryId = @category.CategoryId }, new {@class="btn btn-default"}) @:&nbsp; &nbsp;
+}
+
+<h2>@Model.Category.CategoryDescription</h2>
+
+@foreach (var product in Model.Products)
+{
+    <div class="ShopProduct">
+        <a id="@product.ProductId" href="@Url.Action("ViewProduct", new { productId = product.ProductId, categoryId = Model.Category.CategoryId })"> 
+            
+            <div class="ShopProductImage">
+                               
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=150"/>
+            
+                @if (product.Sold)
+                {                                                                          
+                    <div class="ShopProductSold"> 
+                        <div class="ShopProductSoldText">                      
+                            Sold
+                        </div>
+                    </div>                                                   
+                }
+                else if (product.Reserved)
+                {
+                    <div class="ShopProductReserved">
+                        <div class="ShopProductReservedText">                     
+                            Reserved
+                        </div>
+                    </div>
+                }
+                    
+                @if ((product.Reserved && product.DiscountDetails.Discounted) || product.DiscountDetails.Discounted)
+                {
+                    <div class="ShopProductSale">                         
+                    </div>
+                }
+              
+            </div>
+        </a>
+            
+        @product.Title
+
+    </div>
+}

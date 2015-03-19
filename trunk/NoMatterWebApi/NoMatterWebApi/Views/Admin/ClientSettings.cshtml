@@ -1,0 +1,79 @@
+﻿@model NoMatterWebApiModels.ViewModels.ClientSettingsVm
+
+@{
+    ViewBag.Title = "Client Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Client Settings</h1>
+
+Client: <b>@Model.Client.ClientName</b><br/>
+<br/>
+<div class="PageNavigationBar">
+@Html.ActionLink("add setting", "ClientSettingAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+&nbsp;    
+@Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
+</div>
+
+<table class="table_grid">
+    <tr>
+
+        <th>
+            Setting Name
+        </th> 
+        
+        <th>
+            String Value
+        </th> 
+        
+         <th>
+            Int Value
+        </th> 
+       
+        <th>
+           
+        </th>
+        
+         <th>
+           
+        </th>
+
+    </tr>
+
+@foreach (var setting in Model.ClientSettings)
+{
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => setting.SettingName)
+        </td>
+        
+         <td>
+            @Html.DisplayFor(modelItem => setting.StringValue)
+         </td>   
+        
+         <td>
+            @Html.DisplayFor(modelItem => setting.IntValue)
+        </td>      
+              
+        <td>
+            @Html.ActionLink("edit", "ClientSettingEdit", "Admin", new { clientId = @Model.Client.ClientId, settingId = @setting.SettingId }, null)
+        </td>
+        
+         <td>
+            @Html.ActionLink("delete", "ClientSettingDelete", "Admin", new { clientId = @Model.Client.ClientId, settingId = @setting.SettingId }, new { onclick = "return confirm('Are you sure you wish to delete this setting?');" })
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>
+
+
+
+
+
+

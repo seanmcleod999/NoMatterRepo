@@ -48,10 +48,10 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = await client.PostAsJsonAsync(String.Format("api/v1/clients/{0}/users/{1}/orders", _globalSettings.DefaultClientId, userId), generateUserOrder);
+				var response = await client.PostAsJsonAsync(String.Format("api/v1/clients/{0}/users/{1}/orders", _globalSettings.SiteClientId, userId), generateUserOrder);
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Error generating user order", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 
 				var orderId = await response.Content.ReadAsAsync<string>();
 
@@ -70,7 +70,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.GetAsync(string.Format("api/v1/orders/{0}", orderId));
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot get order", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 
 				var order = await response.Content.ReadAsAsync<Order>();
 
@@ -264,7 +264,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.PostAsJsonAsync(String.Format("api/v1/orders/{0}/paid", orderId), new object());
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Error generating user order", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 			}
 		}
 
@@ -279,7 +279,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.PostAsJsonAsync(String.Format("api/v1/orders/{0}/reserve", orderId), new object());
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Error generating user order", response);
+					GeneralHelper.HandleWebApiFailedResult(response);
 			}
 		}
 

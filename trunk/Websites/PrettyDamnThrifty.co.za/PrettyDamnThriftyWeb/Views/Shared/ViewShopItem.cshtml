@@ -1,0 +1,264 @@
+﻿@model SharedLibrary.ViewModels.ViewShopItemVm
+
+@using SharedLibrary.Helpers
+
+@{
+    var globalSettings = new GlobalSettings();
+    
+    ViewBag.Title = Model.ShopItem.Description;
+    ViewBag.OgTitle = Model.ShopItem.Description;
+    ViewBag.ImageUrl = Url.Content(globalSettings.OgShopImagesPath + Model.ShopItem.Picture1);
+    ViewBag.Type = "product";
+    ViewBag.MetaDescription = "Buy the " + Model.ShopItem.Description + " from " + globalSettings.SiteName + ". " + globalSettings.SiteMetaDescription;
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/bxslider/jquery.bxslider.css")" />
+<script type="text/javascript" src="@Url.Content("~/bxslider/jquery.bxslider.min.js")"></script>
+
+<div class="viewItemOuter" itemscope itemtype="http://schema.org/Product"  id="result">
+
+    <div class="viewItemLeft" style="visibility:hidden">
+                      
+        <div class="viewItemLeftImageView">
+                            
+            <div class="bxslider">
+                
+                <div><img itemprop="image" src="@Url.Content(globalSettings.ShopImagesPath + Model.ShopItem.Picture1)" width="350px" /></div>
+                
+                @if (!string.IsNullOrEmpty(Model.ShopItem.Picture2))
+                {
+                    <div><img src="@Url.Content(globalSettings.ShopImagesPath + Model.ShopItem.Picture2)" /></div>
+                }
+                @if (!string.IsNullOrEmpty(Model.ShopItem.Picture3))
+                {
+                    <div><img src="@Url.Content(globalSettings.ShopImagesPath + Model.ShopItem.Picture3)" /></div>
+                }
+                @if (!string.IsNullOrEmpty(Model.ShopItem.Picture4))
+                {
+                    <div><img src="@Url.Content(globalSettings.ShopImagesPath + Model.ShopItem.Picture4)" /></div>
+                }
+                @if (!string.IsNullOrEmpty(Model.ShopItem.Picture5))
+                {
+                    <div><img src="@Url.Content(globalSettings.ShopImagesPath + Model.ShopItem.Picture5)" /></div>
+                }
+            </div> 
+                
+            @*@if (Model.ShopItem.Sold)
+                {
+                    <div class="viewItemSoldItem"> 
+                        <div class="viewItemSoldItemText">                      
+                            Sold
+                        </div>
+                    </div>  
+                }
+                else if (Model.ShopItem.Reserved)
+                {
+                   <div class="viewItemReservedItem"> 
+                        <div class="viewItemReservedItemText">                      
+                            Reserved
+                        </div>
+                    </div>  
+                }*@
+                
+            @if ((Model.ShopItem.Reserved && Model.ShopItem.DiscountDetails.Discounted) || (Model.ShopItem.DiscountDetails.Discounted))
+            {
+                <div class="viewItemSaleItem">                         
+                </div>
+            }
+         
+        </div>
+            
+        <div class="viewItemLeftThumbnails">       
+
+            @if (!string.IsNullOrEmpty(Model.ShopItem.Picture2) || !string.IsNullOrEmpty(Model.ShopItem.Picture3) || !string.IsNullOrEmpty(Model.ShopItem.Picture4) || !string.IsNullOrEmpty(Model.ShopItem.Picture5))
+            {
+
+                <div id="bx-thumbnails" class="bx-thumbnails">
+                    
+                    <a data-slide-index="0" href=""><img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture1)"  /></a>
+
+                    @if (!string.IsNullOrEmpty(Model.ShopItem.Picture2))
+                    {
+                        <a data-slide-index="1" href=""><img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture2)" /></a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ShopItem.Picture3))
+                    {
+                        <a data-slide-index="2" href=""><img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture3)" /></a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ShopItem.Picture4))
+                    {
+                        <a data-slide-index="3" href=""><img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture4)" /></a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ShopItem.Picture5))
+                    {
+                        <a data-slide-index="4" href=""><img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + Model.ShopItem.Picture5)" /></a>
+                    }
+    
+                </div>
+            }
+            
+        </div>                                                   
+    </div>
+
+    <div class="viewItemRight">
+                   
+        <div itemprop="name" class="viewItemDescription">            
+            @Model.ShopItem.Description
+        </div>
+           
+
+        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="viewItempPrice">                   
+                
+                
+            @if (Model.ShopItem.DiscountDetails.Discounted)
+            {
+                <strike>R @String.Format("{0:0}", Model.ShopItem.Price) </strike> @:&nbsp;
+                             
+                <span itemprop="price">R @String.Format("{0:0}", Model.ShopItem.DiscountDetails.SalePrice) </span>
+            }
+            else
+            {
+                <span itemprop="price">R @String.Format("{0:0}", @Model.ShopItem.Price) </span>
+            }
+
+        </div>   
+            
+        @if (Model.ShopItem.Size != null)
+        {
+            <div class="viewItemSize">                   
+                Size: @Model.ShopItem.Size
+            </div>                                                     
+        }
+            
+        @if (!string.IsNullOrEmpty(Model.ShopItem.Notes))
+        {
+            <div class="viewItemNotes" itemprop="description">
+                @Html.Raw(Model.ShopItem.Notes)
+            </div>                 
+        }
+        else
+        {
+            <br /><br />
+        }
+            
+        <div class="ViewItemItemStatus">
+                  
+            @if (@Model.ShopItem.Sold)
+            {
+                <b>Sorry, this item is Sold</b>                  
+            }
+            else if (@Model.ShopItem.Reserved)
+            {
+                <b>Sorry, this item is currently Reserved</b>                
+            }
+            else if (@Model.ShopItem.Hidden)
+            {
+                <b>Sorry, this item is currently Not Available</b>                   
+            }
+            else
+            {                                                                           
+                <a href="javascript:void(0);" class="siteButton" onclick="addToCart(@Model.ShopItem.ShopItemId);">Add to Cart</a>                                                                                          
+            }  
+                
+        </div>
+                   
+        <div class="viewItemBackLink"> 
+            @*  <a href="javascript: history.go(-1)" class="BackLink">back to items</a>&nbsp;&nbsp;*@
+            
+            @if (!string.IsNullOrEmpty(Model.FromLink))
+            {
+                if (Model.FromLink == "cart")
+                {
+                    @Html.ActionLink("back to cart", "GetCart", "ShoppingCart", null, new {@class = "BackLink"})@:&nbsp;&nbsp;
+                }
+            }
+            else
+            {
+
+                if (!string.IsNullOrEmpty(Model.LastAction))
+                {
+                    @Html.ActionLink("back to items", Model.LastAction, null, null, null, Model.LastId.ToString(), new {page = Model.LastPage}, new {@class = "BackLink"})@:&nbsp;&nbsp;
+                }
+                else
+                {
+                    @Html.ActionLink("back to items", "Category", null, null, null, Model.LastId.ToString(), new {id = Model.LastCatgeory}, new {@class = "BackLink"})@:&nbsp;&nbsp;   
+                }
+            }       
+                     
+            @if (Request.IsAuthenticated)
+            {                          
+                @Html.ActionLink("edit", "Edit", "Product", new { id = Model.ShopItem.ShopItemId, fromPage="ViewShopItem" }, new { @class = "EditShopItemLink" })
+            }
+            
+        </div>
+
+        @*@{Html.RenderPartial("partialShopItemPagingDetails", Model);}*@
+
+        <div class="viewItemSocialMediaLinks">
+            
+            <!-- FB -->
+            <div id="fb-root"></div>
+            <div class="fb-like" data-href="@globalSettings.ShopItemPath@Model.ShopItem.ShopItemId" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="false" data-send="false" style="vertical-align:top;zoom:1;*display:inline;border:none;"></div>
+            <!-- TWITTER -->
+            @*<a href="https://twitter.com/share" class="twitter-share-button" data-url="@globalSettings.ShopItemPath@Model.ShopItem.ShopItemId" data-text="@globalSettings.TwitterItemCustomerPostMessage@Model.ShopItem.Description - R @Model.ShopItem.Price #PDT" ></a>  *@
+        </div>  
+              
+        </div>        
+                                          
+    </div>
+
+
+<div class="viewShopItemRelatesItemsWrapper">
+    @{Html.RenderPartial("partialShopItemRelatedItems", Model);}
+</div>  
+
+<script type="text/javascript">
+
+    $(window).bind("load", function () {
+        $.getScript('@Url.Content("~/scripts/social.js")', function () { });
+    });
+
+    $(document).ready(function () {
+        $('.bxslider').bxSlider({
+            pagerCustom: '#bx-thumbnails',
+            startSlide: 0,
+            slideWidth: 350,
+            minSlides: 1,
+            maxSlides: 1,
+            slideMargin: 0,
+            touchEnabled: false,
+            controls: false,
+            preloadImages: 'all',
+            adaptiveHeight: true,
+            onSliderLoad: function () {
+                $(".viewItemLeft").css("visibility", "visible");
+            }
+        });
+    });
+      
+     function addToCart(id) {
+
+         $.post('@Url.Action("AddItemToCart", "ShoppingCart")' + "?shopItemId=" + id + "&quantity=1")
+             .success(function(data) {
+
+                 var cartItemCount = $('#cartItemCount').html();                 
+                 $('#cartItemCount').html(parseInt(cartItemCount) + 1);
+                 
+                 alert("Thank you. The item was added to your cart.");
+                 
+                 $(".headerCart").css("display", "block");
+                 
+             })
+             .error(function(xhr) {
+                 var obj = jQuery.parseJSON(xhr.responseText);
+                 alert(obj.Message);
+             });
+     }
+
+</script>
+
+<script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>
+
+
+
+

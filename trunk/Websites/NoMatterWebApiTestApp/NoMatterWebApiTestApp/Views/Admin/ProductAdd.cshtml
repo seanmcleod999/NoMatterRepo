@@ -9,7 +9,7 @@
 </div>
 <br/>
 
-@using (Html.BeginForm("NewCategoryProduct", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("ProductAdd", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.ValidationSummary(true)
 

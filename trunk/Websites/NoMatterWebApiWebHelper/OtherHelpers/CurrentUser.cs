@@ -37,12 +37,12 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		public bool IsAdmin()
 		{
-			return HttpContext.Current.User.IsInRole("Admin");
+			return HttpContext.Current.User.Identity.IsAuthenticated && HttpContext.Current.User.IsInRole("Admin");
 		}
 
 		public bool IsSuperuser()
 		{
-			return HttpContext.Current.User.IsInRole("Superuser");
+			return HttpContext.Current.User.Identity.IsAuthenticated && HttpContext.Current.User.IsInRole("Superuser");
 		}
 
 		public string UserHostAddress()

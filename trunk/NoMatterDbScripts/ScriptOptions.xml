@@ -12,4 +12,9 @@
   </scriptValues>
 
 
+ <scriptValues outputFile="otherinsert.sql">
+       <table name="Setting" />
+  </scriptValues>
+
+
 </scriptOptions>

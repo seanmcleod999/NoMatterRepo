@@ -10,8 +10,8 @@ namespace NoMatterWebApi.DAL
 {
 	public interface IUserRepository
 	{
-		Task<User> GetClientUserByEmailAsync(Guid clientUuid, string email);
-		Task<User> GetClientUserByFacebookIdAsync(Guid clientUuid, string email);
+		Task<User> GetClientUserByEmailAsync(Guid? clientUuid, string email);
+		Task<User> GetClientUserByFacebookIdAsync(Guid? clientUuid, string email);
 		Task<User> GetClientUserByTokenAsync(string token);
 		Task<User> GetUserByUuidAsync(Guid userUuid);
 		Task<string> SaveUserAsync(User user);
@@ -27,15 +27,15 @@ namespace NoMatterWebApi.DAL
 			this.databaseConnection = databaseConnection;
 		}
 
-		public async Task<User> GetClientUserByEmailAsync(Guid clientUuid, string email)
+		public async Task<User> GetClientUserByEmailAsync(Guid? clientUuid, string email)
 		{
-			var user = await databaseConnection.Users.SingleOrDefaultAsync(x => x.Client.ClientUUID == clientUuid && x.Email == email && x.CredentialTypeId == 1);
+			var user = await databaseConnection.Users.Include(x => x.Client).Include(x => x.UserRoles).SingleOrDefaultAsync(x => x.Client.ClientUUID == clientUuid && x.Email == email && x.CredentialTypeId == 1);
 			return user;
 		}
 
-		public async Task<User> GetClientUserByFacebookIdAsync(Guid clientUuid, string facebookIdentifier)
+		public async Task<User> GetClientUserByFacebookIdAsync(Guid? clientUuid, string facebookIdentifier)
 		{
-			var user = await databaseConnection.Users.SingleOrDefaultAsync(x => x.Client.ClientUUID == clientUuid && x.Identifier == facebookIdentifier && x.CredentialTypeId == 2);
+			var user = await databaseConnection.Users.Include(x => x.Client).Include(x=>x.UserRoles).SingleOrDefaultAsync(x => x.Client.ClientUUID == clientUuid && x.Identifier == facebookIdentifier && x.CredentialTypeId == 2);
 			return user;
 		}
 

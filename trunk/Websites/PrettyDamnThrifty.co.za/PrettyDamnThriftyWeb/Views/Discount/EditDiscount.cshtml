@@ -1,0 +1,218 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.DiscountVm
+
+@{
+    ViewBag.Title = "EditDiscount";
+
+    var globalSettings = new GlobalSettings();
+}
+
+<div id="container" class="clearfix">
+        
+<div id="sidebar">
+                                                                        
+    @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}       
+</div>
+        
+<div id="content">
+    <div class="pageHeader">edit discount</div>
+ 
+     <div class="PageNavigationBar">
+        @Html.ActionLink("Back to List", "Discounts", null, new { @class = "BackLink" })
+    </div>
+  <br/>
+
+    @using (Html.BeginForm("EditDiscount", "Discount", FormMethod.Post, new { id = "myForm" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <input type="hidden" name="SelectedDiscountShopItems" id="SelectedDiscountShopItems" value="" />    
+
+        <input type="hidden" name="Discount.DiscountId" id="Discount.DiscountId" value="@Model.Discount.DiscountId" />  
+        <input type="hidden" name="Discount.DiscountTypeId" id="Discount.DiscountTypeId" value="@Model.Discount.DiscountTypeId" />  
+         
+        <table class="table_grid">
+            <tr>
+                <td  class="td_grid">
+                    Discount Type
+                </td>
+                <td class="td_grid">
+                    <b>@Model.Discount.DiscountTypeDescription </b>                               
+                </td>
+            </tr> 
+            <tr>
+                <td class="td_grid">
+                    Start Date
+                </td>
+                <td class="td_grid">
+                    @Html.TextBox("Discount.StartDate", Model.Discount.StartDate.ToString("yyyy/MM/dd"), new { style = "width:100px;" })                                   
+                </td>
+            </tr>
+            <tr>
+                <td class="td_grid">
+                    End Date
+                </td>
+                <td class="td_grid">
+                    @Html.TextBox("Discount.EndDate", Model.Discount.EndDate.ToString("yyyy/MM/dd"), new { style = "width:100px;" })                                   
+                </td>
+            </tr>    
+            @if (Model.Discount.DiscountTypeId != 1)
+            {
+                <tr >
+                    <td class="td_grid">
+                        Discount Amount
+                    </td>
+                    <td class="td_grid">
+                        @Html.TextBoxFor(model => Model.Discount.DiscountAmount, new { style = "width:50px;" })                                   
+                    </td>
+                </tr>
+            }
+             
+            
+               
+        </table>
+
+        <input type="submit" value="Save" />
+        
+        <input type="hidden" name="SelectedDiscountShopItems" id="SelectedDiscountShopItems" value="" />    
+           
+    }
+    <br />
+    @if (Model.Discount.DiscountTypeId != 1)
+    {
+
+      <div class="PageNavigationBar">
+        <a href="javascript:addShopItems();" class="AddLink">Add Products</a>
+      </div>
+
+        <table class="table_grid">
+            <tr>
+                <th  class="th_grid">
+                    
+                </th>
+                <th   class="th_grid">
+                    Description
+                </th>
+                <th   class="th_grid">
+                    Price
+                </th>
+                <th   class="th_grid">
+                    Sale Price
+                </th>
+                <th class="th_grid">
+                    Sold
+                </th>      
+                <th class="th_grid">
+                    Res.
+                </th>
+                <th class="th_grid">
+                    Hid.
+                </th>
+
+                <th class="th_grid"></th>
+            </tr>
+
+            @foreach (var item in Model.Discount.DiscountShopItems)
+            {
+                <tr>
+                    <td  class="td_grid" >
+                        @if (!string.IsNullOrEmpty(item.Picture1))
+                        {
+                            <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + item.Picture1)" alt="View Image" height="40" />
+                        } 
+            
+                    </td>
+
+                    <td class="td_grid">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="td_grid">
+                        R @String.Format("{0:0}", @item.Price)
+                    </td>
+                    <td class="td_grid">
+                        R @String.Format("{0:0}", @item.DiscountDetails.SalePrice)
+                    </td>
+                    <td class="td_grid">
+                        @Html.DisplayFor(modelItem => item.Sold)
+                    </td>
+                    <td class="td_grid">
+                        @Html.DisplayFor(modelItem => item.Reserved)
+                    </td>
+                    <td class="td_grid">
+                        @Html.DisplayFor(modelItem => item.Hidden)
+                    </td>
+                          
+                    <td class="td_grid">
+
+                        @Html.ActionLink("Remove", "RemoveDiscountShopItem", new { id = item.ShopItemId, discountId = Model.Discount.DiscountId }, new { @class = "DeleteLink", onclick = "return confirm('Are you sure you want to remove?')" }) 
+
+                    </td>
+          
+                </tr>
+            }
+
+        </table>
+
+    }
+    
+    <br/>
+
+</div>
+    
+    </div>
+
+<div id="addShopItemsDialog"></div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#Discount_StartDate").datepicker({ dateFormat: 'yy/mm/dd' });
+        $("#Discount_StartDate").attr("readOnly", true);
+
+        $("#Discount_EndDate").datepicker({ dateFormat: 'yy/mm/dd' });
+        $("#Discount_EndDate").attr("readOnly", true);
+    });
+
+    function addShopItems() {
+
+        $.ajax({
+            type: "GET",
+            url: encodeURI('@Url.Action("GetDiscountShopItemChoices", "Discount")'),
+            cache: false,
+            dataType: 'html',
+            error: function () {
+                alert('Oops, there has been an error. Please notify your Support Technician.');
+            },
+            success: function (data) {
+                $("#addShopItemsDialog").html(data);
+            },
+            complete: function () {
+
+                $('#addShopItemsDialog').dialog({
+                    title: "Select Products for discount",
+                    modal: true,
+                    width: 600,
+                    height: 580,
+                    resizable: false,
+                    close: function (event, ui) { $("#addShopItemsDialog").html(""); },
+                    buttons: {
+                        "Save": function () {
+
+                            var checkedString = $('[name="ShopItemCheckBox"]:checked').map(function () { return this.value; }).get().join(',');
+
+                            $("#SelectedDiscountShopItems").val(checkedString);
+
+                            $(this).dialog('close');
+                            $('form#myForm').submit();
+
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>

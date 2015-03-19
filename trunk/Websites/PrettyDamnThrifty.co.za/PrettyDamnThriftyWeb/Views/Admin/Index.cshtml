@@ -1,0 +1,30 @@
+﻿@using SharedLibrary.Helpers
+@using SharedLibrary.Services.SliderService
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="container" class="clearfix">
+           
+
+    <div id="sidebar">
+                                                                        
+        @{Html.RenderPartial("partialAdminMenu");}       
+    </div>
+        
+    <div id="content">
+            
+        <div class="adminHomeHeader">
+                
+           
+        </div>
+
+        <div class="adminPictureWrapper">
+              
+            @{Html.RenderPartial("partialPictureSlider", SliderStaticCache.GetSlider("AdminHome"));}
+
+        </div>
+    </div>
+    
+</div>
+

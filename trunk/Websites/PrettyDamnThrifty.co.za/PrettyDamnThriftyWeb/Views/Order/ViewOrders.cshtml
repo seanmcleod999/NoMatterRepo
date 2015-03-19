@@ -1,0 +1,115 @@
+﻿@model SharedLibrary.ViewModels.ViewOrdersVm
+
+@{
+    ViewBag.Title = "View Orders";
+}
+
+<div id="container" class="clearfix">
+        
+    <div id="sidebar">
+                                                                        
+          @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}     
+    </div>
+        
+    <div id="content">
+        
+       <div class="pageHeader">view orders</div>
+    <br/>
+
+
+<div>
+    @Html.ActionLink("Back to Admin", "Index", "Admin", null, new { @class = "BackLink" })
+</div>
+<br/>
+<table class="table_grid">
+    <tr>
+
+        <th>
+            Order
+        </th>
+        <th>
+            Customer Name
+        </th>
+        <th>
+            Items
+        </th>
+        <th>
+            Total
+        </th>
+         <th>
+            Pay Type
+        </th>
+        <th>
+            Paid
+        </th>
+        <th>
+            Date Created
+        </th>
+        <th>
+            Courier
+        </th>
+        <th>
+            Tracking Number
+        </th>
+
+        <th>
+
+        </th>
+      
+    </tr>
+
+    @foreach (var item in Model.OrderList) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.user.Fullname)
+            </td>
+            <td>
+                @item.order_shopitem.Count
+            </td>
+            <td>
+                R @String.Format("{0:0}", @item.Total)
+            </td>
+            <td>
+                @if (item.PaymentTypeId == 1)
+                {
+                    @:EFT
+                }
+                else
+                {
+                    @:Payfast
+                }
+            </td>
+             <td>
+                @if (@item.Paid)
+                {
+                    @:Yes
+                }
+            </td>
+            <td>
+                @item.DateCreated
+            </td>
+            <td>
+                @item.CourierName
+            </td>
+            <td>
+                @item.TrackingNumber
+            </td>
+
+    
+            <td>
+
+                @Html.ActionLink("View", "OrderDetails", "Order", new { id = item.OrderId }, new { @class = "ViewLink" }) 
+            </td>
+              
+        </tr>
+    }
+
+</table>
+<br/>
+    
+    </div>
+    
+</div>

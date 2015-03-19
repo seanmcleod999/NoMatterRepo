@@ -1,0 +1,51 @@
+﻿@model List<SharedLibrary.DatabaseModel.stringtemplate>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div id="container" class="clearfix">
+        
+    <div id="sidebar">
+                                                                        
+        @{Html.RenderPartial("partialAdminMenu");}       
+    </div>
+        
+    <div id="content">
+        
+        <div class="pageHeader">page text</div>
+        <br/>
+        
+        <div class="PageNavigationBar">
+        @Html.ActionLink("New Page Text", "PageTextAdd", "Admin", null, new { @class = "AddLink" })
+        </div>
+        
+        <table class="table_grid">
+            <tr>
+                <th>
+                    Page Name
+                </th>
+            
+                <th></th>
+
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StringTemplateId)
+                    </td>
+                      
+                    <td>
+                        @Html.ActionLink("Edit", "PageTextEdit", "Admin", new { StringTemplateId = item.StringTemplateId }, new { @class = "EditLink" }) 
+                    </td>
+              
+                </tr>
+            }
+
+        </table>
+       
+
+    </div>
+    
+</div>

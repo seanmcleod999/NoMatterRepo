@@ -1,0 +1,75 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title - @StaticGlobalSettings.SiteNameFriendly</title>
+        <meta  charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+        <meta name="keywords" content="@StaticGlobalSettings.SEOKeywords" />
+    
+        <meta property="fb:app_id" content="@StaticGlobalSettings.FacebookAppId"/>
+
+        <link rel="SHORTCUT ICON" href="~/Content/images/icon.ico" />
+    
+        @*GOOGLE FONT*@
+        <link href='http://fonts.googleapis.com/css?family=Muli:300' rel='stylesheet' type='text/css'>
+
+        @CustomHtmlHelpers.OpenGraph()
+
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+    </head>
+    
+    <body>
+               
+        <div>
+              
+            <div class="header">
+                                                        
+                <div class="headerLogoDesktop">
+                    <a href="@Url.Action("Index", "Home")"  style="display:block; height:100%; width:100%;"><img src="~/Content/images/pdtbanner.jpg" style="max-width: 1500px;" /></a>                 
+                                        
+                </div>
+                                       
+            </div>
+            
+            <div class="headerMenuItemsWrapper">                                                             
+                <ul>        
+                    @{
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        
+                       
+                        var sections = ClientSectionsStaticCache.GetClientSections();
+                        
+                        foreach (var section in sections)
+                        {
+                                <li>@Html.ActionLink((string)section.SectionName, "Section", "Shop", new {id = section.SectionId}, null)</li>
+                        }
+                                                                                    
+                        <li>@Html.ActionLink("Your Cart", "ViewCart", "Cart")</li>
+                    }               
+                </ul>
+            </div>
+            
+            <div class="pageBodyWrapper">
+                   
+                @RenderBody()
+            
+            </div>
+
+            <div class="footer">
+        
+                @{Html.RenderPartial("partialPageFooter");}
+       
+            </div>            
+        </div>
+       
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

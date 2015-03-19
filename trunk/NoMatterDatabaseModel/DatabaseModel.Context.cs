@@ -45,5 +45,6 @@ namespace NoMatterDatabaseModel
         public virtual DbSet<ClientDeliveryOption> ClientDeliveryOptions { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<ClientPage> ClientPages { get; set; }
     }
 }

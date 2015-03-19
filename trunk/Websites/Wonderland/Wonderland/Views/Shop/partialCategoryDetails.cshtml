@@ -1,0 +1,14 @@
+﻿
+@model NoMatterWebApiModels.Models.Category
+
+
+@if (!string.IsNullOrEmpty(Model.CategoryDescription))
+{ 
+    <div class="itemListCategoryDetailsWrapper">
+                
+        <div class="itemListCategoryDescription">
+             @Html.Raw(@Model.CategoryDescription)
+        </div>
+                   
+    </div>
+}

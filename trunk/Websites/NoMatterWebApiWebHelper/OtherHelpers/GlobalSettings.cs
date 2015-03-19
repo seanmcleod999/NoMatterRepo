@@ -15,24 +15,8 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		string SiteName { get; }
 		string SiteUrl { get; }
-		//string SEOKeywords { get; }
-		//string SiteNameFriendly { get; }
-		//string SiteDescription { get; }
-		//string SiteMetaDescription  { get; }
-		//string SiteHomePageTitle { get; }
-		//string SiteLogoPath { get; }
 
 		string ShopItemPath { get; }
-		//string OgShopImagesPath { get; }
-		string ShopImagesPath { get; }
-		string SliderImagesPath { get; }
-		string CategoryImagesPath { get; }
-		string SectionImagesPath { get; }
-
-		int ShopItemImageMaxSize { get; }
-		int CategoryImageMaxSize { get; }
-		int SliderImageMaxSize { get; }
-		int SectionImageMaxSize { get; }
 
 		//int LatestItemsCount { get; }
 		//int RelatedItemsCount { get; }
@@ -71,9 +55,9 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		//string TwitterSiteCustomerPostMessage { get; }
 
 		//int ShippingAmount { get; }
-		int PictureThumbnailSize { get; }
+		//int PictureThumbnailSize { get; }
 
-		string DefaultClientId { get; }
+		string SiteClientId { get; }
 
 
 
@@ -88,19 +72,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		public string ShopItemPath { get { return SiteUrl + ConfigurationManager.AppSettings["ShopItemPath"]; } }
 
-		public string ShopImagesPath { get { return ConfigurationManager.AppSettings["ShopImagesPath"]; } }
-		public string SliderImagesPath { get { return ConfigurationManager.AppSettings["SliderImagesPath"]; } }
-		public string CategoryImagesPath { get { return ConfigurationManager.AppSettings["CategoryImagesPath"]; } }
-		public string SectionImagesPath { get { return ConfigurationManager.AppSettings["SectionImagesPath"]; } }
-
-		public int ShopItemImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["ShopItemImageMaxSize"]); } }
-		public int CategoryImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["CategoryImageMaxSize"]); } }
-		public int SliderImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["SliderImageMaxSize"]); } }
-		public int SectionImageMaxSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["SectionImageMaxSize"]); } }
-
-		public int PictureThumbnailSize { get { return Convert.ToInt32(ConfigurationManager.AppSettings["PictureThumbnailSize"]); } }
-
-		public string DefaultClientId { get { return ConfigurationManager.AppSettings["DefaultClientId"]; } }
+		public string SiteClientId { get { return ConfigurationManager.AppSettings["SiteClientId"]; } }
 
 		public string SiteName { get { return ConfigurationManager.AppSettings["SiteName"]; } }
 		public string SiteUrl { get { return ConfigurationManager.AppSettings["SiteUrl"]; } }

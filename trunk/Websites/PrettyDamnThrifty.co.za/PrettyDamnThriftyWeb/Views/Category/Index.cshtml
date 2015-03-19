@@ -1,0 +1,93 @@
+﻿@model IEnumerable<SharedLibrary.Services.CategoryService.Category>
+
+@{
+    ViewBag.Title = "Categories";
+}
+
+<div id="container" class="clearfix">
+        
+    <div id="sidebar">
+                                                                        
+         @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}        
+    </div>
+        
+    <div id="content">
+        
+        <div class="pageHeader">Categories</div>
+    
+    <div class="PageNavigationBar">
+    @Html.ActionLink("New Category", "CategoryAdd", null, new { @class = "AddLink" })
+    </div>
+       
+
+    <table class="table_grid">
+        <tr>
+            <th>
+                Type
+            </th>
+            <th>
+                Category Name
+            </th>
+            <th>
+                Order
+            </th>
+            <th>
+                Hidden
+            </th>
+             <th>
+                System
+            </th>
+            <th>
+                Item Count
+            </th>
+            @*<th></th>
+            <th></th>*@
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr  onclick="window.location='@Url.Action("CategoryEdit", new { id = item.CategoryId })';" style="cursor: pointer;">
+                <td>
+                    @Html.DisplayFor(modelItem => item.SectionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hidden)
+                </td>
+                  <td>
+                    @Html.DisplayFor(modelItem => item.Conditional)
+                </td>
+                 <td>
+                    @item.ShopItemCount
+                </td>
+        
+                @*<td>
+                    @Html.ActionLink("Edit", "CategoryEdit", new { id = item.CategoryId }, new { @class = "EditLink" }) 
+
+                </td>
+      
+                <td>
+                    @if (item.ShopItemCount == 0 && item.Conditional == false)
+                    {
+                         @Html.ActionLink("Delete", "CategoryDelete", new { id = item.CategoryId }, new { @class = "DeleteLink", onclick = "return confirm('Are you sure you want to delete?')" }) 
+                    }
+                   
+
+                </td>*@
+          
+            </tr>
+        }
+
+    </table>
+    <br/><br/>
+    
+    </div>
+    
+</div>
+
+

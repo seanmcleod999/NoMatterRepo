@@ -14,7 +14,7 @@ using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
-using WebApplication7.Models;
+using WebApplication7.Logging;
 using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers
@@ -27,10 +27,7 @@ namespace WebApplication7.Controllers
 		private ICategoryHelper _categoryHelper;
 		private IProductHelper _productHelper;
 		private IGlobalSettings _globalSettings;
-		private IPictureHelper _pictureHelper;
-		private IPictureUploadSettings _sectionPictureUploadSettings;
-		private IPictureUploadSettings _categoryPictureUploadSettings;
-		private IPictureUploadSettings _productPictureUploadSettings;
+		private IImageHelper _imageHelper;
 
 		public AdminController()
 		{
@@ -38,11 +35,8 @@ namespace WebApplication7.Controllers
 			_sectionHelper = new SectionHelper();
 			_categoryHelper = new CategoryHelper();
 			_productHelper = new ProductHelper();
-			_pictureHelper = new PictureHelper();
+			_imageHelper = new ImageHelper();
 			_globalSettings = new GlobalSettings();
-			_sectionPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.SectionPicture, _globalSettings);
-			_categoryPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.CategoryPicture, _globalSettings);
-			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ProductPicture, _globalSettings);
 		}
 
 		public AdminController(IClientHelper clientHelper, ISectionHelper sectionHelper, ICategoryHelper categoryHelper, IProductHelper productHelper, IGlobalSettings globalSettings)
@@ -123,7 +117,7 @@ namespace WebApplication7.Controllers
 		{
 			var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			if (addEditSectionVm.Picture != null) addEditSectionVm.Section.Picture = _pictureHelper.UploadPicture(Image.FromStream(addEditSectionVm.Picture.InputStream), _sectionPictureUploadSettings);
+			if (addEditSectionVm.Picture != null) addEditSectionVm.Section.Picture = await _imageHelper.UploadImageAsync(addEditSectionVm.Picture);
 
 			await _sectionHelper.PostSectionAsync(addEditSectionVm.Section, token);
 
@@ -148,7 +142,7 @@ namespace WebApplication7.Controllers
 		{
 			var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			if (addEditSectionVm.Picture != null) addEditSectionVm.Section.Picture = _pictureHelper.UploadPicture(Image.FromStream(addEditSectionVm.Picture.InputStream), _sectionPictureUploadSettings);
+			if (addEditSectionVm.Picture != null) addEditSectionVm.Section.Picture = await _imageHelper.UploadImageAsync(addEditSectionVm.Picture);
 
 			await _sectionHelper.UpdateSectionAsync(addEditSectionVm.Section, token);
 
@@ -200,7 +194,7 @@ namespace WebApplication7.Controllers
 		{
 			var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			if (addCategoryVm.Picture != null) addCategoryVm.Category.Picture = _pictureHelper.UploadPicture(Image.FromStream(addCategoryVm.Picture.InputStream), _categoryPictureUploadSettings);
+			if (addCategoryVm.Picture != null) addCategoryVm.Category.Picture = await _imageHelper.UploadImageAsync(addCategoryVm.Picture);
 
 			await _categoryHelper.PostCategoryAsync(addCategoryVm.Category, token);
 
@@ -277,24 +271,33 @@ namespace WebApplication7.Controllers
 		[HttpPost]
 		public async Task<ActionResult> ProductAdd(AddEditProductVm addEditProductVm)
 		{
+			try
+			{
+				var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			var token = ((CustomPrincipal)HttpContext.User).Token;
+				if (addEditProductVm.Picture1 != null) addEditProductVm.Product.Picture1 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture1);
+				if (addEditProductVm.Picture2 != null) addEditProductVm.Product.Picture2 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture2);
+				if (addEditProductVm.Picture3 != null) addEditProductVm.Product.Picture3 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture3);
+				if (addEditProductVm.Picture4 != null) addEditProductVm.Product.Picture4 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture4);
+				if (addEditProductVm.Picture5 != null) addEditProductVm.Product.Picture5 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture5);
+				if (addEditProductVm.PictureOther != null) addEditProductVm.Product.PictureOther = await _imageHelper.UploadImageAsync(addEditProductVm.PictureOther);
 
-			if (addEditProductVm.Picture1 != null) addEditProductVm.Product.Picture1 = _pictureHelper.UploadPicture(Image.FromStream(addEditProductVm.Picture1.InputStream), _productPictureUploadSettings);
-			if (addEditProductVm.Picture2 != null) addEditProductVm.Product.Picture2 = _pictureHelper.UploadPicture(Image.FromStream(addEditProductVm.Picture2.InputStream), _productPictureUploadSettings);
-			if (addEditProductVm.Picture3 != null) addEditProductVm.Product.Picture3 = _pictureHelper.UploadPicture(Image.FromStream(addEditProductVm.Picture3.InputStream), _productPictureUploadSettings);
-			if (addEditProductVm.Picture4 != null) addEditProductVm.Product.Picture4 = _pictureHelper.UploadPicture(Image.FromStream(addEditProductVm.Picture4.InputStream), _productPictureUploadSettings);
-			if (addEditProductVm.Picture5 != null) addEditProductVm.Product.Picture5 = _pictureHelper.UploadPicture(Image.FromStream(addEditProductVm.Picture5.InputStream), _productPictureUploadSettings);
-			if (addEditProductVm.PictureOther != null) addEditProductVm.Product.PictureOther = _pictureHelper.UploadPicture(Image.FromStream(addEditProductVm.PictureOther.InputStream), _productPictureUploadSettings);
 
-			addEditProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
+				addEditProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
 
-			var product = await _categoryHelper.PostCategoryProductsAsync(addEditProductVm.CategoryId, addEditProductVm.Product, token);
+				var product = await _categoryHelper.PostCategoryProductsAsync(addEditProductVm.CategoryId, addEditProductVm.Product, token);
 
-			return RedirectToAction("CategoryProducts", new
+				return RedirectToAction("CategoryProducts", new
 				{
 					categoryId = addEditProductVm.CategoryId
 				});
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+			
 
 		}
 
@@ -302,34 +305,71 @@ namespace WebApplication7.Controllers
 		[Authorize]
 		public async Task<ActionResult> ProductEdit(string productId)
 		{
-			var product = await _productHelper.GetProductNoRelatedProductsAsync(productId);
-
-			var addEditProductVm = new AddEditProductVm
+			try
 			{
-				Product = product,
-			};
+				var product = await _productHelper.GetProductNoRelatedProductsAsync(productId);
 
-			return View(addEditProductVm);
+				var addEditProductVm = new AddEditProductVm
+				{
+					Product = product,
+				};
+
+				return View(addEditProductVm);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+			
 		}
 
 		[Authorize]
 		[HttpPost]
-		public async Task<ActionResult> ProductEdit(AddEditProductVm editProductVm)
+		public async Task<ActionResult> ProductEdit(AddEditProductVm addEditProductVm)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
+			try
+			{
+				var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			if (editProductVm.Picture1 != null) editProductVm.Product.Picture1 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture1.InputStream), _productPictureUploadSettings);
-			if (editProductVm.Picture2 != null) editProductVm.Product.Picture2 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture2.InputStream), _productPictureUploadSettings);
-			if (editProductVm.Picture3 != null) editProductVm.Product.Picture3 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture3.InputStream), _productPictureUploadSettings);
-			if (editProductVm.Picture4 != null) editProductVm.Product.Picture4 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture4.InputStream), _productPictureUploadSettings);
-			if (editProductVm.Picture5 != null) editProductVm.Product.Picture5 = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.Picture5.InputStream), _productPictureUploadSettings);
-			if (editProductVm.PictureOther != null) editProductVm.Product.PictureOther = _pictureHelper.UploadPicture(Image.FromStream(editProductVm.PictureOther.InputStream), _productPictureUploadSettings);
+				if (addEditProductVm.Picture1 != null) addEditProductVm.Product.Picture1 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture1);
+				if (addEditProductVm.Picture2 != null) addEditProductVm.Product.Picture2 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture2);
+				if (addEditProductVm.Picture3 != null) addEditProductVm.Product.Picture3 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture3);
+				if (addEditProductVm.Picture4 != null) addEditProductVm.Product.Picture4 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture4);
+				if (addEditProductVm.Picture5 != null) addEditProductVm.Product.Picture5 = await _imageHelper.UploadImageAsync(addEditProductVm.Picture5);
+				if (addEditProductVm.PictureOther != null) addEditProductVm.Product.PictureOther = await _imageHelper.UploadImageAsync(addEditProductVm.PictureOther);
+			
+				//editProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
 
-			//editProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
+				var product = await _productHelper.UpdateProductAsync(addEditProductVm.Product, token);
 
-			var product = await _productHelper.UpdateProductAsync(editProductVm.Product, token);
+				return RedirectToAction("GetCategoryProducts", "Category", new { categoryId = addEditProductVm.Product.CategoryId });
 
-			return RedirectToAction("GetCategoryProducts", "Category", new { categoryId = editProductVm.Product.CategoryId });
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+		}
+
+		[Authorize]
+		public async Task<ActionResult> DeleteProduct(string productId, string clientId)
+		{
+			try
+			{
+				var token = ((CustomPrincipal)HttpContext.User).Token;
+
+				await _productHelper.DeleteProductAsync(productId, token);
+
+				return RedirectToAction("GetCategoryProducts", "Category", new { clientId = clientId });
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+
 		}
 
     }

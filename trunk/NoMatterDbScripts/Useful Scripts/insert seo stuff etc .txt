@@ -1,0 +1,8 @@
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SiteName', 1, 'wonderlandvintage.co.za', null)
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SiteUrl', 1, 'http://wonderlandvintage.co.za', null)
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SEOKeywords', 1, 'red, orange, test, website', null)
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SiteNameFriendly', 1, 'Wonderland Vintage', null)
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SiteDescription', 1, 'WonderlandVintage.co.za - Your favourite online vintage store', null)
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SiteMetaDescription', 1, 'Online store selling vintage goods', null)
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SiteHomePageTitle', 1, 'WonderlandVintage Online Store', null)
+insert into [Setting] ([ClientId], [SettingName], [SettingType], [StringValue], [IntValue]) values (5, 'SiteLogoPath', 1, '/Content/images/logoFB.png', null)

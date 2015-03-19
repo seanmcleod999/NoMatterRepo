@@ -1,0 +1,79 @@
+﻿@model SharedLibrary.ViewModels.UsersVm
+
+@{
+    ViewBag.Title = "ViewUsers";
+}
+
+
+    <div class="pageHeader">users</div>
+    
+    <br />
+    
+   @Html.ActionLink("Back to Admin", "Index", "Admin", null, new { @class = "BackLink" })
+    <br/><br/>
+
+    <table class="table_grid">
+        <tr>
+            <th>
+                Email Address
+            </th>
+            <th>
+                Full name
+            </th>    
+             <th>
+                Facebook User
+             </th>    
+             <th>
+                Date Added
+            </th>    
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fullname)
+                </td>
+                
+                <td>
+                    @if (!string.IsNullOrEmpty(item.FacebookUserId))
+                    {
+                        @:True
+                    }
+                    
+                </td>
+                
+                 <td>
+                    @if (item.DateAdded != null)
+                    {
+                        @item.DateAdded.Value.ToShortDateString();
+                    }
+                    
+                </td>
+                     
+                <td>
+                    @Html.ActionLink("Edit", "YourProfile", "Account", new { id = item.UserId }, new { @class = "EditLink" }) 
+
+                </td>
+      
+                <td>
+
+                    @Html.ActionLink("Delete", "UserDelete", "Account", new { id = item.UserId }, new { @class = "DeleteLink", onclick = "return confirm('Are you sure you want to delete?')" }) 
+                    
+                   
+
+                </td>
+          
+            </tr>
+        }
+
+    </table>
+    <br/><br/>
+
+
+

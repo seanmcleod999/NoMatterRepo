@@ -1,0 +1,77 @@
+﻿@model SharedLibrary.ViewModels.ContactUsVm
+
+@{
+    ViewBag.Title = "Contact Us";
+}
+ <script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>
+
+@{Html.RenderPartial("partialMobileMenu");}  
+
+<div class="pageHeader">Contact Us</div>
+
+<br />      
+We would love to hear from you! Please email us at <a href="mailto:info@prettydamnthrifty.co.za?Subject=Website%20Enquiry" target="_top">info@prettydamnthrifty.co.za</a>
+<br /><br />
+
+Or, fill in the form below.
+
+<br /><br/>
+
+@using (Html.BeginForm())
+{ 
+    
+     <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+     </div>
+     <div class="editor-field">
+            @Html.TextBoxFor(model => model.Name, new { style = "width:150px;" })
+            @Html.ValidationMessageFor(model => model.Name)
+     </div>
+    
+      <div class="editor-label">
+            @Html.LabelFor(model => model.EmailAddress)
+     </div>
+     <div class="editor-field">
+            @Html.TextBoxFor(model => model.EmailAddress, new { style = "width:200px;" })
+            @Html.ValidationMessageFor(model => model.EmailAddress)
+     </div>
+    
+     <div class="editor-label">
+        @Html.LabelFor(model => model.ContactNumber) 
+     </div>
+     <div class="editor-field">
+            @Html.TextBoxFor(model => model.ContactNumber, new { style = "width:150px;" }) (Not required)
+            @Html.ValidationMessageFor(model => model.ContactNumber)
+     </div>
+    
+     <div class="editor-label">
+             @Html.LabelFor(model => model.Message)
+     </div>
+     <div class="editor-field">
+             @Html.TextAreaFor(model => model.Message, new { style = "width:300px;" })
+                @Html.ValidationMessageFor(model => model.Message)
+     </div>@*
+        
+    <input type="submit" value="Send" />*@
+    <br/>
+     <a href="javascript:void(0);" class="siteButton" onclick="submitLoginForm();">Send</a> 
+    
+    <br /><br />
+                        
+}
+
+<script type="text/javascript">
+
+    function submitLoginForm() {
+        $('form').submit();
+    }
+    
+
+</script>
+
+
+      
+
+
+
+

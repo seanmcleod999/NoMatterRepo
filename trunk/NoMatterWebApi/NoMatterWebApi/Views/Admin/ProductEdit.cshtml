@@ -1,0 +1,253 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.AddEditProductVm
+
+@{
+    ViewBag.Title = "Product Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/ckeditor/ckeditor.js"></script>
+
+<h1>Edit Product</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to products", "CategoryProducts", "Admin", new { clientId = @Model.Section.ClientId, categoryId = @Model.Product.CategoryId }, new { @class = "BackLink" })
+</div>
+
+@using (Html.BeginForm("ProductEdit", "Admin", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Section.ClientId)
+    @Html.HiddenFor(model => model.Product.ProductId)
+    @Html.HiddenFor(model => model.Product.CategoryId)
+
+    @Html.HiddenFor(model => model.Product.Picture1)
+    @Html.HiddenFor(model => model.Product.Picture2)
+    @Html.HiddenFor(model => model.Product.Picture3)
+    @Html.HiddenFor(model => model.Product.Picture4)
+    @Html.HiddenFor(model => model.Product.Picture5)
+    @Html.HiddenFor(model => model.Product.PictureOther)
+    
+
+
+    <div class="editor-label">
+        Title
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Product.Title, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.Product.Title)
+    </div>
+
+    <div class="editor-label">
+        Description
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.Product.Description, new {style = "width:500px;"})
+        <script>
+                    CKEDITOR.replace('Product_Description');
+        </script>
+    </div>
+    
+       <div class="editor-label">
+        Hidden Notes
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Product.AdminNotes, new { style = "width:300px;" })
+    </div>
+    
+    <div class="editor-label">
+        Key Words
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Product.Keywords, new { style = "width:300px;" })
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Product.Price)
+    </div>
+    <div class="editor-field">
+        @Html.TextBox("Product.Price", Model.Product.Price.ToString("0"), new { style = "width:80px;" }) 
+        @Html.ValidationMessageFor(model => model.Product.Price)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Product.Size)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.Product.Size, null, new { style = "width:60px" })
+        @Html.ValidationMessageFor(model => model.Product.Size)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Product.ReleaseDate)
+    </div>
+    <div class="editor-field">
+        @Html.TextBox("Product.ReleaseDate", Model.Product.ReleaseDate.ToShortDateString(), new { style = "width:100px;" }) 
+        @Html.ValidationMessageFor(model => model.Product.ReleaseDate)
+    </div>
+    
+     <div class="editor-label">
+        @Html.LabelFor(model => model.Product.DateSold)
+    </div>
+    <div class="editor-field">
+        @if (Model.Product.DateSold != null)
+        {
+            @Html.TextBox("Product.DateSold", Model.Product.DateSold.Value.ToString("yyyy/MM/dd"), new { style = "width:100px;" })  @:<a id="clearDate" href="#">x</a>
+        }
+        else
+        {
+            @Html.TextBox("Product.DateSold", Model.Product.DateSold, new { style = "width:100px;" })  
+        }
+    </div>
+    
+     <br/>
+    
+    <table>                      
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Product.Hidden)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Product.Hidden)
+                @Html.ValidationMessageFor(model => model.Product.Hidden)
+
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Product.Reserved)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Product.Reserved)
+                @Html.ValidationMessageFor(model => model.Product.Reserved)
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                   
+
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Picture1)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.Picture1, new { type = "file", @class="form-control" })
+                @Html.ValidationMessageFor(m => m.Picture1)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Picture2)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.Picture2, new { type = "file", @class="form-control" })
+                @Html.ValidationMessageFor(m => m.Picture2)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Picture3)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.Picture3, new { type = "file", @class="form-control" })
+                @Html.ValidationMessageFor(m => m.Picture3)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Picture4)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.Picture4, new { type = "file", @class="form-control" })
+                @Html.ValidationMessageFor(m => m.Picture4)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.Picture5)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.Picture5, new { type = "file", @class="form-control" })
+                @Html.ValidationMessageFor(m => m.Picture5)
+            </td>
+        </tr>
+        <tr>
+            <td valign=top>
+                @Html.LabelFor(model => model.PictureOther)
+            </td>
+            <td >
+                @Html.TextBoxFor(m => m.PictureOther, new { type = "file", @class="form-control" })
+                @Html.ValidationMessageFor(m => m.PictureOther)
+            </td>
+        </tr>
+              
+    </table>
+   
+    <br/>
+    <p>
+        <input type="submit" value="Save"  class="btn btn-default"/> &nbsp; @Html.ActionLink("cancel", "CategoryProducts", new { clientId = @Model.Section.ClientId, categoryId = @Model.Category.CategoryId } , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+    </p>
+
+}
+
+<br/>
+@if (!string.IsNullOrEmpty(Model.Product.Picture1))
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture1?w=100" alt="Picture1"/>
+}
+else
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture2))
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture2?w=100" alt="Picture2"/>   
+}
+else
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture3))
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture3?w=100" alt="Picture3"/>   
+}
+else
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture4))
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture4?w=100" alt="Picture4"/>   
+}
+else
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture5))
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture5?w=100" alt="Picture5"/>   
+}
+else
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.PictureOther))
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.PictureOther?w=100"  alt="PictureOther"/>   
+}
+else
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
+}

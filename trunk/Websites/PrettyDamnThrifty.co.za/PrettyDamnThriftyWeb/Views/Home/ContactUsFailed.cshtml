@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "ContactUsFailed";
+}
+
+@{Html.RenderPartial("partialMobileMenu");}  
+
+<div class="pageHeader">Enquiry Unsuccessful</div>
+    <br />
+
+We are sorry, but there was a problem sending the email. Please  @Html.ActionLink("try again", "ContactUs", "Home")  or send an email to us at <a href="mailto:info@prettydamnthrifty.co.za?Subject=Website%20Enquiry" target="_top">info@prettydamnthrifty.co.za</a>
+<br /><br />
+Reason for failure: <div class="ErrorMessage">@ViewBag.ErrorMessage</div>
+
+<br /><br />
+

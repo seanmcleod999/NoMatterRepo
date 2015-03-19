@@ -47,6 +47,8 @@
         <EntityTypeShape EntityType="DatabaseModel.UserRole" Width="1.5" PointX="5" PointY="35" />
         <AssociationConnector Association="DatabaseModel.FK_UserRole_Role" />
         <AssociationConnector Association="DatabaseModel.FK_UserRole_User" />
+        <EntityTypeShape EntityType="DatabaseModel.ClientPage" Width="1.5" PointX="3" PointY="2" />
+        <AssociationConnector Association="DatabaseModel.FK_ClientPage_Client" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

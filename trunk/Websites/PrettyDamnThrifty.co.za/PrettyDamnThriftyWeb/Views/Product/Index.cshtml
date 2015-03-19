@@ -1,0 +1,157 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.ViewShopItemsAdminVm
+
+@{
+    ViewBag.Title = "Index";
+    
+    var globalSettings = new GlobalSettings();
+    
+}
+
+<div id="container" class="clearfix">
+        
+<div id="sidebar">
+                                                                        
+    @{Html.RenderPartial("~/Views/Admin/partialAdminMenu.cshtml");}       
+</div>
+        
+<div id="content">
+        
+<div class="pageHeader">Products</div>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("New Product", "Create", "Product", null, new { @class = "AddLink" }) 
+</div>
+
+@using (Html.BeginForm("Index", "Product", FormMethod.Post, new { name = "myForm", id = "myForm" }))
+{
+    @Html.DropDownListFor(m => m.CategoryId, new SelectList(Model.Categories, "CategoryId", "CategoryName")) @:&nbsp;   
+    @Html.DropDownListFor(m => m.SelectedDisplayType, new SelectList(Model.DisplayTypes, "Value", "Text"))  @:(@Model.ShopItems.Count items)
+    
+    <br /><br/>
+    
+    <input type="hidden" id="SortColumn" name="SortColumn" value="@Model.SortColumn" /> 
+    
+    <table class="table_grid">
+        <tr>
+          <th>
+             
+            </th>
+            <th>
+                <a class="th_grid_Link" href="javascript:submitSortFilter('Description');" >Title</a>
+            </th>
+            <th>
+               <a class="th_grid_Link" href="javascript:submitSortFilter('Type');" >Type</a>
+            </th>
+             <th>
+               <a class="th_grid_Link" href="javascript:submitSortFilter('Category');" >Category</a>
+            </th>
+            <th>
+               <a class="th_grid_Link" href="javascript:submitSortFilter('Price');" >Price</a>
+            </th>
+
+@*            <th >
+               <a class="th_grid_Link" href="javascript:submitSortFilter('DateCreated');" >Date Created</a>
+            </th>*@
+
+            <th>
+                <a class="th_grid_Link" href="javascript:submitSortFilter('Hidden');" >Hid.</a>
+            </th>
+
+            <th>
+                <a class="th_grid_Link" href="javascript:submitSortFilter('Reserved');" >Res.</a>
+            </th>
+            <th >
+                <a class="th_grid_Link" href="javascript:submitSortFilter('Sold');" >Sold</a>
+            </th>
+
+           @* <th ></th>
+            <th ></th>
+            <th ></th>*@
+        </tr>
+
+    @foreach (var item in Model.ShopItems)
+    {
+         <tr onclick="window.location='@Url.Action("Edit", new { id = item.ShopItemId })';" style="cursor: pointer;">
+            <td>
+            @if (!string.IsNullOrEmpty(item.Picture1))
+            {
+                <img src="@Url.Content(globalSettings.ShopImagesPath + "thumb-" + item.Picture1)" alt="View Image" height="60" />
+            } 
+            
+            </td>
+
+            <td>
+                               
+                @if (item.Description.Length > 30)
+                {
+                    var newAddress = item.Description.Substring(0, 27) + "...";
+
+                    @newAddress
+                }
+                else
+                {
+                     @Html.DisplayFor(modelItem => item.Description)
+                }
+            </td>
+             <td>
+                 @Html.DisplayFor(modelItem => item.SectionName)
+             </td>
+             <td>
+                 @Html.DisplayFor(modelItem => item.CategoryName)
+             </td>
+             <td>
+                R @String.Format("{0:0}", @item.Price)
+            </td>
+@*            <td>
+                @item.DateCreated.ToShortDateString()
+            </td>*@
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Hidden)
+            </td>
+             <td>
+                 @Html.DisplayFor(modelItem => item.Reserved)
+             </td>
+             <td>
+                 @Html.DisplayFor(modelItem => item.Sold)
+             </td>
+            
+          @*  <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ShopItemId }, new { @class = "EditLink" }) 
+
+            </td>*@
+          @*  <td>
+                @Html.ActionLink("View", "Item", "Shop", new { id = item.ShopItemId }, new { @class = "ViewLink" }) 
+            </td>       
+             <td>
+                @Html.ActionLink("Delete", "Delete", new { id = item.ShopItemId }, new { @class = "DeleteLink" }) 
+            </td>*@
+          
+        </tr>
+    }
+
+    </table>
+
+}
+    
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+    $("#CategoryId").change(function () {
+        $('#myForm').submit();
+    });
+
+    $("#SelectedDisplayType").change(function () {
+        $('#myForm').submit();
+    });
+
+    function submitSortFilter(sortOrder) {
+
+        $("#SortColumn").val(sortOrder);
+        document.getElementById('myForm').submit();
+    }
+
+</script>

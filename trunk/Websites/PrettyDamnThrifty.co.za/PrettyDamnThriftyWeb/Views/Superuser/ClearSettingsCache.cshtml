@@ -1,0 +1,12 @@
+﻿@model List<SharedLibrary.DatabaseModel.globalsetting>
+
+@{
+    ViewBag.Title = "ClearSettingsCache";
+}
+
+<h2>ClearSettingsCache</h2>
+
+@foreach (var globalSetting in Model)
+{
+    @globalSetting.SettingName @:- @globalSetting.StringValue - @globalSetting.IntValue <br />
+}

@@ -1,0 +1,760 @@
+﻿.page 
+{
+    height: 100%;
+    width: 100%;
+    
+    /* prevents flicker when starting css transition */
+    -webkit-backface-visibility: hidden;
+}
+
+body 
+{  
+    font-size:medium;
+    font-family: 'Muli', sans-serif;
+    color: gray;
+    padding: 0;
+    margin: 0;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right:auto;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+h1 {
+    font-family: inherit;
+    font-weight: bold;
+    color: #555555;
+    font-size: 24px;
+    margin-top: 5px;
+}
+
+h2 {
+    font-family: inherit;
+    font-weight: bold;
+    color: #555555;
+    font-size: 20px;
+}
+
+h2 {
+    font-family: inherit;
+    font-weight: bold;
+    color: #555555;
+    font-size: 18px;
+}
+
+#container
+{  
+    width: 100%;
+    margin: 0 auto;
+}
+
+#sidebar {
+
+    float: left;
+    padding-right: 40px;
+}
+
+.PageNavigationBar {
+    padding: 15px 0 20px 0;
+}
+
+#content {
+    
+   overflow: hidden
+}
+
+a:hover, a:link, a:visited, a:active
+{
+    font-size: medium;
+    color: #999999;
+    text-decoration:none;
+}
+
+.pageBodyWrapper {
+padding: 0 30px;
+}
+
+/* Header Stuff
+-----------------------------------------------------------*/
+
+.header {
+    
+}
+
+.headerLogoDesktop {
+    
+}
+
+.headerLogoDesktop img {
+width: 100%;
+}
+
+.headerMenuItemsWrapper {
+
+    padding: 10px 20px 0px 0px;
+    text-align: right
+}
+
+.headerMenuItemsWrapper ul li {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0 0 0 15px;
+}
+
+
+
+
+/* General Stuff
+-----------------------------------------------------------*/
+.PageNavigationBar {
+    padding: 5px 0 15px 0;
+}
+
+/*.siteButton {
+    border-radius:20px;
+    border-color: #7c7c7c;
+    border-style: solid;
+    border-width: 2px;
+	padding:4px 20px;
+    text-decoration: none;
+    background-color:black;
+    color: white;
+
+}*/
+
+
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+    cursor: pointer;
+    -webkit-appearance: button;
+}
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-color: #ccc;
+}
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.428571429;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.form-control {
+display: block;
+width: 100%;
+height: 34px;
+padding: 6px 12px;
+font-size: 14px;
+line-height: 1.428571429;
+color: #555;
+vertical-align: middle;
+background-color: #fff;
+border: 1px solid #ccc;
+border-radius: 4px;
+-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+-webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+select {
+font-family: inherit;
+font-size: inherit;
+border: 1px solid #A9A9A9;
+padding: 5px 1px 5px 1px;
+}
+
+input[type="text"]
+{
+    padding: 5px 1px 5px 1px;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input[type="password"]
+{
+    padding: 5px 1px 5px 1px;
+    font-family: inherit;
+    font-size: inherit;
+    border: 1px solid #A9A9A9;
+}
+
+input:not([type]), input[type="text"]
+{
+    padding: 5px 1px 5px 1px;
+    font-family: inherit;
+    font-size: inherit;
+    border: 1px solid #A9A9A9;
+}
+
+textarea {
+    border: 1px solid #A9A9A9;
+}
+
+.editor-label {
+margin: 0.6em 0 0 0;
+}
+
+/* Shopping products list
+-----------------------------------------------------------*/
+.itemListOuter 
+{
+     /*text-align: center;*/
+     display:block;
+     padding:0; 
+}
+
+@media (max-width: 650px) {
+    .itemListOuter {
+        text-align: center;
+    }
+}
+
+.itemListInner 
+{
+    text-align: center;
+    vertical-align:top;
+    display:inline-table;
+    /*width: 220px;
+    height: 275px;*/
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px
+}
+
+.itemListInnerPicture
+{
+    text-align: center;
+    position: relative;
+    display: table;
+
+}
+
+.itemListInnerPicture a:focus
+{
+    outline: 0;
+}
+
+.itemListInnerPicture a img
+{
+    border: none;
+    border-style: none;
+    border: 0
+}
+
+.itemListInner img
+{
+    margin-left: auto;
+    margin-right:auto;  
+    max-height:280px;
+}
+
+@media (max-width: 650px) {
+    .itemListInner img {
+        max-height:350px;
+    }
+}
+
+.itemListInner img:hover {
+    opacity: 0.8;
+}
+
+.itemListDetailsWrapper 
+{
+    height: 55px;
+}
+
+.itemListDetailsDescription 
+{
+    max-width: 150px;
+    font-style: italic
+}
+
+.itemListDetailsPrice 
+{
+   
+}
+
+.itemListSoldItem
+{
+     position:absolute;
+    top: 100px;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+
+     background-image:url('images/soldLayer.png'); 
+     width:100px;   
+     text-align: center;     
+     border-radius: 150px;
+      height: 100px
+}
+
+.itemListSoldItemText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;  
+     line-height: 100px;    
+}
+
+.itemListReservedItem
+{
+    position:absolute;
+    top: 100px;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+
+    background-image:url('images/reservedLayer.png'); 
+    width:100px;   
+    text-align: center;     
+    border-radius: 150px;
+    height: 100px;
+    
+}
+
+.itemListReservedItemText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;
+     line-height: 100px;   
+}
+
+.itemListSaleItem
+{
+     position: absolute; top: 0px; left: 0px;
+     width:50px;
+     height:50px; 
+     background-image:url('images/SaleLayer2.png');
+     background-repeat:no-repeat; 
+   
+}
+
+.itemListCategoryDetailsWrapper
+{
+     padding-bottom: 10px
+}
+
+.itemListCategoryDescription
+{
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+    margin-right: 150px
+}
+
+@media (max-width: 650px) {
+    .itemListCategoryDescription {
+      margin-right: 0
+   }
+}
+
+
+
+.itemListCategoryPicture img
+{   
+   height: 100px
+}
+
+.categoryListWrapper {
+    padding: 10px 20px 10px 0px
+}
+
+.categoryListWrapper ul{
+list-style:none;
+    padding-left:0;
+}
+
+.categoryListWrapper ul li {
+    list-style-type: none;
+}
+
+
+.categoryListWrapper ul li a:hover, .categoryListWrapper a:link, .categoryListWrapper a:visited, .categoryListWrapper a:active
+{
+    font-size: medium;
+    color: #999999;
+    text-decoration:none;
+}
+
+
+.latestItemListPagingControls 
+{
+    text-align: center;
+    padding: 5px
+}
+
+/* Viewing shop item
+-----------------------------------------------------------*/
+
+.viewItemOuter 
+{
+   
+    margin-left: auto;
+    margin-right:auto;
+    padding: 0 10px;
+    margin-bottom:10px; 
+    
+    text-align: center;
+}
+
+.viewItemLeft 
+{ 
+    display: inline-block;
+    vertical-align: top;
+    padding-bottom: 10px;
+    padding-right: 10px
+}
+
+.viewItemLeft img
+{
+
+}
+
+.viewItemLeftImageView 
+{ 
+    position: relative;
+    padding: 0;
+}
+
+.viewItemRight 
+{
+     max-width: 390px;
+    display: inline-block;
+     padding-left: 10px;
+    text-align: left;     
+}
+
+
+
+.viewItemLeftThumbnails 
+{ 
+    
+}
+
+
+
+@media only screen and (max-width: 480px) 
+{
+    .viewItemLeft 
+    {
+        display: block;
+    }
+
+    .viewItemRight 
+    { 
+        display: block;
+    }
+   			
+}
+
+.viewItemDescription 
+{
+     font-size:large;
+     font-weight: bold;
+     color: #00A99D;
+     padding-bottom: 15px; 
+}
+
+.viewItempPrice 
+{
+     display:inline;
+     font-weight: bold;
+}
+
+.viewItemSize 
+{
+    display:inline;
+    padding-left: 30px;
+} 
+
+.viewItemNotes 
+{
+    display:block;
+    padding: 20px 0; 
+} 
+
+.viewItemSocialMediaLinks 
+{
+    padding:10px 0;
+
+}
+
+
+.viewItemBackLink 
+{
+    padding:10px 0 5px 0;  
+}
+
+.viewItemSaleItem
+{
+     position: absolute; 
+     top: 0px; left: 0px;
+     width:90px;
+     height:90px; 
+     background-image:url('images/SaleLayerLarge2.png');
+     background-repeat:no-repeat; 
+   
+}
+
+.viewItemSoldItem
+{
+     position: absolute; 
+     bottom: 60px; left: 0px;
+     background-image:url('images/soldLayer.png'); 
+     width:100%;   
+     text-align: center;     
+}
+
+.viewItemSoldItemText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;
+     line-height: 30px;    
+}
+
+.viewItemReservedItem
+{
+     position: absolute; 
+     bottom: 60px; left: 0px;
+     background-image:url('images/reservedLayer.png'); 
+     width:100%;   
+     text-align: center;     
+
+}
+
+.viewItemReservedItemText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;
+     line-height: 30px;   
+}
+
+.ViewItemItemStatus
+ {
+    padding-top: 5px;
+    padding-bottom: 15px;    
+}
+
+.AddToCartLink a:link, .AddToCartLink a:visited,  .AddToCartLink a:hover,  .AddToCartLink a:active 
+{
+    text-decoration: none;
+    
+}
+
+.viewItemRelatedItemsHeadingBox {
+    border-top: 1px dotted #7c7c7c;
+    border-bottom: 1px dotted #7c7c7c;
+    padding: 7px 0px 7px 8px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    margin-left: 1px;
+    text-align: left;
+}
+
+.viewItemRelatedItem {
+    display: inline;
+}
+
+.viewItemRelatedItem img{
+    max-height: 200px;
+    border: none;
+    padding: 11px;
+}
+
+.viewShopItemPagingControl {
+    padding: 10px 0;
+}
+
+
+/* Table grids
+-----------------------------------------------------------*/
+
+
+.table_grid
+{
+    border-collapse:collapse;
+}
+.table_grid, .table_grid th, .table_grid td
+{
+border-bottom: 0px solid #E8E8E8;
+}
+
+.table_grid tr:nth-child(even) {
+    background-color: #F4F4F4;
+}
+
+.table_grid tr:nth-child(odd) {
+    background-color: #EFEFEF;
+}
+
+.table_grid td, .table_grid th {
+    padding: 5px;
+}
+
+.table_grid th
+{
+  color: white;
+  text-align: left;
+  background-color: #00A99D;    
+}
+
+.table_grid th a
+{
+    text-decoration: none;    
+}
+
+/* Links
+-----------------------------------------------------------*/
+
+a.BackLink:link, a.BackLink:visited,  a.BackLink:hover,  a.BackLink:active 
+{
+    margin: 0px 0px 0px 0px;
+    background:url(images/icon_back.png) left center no-repeat;
+    background-size: 18px 18px;
+    padding:  0.2em 0.3em 0.2em 1.6em;
+    text-decoration: none;
+    font-weight: normal; 
+}
+
+a.AddLink:link, a.AddLink:visited,  a.AddLink:hover,  a.AddLink:active 
+{
+    margin: 0px 0px 0px 0px;
+    background:url(images/icon_add.png) left center no-repeat;
+    background-size: 18px 18px;
+    padding:  0.2em 0.3em 0.2em 1.6em;
+    text-decoration: none;
+    font-weight: normal; 
+}
+
+/* Footer Stuff
+-----------------------------------------------------------*/
+
+.footer 
+{
+    width: 100%;
+}
+
+.footerRow 
+{
+    border-top: 1px dotted #c8c8c8;
+    margin-top: 20px;
+    padding-top: 5px;
+    width: 100%;
+}
+
+.footerWrapper
+{
+    max-width: 900px;  
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 10px 5px 10px;
+}
+
+
+.footerLinks ul li {
+    list-style-type: none;
+}
+
+.footerLinkCol1
+{
+    display:inline-table;
+    width: 40%;
+}
+
+.footerLinkCol2
+{
+    display:inline-table;
+    width: 40%;
+}
+
+.footerLinkCol3
+{
+    display:inline-table;
+
+}
+
+@media (max-width: 650px) {
+
+    .footerLinkCol1
+    {
+         width: 50%;
+    }
+
+    .footerLinkCol2
+    {
+        display: none !important;
+    }
+
+    .footerLinkCol3
+    {
+        width: 48%;
+        text-align: right;
+        padding-right: 0;
+    }
+
+}
+
+@media (min-width: 651px) {
+ 
+   .headerLogoMobile {
+      display: none !important;
+   }
+}
+
+.footerText
+{
+    
+    font-size: small;
+     position: absolute; top: 12px; left: 10px;
+}
+
+.footerAllRightsReserved {
+    padding: 10px;
+    font-size:small;
+    color: #999999;
+    text-align: center
+}
+
+.footerSocialMediaIcons 
+{ 
+    display:none;
+}

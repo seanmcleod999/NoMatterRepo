@@ -1,0 +1,102 @@
+﻿@using SharedLibrary.Helpers
+@model SharedLibrary.ViewModels.SliderVm
+
+@{
+    ViewBag.Title = "PictureGridIndex";
+
+    var globalSettings = new GlobalSettings();
+}
+
+
+    <div class="pageHeader">slider images</div>
+    <br/>
+    
+     @Html.ActionLink("Back to Sliders", "GetSlidersForEdit", "Slider", null, new { @class = "BackLink" })
+     
+     <br/> <br/>
+
+    @using (Html.BeginForm())
+    {
+
+        <table>
+             <tr>
+                <td>
+                    Slider Name
+                </td>
+                <td>
+                    @Html.TextBoxFor(x=>x.Slider.SliderName)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Slider Width
+                </td>
+                <td>
+                    @Html.TextBoxFor(x=>x.Slider.SlideWidth)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Minimum Slides
+                </td>
+                <td>
+                    @Html.TextBoxFor(x=>x.Slider.MinSlides)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Maximum Slides
+                </td>
+                <td>
+                    @Html.TextBoxFor(x=>x.Slider.MaxSlides)
+                </td>
+            </tr> 
+            <tr>
+                <td>
+                    Show Next/Prev
+                </td>
+                <td>
+                    @Html.EditorFor(x => x.Slider.ShowNextPrevControls)
+                </td>
+            </tr>  
+         
+            <tr>
+                <td>
+                    Touch Enabled
+                </td>
+                <td>
+                    @Html.EditorFor(x => x.Slider.TouchEnabled)
+                </td>
+            </tr> 
+            <tr>
+                <td>
+                    Auto Scroll
+                </td>
+                <td>
+                    @Html.EditorFor(x=>x.Slider.AutoScroll)
+                </td>
+            </tr> 
+            <tr>
+                <td>
+                    Auto Scroll time
+                </td>
+                <td>
+                    @Html.TextBoxFor(x=>x.Slider.AutoScrollTime) milliseconds
+                </td>
+            </tr>    
+            <tr>
+                <td>
+                    Image Padding 
+                </td>
+                <td>
+                    @Html.TextBoxFor(x=>x.Slider.ImagePadding) pixels
+                </td>
+            </tr>      
+        </table>
+    
+      <input type="submit" value="Save" />
+}
+
+
+
+

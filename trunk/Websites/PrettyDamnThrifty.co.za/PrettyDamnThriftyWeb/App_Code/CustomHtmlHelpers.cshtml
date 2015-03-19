@@ -1,0 +1,58 @@
+﻿@using SharedLibrary.Helpers
+@using SharedLibrary.Models
+
+@helper OpenGraph()
+{
+    var bag = ((System.Web.Mvc.WebViewPage)WebPageContext.Current.Page).ViewBag;
+
+    var globalSettings = new GlobalSettings();
+    
+    if (bag.OgTitle != null)
+    {
+        <meta property="og:title" content="@bag.OgTitle" />
+    }
+    else
+    {
+       <meta property="og:title" content="@globalSettings.SiteName" />   
+    }
+
+
+    if (bag.Type != null)
+    {
+        <meta property="og:type" content="@bag.Type" />
+    }
+    else
+    { 
+        <meta property="og:type" content="website" />      
+    }    
+    
+    <meta property="og:url" content="@WebPageContext.Current.Page.Context.Request.Url.ToString()" />
+    <meta property="og:site_name" content="@globalSettings.SiteName" />
+    
+    if (bag.ImageUrl != null)
+    {
+        <meta property="og:image" content="@globalSettings.SiteUrl@bag.ImageUrl" />
+    }
+    else
+    { 
+        <meta property="og:image" content="@globalSettings.SiteUrl@globalSettings.SiteLogoPath" />      
+    }
+    
+    if (bag.Description != null)
+    {
+        <meta property="og:description" content="@bag.Description" />        
+    }
+    else
+    {       
+        <meta property="og:description" content="@globalSettings.SiteDescription" />
+    }
+    
+    if (bag.MetaDescription != null)
+    {
+        <meta property="description" content="@bag.MetaDescription" />        
+    }
+    else
+    {       
+        <meta property="description" content="@globalSettings.SiteMetaDescription" />
+    }
+}

@@ -14,7 +14,6 @@ using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
-using WebApplication7.Models;
 using NoMatterWebApiModels.ViewModels;
 
 namespace WebApplication7.Controllers
@@ -22,16 +21,12 @@ namespace WebApplication7.Controllers
     public class CategoryController : Controller
     {
 		private ICategoryHelper _categoryHelper;
-		private IPictureHelper _pictureHelper;
 		private IGlobalSettings _globalSettings;
-		private IPictureUploadSettings _productPictureUploadSettings;
 
 		public CategoryController()
 		{
 			_categoryHelper = new CategoryHelper();
-			_pictureHelper = new PictureHelper();
 			_globalSettings = new GlobalSettings();
-			_productPictureUploadSettings = new PictureUploadSettings(PictureTypeEnum.ProductPicture, _globalSettings);
 		}
 
 		//public CategoryController(ICurrentUser currentUser)
@@ -62,11 +57,6 @@ namespace WebApplication7.Controllers
 
 			return View(viewCategoryProductsVm);
         }
-
-
-
-
-
 
     }
 }

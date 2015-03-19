@@ -45,14 +45,22 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.PostAsJsonAsync(string.Format("api/v1/clients/{0}/users/authenticate", clientId), userAuthenticateModel);
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot login via facebook", response);
+				{
+					var resultCode = GeneralHelper.ExtractWebApiFailedResultCode(response);
+
+					if (resultCode == 10) return null;
+					
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 
 				var userAuthenticatedResult = await response.Content.ReadAsAsync<UserAuthenticatedResult>();
 
-				return userAuthenticatedResult;
+				return userAuthenticatedResult;				
 
 			}		
 		}
+
+		
 
 		public async Task<string> CreateOrUpdateUser(string clientId, UserModel userModel)
 		{
@@ -68,11 +76,13 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				var response = await client.PostAsJsonAsync(string.Format("api/v1/clients/{0}/users", clientId), userModel);
 
 				if (!response.IsSuccessStatusCode)
-					throw new WebApiException("Cannot create or update", response);
+				{
+					GeneralHelper.HandleWebApiFailedResult(response);
+				}
 
 				var userId = await response.Content.ReadAsAsync<string>();
 
-				return userId;
+				return userId;			
 
 			}
 		}
