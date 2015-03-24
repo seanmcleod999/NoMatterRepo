@@ -1,0 +1,102 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApi.ViewModels.ViewClientsVm
+@{
+    ViewBag.Title = "Clients";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Clients</h1>
+
+<div class="PageNavigationBar">
+@Html.ActionLink("add client", "ClientAdd", "Superuser", null, new { @class = "AddLink" })
+&nbsp;  
+@Html.ActionLink("back to admin", "Index", "Admin", null, new {@class = "BackLink"})
+</div>
+
+<table class="table_grid">
+    <tr>
+         <th>
+           
+        </th>
+        <th>
+            Client
+        </th> 
+        <th>
+            Enabled
+        </th>
+        <th>
+           
+        </th>
+        <th>
+           
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+        
+         <th>
+            
+        </th>
+
+    </tr>
+
+@foreach (var client in Model.Clients)
+{
+    <tr>
+         <td>
+            @if (!string.IsNullOrEmpty(@client.Logo))
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@client.Logo?w=30"/>
+            }
+            else
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=30"/>
+            }  
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => client.ClientName)
+        </td>
+        
+         <td>
+            @Html.DisplayFor(modelItem => client.Enabled)
+        </td>
+        
+        <td>
+            @Html.ActionLink("edit", "ClientEdit", "Superuser", new { clientId = @client.ClientId }, null)
+        </td>
+       
+        <td>
+            @Html.ActionLink("sections", "Sections", "Admin", new { clientId = @client.ClientId }, null)
+        </td>
+        
+        <td>
+            @Html.ActionLink("discounts", "Discounts", "Admin", new { clientId = @client.ClientId }, null)
+        </td>
+        
+         <td>
+            @Html.ActionLink("postage", "ClientPostage", "Admin", new { clientId = @client.ClientId }, null)
+        </td>
+        
+        <td>
+            @Html.ActionLink("pages", "ClientPages", "Admin", new { clientId = @client.ClientId }, null)
+        </td>
+        
+        <td>
+            @Html.ActionLink("settings", "ClientSettings", "Admin", new { clientId = @client.ClientId }, null)
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>
+
+
+

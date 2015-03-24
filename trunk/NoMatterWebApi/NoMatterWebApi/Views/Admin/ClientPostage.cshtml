@@ -1,0 +1,94 @@
+﻿@model NoMatterWebApiModels.ViewModels.ClientDeliveryOptionsVm
+
+@{
+    ViewBag.Title = "Client Delivery Options";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Postage Options</h1>
+
+Client: <b>@Model.Client.ClientName</b><br/>
+<br/>
+<div class="PageNavigationBar">
+@Html.ActionLink("add postage option", "ClientPostageAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+&nbsp;  
+
+@if (User.IsInRole("SuperUser"))
+{  
+    @Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
+}
+else
+{
+    @Html.ActionLink("back to admin", "Index", "Admin", null, new {@class = "BackLink"})
+}
+     
+
+</div>
+
+<table class="table_grid">
+    <tr>
+
+        <th>
+            Description
+        </th> 
+       
+        <th>
+            Amount
+        </th>
+        
+        <th>
+            Order
+        </th>
+        
+        <th>
+            Enabled
+        </th>
+        
+        <th>
+            
+        </th>
+        
+         <th>
+            
+        </th>
+
+    </tr>
+
+@foreach (var clientDeliveryOption in Model.ClientDeliveryOptions)
+{
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => clientDeliveryOption.Description)
+        </td>
+ 
+        <td>
+            R @String.Format("{0:0}", @clientDeliveryOption.DeliveryAmount)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => clientDeliveryOption.OptionOrder)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => clientDeliveryOption.Enabled)
+        </td>
+                            
+        <td>
+            @Html.ActionLink("edit", "ClientPostageEdit", "Admin", new { clientId = @Model.Client.ClientId, ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId }, null)
+        </td>
+        
+         <td>
+            @Html.ActionLink("delete", "ClientPostageDelete", "Admin", new { clientId = @Model.Client.ClientId, ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId }, new { onclick = "return confirm('Are you sure you wish to delete this page?');" })
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>
+
+
+

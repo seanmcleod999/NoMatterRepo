@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using NoMatterDatabaseModel;
 using NoMatterWebApi.ActionResults;
+using NoMatterWebApi.CustomAuth;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Logging;
@@ -14,6 +16,7 @@ using Client = NoMatterWebApiModels.Models.Client;
 using ClientDeliveryOption = NoMatterWebApiModels.Models.ClientDeliveryOption;
 using ClientPage = NoMatterWebApiModels.Models.ClientPage;
 using ClientPaymentType = NoMatterWebApiModels.Models.ClientPaymentType;
+using ClientSetting = NoMatterWebApiModels.Models.ClientSetting;
 using Section = NoMatterWebApiModels.Models.Section;
 
 
@@ -46,36 +49,69 @@ namespace NoMatterWebApi.Controllers.V1
 			_categoryRepository = categoryRepository;
 		}
 
-		// POST api/v1/client
-		[HttpPost]
-		[Authorize]
-		[Route("api/v1/clients")]
-		public async Task<IHttpActionResult> AddClientAsync(Client client)
-		{
-			//TODO: make sure the user can add this page
+		//// POST api/v1/client
+		//[HttpPost]
+		//[Authorize]
+		//[Route("api/v1/clients")]
+		//public async Task<IHttpActionResult> AddClientAsync(Client client)
+		//{
+		//	//TODO: make sure the user can add this page
 
-			try
-			{
-				var userToken = User.Identity.Name;
+		//	try
+		//	{
+		//		var userToken = User.Identity.Name;
 
-				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
-				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+		//		var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
+		//		if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
 
-				NoMatterDatabaseModel.Client clientDb = client.ToDatabaseClient();
+		//		NoMatterDatabaseModel.Client clientDb = client.ToDatabaseClient();
 
-				//Save the client
-				await _clientRepository.AddClientAsync(clientDb);
-				return Ok();
+		//		//Save the client
+		//		await _clientRepository.AddClientAsync(clientDb);
+		//		return Ok();
 
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				return InternalServerError(ex);
-			}
-		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Logger.WriteGeneralError(ex);
+		//		return InternalServerError(ex);
+		//	}
+		//}
 
-		// GET api/v1/clients
+		//// PUR api/v1/clients
+		//[HttpPut]
+		//[Authorize]
+		//[Route("api/v1/clients/{clientId}")]
+		//public async Task<IHttpActionResult> UpdateClientAsync(string clientId, Client client)
+		//{
+		//	//TODO: make sure the user can update this client
+
+		//	try
+		//	{
+		//		var userToken = User.Identity.Name;
+
+		//		var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
+		//		if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+
+		//		var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+		//		if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+
+		//		if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+		//		//Update the client
+		//		await _clientRepository.UpdateClientAsync(clientDb, client);
+
+		//		return Ok();
+
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Logger.WriteGeneralError(ex);
+		//		return InternalServerError(ex);
+		//	}
+		//}
+
+		[HttpGet]
 		[Route("api/v1/clients")]
 		[ResponseType(typeof(List<Client>))]
 		public async Task<IHttpActionResult> GetClientsAsync()
@@ -96,46 +132,44 @@ namespace NoMatterWebApi.Controllers.V1
 			
 		}
 
-		// GET api/v1/clients/{clientId}
-		[Route("api/v1/clients/{clientId}")]
-		[ResponseType(typeof(List<Client>))]
-		public async Task<IHttpActionResult> GetClientAsync(string clientId)
-		{
-			try
-			{
-				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+		//// GET api/v1/clients/{clientId}
+		//[Route("api/v1/clients/{clientId}")]
+		//[ResponseType(typeof(List<Client>))]
+		//public async Task<IHttpActionResult> GetClientAsync(string clientId)
+		//{
+		//	try
+		//	{
+		//		var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+		//		if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				var client = clientDb.ToDomainClient();
+		//		var client = clientDb.ToDomainClient();
 
-				return Ok(client);
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				return InternalServerError(ex);
-			}
+		//		return Ok(client);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Logger.WriteGeneralError(ex);
+		//		return InternalServerError(ex);
+		//	}
 
-		}
+		//}
 
 		// POST api/v1/clients/{clientId}/sections
 		
 
-		
-
-		// GET api/v1/client/5/settingd
-		[Route("api/v1/clients/{clientUuid}/settings")]
-		[ResponseType(typeof(ClientSetting))]
-		public async Task<IHttpActionResult> GetClientSettingsAsync(string clientUuid)
+		[HttpGet]
+		[Route("api/v1/clients/{clientId}/settings")]
+		[ResponseType(typeof(List<ClientSetting>))]
+		public async Task<IHttpActionResult> GetClientSettingsAsync(string clientId)
 		{
 			try
 			{
-				var settingsDb = await _clientRepository.GetClientSettingsAsync(new Guid(clientUuid));
+				var clientSettingsDb = await _clientRepository.GetClientSettingsAsync(new Guid(clientId));
 
-				var settings = settingsDb.Select(x => x.ToDomainClientSetting()).ToList();
+				var clientSettings = clientSettingsDb.Select(x => x.ToDomainClientSetting()).ToList();
 
-				return Ok(settings);
+				return Ok(clientSettings);
 			}
 			catch (Exception ex)
 			{
@@ -145,14 +179,14 @@ namespace NoMatterWebApi.Controllers.V1
 			
 		}
 
-		// GET api/v1/client/5/settings/123
+		[HttpGet]
 		[Route("api/v1/clients/{clientId}/setting/{settingId}")]
-		[ResponseType(typeof(List<ClientPage>))]
-		public async Task<IHttpActionResult> GetClientSettingAsync(string clientId, short settingId)
+		[ResponseType(typeof(ClientSetting))]
+		public async Task<IHttpActionResult> GetClientSettingAsync(string clientId, int clientSettingId)
 		{
 			try
 			{
-				var clientSettingDb = await _clientRepository.GetClientSettingAsync(new Guid(clientId), settingId);
+				var clientSettingDb = await _clientRepository.GetClientSettingAsync(new Guid(clientId), clientSettingId);
 
 				var clientSetting = clientSettingDb.ToDomainClientSetting();
 
@@ -165,30 +199,29 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// POST api/v1/client/5/settings
+
 		[HttpPost]
 		[Authorize]
 		[Route("api/v1/clients/{clientId}/settings")]
 		public async Task<IHttpActionResult> AddClientSettingAsync(string clientId, ClientSetting clientSetting)
 		{
-			//TODO: make sure the user can add this page
-
 			try
 			{
-				var userToken = User.Identity.Name;
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
 
-				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
-				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
-
-				NoMatterDatabaseModel.Setting clienSettingDb = clientSetting.ToDatabaseClientSetting(clientDb.ClientId);
+				var clienSettingDb = clientSetting.ToDatabaseClientSetting(clientDb.ClientId);
 
 				//Save the section
 				await _clientRepository.AddClientSettingAsync(clienSettingDb);
+
 				return Ok();
 
 			}
@@ -199,28 +232,60 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// PUT api/v1/client/5/pages/123
-		[HttpPut]
+
+		[HttpPost]
 		[Authorize]
-		[Route("api/v1/clients/{clientId}/settings/{settingId}")]
-		public async Task<IHttpActionResult> UpdateClientSettingAsync(string clientId, short settingId, ClientSetting clientSetting)
+		[Route("api/v1/clients/{clientId}/settings/allocate-missing")]
+		public async Task<IHttpActionResult> AllocateMissingClientSettingsAsync(string clientId)
 		{
-			//TODO: make sure the user can update this page
+			//TODO: make sure the user can add this page
 
 			try
 			{
-				var userToken = User.Identity.Name;
 
-				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
-				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				var clientSettingDb = await _clientRepository.GetClientSettingAsync(new Guid(clientId), settingId);
-				if (clientSettingDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientSettingNotFound);
+				//Save the section
+				var clientSettings = await _clientRepository.GetClientSettingsAsync(new Guid(clientId));
 
-				if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+				var settingsIds = clientSettings.Select(x => x.SettingId).ToList();
+
+				await _clientRepository.AllocateMissingClientSettingsAsync(clientDb, settingsIds);
+
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+		[HttpPut]
+		[Authorize]
+		[Route("api/v1/clients/{clientId}/settings/{settingId}")]
+		public async Task<IHttpActionResult> UpdateClientSettingAsync(string clientId, int clientSettingId, ClientSetting clientSetting)
+		{
+			try
+			{
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+				var clientSettingDb = await _clientRepository.GetClientSettingAsync(new Guid(clientId), clientSettingId);
+				if (clientSettingDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientSettingNotFound);
 
 				//Update the page
 				await _clientRepository.UpdateClientSettingAsync(clientSettingDb, clientSetting);
@@ -235,13 +300,20 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// DELETE api/v1/clients/{clientId}/settings/{settingId}
+		[Authorize]
 		[HttpDelete]
 		[Route("api/v1/clients/{clientId}/settings/{settingId}")]
 		public async Task<IHttpActionResult> DeleteClientSettingAsync(string clientId, short settingId)
 		{
 			try
 			{
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
 				await _clientRepository.DeleteClientSettingAsync(new Guid(clientId), settingId);
 
 				return Ok();
@@ -253,14 +325,14 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// GET api/v1/client/5/payment-types
-		[Route("api/v1/clients/{clientUuid}/delivery-options")]
+		[HttpGet]
+		[Route("api/v1/clients/{clientId}/delivery-options")]
 		[ResponseType(typeof(List<ClientDeliveryOption>))]
-		public async Task<IHttpActionResult> GetClientDeliveryOptions(string clientUuid)
+		public async Task<IHttpActionResult> GetClientDeliveryOptions(string clientId)
 		{
 			try
 			{
-				var clientDeliveryOptionsDb = await _clientRepository.GetClientDeliveryOptionsAsync(new Guid(clientUuid));
+				var clientDeliveryOptionsDb = await _clientRepository.GetClientDeliveryOptionsAsync(new Guid(clientId));
 
 				var clientDeliveryOptions = clientDeliveryOptionsDb.Select(x => x.ToDomainClientDeliveryOption()).ToList();
 
@@ -278,14 +350,15 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// GET api/v1/client/5/payment-types
-		[Route("api/v1/clients/{clientUuid}/payment-types")]
+
+		[HttpGet]
+		[Route("api/v1/clients/{clientId}/payment-types")]
 		[ResponseType(typeof(List<ClientPaymentType>))]
-		public async Task<IHttpActionResult> GetClientPaymentTypes(string clientUuid)
+		public async Task<IHttpActionResult> GetClientPaymentTypes(string clientId)
 		{
 			try
 			{
-				var clientPaymentTypesDb = await _clientRepository.GetClientPaymentTypesAsync(new Guid(clientUuid));
+				var clientPaymentTypesDb = await _clientRepository.GetClientPaymentTypesAsync(new Guid(clientId));
 
 				var clientPaymentTypes = clientPaymentTypesDb.Select(x => x.ToDomainClientPaymentType()).ToList();
 
@@ -303,7 +376,8 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// GET api/v1/client/5/payment-types
+		
+		[HttpGet]
 		[Route("api/v1/clients/{clientId}/pages")]
 		[ResponseType(typeof(List<ClientPage>))]
 		public async Task<IHttpActionResult> GetClientPagesAsync(string clientId)
@@ -323,7 +397,8 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// GET api/v1/client/5/pages/123
+
+		[HttpGet]
 		[Route("api/v1/clients/{clientId}/pages/{pageName}")]
 		[ResponseType(typeof(List<ClientPage>))]
 		public async Task<IHttpActionResult> GetClientPageAsync(string clientId, string pageName)
@@ -343,27 +418,28 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// POST api/v1/client/5/pages
+
 		[HttpPost]
 		[Authorize]
 		[Route("api/v1/clients/{clientId}/pages")]
 		public async Task<IHttpActionResult> AddClientPageAsync(string clientId, ClientPage clientPage)
 		{
-			//TODO: make sure the user can add this page
 
 			try
 			{
-				var userToken = User.Identity.Name;
 
-				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
-				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
 
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
-
-				NoMatterDatabaseModel.ClientPage clientPageDb = clientPage.ToDatabaseClientPage(clientDb.ClientId);
+				var clientPageDb = clientPage.ToDatabaseClientPage(clientDb.ClientId);
 
 				//Save the section
 				await _clientRepository.AddClientPageAsync(clientPageDb);
@@ -383,23 +459,19 @@ namespace NoMatterWebApi.Controllers.V1
 		[Route("api/v1/clients/{clientId}/pages/{pageName}")]
 		public async Task<IHttpActionResult> UpdateClientPageAsync(string clientId, string pageName, ClientPage clientPage)
 		{
-			//TODO: make sure the user can update this page
-
 			try
 			{
-				var userToken = User.Identity.Name;
 
-				var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
-				if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
 
-				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
-				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
 				var clientPageDb = await _clientRepository.GetClientPageAsync(new Guid(clientId), pageName);
 				if (clientPageDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientPageNotFound);
 				
-				if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
-
 				//Update the page
 				await _clientRepository.UpdateClientPageAsync(clientPageDb, clientPage);
 
@@ -413,13 +485,20 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// DELETE api/v1/clients/{clientId}/pages/{pageName}
+		[Authorize]
 		[HttpDelete]
 		[Route("api/v1/clients/{clientId}/pages/{pageName}")]
 		public async Task<IHttpActionResult> DeleteClientPageAsync(string clientId, string pageName)
 		{
 			try
 			{
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
 				await _clientRepository.DeleteClientPageAsync(new Guid(clientId), pageName);
 
 				return Ok();
@@ -431,7 +510,7 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		// GET api/v1/clients/{clientUuid}/sections
+
 		[HttpGet]
 		[Route("api/v1/clients/{clientId}/sections")]
 		[ResponseType(typeof(List<Section>))]
@@ -439,7 +518,6 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-
 				var sectionsDb = await _sectionRepository.GetClientSectionsAsync(new Guid(clientId), includeHidden);
 
 				var sections = sectionsDb.Select(x => x.ToDomainSection()).ToList();
@@ -464,20 +542,26 @@ namespace NoMatterWebApi.Controllers.V1
 		[Route("api/v1/clients/{clientId}/sections")]
 		public async Task<IHttpActionResult> AddClientSection(string clientId, Section section)
 		{
-			//TODO: make sure the user can post to this category
-
 			try
 			{
-				var userToken = User.Identity.Name;
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
 
-				var user = await _userRepository.GetClientUserByTokenAsync(userToken);
-
-				var client = await _clientRepository.GetClientAsync(new Guid(clientId));
-
-				if (user.ClientId != null && user.ClientId != null && user.ClientId != client.ClientId) 
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				NoMatterDatabaseModel.Section sectionDb = section.ToDatabaseSection(client.ClientId);
+				//var userToken = User.Identity.Name;
+
+				//var user = await _userRepository.GetClientUserByTokenAsync(userToken);
+
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+
+				//if (user.ClientId != null && user.ClientId != null && user.ClientId != client.ClientId) 
+				//	return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+				var sectionDb = section.ToDatabaseSection(clientDb.ClientId);
 
 				//Save the section
 				var sectionId = await _sectionRepository.AddSectionAsync(sectionDb);
@@ -509,6 +593,137 @@ namespace NoMatterWebApi.Controllers.V1
 
 				return Ok();
 
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+
+		[HttpGet]
+		[Route("api/v1/clients/{clientId}/delivery-options/{clientDeliveryOptionId}")]
+		[ResponseType(typeof(ClientDeliveryOption))]
+		public async Task<IHttpActionResult> GetClientDeliveryOptionAsync(string clientId, short clientDeliveryOptionId)
+		{
+			try
+			{
+				var clientDeliveryOptionDb = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionId);
+
+				var clientDeliveryOption = clientDeliveryOptionDb.ToDomainClientDeliveryOption();
+
+				return Ok(clientDeliveryOption);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[Route("api/v1/clients/{clientId}/delivery-options")]
+		public async Task<IHttpActionResult> AddClientDeliveryOptionAsync(string clientId, ClientDeliveryOption clientDeliveryOption)
+		{
+			try
+			{
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+
+
+				//var userToken = User.Identity.Name;
+
+				//var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
+				//if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+
+				//if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+				var clientDeliveryOptionDb = clientDeliveryOption.ToDatabaseClientDeliveryOption(clientDb.ClientId);
+
+				//Save the section
+				await _clientRepository.AddClientDeliveryOptionAsync(clientDeliveryOptionDb);
+
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+
+		[HttpPut]
+		[Authorize]
+		[Route("api/v1/clients/{clientId}/delivery-options/{clientDeliveryOptionId}")]
+		public async Task<IHttpActionResult> UpdateClientDeliveryOptionAsync(string clientId, short clientDeliveryOptionId, ClientDeliveryOption clientDeliveryOption)
+		{
+			try
+			{
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+
+
+				//var userToken = User.Identity.Name;
+
+				//var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
+				//if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
+
+				//var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				//if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+
+				var clientDeliveryOptionDb = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionId);
+				if (clientDeliveryOptionDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientDeliveryOptionNotFound);
+
+				//if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+				//Update the page
+				await _clientRepository.UpdateClientDeliveryOptionAsync(clientDeliveryOptionDb, clientDeliveryOption);
+
+				return Ok();
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
+
+		[Authorize]
+		[HttpDelete]
+		[Route("api/v1/clients/{clientId}/delivery-options/{clientDeliveryOptionId}")]
+		public async Task<IHttpActionResult> DeleteClientDeliveryOptionAsync(string clientId, short clientDeliveryOptionId)
+		{
+			try
+			{
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
+
+				await _clientRepository.DeleteClientDeliveryOptionAsync(new Guid(clientId), clientDeliveryOptionId);
+
+				return Ok();
 			}
 			catch (Exception ex)
 			{

@@ -24,6 +24,9 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		public static string FacebookAppId { get { return ConfigurationManager.AppSettings["FacebookAppId"]; } }
 
+		public static string ClientLongitude { get { return ClientSettingsStaticCache.GetStringSetting("ClientLongitude"); } }
+		public static string ClientLatitude { get { return ClientSettingsStaticCache.GetStringSetting("ClientLatitude"); } }
+
 
 
 	}

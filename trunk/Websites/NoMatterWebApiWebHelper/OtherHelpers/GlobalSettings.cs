@@ -59,8 +59,6 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		string SiteClientId { get; }
 
-
-
 	}
 
 	public class GlobalSettings : IGlobalSettings
@@ -82,7 +80,10 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public string PayfastMerchantKey { get { return ConfigurationManager.AppSettings["PayfastMerchantKey"]; } }
 		public string PayfastReturnUrl { get { return SiteUrl + ConfigurationManager.AppSettings["PayfastReturnUrl"]; } }
 		public string PayfastCancelUrl { get { return SiteUrl + ConfigurationManager.AppSettings["PayfastCancelUrl"]; } }
+
 		public string PayfastNotifyUrl { get { return SiteUrl + ConfigurationManager.AppSettings["PayfastNotifyUrl"]; } }
+
+
 
 		
 	}

@@ -22,7 +22,8 @@ namespace NoMatterWebApi
 		OrderNotFound = 17,
 		CategoryNotFound = 18,
 		ClientPageNotFound = 19,
-		ClientSettingNotFound = 20
+		ClientSettingNotFound = 20,
+		ClientDeliveryOptionNotFound = 21
 
 	}
 }

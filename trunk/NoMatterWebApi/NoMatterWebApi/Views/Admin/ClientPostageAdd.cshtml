@@ -1,0 +1,66 @@
+﻿@model NoMatterWebApiModels.ViewModels.ClientDeliveryOptionVm
+
+
+@{
+    ViewBag.Title = "Client Delivery Option Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Add Postage Option</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to pages", "ClientPostage", "Admin", new {clientId = @Model.Client.ClientId}, new { @class = "BackLink" })
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Client.ClientId)
+
+   
+    <div class="editor-label">
+        Delivery Description
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ClientDeliveryOption.Description, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.ClientDeliveryOption.Description)
+    </div>
+    
+     <div class="editor-label">
+        Amount
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ClientDeliveryOption.DeliveryAmount, new {style = "width:100px;"})
+        @Html.ValidationMessageFor(model => model.ClientDeliveryOption.DeliveryAmount)
+    </div>
+    
+    <div class="editor-label">
+        Enabled
+    </div>
+    <div class="editor-field">
+        @Html.CheckBoxFor(model => model.ClientDeliveryOption.Enabled)
+        @Html.ValidationMessageFor(model => model.ClientDeliveryOption.Enabled)
+    </div>
+    
+    <div class="editor-label">
+        Order
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.ClientDeliveryOption.OptionOrder, new {style = "width:100px;"})
+        @Html.ValidationMessageFor(model => model.ClientDeliveryOption.OptionOrder)
+    </div>
+ 
+    <br/>
+    <p>
+        <input type="submit" value="Save" class="btn btn-default" /> &nbsp;@Html.ActionLink("cancel", "ClientPostage", "Admin", new { clientId = Model.Client.ClientId }, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+    </p>
+
+}
+
+
+
+
+
+
+

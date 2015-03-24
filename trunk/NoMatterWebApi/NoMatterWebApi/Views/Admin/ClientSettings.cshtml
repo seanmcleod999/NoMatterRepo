@@ -11,9 +11,19 @@
 Client: <b>@Model.Client.ClientName</b><br/>
 <br/>
 <div class="PageNavigationBar">
-@Html.ActionLink("add setting", "ClientSettingAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
-&nbsp;    
-@Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
+@*@Html.ActionLink("add setting", "ClientSettingAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+    &nbsp; *@
+@Html.ActionLink("add missing settings", "ClientSettingAddMissing", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+&nbsp; 
+    @if (User.IsInRole("SuperUser"))
+{   
+    @Html.ActionLink("back to clients", "Clients", "Admin", null, new {@class = "BackLink"})
+}
+else
+{
+    @Html.ActionLink("back to admin", "Index", "Admin", null, new {@class = "BackLink"})
+}
+      
 </div>
 
 <table class="table_grid">
@@ -21,6 +31,10 @@ Client: <b>@Model.Client.ClientName</b><br/>
 
         <th>
             Setting Name
+        </th> 
+        
+         <th>
+            Category
         </th> 
         
         <th>
@@ -35,35 +49,39 @@ Client: <b>@Model.Client.ClientName</b><br/>
            
         </th>
         
-         <th>
+        @* <th>
            
-        </th>
+        </th>*@
 
     </tr>
 
-@foreach (var setting in Model.ClientSettings)
+@foreach (var clientSetting in Model.ClientSettings)
 {
     <tr>
 
         <td>
-            @Html.DisplayFor(modelItem => setting.SettingName)
+            @Html.DisplayFor(modelItem => clientSetting.Setting.SettingName)
         </td>
         
          <td>
-            @Html.DisplayFor(modelItem => setting.StringValue)
+            @Html.DisplayFor(modelItem => clientSetting.Setting.SettingCategory)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => clientSetting.StringValue)
          </td>   
         
          <td>
-            @Html.DisplayFor(modelItem => setting.IntValue)
+            @Html.DisplayFor(modelItem => clientSetting.IntValue)
         </td>      
               
         <td>
-            @Html.ActionLink("edit", "ClientSettingEdit", "Admin", new { clientId = @Model.Client.ClientId, settingId = @setting.SettingId }, null)
+            @Html.ActionLink("edit", "ClientSettingEdit", "Admin", new { clientId = @Model.Client.ClientId, clientSettingId = @clientSetting.ClientSettingId }, null)
         </td>
         
-         <td>
-            @Html.ActionLink("delete", "ClientSettingDelete", "Admin", new { clientId = @Model.Client.ClientId, settingId = @setting.SettingId }, new { onclick = "return confirm('Are you sure you wish to delete this setting?');" })
-        </td>
+      @*   <td>
+            @Html.ActionLink("delete", "ClientSettingDelete", "Admin", new { clientId = @Model.Client.ClientId, clientSettingId = @clientSetting.ClientSettingId }, new { onclick = "return confirm('Are you sure you wish to delete this setting?');" })
+        </td>*@
        
     </tr>
     

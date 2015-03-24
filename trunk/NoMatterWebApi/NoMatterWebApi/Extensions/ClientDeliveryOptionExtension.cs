@@ -11,10 +11,24 @@ namespace NoMatterWebApi.Extensions
 		{
 			return new NoMatterWebApiModels.Models.ClientDeliveryOption
 			{
-				ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId.ToString(),
+				ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId,
 				Description = clientDeliveryOption.Description,
 				DeliveryAmount = clientDeliveryOption.DeliveryAmount,
+				OptionOrder = clientDeliveryOption.OptionOrder,
+				Enabled = clientDeliveryOption.Enabled
 
+			};
+		}
+
+		public static NoMatterDatabaseModel.ClientDeliveryOption ToDatabaseClientDeliveryOption(this  NoMatterWebApiModels.Models.ClientDeliveryOption clientDeliveryOption, int clientId)
+		{
+			return new NoMatterDatabaseModel.ClientDeliveryOption
+			{
+				ClientId = clientId,
+				Description = clientDeliveryOption.Description,
+				DeliveryAmount = clientDeliveryOption.DeliveryAmount,
+				OptionOrder = clientDeliveryOption.OptionOrder,
+				Enabled = clientDeliveryOption.Enabled
 			};
 		}
 	}

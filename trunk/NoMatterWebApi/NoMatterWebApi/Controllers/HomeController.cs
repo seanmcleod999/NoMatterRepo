@@ -4,26 +4,38 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Web.Security;
+using NoMatterDatabaseModel;
+using NoMatterWebApi.Controllers.V1;
+using NoMatterWebApi.DAL;
+using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
+using NoMatterWebApi.ViewModels;
+using NoMatterWebApiModels.ViewModels;
+using Client = NoMatterWebApiModels.Models.Client;
 
 namespace NoMatterWebApi.Controllers.v1
 {
     public class HomeController : Controller
     {
 		private IGeneralHelper _generalHelper;
-		
+		private IClientRepository _clientRepository;
 
 		public HomeController()
 		{
-			_generalHelper = new WebApiGeneralHelper();		
+			var databaseEntity = new DatabaseEntities();
+
+			_generalHelper = new WebApiGeneralHelper();
+			_clientRepository = new ClientRepository(databaseEntity);
 		}
 
-		public HomeController(IGeneralHelper facebookHelper)
+		public HomeController(IGeneralHelper facebookHelper, IClientRepository clientRepository)
 		{
 			_generalHelper = facebookHelper;
+			_clientRepository = clientRepository;
 		}
 
         public ActionResult Index()
@@ -97,5 +109,24 @@ namespace NoMatterWebApi.Controllers.v1
 
 			Response.Cookies.Add(authCookie);
 		}
+
+		public async Task<ActionResult> Portfolio()
+		{
+			//var _clientController = new ClientController();
+
+			//var clientControlleResult = await _clientController.GetClientsAsync();
+			//var clientsResult = clientControlleResult as OkNegotiatedContentResult<List<Client>>;
+
+			var clients = await _clientRepository.GetClientsAsync();
+
+			var viewClientsVm = new ViewClientsVm
+			{
+				Clients = clients.Select(x => x.ToDomainClient()).ToList()
+			};
+
+			return View(viewClientsVm);
+		}
+
+
     }
 }

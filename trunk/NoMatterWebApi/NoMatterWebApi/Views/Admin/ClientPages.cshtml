@@ -6,14 +6,21 @@
 }
 
 
-<h1>Client Pages</h1>
+<h1>Pages</h1>
 
 Client: <b>@Model.Client.ClientName</b><br/>
 <br/>
 <div class="PageNavigationBar">
 @Html.ActionLink("add page", "ClientPageAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
 &nbsp;    
-@Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
+@if (User.IsInRole("SuperUser"))
+{  
+    @Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
+}
+else
+{
+    @Html.ActionLink("back to admin", "Index", "Admin", null, new {@class = "BackLink"})
+}
 </div>
 
 <table class="table_grid">

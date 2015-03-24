@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -38,6 +39,8 @@ namespace RedOrange.Controllers
 				        PageText = page != null ? page.PageText : ""
 			        };
 
+				//ViewBag.ClientLongitude = _globalSettings.ClientLongitude;
+				//ViewBag.ClientLatitude = _globalSettings.ClientLatitude;
 
 				return View(viewClientPageVm);
 	        }
@@ -55,11 +58,25 @@ namespace RedOrange.Controllers
 			try
 			{
 				var page = await _clientHelper.GetClientPage(_globalSettings.SiteClientId, "ContactPage");
-				
-				var viewClientPageVm = new ViewClientPageVm
+
+				var viewClientPageVm = new ViewClientPageVm();
+
+				if (page != null)
 				{
-					PageText = page != null ? page.PageText : ""
-				};
+					//String html = "<p>[SLIDER]Something[\\SLIDER]</p>";
+
+					String html = page.PageText;
+
+					//String replacementHtml = "<iframe src=\"//www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>";
+					String replacementHtml = "@{Html.RenderPartial(\"partialTest\");}";
+
+					Regex shortcodeRegex = new Regex(@"\[SLIDER\]([^\[\\]+)\[/SLIDER\]");
+
+					String result = shortcodeRegex.Replace(html, replacementHtml);
+
+
+					viewClientPageVm.PageText = result;
+				}
 
 
 				return View(viewClientPageVm);

@@ -46,5 +46,8 @@ namespace NoMatterDatabaseModel
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<ClientPage> ClientPages { get; set; }
+        public virtual DbSet<ClientSetting> ClientSettings { get; set; }
+        public virtual DbSet<SettingCategory> SettingCategories { get; set; }
+        public virtual DbSet<SettingType> SettingTypes { get; set; }
     }
 }

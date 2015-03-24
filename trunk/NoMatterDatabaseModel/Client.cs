@@ -18,12 +18,12 @@ namespace NoMatterDatabaseModel
         {
             this.Enquiries = new HashSet<Enquiry>();
             this.ClientPaymentTypes = new HashSet<ClientPaymentType>();
-            this.Settings = new HashSet<Setting>();
             this.Discounts = new HashSet<Discount>();
             this.Sections = new HashSet<Section>();
             this.Users = new HashSet<User>();
             this.ClientDeliveryOptions = new HashSet<ClientDeliveryOption>();
             this.ClientPages = new HashSet<ClientPage>();
+            this.ClientSettings = new HashSet<ClientSetting>();
         }
     
         public int ClientId { get; set; }
@@ -31,14 +31,15 @@ namespace NoMatterDatabaseModel
         public string ClientName { get; set; }
         public bool Enabled { get; set; }
         public string Logo { get; set; }
+        public string SiteUrl { get; set; }
     
         public virtual ICollection<Enquiry> Enquiries { get; set; }
         public virtual ICollection<ClientPaymentType> ClientPaymentTypes { get; set; }
-        public virtual ICollection<Setting> Settings { get; set; }
         public virtual ICollection<Discount> Discounts { get; set; }
         public virtual ICollection<Section> Sections { get; set; }
         public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<ClientDeliveryOption> ClientDeliveryOptions { get; set; }
         public virtual ICollection<ClientPage> ClientPages { get; set; }
+        public virtual ICollection<ClientSetting> ClientSettings { get; set; }
     }
 }

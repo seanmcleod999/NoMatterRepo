@@ -13,8 +13,8 @@ namespace NoMatterWebApi.DAL
 		Task<Client> GetClientAsync(int clientId);
 		Task<Client> GetClientAsync(Guid clientUuid);
 		Task<List<Client>> GetClientsAsync();
-		Task<List<Setting>> GetClientSettingsAsync(Guid clientUuid);
-		Task<Setting> GetClientSettingAsync(Guid clientUuid, short settingId);
+		Task<List<ClientSetting>> GetClientSettingsAsync(Guid clientUuid);
+		Task<ClientSetting> GetClientSettingAsync(Guid clientUuid, int clientSettingId);
 		Task<List<ClientPaymentType>> GetClientPaymentTypesAsync(Guid clientUuid);
 		Task<List<ClientDeliveryOption>> GetClientDeliveryOptionsAsync(Guid clientUuid);
 		Task<ClientDeliveryOption> GetClientDeliveryOptionAsync(short clientDeliveryOptionId);
@@ -23,9 +23,14 @@ namespace NoMatterWebApi.DAL
 		Task UpdateClientPageAsync(ClientPage clientPageDb, NoMatterWebApiModels.Models.ClientPage clientPage);
 		Task<int> AddClientPageAsync(ClientPage clientPage);
 		Task DeleteClientPageAsync(Guid clientUuid, string pageName);
-		Task<int> AddClientSettingAsync(Setting clientSetting);
+		Task<int> AddClientSettingAsync(ClientSetting clientSetting);
 		Task DeleteClientSettingAsync(Guid clientUuid, short settingId);
-		Task UpdateClientSettingAsync(Setting clientSettingDb, NoMatterWebApiModels.Models.ClientSetting clientSetting);
+		Task UpdateClientSettingAsync(ClientSetting clientSettingDb, NoMatterWebApiModels.Models.ClientSetting clientSetting);
+		Task UpdateClientAsync(Client clientDb, NoMatterWebApiModels.Models.Client client);
+		Task<int> AddClientDeliveryOptionAsync(ClientDeliveryOption clientDeliveryOption);
+		Task UpdateClientDeliveryOptionAsync(ClientDeliveryOption clientDeliveryOptionDb, NoMatterWebApiModels.Models.ClientDeliveryOption clientDeliveryOption);
+		Task DeleteClientDeliveryOptionAsync(Guid clientUuid, short clientDeliveryOptionId);
+		Task AllocateMissingClientSettingsAsync(Client client, List<short> currentSettingIds);
 	}
 
 	public class ClientRepository : IClientRepository
@@ -46,6 +51,20 @@ namespace NoMatterWebApi.DAL
 			return client.ClientId;
 		}
 
+		public async Task UpdateClientAsync(Client clientDb, NoMatterWebApiModels.Models.Client client)
+		{
+
+			databaseConnection.Clients.Attach(clientDb);
+
+			clientDb.ClientName = client.ClientName;
+			clientDb.SiteUrl = client.SiteUrl;
+			clientDb.Enabled = client.Enabled;
+			//clientDb.Logo = client.Logo;
+
+			await databaseConnection.SaveChangesAsync();
+
+		}
+
 		public async Task<Client> GetClientAsync(int clientId)
 		{
 			var client = await databaseConnection.Clients.SingleOrDefaultAsync(x => x.ClientId == clientId);
@@ -62,21 +81,29 @@ namespace NoMatterWebApi.DAL
 
 		public async Task<List<Client>> GetClientsAsync()
 		{
-			var clients = await databaseConnection.Clients.Where(x=>x.Enabled).ToListAsync();
+			var clients = await databaseConnection.Clients.ToListAsync();
 
 			return clients;
 		}
 
-		public async Task<List<Setting>> GetClientSettingsAsync(Guid clientUuid)
+		public async Task<List<ClientSetting>> GetClientSettingsAsync(Guid clientUuid)
 		{
-			var settings = await databaseConnection.Settings.Where(x => x.Client.ClientUUID == clientUuid).ToListAsync();
+			var settings = await databaseConnection.ClientSettings
+				.Include(x => x.Setting)
+				.Include(x => x.Setting.SettingType)
+				.Include(x => x.Setting.SettingCategory)
+				.Where(x => x.Client.ClientUUID == clientUuid).ToListAsync();
 
 			return settings;
 		}
 
-		public async Task<Setting> GetClientSettingAsync(Guid clientUuid, short settingId)
+		public async Task<ClientSetting> GetClientSettingAsync(Guid clientUuid, int clientSettingId)
 		{
-			var setting = await databaseConnection.Settings.Where(x => x.Client.ClientUUID == clientUuid && x.SettingId == settingId).FirstOrDefaultAsync();
+			var setting = await databaseConnection.ClientSettings
+				.Include(x=>x.Setting)
+				.Include(x=>x.Setting.SettingType)
+				.Include(x=>x.Setting.SettingCategory)
+				.Where(x => x.Client.ClientUUID == clientUuid && x.ClientSettingId == clientSettingId).FirstOrDefaultAsync();
 
 			return setting;
 		}
@@ -131,9 +158,9 @@ namespace NoMatterWebApi.DAL
 			return clientPage.ClientPageId;
 		}
 
-		public async Task<int> AddClientSettingAsync(Setting clientSetting)
+		public async Task<int> AddClientSettingAsync(ClientSetting clientSetting)
 		{
-			databaseConnection.Settings.Add(clientSetting);
+			databaseConnection.ClientSettings.Add(clientSetting);
 			await databaseConnection.SaveChangesAsync();
 
 			return clientSetting.SettingId;
@@ -149,11 +176,11 @@ namespace NoMatterWebApi.DAL
 			await databaseConnection.SaveChangesAsync();
 		}
 
-		public async Task UpdateClientSettingAsync(Setting clientSettingDb, NoMatterWebApiModels.Models.ClientSetting clientSetting)
+		public async Task UpdateClientSettingAsync(ClientSetting clientSettingDb, NoMatterWebApiModels.Models.ClientSetting clientSetting)
 		{
-			databaseConnection.Settings.Attach(clientSettingDb);
+			databaseConnection.ClientSettings.Attach(clientSettingDb);
 
-			clientSettingDb.SettingName = clientSetting.SettingName;
+			//clientSettingDb.SettingName = clientSetting.SettingName;
 			clientSettingDb.StringValue = clientSetting.StringValue;
 			clientSettingDb.IntValue = clientSetting.IntValue;
 
@@ -178,11 +205,59 @@ namespace NoMatterWebApi.DAL
 
 		public async Task DeleteClientSettingAsync(Guid clientUuid, short settingId)
 		{
-			var clientsetting = await databaseConnection.Settings.Where(x => x.Client.ClientUUID == clientUuid && x.SettingId == settingId).FirstOrDefaultAsync();
+			var clientsetting = await databaseConnection.ClientSettings.Where(x => x.Client.ClientUUID == clientUuid && x.SettingId == settingId).FirstOrDefaultAsync();
 
-			databaseConnection.Settings.Remove(clientsetting);
+			databaseConnection.ClientSettings.Remove(clientsetting);
 			await databaseConnection.SaveChangesAsync();
 
+		}
+
+		public async Task<int> AddClientDeliveryOptionAsync(ClientDeliveryOption clientDeliveryOption)
+		{
+			databaseConnection.ClientDeliveryOptions.Add(clientDeliveryOption);
+			await databaseConnection.SaveChangesAsync();
+
+			return clientDeliveryOption.ClientDeliveryOptionId;
+		}
+
+		public async Task UpdateClientDeliveryOptionAsync(ClientDeliveryOption clientDeliveryOptionDb, NoMatterWebApiModels.Models.ClientDeliveryOption clientDeliveryOption)
+		{
+			databaseConnection.ClientDeliveryOptions.Attach(clientDeliveryOptionDb);
+
+			clientDeliveryOptionDb.Description = clientDeliveryOption.Description;
+			clientDeliveryOptionDb.DeliveryAmount = clientDeliveryOption.DeliveryAmount;
+			clientDeliveryOptionDb.OptionOrder = clientDeliveryOption.OptionOrder;
+			clientDeliveryOptionDb.Enabled = clientDeliveryOption.Enabled;
+
+			await databaseConnection.SaveChangesAsync();
+		}
+
+		public async Task DeleteClientDeliveryOptionAsync(Guid clientUuid, short clientDeliveryOptionId)
+		{
+			var clientDeliveryOption = await databaseConnection.ClientDeliveryOptions.Where(x => x.Client.ClientUUID == clientUuid && x.ClientDeliveryOptionId == clientDeliveryOptionId).FirstOrDefaultAsync();
+
+			databaseConnection.ClientDeliveryOptions.Remove(clientDeliveryOption);
+			await databaseConnection.SaveChangesAsync();
+
+		}
+
+		public async Task AllocateMissingClientSettingsAsync(Client client, List<short> currentSettingIds)
+		{
+			var missingSettings = await (from f in databaseConnection.Settings
+			                       where !currentSettingIds.Contains(f.SettingId)
+			                       select f).ToListAsync();
+
+			foreach (var setting in missingSettings)
+			{
+				var clientSetting = databaseConnection.ClientSettings.Create();
+
+				clientSetting.Client = client;
+				clientSetting.SettingId = setting.SettingId;
+
+				databaseConnection.ClientSettings.Add(clientSetting);
+			}
+
+			await databaseConnection.SaveChangesAsync();
 		}
 
 		public void Save()

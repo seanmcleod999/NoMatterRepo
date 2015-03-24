@@ -13,6 +13,10 @@ namespace NoMatterWebApi.DAL
 	public interface IGlobalRepository
 	{
 		Task<List<GlobalSetting>> GetGlobalSettingsAsync();
+		Task<List<Setting>> GetSettingsAsync();
+		Task<Setting> GetSettingAsync(short settingId);
+		Task DeleteSettingAsync(short settingId);
+		Task AddSettingAsync(Setting setting);
 	}
 
 	public class GlobalRepository : IGlobalRepository
@@ -30,6 +34,36 @@ namespace NoMatterWebApi.DAL
 			var settings = await databaseConnection.GlobalSettings.ToListAsync();
 
 			return settings;
+		}
+
+		public async Task<List<Setting>> GetSettingsAsync()
+		{
+			var settings = await databaseConnection.Settings.ToListAsync();
+
+			return settings;
+		}
+
+		public async Task<Setting> GetSettingAsync(short settingId)
+		{
+			var setting = await databaseConnection.Settings.Where(x=>x.SettingId == settingId).FirstOrDefaultAsync();
+
+			return setting;
+		}
+
+		public async Task AddSettingAsync(Setting setting)
+		{
+			databaseConnection.Settings.Add(setting);
+
+			await databaseConnection.SaveChangesAsync();
+		}
+
+		public async Task DeleteSettingAsync(short settingId)
+		{
+			var setting = await databaseConnection.Settings.Where(x => x.SettingId == settingId).SingleOrDefaultAsync();
+
+			databaseConnection.Settings.Remove(setting);
+			await databaseConnection.SaveChangesAsync();
+
 		}
 
 		public void Save()

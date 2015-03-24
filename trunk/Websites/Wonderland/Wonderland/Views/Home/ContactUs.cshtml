@@ -1,8 +1,46 @@
-﻿@model NoMatterWebApiModels.ViewModels.ViewClientPageVm
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.ViewClientPageVm
 
 @{
     ViewBag.Title = "Contact";
 }
+
+<style>
+    #map-canvas {
+        height: 400px;
+        width: 600px;
+        margin: 20px;
+        padding: 20px 0;
+        margin:0 auto;
+    }
+</style>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+        var map;
+        function initialize() {
+            
+            var myLatlng = new google.maps.LatLng('@StaticGlobalSettings.ClientLatitude', '@StaticGlobalSettings.ClientLongitude');
+            
+            var mapOptions = {
+                zoom: 16,
+                center: myLatlng
+            };
+            map = new google.maps.Map(document.getElementById('map-canvas'),
+                mapOptions);
+            
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                title: 'Wonderland Vintage'
+            });
+            markersArray.push(marker);
+            
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
 
 
 <h1>Contact us</h1>
@@ -10,14 +48,5 @@
 
  @Html.Raw(Model.PageText)
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<div id="map-canvas"></div>

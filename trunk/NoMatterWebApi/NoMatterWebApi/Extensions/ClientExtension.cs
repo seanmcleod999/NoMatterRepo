@@ -14,7 +14,8 @@ namespace NoMatterWebApi.Extensions
 				ClientId = client.ClientUUID.ToString(),
 				ClientName = client.ClientName,
 				Enabled = client.Enabled,
-				Logo = client.Logo
+				Logo = client.Logo,
+				SiteUrl = client.SiteUrl
 			};
 		}
 
@@ -24,7 +25,8 @@ namespace NoMatterWebApi.Extensions
 			{
 				ClientName = client.ClientName,
 				Enabled = client.Enabled,
-				Logo = client.Logo
+				Logo = client.Logo,
+				SiteUrl = client.SiteUrl
 			};
 		}
 	}

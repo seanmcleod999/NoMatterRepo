@@ -1,12 +1,36 @@
-﻿@*<div class="jumbotron">
-    <h1>NoMatter Web Api</h1>
+﻿<link rel="stylesheet" type="text/css" href="@Url.Content("~/bxslider/jquery.bxslider.css")" />
+<script type="text/javascript" src="@Url.Content("~/bxslider/jquery.bxslider.min.js")"></script>
 
-</div>*@
+<script type="text/javascript">
 
-<div class="row">
-    <center>
-        <div class="HomePageImage">
-            <img src="~/Content/images/nomatter.jpg" />
-        </div>
-    </center>
+    $(document).ready(function() {
+
+        $('#bxslider').show().bxSlider({
+            slideWidth: '370',
+            minSlides: '1',
+            maxSlides: '3',
+            moveSlides: 1,
+            slideMargin: 0,
+            controls: "true",
+            auto:  "true",
+            pause: '8000',
+            pager: false,
+            captions: true,
+            preloadImages: 'visible',
+            touchEnabled: "true",
+            adaptiveHeight: true
+            //autoHover: true
+        });
+    });
+
+</script>
+
+<div id="bxslider" style="display: none">
+       
+    <img src="~/Content/images/nomatter.jpg" title="NoMatter"/>
+    <img src="~/Content/images/bridge.jpg" title="NoMatter"/>
+    <img src="~/Content/images/umbrella.jpg" title="NoMatter"/>
+    <img src="~/Content/images/umbrella2.jpg" title="NoMatter"/>
+
 </div>
+

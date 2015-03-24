@@ -229,6 +229,7 @@
     <Content Include="Views\Checkout\Postage.cshtml" />
     <Content Include="Views\Checkout\Summary.cshtml" />
     <Content Include="Views\Home\Shipping.cshtml" />
+    <Content Include="Views\Shared\partialTest.cshtml" />
     <None Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

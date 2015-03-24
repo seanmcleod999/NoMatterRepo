@@ -15,7 +15,11 @@ Client: <b>@Model.Client.ClientName</b><br/><br/>
 @if (User.IsInRole("SuperUser"))
 {       
     @Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
-}    
+}   
+else
+{
+    @Html.ActionLink("back to admin", "Index", "Admin", null, new {@class = "BackLink"})
+} 
 
 </div>
 

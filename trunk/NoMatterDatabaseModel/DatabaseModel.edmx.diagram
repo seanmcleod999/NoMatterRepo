@@ -13,21 +13,20 @@
         <EntityTypeShape EntityType="DatabaseModel.DiscountProduct" Width="1.5" PointX="8.25" PointY="15.875" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.DiscountType" Width="1.5" PointX="6.125" PointY="12.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Enquiry" Width="1.5" PointX="3" PointY="19.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.GlobalSetting" Width="1.5" PointX="1" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.GlobalSetting" Width="1.5" PointX="15.375" PointY="6.375" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Order" Width="1.875" PointX="6.5" PointY="29.875" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.OrderProduct" Width="1.5" PointX="9.25" PointY="30.5" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.PaymentType" Width="1.5" PointX="3" PointY="12.375" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Product" Width="1.5" PointX="7.5" PointY="22.5" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.ProductKeyword" Width="1.5" PointX="11" PointY="25" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Section" Width="1.5" PointX="3" PointY="24.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Setting" Width="1.5" PointX="0.5" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Setting" Width="1.5" PointX="8.875" PointY="6.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.User" Width="1.5" PointX="2.75" PointY="28.5" IsExpanded="true" />
         <AssociationConnector Association="DatabaseModel.FK_CartProduct_Product" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_Category_Section" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_Product_Category" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_ClientEnquiry_Client" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_ClientPaymentType_Client" ManuallyRouted="false" />
-        <AssociationConnector Association="DatabaseModel.FK_ClientSetting_Client" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_Discount_Client" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_Section_Section" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_User_Client" ManuallyRouted="false" />
@@ -47,8 +46,15 @@
         <EntityTypeShape EntityType="DatabaseModel.UserRole" Width="1.5" PointX="5" PointY="35" />
         <AssociationConnector Association="DatabaseModel.FK_UserRole_Role" />
         <AssociationConnector Association="DatabaseModel.FK_UserRole_User" />
-        <EntityTypeShape EntityType="DatabaseModel.ClientPage" Width="1.5" PointX="3" PointY="2" />
+        <EntityTypeShape EntityType="DatabaseModel.ClientPage" Width="1.5" PointX="0.5" PointY="5.625" />
         <AssociationConnector Association="DatabaseModel.FK_ClientPage_Client" />
+        <EntityTypeShape EntityType="DatabaseModel.ClientSetting" Width="1.5" PointX="6.375" PointY="6.75" />
+        <AssociationConnector Association="DatabaseModel.FK_ClientSetting_Setting" />
+        <AssociationConnector Association="DatabaseModel.FK_ClientSetting_Client1" />
+        <EntityTypeShape EntityType="DatabaseModel.SettingCategory" Width="1.5" PointX="11.25" PointY="6.125" />
+        <EntityTypeShape EntityType="DatabaseModel.SettingType" Width="1.5" PointX="11.25" PointY="8.125" />
+        <AssociationConnector Association="DatabaseModel.FK_Setting_SettingCategory" />
+        <AssociationConnector Association="DatabaseModel.FK_Setting_SettingType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -39,6 +39,7 @@
           <Property Name="ClientName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
           <Property Name="Logo" Type="varchar" MaxLength="50" />
+          <Property Name="SiteUrl" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="ClientDeliveryOption">
           <Key>
@@ -68,6 +69,16 @@
           <Property Name="ClientId" Type="int" Nullable="false" />
           <Property Name="PaymentTypeId" Type="smallint" Nullable="false" />
           <Property Name="PaymentTypeOrder" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientSetting">
+          <Key>
+            <PropertyRef Name="ClientSettingId" />
+          </Key>
+          <Property Name="ClientSettingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="SettingId" Type="smallint" Nullable="false" />
+          <Property Name="StringValue" Type="varchar" MaxLength="200" />
+          <Property Name="IntValue" Type="int" />
         </EntityType>
         <EntityType Name="Discount">
           <Key>
@@ -213,12 +224,26 @@
           <Key>
             <PropertyRef Name="SettingId" />
           </Key>
-          <Property Name="SettingId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="SettingId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="SettingName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="SettingType" Type="tinyint" Nullable="false" />
-          <Property Name="StringValue" Type="varchar" MaxLength="200" />
-          <Property Name="IntValue" Type="smallint" />
+          <Property Name="SettingDescription" Type="varchar" MaxLength="500" />
+          <Property Name="SettingTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="SettingCategoryId" Type="smallint" Nullable="false" />
+          <Property Name="RegexValidation" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SettingCategory">
+          <Key>
+            <PropertyRef Name="SettingCategoryId" />
+          </Key>
+          <Property Name="SettingCategoryId" Type="smallint" Nullable="false" />
+          <Property Name="Category" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SettingType">
+          <Key>
+            <PropertyRef Name="SettingTypeId" />
+          </Key>
+          <Property Name="SettingTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -337,15 +362,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ClientSetting_Client">
+        <Association Name="FK_ClientSetting_Client1">
           <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="Setting" Type="Self.Setting" Multiplicity="*" />
+          <End Role="ClientSetting" Type="Self.ClientSetting" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Client">
               <PropertyRef Name="ClientId" />
             </Principal>
-            <Dependent Role="Setting">
+            <Dependent Role="ClientSetting">
               <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientSetting_Setting">
+          <End Role="Setting" Type="Self.Setting" Multiplicity="1" />
+          <End Role="ClientSetting" Type="Self.ClientSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Setting">
+              <PropertyRef Name="SettingId" />
+            </Principal>
+            <Dependent Role="ClientSetting">
+              <PropertyRef Name="SettingId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -477,6 +514,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Setting_SettingCategory">
+          <End Role="SettingCategory" Type="Self.SettingCategory" Multiplicity="1" />
+          <End Role="Setting" Type="Self.Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettingCategory">
+              <PropertyRef Name="SettingCategoryId" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="SettingCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Setting_SettingType">
+          <End Role="SettingType" Type="Self.SettingType" Multiplicity="1" />
+          <End Role="Setting" Type="Self.Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettingType">
+              <PropertyRef Name="SettingTypeId" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="SettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserOrder_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="Order" Type="Self.Order" Multiplicity="*" />
@@ -520,6 +581,7 @@
           <EntitySet Name="ClientDeliveryOption" EntityType="Self.ClientDeliveryOption" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientPage" EntityType="Self.ClientPage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientPaymentType" EntityType="Self.ClientPaymentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientSetting" EntityType="Self.ClientSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscountProduct" EntityType="Self.DiscountProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscountType" EntityType="Self.DiscountType" Schema="dbo" store:Type="Tables" />
@@ -533,6 +595,8 @@
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SettingCategory" EntityType="Self.SettingCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SettingType" EntityType="Self.SettingType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CartProduct_Product" Association="Self.FK_CartProduct_Product">
@@ -563,9 +627,13 @@
             <End Role="PaymentType" EntitySet="PaymentType" />
             <End Role="ClientPaymentType" EntitySet="ClientPaymentType" />
           </AssociationSet>
-          <AssociationSet Name="FK_ClientSetting_Client" Association="Self.FK_ClientSetting_Client">
+          <AssociationSet Name="FK_ClientSetting_Client1" Association="Self.FK_ClientSetting_Client1">
             <End Role="Client" EntitySet="Client" />
+            <End Role="ClientSetting" EntitySet="ClientSetting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientSetting_Setting" Association="Self.FK_ClientSetting_Setting">
             <End Role="Setting" EntitySet="Setting" />
+            <End Role="ClientSetting" EntitySet="ClientSetting" />
           </AssociationSet>
           <AssociationSet Name="FK_Discount_Client" Association="Self.FK_Discount_Client">
             <End Role="Client" EntitySet="Client" />
@@ -606,6 +674,14 @@
           <AssociationSet Name="FK_Section_Section" Association="Self.FK_Section_Section">
             <End Role="Client" EntitySet="Client" />
             <End Role="Section" EntitySet="Section" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Setting_SettingCategory" Association="Self.FK_Setting_SettingCategory">
+            <End Role="SettingCategory" EntitySet="SettingCategory" />
+            <End Role="Setting" EntitySet="Setting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Setting_SettingType" Association="Self.FK_Setting_SettingType">
+            <End Role="SettingType" EntitySet="SettingType" />
+            <End Role="Setting" EntitySet="Setting" />
           </AssociationSet>
           <AssociationSet Name="FK_UserOrder_User" Association="Self.FK_UserOrder_User">
             <End Role="User" EntitySet="User" />
@@ -662,13 +738,14 @@
           <Property Name="Enabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Enquiries" Relationship="Self.FK_ClientEnquiry_Client" FromRole="Client" ToRole="Enquiry" />
           <NavigationProperty Name="ClientPaymentTypes" Relationship="Self.FK_ClientPaymentType_Client" FromRole="Client" ToRole="ClientPaymentType" />
-          <NavigationProperty Name="Settings" Relationship="Self.FK_ClientSetting_Client" FromRole="Client" ToRole="Setting" />
           <NavigationProperty Name="Discounts" Relationship="Self.FK_Discount_Client" FromRole="Client" ToRole="Discount" />
           <NavigationProperty Name="Sections" Relationship="Self.FK_Section_Section" FromRole="Client" ToRole="Section" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_Client" FromRole="Client" ToRole="User" />
           <NavigationProperty Name="ClientDeliveryOptions" Relationship="DatabaseModel.FK_ClientDeliveryOption_Client1" FromRole="Client" ToRole="ClientDeliveryOption" />
           <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ClientPages" Relationship="DatabaseModel.FK_ClientPage_Client" FromRole="Client" ToRole="ClientPage" />
+          <Property Name="SiteUrl" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClientSettings" Relationship="DatabaseModel.FK_ClientSetting_Client1" FromRole="Client" ToRole="ClientSetting" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -840,12 +917,14 @@
             <PropertyRef Name="SettingId" />
           </Key>
           <Property Name="SettingId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientId" Type="Int32" Nullable="false" />
           <Property Name="SettingName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="SettingType" Type="Byte" Nullable="false" />
-          <Property Name="StringValue" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="IntValue" Type="Int16" />
-          <NavigationProperty Name="Client" Relationship="Self.FK_ClientSetting_Client" FromRole="Setting" ToRole="Client" />
+          <Property Name="SettingDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="RegexValidation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ClientSettings" Relationship="DatabaseModel.FK_ClientSetting_Setting" FromRole="Setting" ToRole="ClientSetting" />
+          <Property Name="SettingTypeId" Type="Byte" Nullable="false" />
+          <Property Name="SettingCategoryId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="SettingCategory" Relationship="DatabaseModel.FK_Setting_SettingCategory" FromRole="Setting" ToRole="SettingCategory" />
+          <NavigationProperty Name="SettingType" Relationship="DatabaseModel.FK_Setting_SettingType" FromRole="Setting" ToRole="SettingType" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -929,18 +1008,6 @@
               <PropertyRef Name="ClientId" />
             </Principal>
             <Dependent Role="ClientPaymentType">
-              <PropertyRef Name="ClientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ClientSetting_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
-          <End Role="Setting" Type="Self.Setting" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientId" />
-            </Principal>
-            <Dependent Role="Setting">
               <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1079,10 +1146,6 @@
             <End Role="Client" EntitySet="Clients" />
             <End Role="ClientPaymentType" EntitySet="ClientPaymentTypes" />
           </AssociationSet>
-          <AssociationSet Name="FK_ClientSetting_Client" Association="Self.FK_ClientSetting_Client">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="Setting" EntitySet="Settings" />
-          </AssociationSet>
           <AssociationSet Name="FK_Discount_Client" Association="Self.FK_Discount_Client">
             <End Role="Client" EntitySet="Clients" />
             <End Role="Discount" EntitySet="Discounts" />
@@ -1150,6 +1213,25 @@
           <AssociationSet Name="FK_ClientPage_Client" Association="DatabaseModel.FK_ClientPage_Client">
             <End Role="Client" EntitySet="Clients" />
             <End Role="ClientPage" EntitySet="ClientPages" />
+          </AssociationSet>
+          <EntitySet Name="ClientSettings" EntityType="DatabaseModel.ClientSetting" />
+          <AssociationSet Name="FK_ClientSetting_Setting" Association="DatabaseModel.FK_ClientSetting_Setting">
+            <End Role="Setting" EntitySet="Settings" />
+            <End Role="ClientSetting" EntitySet="ClientSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientSetting_Client1" Association="DatabaseModel.FK_ClientSetting_Client1">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientSetting" EntitySet="ClientSettings" />
+          </AssociationSet>
+          <EntitySet Name="SettingCategories" EntityType="DatabaseModel.SettingCategory" />
+          <EntitySet Name="SettingTypes" EntityType="DatabaseModel.SettingType" />
+          <AssociationSet Name="FK_Setting_SettingCategory" Association="DatabaseModel.FK_Setting_SettingCategory">
+            <End Role="SettingCategory" EntitySet="SettingCategories" />
+            <End Role="Setting" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Setting_SettingType" Association="DatabaseModel.FK_Setting_SettingType">
+            <End Role="SettingType" EntitySet="SettingTypes" />
+            <End Role="Setting" EntitySet="Settings" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
@@ -1289,6 +1371,82 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ClientSetting">
+          <Key>
+            <PropertyRef Name="ClientSettingId" />
+          </Key>
+          <Property Name="ClientSettingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="StringValue" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntValue" Type="Int32" />
+          <Property Name="SettingId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Setting" Relationship="DatabaseModel.FK_ClientSetting_Setting" FromRole="ClientSetting" ToRole="Setting" />
+          <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_ClientSetting_Client1" FromRole="ClientSetting" ToRole="Client" />
+        </EntityType>
+        <Association Name="FK_ClientSetting_Setting">
+          <End Type="DatabaseModel.Setting" Role="Setting" Multiplicity="1" />
+          <End Type="DatabaseModel.ClientSetting" Role="ClientSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Setting">
+              <PropertyRef Name="SettingId" />
+            </Principal>
+            <Dependent Role="ClientSetting">
+              <PropertyRef Name="SettingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientSetting_Client1">
+          <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DatabaseModel.ClientSetting" Role="ClientSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientSetting">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SettingCategory">
+          <Key>
+            <PropertyRef Name="SettingCategoryId" />
+          </Key>
+          <Property Name="SettingCategoryId" Type="Int16" Nullable="false" />
+          <Property Name="Category" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Settings" Relationship="DatabaseModel.FK_Setting_SettingCategory" FromRole="SettingCategory" ToRole="Setting" />
+        </EntityType>
+        <EntityType Name="SettingType">
+          <Key>
+            <PropertyRef Name="SettingTypeId" />
+          </Key>
+          <Property Name="SettingTypeId" Type="Byte" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Settings" Relationship="DatabaseModel.FK_Setting_SettingType" FromRole="SettingType" ToRole="Setting" />
+        </EntityType>
+        <Association Name="FK_Setting_SettingCategory">
+          <End Type="DatabaseModel.SettingCategory" Role="SettingCategory" Multiplicity="1" />
+          <End Type="DatabaseModel.Setting" Role="Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettingCategory">
+              <PropertyRef Name="SettingCategoryId" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="SettingCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Setting_SettingType">
+          <End Type="DatabaseModel.SettingType" Role="SettingType" Multiplicity="1" />
+          <End Type="DatabaseModel.Setting" Role="Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettingType">
+              <PropertyRef Name="SettingTypeId" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="SettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1325,6 +1483,7 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="DatabaseModel.Client">
               <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="SiteUrl" ColumnName="SiteUrl" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="ClientUUID" ColumnName="ClientUUID" />
@@ -1488,13 +1647,13 @@
           <EntitySetMapping Name="Settings">
             <EntityTypeMapping TypeName="DatabaseModel.Setting">
               <MappingFragment StoreEntitySet="Setting">
+                <ScalarProperty Name="SettingCategoryId" ColumnName="SettingCategoryId" />
+                <ScalarProperty Name="SettingTypeId" ColumnName="SettingTypeId" />
+                <ScalarProperty Name="RegexValidation" ColumnName="RegexValidation" />
+                <ScalarProperty Name="SettingDescription" ColumnName="SettingDescription" />
                 <ScalarProperty Name="SettingId" ColumnName="SettingId" />
-                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="SettingName" ColumnName="SettingName" />
-                <ScalarProperty Name="SettingType" ColumnName="SettingType" />
-                <ScalarProperty Name="StringValue" ColumnName="StringValue" />
-                <ScalarProperty Name="IntValue" ColumnName="IntValue" />
-              </MappingFragment>
+                </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
@@ -1557,6 +1716,33 @@
                 <ScalarProperty Name="PageText" ColumnName="PageText" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="ClientPageId" ColumnName="ClientPageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientSettings">
+            <EntityTypeMapping TypeName="DatabaseModel.ClientSetting">
+              <MappingFragment StoreEntitySet="ClientSetting">
+                <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+                <ScalarProperty Name="IntValue" ColumnName="IntValue" />
+                <ScalarProperty Name="StringValue" ColumnName="StringValue" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ClientSettingId" ColumnName="ClientSettingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SettingCategories">
+            <EntityTypeMapping TypeName="DatabaseModel.SettingCategory">
+              <MappingFragment StoreEntitySet="SettingCategory">
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="SettingCategoryId" ColumnName="SettingCategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SettingTypes">
+            <EntityTypeMapping TypeName="DatabaseModel.SettingType">
+              <MappingFragment StoreEntitySet="SettingType">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="SettingTypeId" ColumnName="SettingTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

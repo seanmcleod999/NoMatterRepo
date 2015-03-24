@@ -1,0 +1,34 @@
+﻿@model NoMatterWebApi.ViewModels.RunMySqlScriptVm
+
+@{
+    ViewBag.Title = "Run Sql Script";
+}
+
+<h2>Run Sql Script</h2>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to run script", "RunSqlScript", "Superuser", null, new { @class = "BackLink" })
+</div>
+
+<b>Script</b><br/>
+@Model.Script
+<br/><br/>      
+
+<div class="editor-label">
+    Success
+</div>
+<div class="editor-field">
+    <b>@Model.Success</b>
+</div>
+
+@if (!Model.Success)
+{
+    <div class="editor-label">
+        Error Text
+    </div>
+    <div class="editor-field">
+        <b>@Model.ErrorText</b>
+    </div>
+}
+
+               

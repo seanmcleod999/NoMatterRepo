@@ -17,40 +17,52 @@
 {
     @Html.ValidationSummary(true)
 
-    @Html.HiddenFor(model => model.ClientSetting.SettingId)
+    @Html.HiddenFor(model => model.ClientSetting.ClientSettingId)
     @Html.HiddenFor(model => model.Client.ClientId)
+    @Html.HiddenFor(model => model.ClientSetting.Setting.RegexValidation)
 
    
     <div class="editor-label">
         Setting Name
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.ClientSetting.SettingName, new {style = "width:300px;"})
-        @Html.ValidationMessageFor(model => model.ClientSetting.SettingName)
+        <b>@Html.DisplayFor(model => model.ClientSetting.Setting.SettingName)</b>
+      
     </div>
     
-     <div class="editor-label">
-        String Value
-    </div>
-    <div class="editor-field">
-        @Html.TextBoxFor(model => model.ClientSetting.StringValue, new {style = "width:500px;"})
-        @Html.ValidationMessageFor(model => model.ClientSetting.StringValue)
+    if (Model.ClientSetting.Setting.SettingType == "String")
+     {
+        <div class="editor-label">
+            Value
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.ClientSetting.StringValue, new {style = "width:500px;"})
+            @Html.ValidationMessageFor(model => model.ClientSetting.StringValue)
 
-    </div>
-    
-     <div class="editor-label">
-        Int Value
-    </div>
-    <div class="editor-field">
-        @Html.TextBoxFor(model => model.ClientSetting.IntValue, new {style = "width:200px;"})
-        @Html.ValidationMessageFor(model => model.ClientSetting.IntValue)
+        </div>
+     }
 
-    </div>
- 
+    if (Model.ClientSetting.Setting.SettingType == "Int")
+    {
+        <div class="editor-label">
+            Value
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.ClientSetting.IntValue, new {style = "width:200px;"})
+            @Html.ValidationMessageFor(model => model.ClientSetting.IntValue)
+        </div>
+    }
+
+
     <br/>
     <p>
         <input type="submit" value="Save" class="btn btn-default" /> &nbsp;@Html.ActionLink("cancel", "ClientSettings", "Admin", new { clientId = Model.Client.ClientId }, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
     </p>
+    
+    <br/>
+    <b>Setting Description</b>
+    <br/>
+    @Model.ClientSetting.Setting.SettingDescription
 
 }
 

@@ -1,0 +1,23 @@
+﻿@model NoMatterWebApi.ViewModels.ViewClientsVm
+@using NoMatterWebApiWebHelper.OtherHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Customers</h1>
+
+<br/>
+@foreach (var client in Model.Clients.Where(x=>x.Enabled))
+{
+
+            if (!string.IsNullOrEmpty(@client.Logo))
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@client.Logo?w=100"/>
+            }
+ 
+            <br/>
+            @Html.DisplayFor(modelItem => client.ClientName)
+            <br/>
+            <a href="@client.SiteUrl" title="@client.ClientName">@client.SiteUrl</a>
+    <br/><br/>
+}

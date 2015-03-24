@@ -15,5 +15,7 @@ namespace NoMatterWebApiModels.Models
 
 		public string Logo { get; set; }
 
+		public string SiteUrl { get; set; }
+
 	}
 }

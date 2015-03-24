@@ -1,0 +1,64 @@
+﻿@model NoMatterWebApi.ViewModels.AddEditClientVm
+
+@{
+    ViewBag.Title = "Client Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit Client</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to clients", "Clients", "Superuser", null, new { @class = "BackLink" })
+</div>
+
+@using (Html.BeginForm("ClientEdit", "Superuser", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Client.ClientId)
+   
+    <div class="editor-label">
+       Client Name
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Client.ClientName, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.Client.ClientName)
+    </div>
+    
+     <div class="editor-label">
+       Site Url
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Client.SiteUrl, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.Client.SiteUrl)
+    </div>
+    
+     <div class="editor-label">
+         Enabled
+    </div>
+    <div class="editor-field">
+        @Html.CheckBoxFor(model => model.Client.Enabled)
+        @Html.ValidationMessageFor(model => model.Client.Enabled)
+    </div>
+    
+     <div class="editor-label">
+        Logo
+    </div>
+    <div class="editor-field">
+         @Html.TextBoxFor(m => m.Client.Logo, new { type = "file", @class="form-control" })
+         @Html.ValidationMessageFor(m => m.Client.Logo)
+    </div>
+   
+
+    <br/>
+    <p>
+        <input type="submit" value="Save" class="btn btn-default"/> &nbsp;@Html.ActionLink("cancel", "Clients", "Superuser",  null, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+        
+       
+    </p>
+
+}
+
+
+
+

@@ -14,13 +14,20 @@ namespace NoMatterDatabaseModel
     
     public partial class Setting
     {
-        public short SettingId { get; set; }
-        public int ClientId { get; set; }
-        public string SettingName { get; set; }
-        public byte SettingType { get; set; }
-        public string StringValue { get; set; }
-        public Nullable<short> IntValue { get; set; }
+        public Setting()
+        {
+            this.ClientSettings = new HashSet<ClientSetting>();
+        }
     
-        public virtual Client Client { get; set; }
+        public short SettingId { get; set; }
+        public string SettingName { get; set; }
+        public string SettingDescription { get; set; }
+        public string RegexValidation { get; set; }
+        public byte SettingTypeId { get; set; }
+        public short SettingCategoryId { get; set; }
+    
+        public virtual ICollection<ClientSetting> ClientSettings { get; set; }
+        public virtual SettingCategory SettingCategory { get; set; }
+        public virtual SettingType SettingType { get; set; }
     }
 }

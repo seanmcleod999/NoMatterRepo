@@ -6,8 +6,12 @@
 
 <h1>Admin</h1>
 
-<img src="@StaticGlobalSettings.ImagesBaseAddress@ViewBag.Logo?w=100"/>
-<br/><br/>
+@if (!string.IsNullOrEmpty(@ViewBag.Logo))
+{
+    <img src="@StaticGlobalSettings.ImagesBaseAddress@ViewBag.Logo?w=100"/><br/>
+}
+
+<br/>
 Welcome <b>@ViewBag.UserName</b> from <b>@ViewBag.ClientName</b> 
 
 <br/><br/>
@@ -16,18 +20,35 @@ What would you like to do..
 
 @if (User.IsInRole("SuperUser"))
 {
-    @Html.ActionLink("Clients", "Clients", "Admin") 
+    @Html.ActionLink("Clients", "Clients", "Superuser")
     <br/>
     <br/>
     
-   @Html.ActionLink("Superuser", "Index", "Superuser")
-   <br/>
-   <br/>
+    @Html.ActionLink("Site Settings", "SiteSettings", "Superuser")
+    <br/>
+    <br/>
+
+    @Html.ActionLink("Superuser", "Index", "Superuser")
+    <br/>
+    <br/>
+}
+else
+{
+   @Html.ActionLink("Sections, Categories and Products", "Sections", "Admin") 
+    <br/>
+    <br/>
+    @Html.ActionLink("Postage Options", "ClientPostage", "Admin") 
+    <br/>
+    <br/>    
+    @Html.ActionLink("Site Config Settings", "ClientSettings", "Admin") 
+    <br/>
+    <br/>  
+    @Html.ActionLink("Editable Pages", "ClientPages", "Admin") 
+    <br/>
+    <br/>
 }
 
-@Html.ActionLink("Sections, Categories and Products", "Sections", "Admin") 
-    <br/>
-    <br/>
+
 
 
 

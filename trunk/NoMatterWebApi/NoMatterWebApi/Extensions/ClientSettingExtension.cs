@@ -7,29 +7,29 @@ namespace NoMatterWebApi.Extensions
 {
 	public static class ClientSettingExtension
 	{
-		public static NoMatterWebApiModels.Models.ClientSetting ToDomainClientSetting(this   NoMatterDatabaseModel.Setting setting)
+		public static NoMatterWebApiModels.Models.ClientSetting ToDomainClientSetting(this   NoMatterDatabaseModel.ClientSetting clientSetting)
 		{
 			return new NoMatterWebApiModels.Models.ClientSetting
 			{
-				SettingId = setting.SettingId,
-				SettingName = setting.SettingName,
-				SettingType = setting.SettingType,
-				StringValue = setting.StringValue,
-				IntValue = setting.IntValue
-
+				ClientSettingId = clientSetting.ClientSettingId,
+				//SettingName = clientSetting.SettingName,
+				//SettingType = clientSetting.SettingType,
+				StringValue = clientSetting.StringValue,
+				IntValue = clientSetting.IntValue,
+				Setting = clientSetting.Setting.ToDomainSetting()
 			};
 		}
 
-		public static NoMatterDatabaseModel.Setting ToDatabaseClientSetting(this  NoMatterWebApiModels.Models.ClientSetting clientSetting, int clientId)
+		public static NoMatterDatabaseModel.ClientSetting ToDatabaseClientSetting(this  NoMatterWebApiModels.Models.ClientSetting clientSetting, int clientId)
 		{
-			return new NoMatterDatabaseModel.Setting
+			return new NoMatterDatabaseModel.ClientSetting
 			{
-				SettingId = clientSetting.SettingId,
+				ClientSettingId = clientSetting.ClientSettingId,
 				ClientId = clientId,
-				SettingName = clientSetting.SettingName,
+				//SettingName = clientSetting.SettingName,
 				StringValue = clientSetting.StringValue,
 				IntValue = clientSetting.IntValue,
-				SettingType = (byte) (clientSetting.StringValue != null ? 1 : 2)
+				//SettingType = (byte) (clientSetting.StringValue != null ? 1 : 2)
 			};
 		}
 	}

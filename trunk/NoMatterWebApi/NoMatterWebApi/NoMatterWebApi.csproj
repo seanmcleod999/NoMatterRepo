@@ -64,6 +64,9 @@
     <Reference Include="ImageResizer.Mvc">
       <HintPath>..\..\Packages\ImageResizer.Mvc.3.4.3\lib\ImageResizer.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Imazen.SlimResponse">
+      <HintPath>..\..\Packages\Imazen.SlimResponse.0.2.4936.26457\lib\net40\Imazen.SlimResponse.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -221,7 +224,6 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\Clients2Controller.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\SuperuserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -235,6 +237,7 @@
     <Compile Include="Controllers\V1\SectionController.cs" />
     <Compile Include="Controllers\V1\UserController.cs" />
     <Compile Include="CustomAuth\AuthenticationFailureResult.cs" />
+    <Compile Include="CustomAuth\CustomAuthentication.cs" />
     <Compile Include="CustomAuth\CustomAuthenticationFilter.cs" />
     <Compile Include="DAL\CartRepository.cs" />
     <Compile Include="DAL\GlobalRepository.cs" />
@@ -248,6 +251,7 @@
     <Compile Include="Extensions\ClientPaymentTypeExtension.cs" />
     <Compile Include="Extensions\ClientSettingExtension.cs" />
     <Compile Include="Extensions\ClientPagesExtension.cs" />
+    <Compile Include="Extensions\SettingExtension.cs" />
     <Compile Include="Extensions\GlobalSettingExtension.cs" />
     <Compile Include="Extensions\OrderExtension.cs" />
     <Compile Include="Extensions\ProductExtension.cs" />
@@ -277,11 +281,21 @@
     <Compile Include="DAL\ProductRepository.cs" />
     <Compile Include="DAL\SectionRepository.cs" />
     <Compile Include="DAL\UserRepository.cs" />
+    <Compile Include="ViewModels\AddEditClientVm.cs" />
     <Compile Include="ViewModels\RunMySqlScriptVm.cs" />
+    <Compile Include="ViewModels\SettingsVm.cs" />
+    <Compile Include="ViewModels\ViewClientsVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\NoMatterWebApi.XML" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="bxslider\images\bx_loader.gif" />
+    <Content Include="bxslider\images\controls.png" />
+    <Content Include="bxslider\jquery.bxslider.css" />
+    <Content Include="bxslider\jquery.bxslider.js" />
+    <Content Include="bxslider\jquery.bxslider.min.js" />
+    <Content Include="bxslider\plugins\jquery.easing.1.3.js" />
+    <Content Include="bxslider\plugins\jquery.fitvids.js" />
     <Content Include="ckeditor\adapters\jquery.js" />
     <Content Include="ckeditor\build-config.js" />
     <Content Include="ckeditor\ckeditor.js" />
@@ -391,6 +405,8 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\bridge.jpg" />
+    <Content Include="Content\images\flowers.jpg" />
     <Content Include="Content\images\icon.ico" />
     <Content Include="Content\images\icon_add.png" />
     <Content Include="Content\images\icon_back.png" />
@@ -408,10 +424,14 @@
     <Content Include="Content\images\SaleLayerLarge2.png" />
     <Content Include="Content\images\SoldLayer.png" />
     <Content Include="Content\images\SoldLayer2.png" />
+    <Content Include="Content\images\umbrella.jpg" />
+    <Content Include="Content\images\umbrella2.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="googlee690a38e4ae0963c.html" />
     <Content Include="Images\noimage.jpg" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
@@ -442,6 +462,7 @@
     <Content Include="ckeditor\LICENSE.md" />
     <Content Include="ckeditor\README.md" />
     <Content Include="ckeditor\skins\moono\readme.md" />
+    <Content Include="bxslider\readme.md" />
     <None Include="Properties\PublishProfiles\NoMatter FTP.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
@@ -460,27 +481,24 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
+    <Content Include="Scripts\slimmage.js" />
+    <Content Include="sitemap.xml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\LoginSuccess.cshtml" />
     <Content Include="Views\Home\AdminMenu.cshtml" />
     <Content Include="Views\Home\LoginFailed.cshtml" />
     <Content Include="Views\Superuser\ClearSettingsCache.cshtml" />
     <Content Include="Views\Superuser\Index.cshtml" />
-    <Content Include="Views\Superuser\RunMySqlScript.cshtml" />
-    <Content Include="Views\Superuser\ViewMySqlResults.cshtml" />
+    <Content Include="Views\Superuser\RunSqlScript.cshtml" />
+    <Content Include="Views\Superuser\ViewSqlResults.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Clients2\Create.cshtml" />
-    <Content Include="Views\Clients2\Delete.cshtml" />
-    <Content Include="Views\Clients2\Details.cshtml" />
-    <Content Include="Views\Clients2\Edit.cshtml" />
-    <Content Include="Views\Clients2\Index.cshtml" />
     <Content Include="Views\Account\LoginSuccess.cshtml" />
     <Content Include="Views\Account\UserLogin.cshtml" />
     <Content Include="Views\Admin\Categories.cshtml" />
     <Content Include="Views\Admin\CategoryAdd.cshtml" />
     <Content Include="Views\Admin\CategoryEdit.cshtml" />
     <Content Include="Views\Admin\CategoryProducts.cshtml" />
-    <Content Include="Views\Admin\Clients.cshtml" />
+    <Content Include="Views\Superuser\Clients.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\ProductAdd.cshtml" />
     <Content Include="Views\Admin\ProductEdit.cshtml" />
@@ -494,6 +512,13 @@
     <Content Include="Views\Admin\ClientSettings.cshtml" />
     <Content Include="Views\Admin\ClientSettingEdit.cshtml" />
     <Content Include="Views\Admin\ClientSettingAdd.cshtml" />
+    <Content Include="Views\Home\Portfolio.cshtml" />
+    <Content Include="Views\Superuser\ClientAdd.cshtml" />
+    <None Include="Views\Superuser\ClientEdit.cshtml" />
+    <Content Include="Views\Superuser\RunSqlScriptResult.cshtml" />
+    <Content Include="Views\Admin\ClientPostage.cshtml" />
+    <Content Include="Views\Admin\ClientPostageAdd.cshtml" />
+    <Content Include="Views\Superuser\SiteSettings.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

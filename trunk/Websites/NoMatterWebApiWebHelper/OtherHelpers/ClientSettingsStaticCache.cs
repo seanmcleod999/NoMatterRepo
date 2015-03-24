@@ -38,7 +38,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		{
 			if (_clientSettings == null) _clientSettings = GetClientSettings();
 
-			var setting = _clientSettings.SingleOrDefault(x => x.SettingName == settingName);
+			var setting = _clientSettings.SingleOrDefault(x => x.Setting.SettingName == settingName);
 
 			return setting != null ? setting.StringValue : "";
 		}
@@ -47,7 +47,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		{
 			if (_clientSettings == null) _clientSettings = GetClientSettings();
 
-			var setting = _clientSettings.SingleOrDefault(x => x.SettingName == settingName);
+			var setting = _clientSettings.SingleOrDefault(x => x.Setting.SettingName == settingName);
 
 			if (setting != null)
 			{
@@ -59,7 +59,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		public static bool GetBooleanSetting(string settingName)
 		{
-			var setting = _clientSettings.SingleOrDefault(x => x.SettingName == settingName);
+			var setting = _clientSettings.SingleOrDefault(x => x.Setting.SettingName == settingName);
 
 			if (setting != null)
 			{
