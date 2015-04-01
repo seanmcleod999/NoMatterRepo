@@ -14,8 +14,8 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	public interface ICartHelper
 	{
 		Task<ShoppingCartDetails> GetCartAsync(string cartId);
-		Task<Product> AddProductToCartAsync(string cartId, string productId, int quantity);
-		Task DeleteProductFromCartAsync(string cartId, string productId);
+		Task<int> AddProductToCartAsync(string cartId, string productId, int quantity);
+		Task<int> DeleteProductFromCartAsync(string cartId, string productId);
 		Task EmptyCartAsync(string cartId);
 	}
 
@@ -53,7 +53,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}
 		}
 
-		public async Task<Product> AddProductToCartAsync(string cartId, string productId, int quantity)
+		public async Task<int> AddProductToCartAsync(string cartId, string productId, int quantity)
 		{
 			using (var client = new HttpClient())
 			{
@@ -72,13 +72,13 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				if (!response.IsSuccessStatusCode)
 					GeneralHelper.HandleWebApiFailedResult(response);
 
-				var responseProduct = await response.Content.ReadAsAsync<Product>();
+				var cartProductCount = await response.Content.ReadAsAsync<int>();
 
-				return responseProduct;
+				return cartProductCount;
 			}
 		}
 
-		public async Task DeleteProductFromCartAsync(string cartId, string productId)
+		public async Task<int> DeleteProductFromCartAsync(string cartId, string productId)
 		{
 			using (var client = new HttpClient())
 			{
@@ -90,6 +90,10 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 
 				if (!response.IsSuccessStatusCode)
 					GeneralHelper.HandleWebApiFailedResult(response);
+
+				var cartProductCount = await response.Content.ReadAsAsync<int>();
+
+				return cartProductCount;
 			}
 		}
 

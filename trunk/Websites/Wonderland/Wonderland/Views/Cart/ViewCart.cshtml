@@ -11,23 +11,96 @@
 
 
 
-@foreach (var product in Model.Products)
-{
-    <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=50" />
-    @:&nbsp; &nbsp;
-    @product.Title  
-    @:&nbsp; &nbsp;  
-    @:R @product.DiscountDetails.DiscountedPrice
-    @:&nbsp; &nbsp; 
-    
-    @Html.ActionLink("Remove from cart", "RemoveProductFromCart", "Cart", new { productId = @product.ProductId }, new { @class = "RemoveFromCartLink" })
-    <br/><br/>
-}
+    @if (!Model.Products.Any())
+    {
+        <br/>
+        @:Your cart is currently empty
+        <br/><br/>
+    }
+    else
+    {
+        
+        <fieldset class="account form-wrapper" id="postage-options">
+        <legend>
+            <span class="fieldset-legend">Your current items</span>
+        </legend> 
+            
+        <div class="form-horizontal">
+                
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <br/>
+                    <table>
+                        <tr>
+                            <th>
+                
+                            </th>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                
+                            </th>
+                        </tr>
+       
+                        @foreach (var product in Model.Products)
+                        {
+              
+                            <tr>
+                                <td>
+                                    <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=40" />
+                                </td>
+                                <td>
+                                    @product.Title  
+                                </td>
+                                <td>
+                                    R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("remove", "RemoveProductFromCart", "Cart", new { productId = @product.ProductId }, new { @class = "RemoveFromCartLink" })
+                                </td>
+                            </tr>
+     
+                
+                        }
+        
+                    </table>
+                
+                    
 
-Total: R @Model.TotalAmount
+                </div>
+                
+                
+                    
+                       
 
-<br/><br/>
+            </div>
+            
+             <br/>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button onclick="location.href='@Url.Action("Index", "Checkout")'" class="btn btn-default">Checkout</button>
+                            <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
+                        </div>
+                    </div>
+        </div>
+            
+           
+            <div>
+                
+            </div>
 
-<br/>
-  @Html.ActionLink("Checkout", "Index", "Checkout", null, new {@class="btn btn-default"})
-<br/><br/>
+@*        Total: R @String.Format("{0:0}", Model.TotalAmount)*@
+
+        <br/>
+
+            
+        </fieldset>
+    }
+       
+
+
+

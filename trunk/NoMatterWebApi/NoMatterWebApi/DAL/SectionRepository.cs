@@ -15,9 +15,10 @@ namespace NoMatterWebApi.DAL
 		Task UpdateSectionAsync(Section sectionDb, NoMatterWebApiModels.Models.Section section);
 		Task<Section> GetSectionAsync(Guid sectionUuid);
 		Task<List<Section>> GetClientSectionsAsync(Guid clientUuid, bool includeHidden);
-		
+		Task<List<Section>> GetClientSectionsAndCategoriesAsync(Guid clientUuid, bool includeHidden);	
 		Task DeleteSectionAsync(Guid sectionUuid);
-		
+
+
 	}
 
 	public class SectionRepository : ISectionRepository
@@ -64,6 +65,8 @@ namespace NoMatterWebApi.DAL
 		{
 			var section = await databaseConnection.Sections.Where(x => x.SectionUUID == sectionUuid).SingleOrDefaultAsync();
 
+			if (section == null) return;
+
 			databaseConnection.Sections.Remove(section);
 			await databaseConnection.SaveChangesAsync();
 
@@ -76,6 +79,25 @@ namespace NoMatterWebApi.DAL
 			if (!includeHidden)
 			{
 				sections = sections.Where(x => !x.Hidden);
+			}
+
+			var sectionsDb = await sections.OrderBy(x => x.SectionOrder).ToListAsync();
+
+			return sectionsDb;
+		}
+
+		public async Task<List<Section>> GetClientSectionsAndCategoriesAsync(Guid clientUuid, bool includeHidden)
+		{
+			var sections = databaseConnection.Sections.Include("Categories").Include("Categories.Products").Where(x => x.Client.ClientUUID == clientUuid);
+
+			if (!includeHidden)
+			{
+				sections = sections.Where(x => !x.Hidden);
+
+
+				//sections = sections.SelectMany(x => x.Categories).Where(x => !x.Hidden);
+				//sections = (sections.Where(s => s.Categories != null && (!s.Hidden && s.Categories.Where(y => !y.Hidden)))).
+
 			}
 
 			var sectionsDb = await sections.OrderBy(x => x.SectionOrder).ToListAsync();

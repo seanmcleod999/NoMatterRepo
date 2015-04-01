@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using CustomAuthLib;
 using NoMatterDatabaseModel;
 using NoMatterWebApi.ActionResults;
 using NoMatterWebApi.DAL;
@@ -29,8 +30,9 @@ namespace NoMatterWebApi.Controllers.V1
 		private IOrderRepository _orderRepository;
 		private ICartRepository _cartRepository;
 		private IUserRepository _userRepository;
-		private IGeneralHelper _generalHelper;
-		private IWebApiGlobalSettings _webApiGlobalSettings;
+		private IGeneralHelper generalHelper;
+		private IGlobalSettings _globalSettings;
+		private ICustomAuthentication _customAuthentication;
 
 		public UserController()
 		{
@@ -40,34 +42,72 @@ namespace NoMatterWebApi.Controllers.V1
 			_clientRepository = new ClientRepository(databaseEntity);
 			_cartRepository = new CartRepository(databaseEntity);
 			_userRepository = new UserRepository(databaseEntity);
-			_generalHelper = new WebApiGeneralHelper();
-			_webApiGlobalSettings = new WebApiGlobalSettings();
+			generalHelper = new GeneralHelper();
+			_globalSettings = new GlobalSettings();
+			_customAuthentication = CustomAuthentication.Instance;
 		}
 
-		public UserController(IClientRepository clientRepository, IOrderRepository orderRepository, ICartRepository cartRepository, IUserRepository userRepository, IGeneralHelper facebookHelper)
+		public UserController(IClientRepository clientRepository, IOrderRepository orderRepository, ICartRepository cartRepository, IUserRepository userRepository, IGeneralHelper facebookHelper, ICustomAuthentication customAuthentication)
 		{
 			_clientRepository = clientRepository;
 			_cartRepository = cartRepository;
 			_orderRepository = orderRepository;
 			_userRepository = userRepository;
-			_generalHelper = facebookHelper;
+			generalHelper = facebookHelper;
+			_customAuthentication = customAuthentication;
 		}
 
-		// GET api/v1/sections/{sectionUuid}/categories
-		[Route("{clientUuid}/users/{email}")]
-		[ResponseType(typeof(List<User>))]
-		public async Task<IHttpActionResult> GetUserByEmails(string clientUuid, string email)
+		//// GET api/v1/sections/{sectionUuid}/categories
+		//[Route("{clientUuid}/users/{email}")]
+		//[ResponseType(typeof(List<User>))]
+		//public async Task<IHttpActionResult> GetUserByEmails(string clientUuid, string email)
+		//{
+
+		//	var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), email);
+
+		//	var user = userDb.ToDomainUser();
+
+		//	return Ok(user);
+		//}
+
+		// POST api/Account/Register
+		[AllowAnonymous]
+		[Route("{clientId}/users/register")]
+		public async Task<IHttpActionResult> Register(string clientId, RegisterBindingModel model)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
 
-			var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), email);
+			var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+			if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-			var user = userDb.ToDomainUser();
+			var passwordSalt = PasswordHelper.CreateSalt();
 
-			return Ok(user);
+			var user = new User { Email = model.Email, FullName = model.FullName };
+			//
+			//IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+			//Non facebook user
+			var userDb = new User
+			{
+				Client = clientDb,
+				CredentialTypeId = (byte)CredentialTypeEnum.UsernameAndPassword,
+				FullName = model.FullName,
+				Identifier = model.Email,
+				Email = model.Email,
+				PasswordSalt = passwordSalt,
+				Password = PasswordHelper.StrToByteArray(PasswordHelper.CreatePasswordHash(model.Password, passwordSalt))
+			};
+
+			var userUuid = await _userRepository.SaveUserAsync(userDb);
+
+			return Ok();
 		}
 
 		// POST api/v1/clients/{clientUuid}/users/register>
-		[Route("{clientUuid}/users/register")]
+		[Route("{clientUuid}/users/register2")]
 		[ResponseType(typeof(UserAuthenticatedResult))]
 		[HttpPost]
 		public async Task<IHttpActionResult> RegisterUser(string clientUuid, NewUser model)
@@ -99,7 +139,7 @@ namespace NoMatterWebApi.Controllers.V1
 				else
 				{
 					//Facebook User.. need to validate the token etc
-					var facebookUser = await _generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
+					var facebookUser = await generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
 
 					userDb = new User
 					{
@@ -122,7 +162,7 @@ namespace NoMatterWebApi.Controllers.V1
 					Email = model.Email,
 					TokenDetails = new TokenDetails()
 					{
-						Token = passwordSalt
+						AccessToken = passwordSalt
 					}
 				};
 
@@ -151,7 +191,7 @@ namespace NoMatterWebApi.Controllers.V1
 			if (!string.IsNullOrEmpty(model.FacebookToken))
 			{
 				//Facebook User.. need to validate the token etc
-				var facebookUser = await _generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
+				var facebookUser = await generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
 
 				userDb = await _userRepository.GetClientUserByFacebookIdAsync(clientUuid, facebookUser.Id);
 
@@ -178,7 +218,10 @@ namespace NoMatterWebApi.Controllers.V1
 				{
 					return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
 				}
-			}		
+			}
+
+			//Profile successfully authenticated, so generate the response with token details etc
+			var accessToken = _customAuthentication.CreateAccessToken(userDb.UserUUID.ToString(), userDb.Client.ClientUUID.ToString());
 
 			var userRoles = String.Join(",", userDb.UserRoles.Select(x=>x.Role.RoleName));
 
@@ -192,7 +235,8 @@ namespace NoMatterWebApi.Controllers.V1
 				UserRoles = userRoles,
 				TokenDetails = new TokenDetails()
 				{
-					Token = userDb.PasswordSalt
+					AccessToken = accessToken.Token,
+					AccessTokenExpiryUtc = accessToken.Expires,
 				}
 			};
 
@@ -316,5 +360,7 @@ namespace NoMatterWebApi.Controllers.V1
 				return InternalServerError(ex);
 			}
 		}
+
+		
 	}
 }

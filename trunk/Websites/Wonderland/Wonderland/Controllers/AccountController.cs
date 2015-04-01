@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataHandler.Encoder;
+using Microsoft.Owin.Security.DataHandler.Serializer;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiModels.ViewModels;
+using NoMatterWebApiWebHelper;
+using NoMatterWebApiWebHelper.Exceptions;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using RedOrange.Logging;
 
 namespace RedOrange.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : WebApiController
     {
 		private IUserHelper _userHelper;
 		private IGlobalSettings _globalSettings;
@@ -30,6 +37,72 @@ namespace RedOrange.Controllers
 			_globalSettings = globalSettings;
 		}
 
+		// GET: Account/Register
+		public ActionResult Register()
+		{
+			return View();
+		}
+
+		// POST: Account/Register
+		[HttpPost]
+		public async Task<ActionResult> Register(RegisterModel model)
+		{
+			try
+			{
+
+				if (!ModelState.IsValid)
+				{
+					return View(model);
+				}
+
+				await _userHelper.RegisterUser(_globalSettings.SiteClientId, model);
+
+				return View("Registered");
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+		}
+
+		// GET: Account/SignIn
+		public ActionResult SignIn()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> SignIn(SignInModel model, string redirectUrl = null)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			try
+			{
+
+				var authenticatedUser = await _userHelper.Login(_globalSettings.SiteClientId, null, model.Email, model.Password);
+
+				if (authenticatedUser == null)
+				{
+					ModelState.AddModelError(string.Empty, "Authentication Failed");
+					return View();
+				}
+
+				GenerateAuthenticationCookie(model.RememberMe, authenticatedUser.TokenDetails.AccessToken, authenticatedUser.Id, authenticatedUser.Fullname, authenticatedUser.UserRoles);
+
+				return View("LoginSuccess", authenticatedUser);
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+		}
+
 
 		public ActionResult Login()
 		{
@@ -44,7 +117,7 @@ namespace RedOrange.Controllers
 			try
 			{
 
-				var authenticatedUser = await _userHelper.Login(_globalSettings.SiteClientId, null, userLoginVm.Username, userLoginVm.Password);
+				var authenticatedUser = await _userHelper.Login(_globalSettings.SiteClientId, null, userLoginVm.Email, userLoginVm.Password);
 
 				if (authenticatedUser == null)
 				{
@@ -52,9 +125,11 @@ namespace RedOrange.Controllers
 					return View();
 				}
 
-				GenerateAuthenticationCookie(authenticatedUser.TokenDetails.Token, authenticatedUser.Id, authenticatedUser.Fullname, authenticatedUser.UserRoles, authenticatedUser.ClientId);
+				GenerateAuthenticationCookie(true, authenticatedUser.TokenDetails.AccessToken, authenticatedUser.Id, authenticatedUser.Fullname, authenticatedUser.UserRoles);
 
-				return View("LoginSuccess", authenticatedUser);
+				//return View("LoginSuccess", authenticatedUser);
+
+				return RedirectToAction("Index", "Admin");
 
 			}
 			catch (Exception ex)
@@ -64,15 +139,13 @@ namespace RedOrange.Controllers
 			}
 		}
 
-		private void GenerateAuthenticationCookie(string accessToken, string profileId, string firstName, string userRoles, string clientId)
+		private void GenerateAuthenticationCookie(bool rememberMe, string accessToken, string profileId, string firstName, string userRoles)
 		{
 
-			var userData = profileId + ";" + clientId + ";" + accessToken + ";" + userRoles;
-
-			const bool createPersistentCookie = false;
+			var userData = profileId + ";" + accessToken + ";" + userRoles;
 
 			var authTicket = new FormsAuthenticationTicket(1, firstName, DateTime.Now, DateTime.Now.AddMonths(3),
-														   createPersistentCookie, userData);
+														   rememberMe, userData);
 
 			string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
 
@@ -96,6 +169,8 @@ namespace RedOrange.Controllers
 			FormsAuthentication.SignOut();
 			return RedirectToAction("Index", "Home");
 		}
+
+
         
     }
 }

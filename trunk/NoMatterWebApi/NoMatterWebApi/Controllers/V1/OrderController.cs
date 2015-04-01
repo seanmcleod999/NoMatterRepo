@@ -21,7 +21,7 @@ namespace NoMatterWebApi.Controllers.V1
 	{
 		
 		private IOrderRepository _orderRepository;
-		private IWebApiGlobalSettings _webApiGlobalSettings;
+		private IGlobalSettings _globalSettings;
 		
 
 		public OrderController()
@@ -29,15 +29,15 @@ namespace NoMatterWebApi.Controllers.V1
 			var databaseEntity = new DatabaseEntities();
 
 			_orderRepository = new OrderRepository(databaseEntity);
-			_webApiGlobalSettings = new WebApiGlobalSettings();
+			_globalSettings = new GlobalSettings();
 			
 			
 		}
 
-		public OrderController(IOrderRepository orderRepository, IWebApiGlobalSettings globalSettings)
+		public OrderController(IOrderRepository orderRepository, IGlobalSettings globalSettings)
 		{
 			_orderRepository = orderRepository;
-			_webApiGlobalSettings = globalSettings;
+			_globalSettings = globalSettings;
 		}
 
 		// GET api/v1/orders/{orderId}

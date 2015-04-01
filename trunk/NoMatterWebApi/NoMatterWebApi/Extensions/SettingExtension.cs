@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using NoMatterDatabaseModel;
 
 namespace NoMatterWebApi.Extensions
 {
@@ -14,8 +15,10 @@ namespace NoMatterWebApi.Extensions
 				SettingId = setting.SettingId,
 				SettingName = setting.SettingName,
 				SettingDescription = setting.SettingDescription,
-				RegexValidation = setting.RegexValidation,
+				//RegexValidation = setting.RegexValidation,
+				SettingTypeId = setting.SettingType.SettingTypeId,
 				SettingType = setting.SettingType.Type,
+				SettingCategoryId = setting.SettingCategory.SettingCategoryId,
 				SettingCategory = setting.SettingCategory.Category
 
 			};

@@ -28,3 +28,33 @@ GO
 SET IDENTITY_INSERT GlobalSetting OFF
 GO
 
+-- SettingType
+insert into [SettingType] ([SettingTypeId], [Type]) values (1, 'String')
+insert into [SettingType] ([SettingTypeId], [Type]) values (2, 'Int')
+GO
+
+-- SettingCategory
+insert into [SettingCategory] ([SettingCategoryId], [Category]) values (1, 'Banking')
+insert into [SettingCategory] ([SettingCategoryId], [Category]) values (2, 'GoogleMap')
+insert into [SettingCategory] ([SettingCategoryId], [Category]) values (3, 'SEO')
+insert into [SettingCategory] ([SettingCategoryId], [Category]) values (4, 'General')
+GO
+
+-- Setting
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (1, 'BankName', '<p>The Bank name for EFT transactions</p>', 1, 1, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (2, 'AccountName', 'The Account name for EFT transactions', 1, 1, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (3, 'BranchName', 'The Branch Name for EFT transactions', 1, 1, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (4, 'BranchNumber', 'The Branch Number for EFT transactions', 1, 1, '^[0-9]*$')
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (5, 'AccountNumber', 'The Account number for EFT transactions', 1, 1, '^[0-9]*$')
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (6, 'MapLongitude', 'The google map Longitude coordinates of the site physical office. e.g. 28.991066', 1, 2, '^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}')
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (7, 'MapLatitude', 'The google map Latitude coordinates of the site physical office. e.g. -27.991066', 1, 2, '^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}')
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (8, 'SiteName', 'The name of the site without the http:// part. e.g. MyCoolSite.co.za', 1, 4, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (9, 'SiteNameFriendly', 'The friendly site name without the url stuff. E.g. My Cool Site', 1, 4, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (10, 'SiteUrl', 'The site name with the http:// part. E.g. http://mycoolsite.co.za', 1, 4, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (11, 'SEOKeywords', 'The keywords used for SEO. Comma delimited.', 1, 3, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (12, 'SiteDescription', 'Your site description used for SEO. Usually your site name followed by a short description. E.g. MyCoolSite.co.za - Your favourite online store for cool goodies ', 1, 3, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (13, 'SiteMetaDescription', 'NOT REALLY SURE ABOUT THIS. E.g. online store selling cool goodies ', 1, 3, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (14, 'SiteHomePageTitle', 'The title of your homepage. E.g. MyCoolSite Online Store', 1, 3, null)
+insert into [Setting] ([SettingId], [SettingName], [SettingDescription], [SettingTypeId], [SettingCategoryId], [RegexValidation]) values (15, 'SiteLogoPath', 'The path to your site logo used for Social Media posts etc.. e.g. /Content/images/logoFB.png', 1, 3, null)
+GO
+

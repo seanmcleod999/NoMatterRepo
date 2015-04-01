@@ -1,46 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using NoMatterDatabaseModel;
+using NoMatterWebApi.DAL;
+using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
-using NoMatterWebApiModels.Models;
 using NoMatterWebApiModels.ViewModels;
-using NoMatterWebApiWebHelper.OtherHelpers;
-using NoMatterWebApiWebHelper.WebApiHelpers;
+
+using Client = NoMatterWebApiModels.Models.Client;
 
 namespace NoMatterWebApi.Controllers.v1
 {
 	public class AccountController : Controller
 	{
-		private IUserHelper _userHelper;
-		private IClientHelper _clientHelper;
-		private IGlobalSettings _globalSettings;
+		private IUserRepository _userRepository;
+		private IClientRepository _clientRepository; 
 
 		public AccountController()
 		{
-			_userHelper = new UserHelper();
-			_clientHelper= new ClientHelper();
-			_globalSettings = new GlobalSettings();
+			var databaseEntity = new DatabaseEntities();
+
+			_userRepository = new UserRepository(databaseEntity);
+			_clientRepository = new ClientRepository(databaseEntity);
 		}
 
-		public AccountController(IUserHelper userHelper, IClientHelper clientHelper, IGlobalSettings globalSettings)
+		public AccountController(IUserRepository userRepository, IClientRepository clientRepository)
 		{
-			_userHelper = userHelper;
-			_clientHelper = clientHelper;
-			_globalSettings = globalSettings;
+			_userRepository = userRepository;
+			_clientRepository = clientRepository;
 		}
 
 
 		public async Task<ActionResult> UserLogin()
 		{
-
-			var clients = await _clientHelper.GetClientsAsync();
-			clients.Add(new Client() {ClientId = "sys", ClientName = "System"});
+			var clients = await GetClientsForDropDown();
 
 			var userLoginVm = new UserLoginVm
 				{
@@ -50,30 +49,57 @@ namespace NoMatterWebApi.Controllers.v1
 			return View(userLoginVm);
 		}
 
+		private async Task<List<Client>> GetClientsForDropDown()
+		{
+			var clientsDb = await _clientRepository.GetClientsAsync();
+
+			var clients = clientsDb.Select(x => x.ToDomainClient()).ToList();
+
+			clients.Add(new Client() { ClientId = "sys", ClientName = "System" });
+
+			return clients;
+
+		}
+
 		[HttpPost]
 		public async Task<ActionResult> UserLogin(UserLoginVm userLoginVm)
 		{
 			try
 			{
-				var user = await _userHelper.Login(userLoginVm.SelectedClientId, null, userLoginVm.Username, userLoginVm.Password);
+				Guid? clientUuid = null;
 
-				if (user == null)
+				if (userLoginVm.SelectedClientId != "sys") clientUuid = new Guid(userLoginVm.SelectedClientId);
+
+				var userDb = await _userRepository.GetClientUserByEmailAsync(clientUuid, userLoginVm.Email);
+
+				if (userDb != null)				
 				{
-					ModelState.AddModelError(string.Empty, "Authentication Failed");
+					//var user = userDb.toM
+					var dBytes = userDb.Password;
+					var enc = new UTF8Encoding();
+					var length = dBytes.TakeWhile(b => b != 0).Count();
+					var strDbPassword = enc.GetString(dBytes, 0, length);
 
-					//Get the list of clients again for the dropdown
-					var clients = await _clientHelper.GetClientsAsync();
-					clients.Add(new Client() { ClientId = "sys", ClientName = "System" });
+					if (strDbPassword == PasswordHelper.CreatePasswordHash(userLoginVm.Password, userDb.PasswordSalt))
+					{
+						var userRoles = String.Join(",", userDb.UserRoles.Select(x => x.Role.RoleName));
 
-					userLoginVm.Clients = clients;
+						GenerateAuthenticationCookie(userDb.UserId.ToString(), userDb.FullName, userRoles, clientUuid.ToString(), userLoginVm.RememberMe);
 
-					return View();
+						return RedirectToAction("Index", "Admin");
+					}
+
 				}
 
-				GenerateAuthenticationCookie(user.TokenDetails.Token, user.Id, user.Fullname, user.UserRoles, user.ClientId);
+				ModelState.AddModelError(string.Empty, "Authentication Failed");
 
-				//return View("LoginSuccess", user);
-				return RedirectToAction("Index", "Admin");
+				//Get the list of clients again for the dropdown
+				var clients = await GetClientsForDropDown();
+
+				userLoginVm.Clients = clients;
+
+				return View(userLoginVm);
+
 			}
 			catch (Exception ex)
 			{
@@ -82,15 +108,15 @@ namespace NoMatterWebApi.Controllers.v1
 			}
 		}
 
-		private void GenerateAuthenticationCookie(string accessToken, string profileId, string firstName, string userRoles, string clientId)
+		private void GenerateAuthenticationCookie(string profileId, string fullName, string userRoles, string clientId, bool rememberMe)
 		{
 
-			var userData = profileId + ";" + clientId + ";" + accessToken + ";" + userRoles;
+			var userData = profileId + ";" + fullName + ";" + clientId + ";" + userRoles;
 
-			const bool createPersistentCookie = true;
+			//const bool createPersistentCookie = true;
 
-			var authTicket = new FormsAuthenticationTicket(1, firstName, DateTime.Now, DateTime.Now.AddMonths(3),
-														   createPersistentCookie, userData);
+			var authTicket = new FormsAuthenticationTicket(1, fullName, DateTime.Now, DateTime.Now.AddMonths(3),
+														   rememberMe, userData);
 
 			string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
 

@@ -32,17 +32,13 @@ namespace RedOrange.Controllers
 
 	    public async Task<string> AddProductToCart(string productId, int quantity = 1)
         {
-			
-
-		    //ViewBag.ProductId = productId;
-
-			//return View();
+		
 
 			try
 			{
-				await _cartHelper.AddProductToCartAsync(_currentUser.CartId(), productId, quantity);
+				int cartItemCount = await _cartHelper.AddProductToCartAsync(_currentUser.CartId(), productId, quantity);
 
-				//Session["CartItemCount"] = _shoppingCartService.GetItemCount(_currentUser.CartId());
+				Session["CartItemCount"] = cartItemCount;
 			}
 			catch (Exception ex)
 			{

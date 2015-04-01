@@ -11,16 +11,16 @@ namespace NoMatterWebApiModels.Models
 
 		private GenericIdentity _identity;
 		
-		private string _profileId;
-		private string _clientId;
+		//private string _profileId;
+		//private string _clientId;
 		private string _token;
 		private string _userRoles;
 
-		public CustomPrincipal(GenericIdentity identity, string profileId, string clientId, string token, string userRoles)
+		public CustomPrincipal(GenericIdentity identity, string token, string userRoles)
 		{
 			_identity = identity;			
-			_profileId = profileId;
-			_clientId = clientId;
+			//_profileId = profileId;
+			//_clientId = clientId;
 			_token = token;
 			_userRoles = userRoles;
 		}
@@ -35,15 +35,15 @@ namespace NoMatterWebApiModels.Models
 			get { return _token; }
 		}
 
-		public string ProfileId
-		{
-			get { return _profileId; }
-		}
+		//public string ProfileId
+		//{
+		//	get { return _profileId; }
+		//}
 
-		public string ClientId
-		{
-			get { return _clientId; }
-		}
+		//public string ClientId
+		//{
+		//	get { return _clientId; }
+		//}
 
 		public bool IsInRole(string role)
 		{

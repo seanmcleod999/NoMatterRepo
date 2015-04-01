@@ -1,10 +1,10 @@
 ﻿@model NoMatterWebApi.ViewModels.ViewClientsVm
-@using NoMatterWebApiWebHelper.OtherHelpers
+@using NoMatterWebApi.Helpers
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Customers</h1>
+<h1>Portfolio</h1>
 
 <br/>
 @foreach (var client in Model.Clients.Where(x=>x.Enabled))

@@ -1,0 +1,71 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.CategoryShopVm
+
+@{Html.RenderPartial("partialCategoryDetails", Model.Category);}
+
+            
+@if (Model.Products.Count(item => !string.IsNullOrEmpty(item.Picture1)) == 0)
+{
+    @: <br /><center>Sorry, there is currently nothing to display in the category @Model.Category.CategoryName. <br />Please check again soon.</center><br /><br /><br /><br />
+}
+else
+{
+
+    foreach (var product in Model.Products.Where(item => !string.IsNullOrEmpty(item.Picture1)))
+    {
+        <div class="itemListInner"> 
+            <div class="itemListInnerPicture">
+                                                                
+                <a id="@product.ProductId" href="@Url.Action("Product", new {id = product.ProductId, category = Model.Category.CategoryName})"> <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=150"/>
+                                  
+                    @if (product.Sold)
+                    {
+                        <div class="itemListSoldItem"> 
+                            <div class="itemListSoldItemText">                      
+                                Sold
+                            </div>
+                        </div>
+                    }
+                    else if (product.Reserved)
+                    {
+                        <div class="itemListReservedItem">
+                            <div class="itemListReservedItemText">                     
+                                Reserved
+                            </div>
+                        </div>
+                    }
+                    
+                    @if ((product.Reserved && product.DiscountDetails.Discounted) || product.DiscountDetails.Discounted)
+                    {
+                        <div class="itemListSaleItem">                         
+                        </div>
+                    }
+                                                       
+                </a>
+                               
+            </div>   
+                        
+            <div class="itemListDetailsWrapper">
+                <div class="itemListDetailsDescription">
+                    @product.Title                                                                
+                </div>                   
+                    
+                <div class="itemListDetailsPrice">
+                    @if (product.DiscountDetails.Discounted)
+                    {
+                        <strike>R @String.Format("{0:0}", product.Price) </strike>
+                        @:&nbsp;
+
+                        @:R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice) 
+                    }
+                    else
+                    {
+                        @:R @String.Format("{0:0}", product.Price)  
+                    }
+                </div>
+            </div>          
+                  
+        </div>
+    }
+
+}

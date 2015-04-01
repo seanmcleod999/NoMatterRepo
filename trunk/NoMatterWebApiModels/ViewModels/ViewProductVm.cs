@@ -10,7 +10,9 @@ namespace NoMatterWebApiModels.ViewModels
 	{
 		public string ClientId { get; set; }
 
-		public string FromCategoryId { get; set; }
+		public string FromCategory { get; set; }
+
+		//public Category Category { get; set; }
 
 		public Product Product { get; set; }
 	}

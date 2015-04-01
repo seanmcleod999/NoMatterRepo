@@ -9,6 +9,9 @@
        <table name="Role" />
        <table name="PaymentType" />
        <table name="Globalsetting" />
+       <table name="SettingType" />
+       <table name="SettingCategory" />
+	<table name="Setting" />
   </scriptValues>
 
 

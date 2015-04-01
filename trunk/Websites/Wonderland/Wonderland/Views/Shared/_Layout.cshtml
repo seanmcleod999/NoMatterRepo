@@ -1,6 +1,11 @@
 ﻿@using NoMatterWebApiWebHelper.OtherHelpers
 <!DOCTYPE html>
 <html>
+         
+    @{
+        var currentUser = new CurrentUser();
+    }
+
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,19 +44,25 @@
             
             <div class="headerMenuItemsWrapper">                                                             
                 <ul>        
-                    @{
+                    @*@{
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
                         
-                       
+                        <li>@Html.ActionLink("Shop", "Index", "Shop")</li>*@
+                        
+                    @*              
                         var sections = ClientSectionsStaticCache.GetClientSections();
                         
                         foreach (var section in sections)
                         {
                                 <li>@Html.ActionLink((string)section.SectionName, "Section", "Shop", new {id = section.SectionId}, null)</li>
-                        }
-                                                                                    
-                        <li>@Html.ActionLink("Your Cart", "ViewCart", "Cart")</li>
-                    }               
+                        }                                                                                    
+                        *@
+
+
+                    
+                    <li><a href="@Url.Action("ViewCart", "Cart")" class="CartLink">Your Cart (<div id="cartItemCount" style="display: inline">@currentUser.CartItemCount()</div>)</a></li>
+
+                    @*} *@              
                 </ul>
             </div>
             
@@ -68,8 +79,7 @@
             </div>            
         </div>
        
-
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    </body>
 </html>

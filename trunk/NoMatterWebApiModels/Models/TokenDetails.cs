@@ -7,6 +7,8 @@ namespace NoMatterWebApiModels.Models
 {
 	public class TokenDetails
 	{
-		public string Token { get; set; }
+		public string AccessToken;
+		public DateTimeOffset AccessTokenExpiryUtc;
+		public string RfreshToken;
 	}
 }

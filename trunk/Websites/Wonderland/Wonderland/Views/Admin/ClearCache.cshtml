@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Clear Cache</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to admin", "Index", "Admin", new {clientId = Model.Client.ClientId}, new { @class = "AddLink" })
+</div>
+
+
+
+Thank you the cache has been cleared.
+
+

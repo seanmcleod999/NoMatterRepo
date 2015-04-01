@@ -157,21 +157,21 @@
             }
             else
             {                                                                           
-                <a href="javascript:void(0);" class="btn btn-default" onclick="addToCart('@Model.Product.ProductId');">Add to Cart</a>                                                             
+                <button onclick="addToCart('@Model.Product.ProductId');" class="btn btn-default">Add to Cart</button>                                                             
             }  
                 
         </div>
                    
         <div class="viewItemBackLink"> 
-            @*  <a href="javascript: history.go(-1)" class="BackLink">back to items</a>&nbsp;&nbsp;*@
+             @* <a href="javascript: history.go(-1)" class="BackLink">back to items</a>&nbsp;&nbsp;*@
             
             
-  @*                  @Html.ActionLink("back to items", "Category", null, null, null, Model.LastId.ToString(), new { id = Model.LastCatgeory }, new { @class = "BackLink" })@:&nbsp;&nbsp;   
-          *@       
+             @Html.ActionLink("back to items", "Category", "Shop", new { id = Model.FromCategory }, new { @class = "BackLink" })&nbsp;&nbsp;   
+                 
                      
             @if (Request.IsAuthenticated)
             {                          
-                @Html.ActionLink("edit", "Edit", "Product", new { id = Model.Product.ProductId, fromPage = "ViewShopItem" }, new { @class = "EditShopItemLink" })
+                @Html.ActionLink("edit", "Edit", "Product", new { id = Model.Product.ProductId, fromPage = "ViewShopItem" }, new { @class = "EditLink" })
             }
             
         </div>
@@ -211,8 +211,8 @@
         $.post('@Url.Action("AddProductToCart", "Cart")' + "?productId=" + id + "&quantity=1")
               .success(function (data) {
 
-                  // var cartItemCount = $('#cartItemCount').html();                 
-                  //$('#cartItemCount').html(parseInt(cartItemCount) + 1);
+                   var cartItemCount = $('#cartItemCount').html();                 
+                  $('#cartItemCount').html(parseInt(cartItemCount) + 1);
 
                   alert("Thank you. The item was added to your cart.");
 

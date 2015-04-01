@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiModels.ViewModels;
+using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using RedOrange.Logging;
@@ -13,7 +14,7 @@ using RedOrange.Logging;
 namespace RedOrange.Controllers
 {
 	[Authorize]
-	public class AdminController : Controller
+	public class AdminController : WebApiController
 	{
 		private IClientHelper _clientHelper;
 		private ISectionHelper _sectionHelper;
@@ -46,44 +47,55 @@ namespace RedOrange.Controllers
 			return View();
 		}
 
-		public async Task<ActionResult> Clients()
+		public ActionResult ClearCache()
 		{
-			var viewClientsVm = new ViewClientsVm
-			{
-				Clients = new List<Client>() { new Client() { ClientId = _globalSettings.SiteClientId, ClientName = "This Client" } }
-			};
 
-			return View(viewClientsVm);
+			ClientSectionsStaticCache.LoadClientSectionsCache();
+			ClientSettingsStaticCache.LoadClientSettingsCache();
+
+			return View();
 		}
 
 		public async Task<ActionResult> Products()
 		{
-
-			string productStatus = "Active";
-			string categoryId = null;
-
-			var products = await _productHelper.GetClientProductsAsync(_globalSettings.SiteClientId, productStatus, categoryId);
-
-			var viewClientProducts = new ViewClientProductsVm
+			try
 			{
-				ClientProducts = products
-			};
 
-			return View(viewClientProducts);
+				string productStatus = "Active";
+				string categoryId = null;
+
+				var products = await _productHelper.GetClientProductsAsync(_globalSettings.SiteClientId, productStatus, categoryId);
+
+				var viewClientProducts = new ViewClientProductsVm
+					{
+						ClientProducts = products
+					};
+
+				return View(viewClientProducts);
+
+			}
+			catch (ApiException ex)
+			{
+				HandleBadRequest(ex);
+
+				return View("ApiError");
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
 		}
 
 
-		public async Task<ActionResult> Sections(string clientId = null)
+		public async Task<ActionResult> Sections()
 		{
-			if (string.IsNullOrEmpty(clientId)) clientId = _globalSettings.SiteClientId;
-
-			var client = await _clientHelper.GetClientAsync(clientId);
 
 			var clientSections = await _clientHelper.GetClientSectionsAsync(_globalSettings.SiteClientId, true, true);
 
 			var clientSectionsVm = new ClientSectionsVm
 			{
-				Client = client,
+				//Client = client,
 				Sections = clientSections
 			};
 
@@ -91,14 +103,14 @@ namespace RedOrange.Controllers
 
 		}
 
-		public ActionResult SectionAdd(string clientId)
+		public ActionResult SectionAdd()
 		{
 			var addSectionVm = new AddEditSectionVm
 			{
 
 				Section = new Section()
 				{
-					ClientId = clientId,
+					ClientId = _globalSettings.SiteClientId,
 					Hidden = false
 				}
 			};
@@ -256,9 +268,9 @@ namespace RedOrange.Controllers
 
 		public async Task<ActionResult> ProductAdd(string categoryId)
 		{
-			var category = await _categoryHelper.GetCategoryAsync(_globalSettings.SiteClientId, categoryId);
+			var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryById(categoryId);
 
-			var addEditProductVm = new AddEditProductVm
+			var addProductVm = new AddProductVm
 			{
 				Category = category,
 				Product = new Product()
@@ -267,13 +279,13 @@ namespace RedOrange.Controllers
 				}
 			};
 
-			return View(addEditProductVm);
+			return View(addProductVm);
 
 		}
 
 		[HttpPost]
 		[ValidateInput(false)]
-		public async Task<ActionResult> ProductAdd(AddEditProductVm addEditProductVm)
+		public async Task<ActionResult> ProductAdd(AddProductVm editProductVm)
 		{
 			try
 			{
@@ -281,21 +293,21 @@ namespace RedOrange.Controllers
 
 				var clientId = _globalSettings.SiteClientId;
 
-				if (addEditProductVm.Picture1 != null) addEditProductVm.Product.Picture1 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture1);
-				if (addEditProductVm.Picture2 != null) addEditProductVm.Product.Picture2 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture2);
-				if (addEditProductVm.Picture3 != null) addEditProductVm.Product.Picture3 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture3);
-				if (addEditProductVm.Picture4 != null) addEditProductVm.Product.Picture4 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture4);
-				if (addEditProductVm.Picture5 != null) addEditProductVm.Product.Picture5 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture5);
-				if (addEditProductVm.PictureOther != null) addEditProductVm.Product.PictureOther = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.PictureOther);
+				if (editProductVm.Picture1 != null) editProductVm.Product.Picture1 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture1);
+				if (editProductVm.Picture2 != null) editProductVm.Product.Picture2 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture2);
+				if (editProductVm.Picture3 != null) editProductVm.Product.Picture3 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture3);
+				if (editProductVm.Picture4 != null) editProductVm.Product.Picture4 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture4);
+				if (editProductVm.Picture5 != null) editProductVm.Product.Picture5 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture5);
+				if (editProductVm.PictureOther != null) editProductVm.Product.PictureOther = await _imageHelper.UploadImageAsync(clientId, editProductVm.PictureOther);
 
 
-				addEditProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
+				editProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
 
-				var product = await _categoryHelper.PostCategoryProductAsync(clientId, addEditProductVm.Category.CategoryId, addEditProductVm.Product, token);
+				await _categoryHelper.PostCategoryProductAsync(clientId, editProductVm.Category.CategoryId, editProductVm.Product, token);
 
 				return RedirectToAction("CategoryProducts", new
 				{
-					categoryId = addEditProductVm.Category.CategoryId
+					categoryId = editProductVm.Category.CategoryId
 				});
 			}
 			catch (Exception ex)
@@ -303,8 +315,6 @@ namespace RedOrange.Controllers
 				Logger.WriteGeneralError(ex);
 				throw;
 			}
-
-
 		}
 
 
@@ -315,12 +325,15 @@ namespace RedOrange.Controllers
 			{
 				var product = await _productHelper.GetProductNoRelatedProductsAsync(productId);
 
-				var addEditProductVm = new AddEditProductVm
+				var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryById(product.CategoryId);
+
+				var editProductVm = new EditProductVm
 				{
+					Category = category,
 					Product = product,
 				};
 
-				return View(addEditProductVm);
+				return View(editProductVm);
 			}
 			catch (Exception ex)
 			{
@@ -332,7 +345,7 @@ namespace RedOrange.Controllers
 
 		[Authorize]
 		[HttpPost]
-		public async Task<ActionResult> ProductEdit(AddEditProductVm addEditProductVm)
+		public async Task<ActionResult> ProductEdit(EditProductVm editProductVm)
 		{
 			try
 			{
@@ -340,18 +353,18 @@ namespace RedOrange.Controllers
 
 				var clientId = _globalSettings.SiteClientId;
 
-				if (addEditProductVm.Picture1 != null) addEditProductVm.Product.Picture1 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture1);
-				if (addEditProductVm.Picture2 != null) addEditProductVm.Product.Picture2 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture2);
-				if (addEditProductVm.Picture3 != null) addEditProductVm.Product.Picture3 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture3);
-				if (addEditProductVm.Picture4 != null) addEditProductVm.Product.Picture4 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture4);
-				if (addEditProductVm.Picture5 != null) addEditProductVm.Product.Picture5 = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.Picture5);
-				if (addEditProductVm.PictureOther != null) addEditProductVm.Product.PictureOther = await _imageHelper.UploadImageAsync(clientId, addEditProductVm.PictureOther);
+				if (editProductVm.Picture1 != null) editProductVm.Product.Picture1 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture1);
+				if (editProductVm.Picture2 != null) editProductVm.Product.Picture2 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture2);
+				if (editProductVm.Picture3 != null) editProductVm.Product.Picture3 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture3);
+				if (editProductVm.Picture4 != null) editProductVm.Product.Picture4 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture4);
+				if (editProductVm.Picture5 != null) editProductVm.Product.Picture5 = await _imageHelper.UploadImageAsync(clientId, editProductVm.Picture5);
+				if (editProductVm.PictureOther != null) editProductVm.Product.PictureOther = await _imageHelper.UploadImageAsync(clientId, editProductVm.PictureOther);
 
 				//editProductVm.Product.ViewProductUrl = _globalSettings.ShopItemPath;
 
-				var product = await _productHelper.UpdateProductAsync(clientId, addEditProductVm.Product, token);
+				await _productHelper.UpdateProductAsync(clientId, editProductVm.Product, token);
 
-				return RedirectToAction("CategoryProducts", "Admin", new { categoryId = addEditProductVm.Product.CategoryId });
+				return RedirectToAction("CategoryProducts", "Admin", new { categoryId = editProductVm.Product.CategoryId });
 
 			}
 			catch (Exception ex)

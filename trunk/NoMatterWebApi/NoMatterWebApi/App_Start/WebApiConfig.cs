@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
-using NoMatterWebApi.CustomAuth;
+using CustomAuthLib;
 using NoMatterWebApi.Logging;
 
 
@@ -14,12 +14,13 @@ namespace NoMatterWebApi
     {
         public static void Register(HttpConfiguration config)
         {
+
 			config.EnableCors();
 
             config.SuppressHostPrincipal();
 
-			
-			config.Filters.Add(new CustomAuthenticationFilter());
+			var authFilter = new CustomAuthenticationFilter();
+			config.Filters.Add(authFilter);
 	      
             // Web API routes
             config.MapHttpAttributeRoutes();

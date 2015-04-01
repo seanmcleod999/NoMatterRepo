@@ -28,9 +28,10 @@
 <br/>
 @Html.ActionLink("My Profile", "UserProfile", "Admin") 
 
-@if (User.IsInRole("SuperUser"))
+@*@if (User.IsInRole("SuperUser"))
 {
+    *@
     <br/>
     <br/>    
     @Html.ActionLink("Clear Cache", "ClearCache", "Admin")    
-}
+@*}*@

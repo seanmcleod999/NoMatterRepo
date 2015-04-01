@@ -13,128 +13,41 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	{
 		Task<Category> GetCategoryAsync(string clientId, string categoryId);
 		Task<List<Product>> GetCategoryProductsAsync(string clientId, string categoryId);
-		Task<Product> PostCategoryProductAsync(string clientId, string categoryId, Product newProduct, string token);
+		Task PostCategoryProductAsync(string clientId, string categoryId, Product newProduct, string token);
 		Task UpdateCategoryAsync(string clientId, Category category, string token);
 		Task DeleteCategoryAsync(string clientId, string categoryId, string token);
 	}
 
 	public class CategoryHelper : ICategoryHelper
 	{
-		private IGlobalSettings _globalSettings;
-		
-		public CategoryHelper()
-		{
-			_globalSettings = new GlobalSettings();
-		}
-
-		public CategoryHelper(IGlobalSettings globalSettings)
-		{
-			_globalSettings = globalSettings;
-		}
 
 		public async Task<Category> GetCategoryAsync(string clientId, string categoryId)
 		{
-			using (var client = new HttpClient())
-			{
-				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			var category = await WebApiService.Instance.GetAsync<Category>(string.Format("api/v1/clients/{0}/categories/{1}", clientId, categoryId));
 
-				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/categories/{1}", clientId, categoryId));
-
-				if (!response.IsSuccessStatusCode)
-				{
-					GeneralHelper.HandleWebApiFailedResult(response);
-				}
-
-				var category = await response.Content.ReadAsAsync<Category>();
-
-				return category;
-		
-			}
+			return category;
 		}
-
-		
 
 		public async Task DeleteCategoryAsync(string clientId, string categoryId, string token)
 		{
-			using (var client = new HttpClient())
-			{
-				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
-
-				var response = await client.DeleteAsync(string.Format("api/v1/clients/{0}/categories/{1}", clientId, categoryId));
-
-				if (!response.IsSuccessStatusCode)
-				{
-					GeneralHelper.HandleWebApiFailedResult(response);
-				}
-			}
+			await WebApiService.Instance.DeleteAsync(string.Format("api/v1/clients/{0}/categories/{1}", clientId, categoryId));
 		}
 
 		public async Task<List<Product>> GetCategoryProductsAsync(string clientId, string categoryId)
 		{
-			using (var client = new HttpClient())
-			{
-				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			var products = await WebApiService.Instance.GetAsync<List<Product>>(string.Format("api/v1/clients/{0}/categories/{1}/products", clientId, categoryId));
 
-				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/categories/{1}/products", clientId, categoryId));
-
-				if (!response.IsSuccessStatusCode)
-				{
-					GeneralHelper.HandleWebApiFailedResult(response);
-				}	
-
-				var products = await response.Content.ReadAsAsync<List<Product>>();
-
-				return products;
-
-			}
+			return products;
 		}
 
-		public async Task<Product> PostCategoryProductAsync(string clientId, string categoryId, Product newProduct, string token)
+		public async Task PostCategoryProductAsync(string clientId, string categoryId, Product product, string token)
 		{
-			using (var client = new HttpClient())
-			{
-				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
-
-				var response = await client.PostAsJsonAsync(String.Format("api/v1/clients/{0}/categories/{1}/products", clientId, categoryId), newProduct);
-
-				if (!response.IsSuccessStatusCode)
-					GeneralHelper.HandleWebApiFailedResult(response);
-
-				var responseProduct = await response.Content.ReadAsAsync<Product>();
-
-				return responseProduct;
-
-			}
+			await WebApiService.Instance.PostAsync(string.Format("api/v1/clients/{0}/categories/{1}/products", clientId, categoryId), product, token);
 		}
 
 		public async Task UpdateCategoryAsync(string clientId, Category category, string token)
 		{
-			using (var client = new HttpClient())
-			{
-				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-				client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", token));
-
-				var response = await client.PutAsJsonAsync(string.Format("api/v1/clients/{0}/categories/{1}", clientId, category.CategoryId), category);
-
-				if (!response.IsSuccessStatusCode)
-					GeneralHelper.HandleWebApiFailedResult(response);
-
-			}
+			await WebApiService.Instance.PutAsync(string.Format("api/v1/clients/{0}/categories/{1}", clientId, category.CategoryId), category, token);
 		}
 	}
 }

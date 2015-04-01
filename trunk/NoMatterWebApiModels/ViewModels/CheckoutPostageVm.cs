@@ -17,7 +17,7 @@ namespace NoMatterWebApiModels.ViewModels
 
 		public string Voucher { get; set; }
 
-		[Display(Name = "Order Comments")]
+		[Display(Name = "Comments")]
 		public string OrderComments { get; set; }
 	}
 }

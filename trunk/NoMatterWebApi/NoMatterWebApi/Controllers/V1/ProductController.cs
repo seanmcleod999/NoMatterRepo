@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using CustomAuthLib;
 using NoMatterDatabaseModel;
 using NoMatterWebApi.ActionResults;
 using NoMatterWebApi.DAL;
@@ -13,7 +12,6 @@ using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
-using NoMatterWebApiWebHelper.WebApiHelpers;
 using Product = NoMatterWebApiModels.Models.Product;
 
 namespace NoMatterWebApi.Controllers.V1
@@ -22,8 +20,7 @@ namespace NoMatterWebApi.Controllers.V1
 	public class ProductController : ApiController
 	{
 		private IProductRepository _productRepository;
-		private IWebApiGlobalSettings _webApiGlobalSettings;
-		private IImageDeleteHelper _imageDeleteHelper;
+		private IGeneralHelper _generalHelper;
 		
 		//private IGeneralHelper _generalHelper;
 
@@ -32,19 +29,14 @@ namespace NoMatterWebApi.Controllers.V1
 			var databaseEntity = new DatabaseEntities();
 
 			_productRepository = new ProductRepository(databaseEntity);
-			_imageDeleteHelper = new ImageDeleteHelper();
-			//_categoryRepository = new CategoryRepository(databaseEntity);
-			//_generalHelper = new GeneralHelper();
-
-			_webApiGlobalSettings = new WebApiGlobalSettings();
+			_generalHelper = new GeneralHelper();
 		}
 
-		public ProductController(IProductRepository productRepository, IImageDeleteHelper imageDeleteHelper)
+		public ProductController(IProductRepository productRepository, IGeneralHelper generalHelper)
 		{
 			_productRepository = productRepository;
-			_imageDeleteHelper = new ImageDeleteHelper();
-			//_categoryRepository = categoryRepository;
-			//_generalHelper = generalHelper;
+			_generalHelper = generalHelper;
+
 		}
 
 		// GET api/v1/products/{productId}?relatedProducts=false
@@ -90,9 +82,9 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 		}
 
-		
 
-		// POST api/v1/products/{productId}
+
+		[Authorize]
 		[HttpPost]
 		[Route("api/v1/clients/{clientId}/products/{productId}")]
 		[ResponseType(typeof(Product))]
@@ -100,8 +92,12 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				//TODO: make sure the user can update this product
-				//Need to get bearer token, and lookup the user so we know which client the user is from
+				//Make sure the user has access to this client
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+
+				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
+					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
 				var productDb = await _productRepository.GetProductAsync(new Guid(productId));
 
@@ -158,9 +154,9 @@ namespace NoMatterWebApi.Controllers.V1
 				return InternalServerError(ex);
 			}
 			
-		}	
+		}
 
-		// DELETE api/v1/products/{productId}
+		[Authorize]
 		[HttpDelete]
 		[Route("api/v1/clients/{clientId}/products/{productId}")]
 		public async Task<IHttpActionResult> DeleteProductAsync(string clientId, string productId)
@@ -169,17 +165,9 @@ namespace NoMatterWebApi.Controllers.V1
 			{
 				//Need to delete all the images for this product
 				var product = await _productRepository.GetProductAsync(new Guid(productId));
-
 				if (product == null) return new CustomBadRequest(Request, ApiResultCode.ProductNotFound);
 
-				var imagesPath = System.Web.HttpContext.Current.Server.MapPath("~\\images") + "/";
-
-				if (!string.IsNullOrEmpty(product.Picture1)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture1);
-				if (!string.IsNullOrEmpty(product.Picture2)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture2);
-				if (!string.IsNullOrEmpty(product.Picture3)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture3);
-				if (!string.IsNullOrEmpty(product.Picture4)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture4);
-				if (!string.IsNullOrEmpty(product.Picture5)) _imageDeleteHelper.DeleteImage(imagesPath + product.Picture5);
-				if (!string.IsNullOrEmpty(product.PictureOther)) _imageDeleteHelper.DeleteImage(imagesPath + product.PictureOther);
+				ProductHelper.DeleteProductPictures(product, _generalHelper);
 
 				await _productRepository.DeleteProductAsync(product);
 
@@ -191,5 +179,7 @@ namespace NoMatterWebApi.Controllers.V1
 				return InternalServerError(ex);
 			}
 		}
+
+
 	}
 }

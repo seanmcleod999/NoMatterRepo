@@ -22,8 +22,9 @@ namespace RedOrange
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-			ClientSectionsStaticCache.LoadClientSectionsCache();
+			//ClientSectionsStaticCache.LoadClientSectionsCache();
 			ClientSettingsStaticCache.LoadClientSettingsCache();
+			ClientSectionsCategoriesStaticCache.LoadClientSectionsCategoriesCache();
 			//GlobalSettingsStaticCache.LoadGlobalSettingsCache();
         }
 
@@ -43,12 +44,12 @@ namespace RedOrange
 
 					var userDataArray = userData.Split(';');
 
-					var profileUuid = userDataArray[0];
-					var clientId = userDataArray[1];
-					var token = userDataArray[2];
-					var userRoles = userDataArray[3];
+					//var profileUuid = userDataArray[0];
+					//var clientId = userDataArray[1];
+					var token = userDataArray[1];
+					var userRoles = userDataArray[2];
 
-					var principal = new CustomPrincipal(new GenericIdentity(auth.Name), profileUuid, clientId, token, userRoles);
+					var principal = new CustomPrincipal(new GenericIdentity(auth.Name), token, userRoles);
 
 					Context.User = Thread.CurrentPrincipal = principal;
 				}

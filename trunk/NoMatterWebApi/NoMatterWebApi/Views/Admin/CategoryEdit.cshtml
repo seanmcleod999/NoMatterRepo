@@ -1,4 +1,4 @@
-﻿@using NoMatterWebApiWebHelper.OtherHelpers
+﻿@using NoMatterWebApi.Helpers
 @model NoMatterWebApiModels.ViewModels.AddEditCategoryVm
 
 @{
@@ -46,7 +46,7 @@
         @Html.TextAreaFor(model => model.Category.CategoryDescription, new {style = "width:600px;"})
         @Html.ValidationMessageFor(model => model.Category.CategoryDescription)
         <script>
-                     CKEDITOR.replace('Category_CategoryDescription');
+            CKEDITOR.replace('Category_CategoryDescription');
         </script>
     </div>
     

@@ -7825,7 +7825,7 @@ jQuery.extend({
 		timeout: 0,
 		data: null,
 		dataType: null,
-		username: null,
+		Email: null,
 		password: null,
 		cache: null,
 		throws: false,

@@ -4,15 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiModels.ViewModels;
+using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using RedOrange.Logging;
 
 namespace RedOrange.Controllers
 {
-	public class ShopController : Controller
+	public class ShopController : WebApiController
 	{
 		private IClientHelper _clientHelper;
 		private ISectionHelper _sectionHelper;
@@ -33,89 +35,132 @@ namespace RedOrange.Controllers
 
 		public async Task<ActionResult> Index()
 		{
+			try
+			{	
+				var defaultSectionName = _globalSettings.DefaultSectionName;
 
-			//var sections = await _clientHelper.GetClientSectionsAsync(_globalSettings.DefaultClientId);
+				var categories = ClientSectionsCategoriesStaticCache.GetSectionCategories(defaultSectionName).OrderBy(x=>x.CategoryOrder).ToList();
 
-			var sections = ClientSectionsStaticCache.GetClientSections();
+				List<Product> products = null;
+				Category category = null;
 
-			return View(sections);
-		}
+				if (categories.Count > 0)
+				{
+					//Get the products for the first category
+					products = await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, categories.First().CategoryId);
+					category = categories.First();
+				}
 
-		public async Task<ActionResult> Section(string id)
-		{
-			//var section = await _sectionHelper.GetSectionAsync(sectionId);
-			var section = ClientSectionsStaticCache.GetClientSection(id);
+				var categoryShopVm = new CategoryShopVm
+				{
+					//Section = section,
+					Category = category,
+					Categories = categories,
+					Products = products
+				};
 
-			//Get the categories for the selected section
-			//var categories = await _sectionHelper.GetSectionCategoriesAsync(sectionId);
-			var categories = await SectionCategoriesSessionCache.GetSectionCategories(_sectionHelper, id);
+				return View("CategoryProducts", categoryShopVm);
 
-			//Filter out all the categories with no visible products //TODO: maybe move this to the webapi via querystring parameter
-			categories = categories.Where(x => x.VisibleProductCount > 0 || x.Conditional).ToList();
-
-			List<Product> products = null;
-			Category category = null;
-
-			if (categories.Count > 0)
-			{
-				//Get the products for the first category
-				products = await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, categories.First().CategoryId);
-				category = categories.First();
 			}
-
-			var categoryShopVm = new CategoryShopVm
+			catch (Exception ex)
 			{
-				Section = section,
-				Category = category,
-				Categories = categories,
-				Products = products
-			};
-
-			return View("CategoryProducts", categoryShopVm);
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
 		}
 
 		public async Task<ActionResult> Category(string id)
 		{
-			//TODO: move this to a cache
-			//Get the categories details for the selected category
-			var category = await _categoryHelper.GetCategoryAsync(_globalSettings.SiteClientId, id);
-
-
-
-			//Get all the other categories for this section from the cache
-			var categories = await SectionCategoriesSessionCache.GetSectionCategories(_sectionHelper, category.SectionId);
-
-			//TODO: move this to a cache
-			//Get the section details from the cache
-			//var section = await _sectionHelper.GetSectionAsync(category.SectionId);
-			var section = ClientSectionsStaticCache.GetClientSection(category.SectionId);
-
-			//Get the products for the selected category
-			var products = (await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, category.CategoryId));
-
-			var categoryShopVm = new CategoryShopVm
+			try
 			{
-				Section = section,
-				Category = category,
-				Categories = categories,
-				Products = products
-			};
+				var defaultSectionName = _globalSettings.DefaultSectionName;
 
-			return View("CategoryProducts", categoryShopVm);
+				var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryByName(defaultSectionName, id);
+
+				//Get all the other categories for this section from the cache
+				var categories = ClientSectionsCategoriesStaticCache.GetSectionCategories(defaultSectionName).OrderBy(x => x.CategoryOrder).ToList();
+
+				//Get the products for the selected category
+				var products = (await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, category.CategoryId));
+
+				var categoryShopVm = new CategoryShopVm
+				{
+					//Section = section,
+					Category = category,
+					Categories = categories,
+					Products = products
+				};
+
+				return View("CategoryProducts", categoryShopVm);
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
 		}
 
-		public async Task<ActionResult> Product(string id, string categoryId = null)
+
+		public async Task<ActionResult> ShopCategoryPartial(string id)
 		{
-			var product = await _productHelper.GetProductAsync(id);
+			try
+			{		
+				ViewBag.PageTitle = "Shop";
 
-			var viewProductVm = new ViewProductVm
+				var defaultSectionName = _globalSettings.DefaultSectionName;
+
+				var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryByName(defaultSectionName, id);
+
+				//Get the products for the selected category
+				var products = await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, category.CategoryId);
+
+				var categoryShopVm = new CategoryShopVm
+				{
+					//Section = section,
+					Category = category,
+					//Categories = categories,
+					Products = products
+				};
+
+				return PartialView("partialCategoryProducts", categoryShopVm);
+
+			}
+			catch (Exception ex)
 			{
-				FromCategoryId = categoryId,
-				Product = product,
-			};
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+		}
 
-			return View("ViewProduct", viewProductVm);
+		public async Task<ActionResult> Product(string id, string category = null)
+		{
+			try
+			{
+				ViewBag.PageTitle = "Shop";
 
+				var product = await _productHelper.GetProductAsync(id);
+
+				var viewProductVm = new ViewProductVm
+				{
+					FromCategory = category,
+					Product = product,
+				};
+
+				return View("ViewProduct", viewProductVm);
+			}
+			catch (ApiException ex)
+			{
+				HandleBadRequest(ex);
+
+				return View("ApiError", ModelState);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return View("GeneralError");
+			}
+			
 		}
 	}
 }

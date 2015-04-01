@@ -1,29 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http.Results;
 using System.Web.Mvc;
-using System.Web.Security;
+using CustomAuthLib;
 using NoMatterDatabaseModel;
-using NoMatterWebApi.Controllers.V1;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
-using NoMatterWebApiModels.Models;
 using NoMatterWebApiModels.ViewModels;
-using NoMatterWebApiWebHelper.OtherHelpers;
-using NoMatterWebApiWebHelper.WebApiHelpers;
 using Category = NoMatterWebApiModels.Models.Category;
-using Client = NoMatterWebApiModels.Models.Client;
 using ClientDeliveryOption = NoMatterWebApiModels.Models.ClientDeliveryOption;
-using ClientPage = NoMatterWebApiModels.Models.ClientPage;
-using ClientSetting = NoMatterWebApiModels.Models.ClientSetting;
 using Product = NoMatterWebApiModels.Models.Product;
 using Section = NoMatterWebApiModels.Models.Section;
 
@@ -32,45 +21,50 @@ namespace NoMatterWebApi.Controllers.v1
 	[Authorize]
 	public class AdminController : Controller
 	{
-
-		private ClientController _clientController = new ClientController();
-		private SectionController _sectionController = new SectionController();
-		private CategoryController _categoryController = new CategoryController();
-		private ProductController _productController = new ProductController();
-		private ImageController _imageController = new ImageController();
-
 		private IClientRepository _clientRepository;
+		private ISectionRepository _sectionRepository;
+		private ICategoryRepository _categoryRepository;
+		private IProductRepository _productRepository;
+		private IGlobalRepository _globalRepository;
+		private IGeneralHelper _generalHelper;
 
 		public AdminController()
 		{
 			var databaseEntity = new DatabaseEntities();
 
 			_clientRepository = new ClientRepository(databaseEntity);
+			_sectionRepository = new SectionRepository(databaseEntity);
+			_categoryRepository = new CategoryRepository(databaseEntity);
+			_productRepository = new ProductRepository(databaseEntity);
+			_globalRepository = new GlobalRepository(databaseEntity);
+
+			_generalHelper = new GeneralHelper();
 		}
 
-		public AdminController(IClientRepository clientRepository)
+		public AdminController(IClientRepository clientRepository, ISectionRepository sectionRepository, IProductRepository productRepository, IGlobalRepository globalRepository)
 		{
 			_clientRepository = clientRepository;
+			_sectionRepository = sectionRepository;
+			_productRepository = productRepository;
+			_globalRepository = globalRepository;
 		}
 
 		public async Task<ActionResult> Index()
 		{
 			//Get the logged in user client if
-			var clientId = ((CustomPrincipal)HttpContext.User).ClientId;
+			var claimsPrincipal = (ClaimsPrincipal)User;
+			var authUserClientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
 
 			ViewBag.UserName = User.Identity.Name;
 
-			if (string.IsNullOrEmpty(clientId))
+			if (string.IsNullOrEmpty(authUserClientId))
 			{
 				//System user not allocated to a client
 				ViewBag.ClientName = "System Administrator";
 			}
 			else
 			{
-				//var getClientResult = await _clientController.GetClientAsync(clientId);
-				//var clientResult = getClientResult as OkNegotiatedContentResult<Client>;
-
-				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(authUserClientId));
 
 				var client = clientDb.ToDomainClient();
 
@@ -106,20 +100,20 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public async Task<ActionResult> Sections(string clientId = null)
 		{
-			if (string.IsNullOrEmpty(clientId)) clientId = ((CustomPrincipal)HttpContext.User).ClientId;
+			if (string.IsNullOrEmpty(clientId))
+			{
+				var claimsPrincipal = (ClaimsPrincipal)User;
+				clientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+			}
 
-			//var getClientResult = await _clientController.GetClientAsync(clientId);
-			//var clientResult = getClientResult as OkNegotiatedContentResult<Client>;
-
-			var getClientSectionsResult = await _clientController.GetClientSections(clientId, true, true);
-			var sectionsResult = getClientSectionsResult as OkNegotiatedContentResult<List<Section>>;
+			var sections = await _sectionRepository.GetClientSectionsAsync(new Guid(clientId), true);
 
 			var client = await _clientRepository.GetClientAsync(new Guid(clientId));
 
 			var clientSectionsVm = new ClientSectionsVm
 			{
 				Client = client.ToDomainClient(),
-				Sections = sectionsResult.Content
+				Sections = sections.Select(x=>x.ToDomainSection()).ToList()
 			};
 
 			return View(clientSectionsVm);
@@ -144,34 +138,27 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> SectionAdd(AddEditSectionVm addEditSectionVm)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
+			var client = await _clientRepository.GetClientAsync(new Guid(addEditSectionVm.Section.ClientId));
 
-			var imageController = new ImageController();
-
-			_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-			
 			if (addEditSectionVm.Picture != null)
 			{
-				var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditSectionVm.Picture);
-				var uploadImageResult = await imageController.UploadImageAsync(addEditSectionVm.Section.ClientId, imageBase64String);
-				var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-				addEditSectionVm.Section.Picture = pictureResult.Content;
+				addEditSectionVm.Section.Picture = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addEditSectionVm.Picture), client.ClientId);
 			}
 
-			await _clientController.AddClientSection(addEditSectionVm.Section.ClientId, addEditSectionVm.Section);
+			var sectionId = await _sectionRepository.AddSectionAsync(addEditSectionVm.Section.ToDatabaseSection(client.ClientId));
+
+			await SectionHelper.AddDefaultSectionCategories(sectionId, _categoryRepository);
 
 			return RedirectToAction("Sections", new { clientId = addEditSectionVm.Section.ClientId });
 		}
 
 		public async Task<ActionResult> SectionEdit(string clientId, string sectionId)
 		{
-			var getSectionResult = await _sectionController.GetSectionAsync(clientId, sectionId);
-			var sectionResult = getSectionResult as OkNegotiatedContentResult<Section>;
+			var section = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
 
 			var addSectionVm = new AddEditSectionVm
 			{
-				Section = sectionResult.Content
+				Section = section.ToDomainSection()
 			};
 
 			return View(addSectionVm);
@@ -182,21 +169,16 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> SectionEdit(AddEditSectionVm addEditSectionVm)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_sectionController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-			
+			var client = await _clientRepository.GetClientAsync(new Guid(addEditSectionVm.Section.ClientId));
 
 			if (addEditSectionVm.Picture != null)
 			{
-				var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditSectionVm.Picture);
-				var uploadImageResult = await _imageController.UploadImageAsync(addEditSectionVm.Section.ClientId, imageBase64String);
-				var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-				addEditSectionVm.Section.Picture = pictureResult.Content;
+				addEditSectionVm.Section.Picture = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addEditSectionVm.Picture), client.ClientId);
 			}
 
-			await _sectionController.UpdateSectionAsync(addEditSectionVm.Section.ClientId, addEditSectionVm.Section.SectionId, addEditSectionVm.Section);
+			var section = await _sectionRepository.GetSectionAsync(new Guid(addEditSectionVm.Section.SectionId));
+
+			await _sectionRepository.UpdateSectionAsync(section, addEditSectionVm.Section);
 
 			return RedirectToAction("Sections", new { clientId = addEditSectionVm.Section.ClientId});
 
@@ -204,31 +186,26 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public async Task<ActionResult> SectionDelete(string clientId, string sectionId)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
+			await SectionHelper.DeleteDefaultSectionCategories(_categoryRepository, sectionId);
 
-			_sectionController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			await _sectionController.DeleteSectionAsync(clientId, sectionId);
+			await _sectionRepository.DeleteSectionAsync(new Guid(sectionId));
 
 			return RedirectToAction("Sections", new {clientId = clientId});
 		}
 
 		public async Task<ActionResult> SectionCategories(string clientId, string sectionId)
 		{
-			var getSectionResult = await _sectionController.GetSectionAsync(clientId, sectionId);
-			var sectionResult = getSectionResult as OkNegotiatedContentResult<Section>;
+			var section = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
 
-			var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
-			var client = clientDb.ToDomainClient();
+			var client = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-			var getSectionCategoriesResult = await _sectionController.GetSectionCategoriesAsync(clientId, sectionId, true, true);
-			var categoriesResult = getSectionCategoriesResult as OkNegotiatedContentResult<List<Category>>;
+			var categories = await _categoryRepository.GetSectionCategoriesAsync(new Guid(sectionId), true);
 
 			var sectionCategoriesVm = new SectionCategoriesVm
 			{
-				Client = client,
-				Section = sectionResult.Content,
-				Categories = categoriesResult.Content
+				Client = client.ToDomainClient(),
+				Section = section.ToDomainSection(),
+				Categories = categories.Select(x=>x.ToDomainCategory()).ToList()
 			};
 
 			return View("Categories", sectionCategoriesVm);
@@ -236,13 +213,12 @@ namespace NoMatterWebApi.Controllers.v1
 		}
 
 		public async Task<ActionResult> CategoryAdd(string clientId, string sectionId)
-		{				
-			var getSectionResult = await _sectionController.GetSectionAsync(clientId, sectionId);
-			var sectionResult = getSectionResult as OkNegotiatedContentResult<Section>;
+		{
+			var section = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
 
 			var addCategoryVm = new AddEditCategoryVm
 			{
-				Section = sectionResult.Content,
+				Section = section.ToDomainSection(),
 				Category = new Category()
 				{
 					SectionId = sectionId
@@ -256,20 +232,16 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> CategoryAdd(AddEditCategoryVm addCategoryVm)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_sectionController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
+			var client = await _clientRepository.GetClientAsync(new Guid(addCategoryVm.Section.ClientId));
 
 			if (addCategoryVm.Picture != null)
 			{
-				var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addCategoryVm.Picture);
-				var uploadImageResult = await _imageController.UploadImageAsync(addCategoryVm.Section.ClientId, imageBase64String);
-				var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-				addCategoryVm.Category.Picture = pictureResult.Content;
+				addCategoryVm.Category.Picture = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addCategoryVm.Picture), client.ClientId);
 			}
 
-			await _sectionController.AddSectionCategory(addCategoryVm.Section.ClientId, addCategoryVm.Category.SectionId, addCategoryVm.Category);
+			var section = await _sectionRepository.GetSectionAsync(new Guid(addCategoryVm.Category.SectionId));
+
+			await _categoryRepository.AddSectionCategoryAsync(addCategoryVm.Category.ToDatabaseCategory(section.SectionId));
 
 			return RedirectToAction("SectionCategories", new { clientId = addCategoryVm.Section.ClientId, sectionId = addCategoryVm.Category.SectionId });
 
@@ -277,16 +249,14 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public async Task<ActionResult> CategoryEdit(string clientId, string categoryId)
 		{
-			var getCategoryResult = await _categoryController.GetCategoryAsync(clientId, categoryId);
-			var categoryResult = getCategoryResult as OkNegotiatedContentResult<Category>;
+			var category = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
 
-			var getSectionResult = await _sectionController.GetSectionAsync(clientId, categoryResult.Content.SectionId);
-			var sectionResult = getSectionResult as OkNegotiatedContentResult<Section>;
+			var section = await _sectionRepository.GetSectionAsync(category.Section.SectionUUID);
 
 			var addCategoryVm = new AddEditCategoryVm
 			{
-				Section = sectionResult.Content,
-				Category = categoryResult.Content
+				Section = section.ToDomainSection(),
+				Category = category.ToDomainCategory()
 			};
 
 			return View("CategoryEdit", addCategoryVm);
@@ -297,20 +267,16 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> CategoryEdit(AddEditCategoryVm addCategoryVm)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_categoryController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
+			var client = await _clientRepository.GetClientAsync(new Guid(addCategoryVm.Section.ClientId));
 
 			if (addCategoryVm.Picture != null)
 			{
-				var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addCategoryVm.Picture);
-				var uploadImageResult = await _imageController.UploadImageAsync(addCategoryVm.Section.ClientId, imageBase64String);
-				var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-				addCategoryVm.Category.Picture = pictureResult.Content;
+				addCategoryVm.Category.Picture = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addCategoryVm.Picture), client.ClientId);
 			}
 
-			await _categoryController.UpdateCategoryAsync(addCategoryVm.Section.ClientId, addCategoryVm.Category.CategoryId, addCategoryVm.Category);
+			var category = await _categoryRepository.GetCategoryAsync(new Guid(addCategoryVm.Section.ClientId), new Guid(addCategoryVm.Category.CategoryId));
+
+			await _categoryRepository.UpdateCategoryAsync(category, addCategoryVm.Category);
 
 			return RedirectToAction("SectionCategories", new { clientId = addCategoryVm.Section.ClientId, sectionId = addCategoryVm.Category.SectionId });
 
@@ -318,11 +284,7 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public async Task<ActionResult> CategoryDelete(string clientId, string categoryId, string sectionId)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_categoryController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			await _categoryController.DeleteCategoryAsync(clientId, categoryId);
+			await _categoryRepository.DeleteCategoryAsync(new Guid(categoryId));
 
 			return RedirectToAction("SectionCategories", new { clientId = clientId, sectionId = sectionId });
 		}
@@ -330,24 +292,20 @@ namespace NoMatterWebApi.Controllers.v1
 		public async Task<ActionResult> CategoryProducts(string clientId, string categoryId)
 		{
 
-			var getCategoryResult = await _categoryController.GetCategoryAsync(clientId, categoryId);
-			var categoryResult = getCategoryResult as OkNegotiatedContentResult<Category>;
+			var category = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
 
-			var getSectionResult = await _sectionController.GetSectionAsync(clientId, categoryResult.Content.SectionId);
-			var sectionResult = getSectionResult as OkNegotiatedContentResult<Section>;
+			var section = await _sectionRepository.GetSectionAsync(category.Section.SectionUUID);
 
-			var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
-			var client = clientDb.ToDomainClient();
+			var client = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-			var getCategoryProductsResult = await _categoryController.GetCategoryProducts(clientId, categoryId);
-			var categoryProductsResult = getCategoryProductsResult as OkNegotiatedContentResult<List<Product>>;
+			var products = await _categoryRepository.GetCategoryProductsAsync(new Guid(categoryId));
 
 			var categoryProductsVm = new CategoryProductsVm
 			{
-				Client = client,
-				Section = sectionResult.Content,
-				Category = categoryResult.Content,
-				CategoryProducts = categoryProductsResult.Content
+				Client = client.ToDomainClient(),
+				Section = section.ToDomainSection(),
+				Category = category.ToDomainCategory(),
+				CategoryProducts = products.Select(x=>x.ToDomainProduct()).ToList()
 			};
 
 			return View(categoryProductsVm);
@@ -356,16 +314,14 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public async Task<ActionResult> ProductAdd(string clientId, string categoryId)
 		{
-			var getCategoryResult = await _categoryController.GetCategoryAsync(clientId, categoryId);
-			var categoryResult = getCategoryResult as OkNegotiatedContentResult<Category>;
+			var category = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
 
-			var getSectionResult = await _sectionController.GetSectionAsync(clientId, categoryResult.Content.SectionId);
-			var sectionResult = getSectionResult as OkNegotiatedContentResult<Section>;
+			var section = await _sectionRepository.GetSectionAsync(category.Section.SectionUUID);
 
-			var addEditProductVm = new AddEditProductVm
+			var addEditProductVm = new AddProductVm
 			{
-				Section = sectionResult.Content,
-				Category = categoryResult.Content,
+				Section = section.ToDomainSection(),
+				Category = category.ToDomainCategory(),
 				Product = new Product()
 				{
 					ReleaseDate = DateTime.Now
@@ -378,75 +334,42 @@ namespace NoMatterWebApi.Controllers.v1
 
 		[HttpPost]
 		[ValidateInput(false)]
-		public async Task<ActionResult> ProductAdd(AddEditProductVm addEditProductVm)
+		public async Task<ActionResult> ProductAdd(AddProductVm addProductVm)
 		{
 			try
 			{
-				var token = ((CustomPrincipal)HttpContext.User).Token;
+				var client = await _clientRepository.GetClientAsync(new Guid(addProductVm.Section.ClientId));
 
-				_categoryController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
+				if (addProductVm.Picture1 != null)			
+					addProductVm.Product.Picture1 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture1), client.ClientId);			
 
-				if (addEditProductVm.Picture1 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture1);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				if (addProductVm.Picture2 != null)			
+					addProductVm.Product.Picture2 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture2), client.ClientId);
+				
+				if (addProductVm.Picture3 != null)			
+					addProductVm.Product.Picture3 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture3), client.ClientId);			
 
-					addEditProductVm.Product.Picture1 = pictureResult.Content;
-				}
+				if (addProductVm.Picture4 != null)		
+					addProductVm.Product.Picture4 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture4), client.ClientId);
+				
+				if (addProductVm.Picture5 != null)				
+					addProductVm.Product.Picture5 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture5), client.ClientId);				
 
-				if (addEditProductVm.Picture2 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture2);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				if (addProductVm.PictureOther != null)			
+					addProductVm.Product.PictureOther = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.PictureOther), client.ClientId);
+				
 
-					addEditProductVm.Product.Picture2 = pictureResult.Content;
-				}
+				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(addProductVm.Section.ClientId), new Guid(addProductVm.Category.CategoryId));
 
-				if (addEditProductVm.Picture3 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture3);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				var productDb = ProductHelper.GenerateProductDbModel(addProductVm.Product, categoryDb.CategoryId, _generalHelper);
 
-					addEditProductVm.Product.Picture3 = pictureResult.Content;
-				}
-
-				if (addEditProductVm.Picture4 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture4);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-					addEditProductVm.Product.Picture4 = pictureResult.Content;
-				}
-
-				if (addEditProductVm.Picture5 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture5);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-					addEditProductVm.Product.Picture5 = pictureResult.Content;
-				}
-
-				if (addEditProductVm.PictureOther != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.PictureOther);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-					addEditProductVm.Product.PictureOther = pictureResult.Content;
-				}
-
-				var addCategoryProductResult = await _categoryController.AddCategoryProductAsync(addEditProductVm.Section.ClientId, addEditProductVm.Category.CategoryId, addEditProductVm.Product);
-				var productResult = addCategoryProductResult as OkNegotiatedContentResult<Product>;
+				//Save the product
+				await _productRepository.AddProductAsync(productDb);
 
 				return RedirectToAction("CategoryProducts", new
 				{
-					clientId = addEditProductVm.Section.ClientId,
-					categoryId = addEditProductVm.Category.CategoryId
+					clientId = addProductVm.Section.ClientId,
+					categoryId = addProductVm.Category.CategoryId
 				});
 			}
 			catch (Exception ex)
@@ -460,23 +383,21 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				var getProductResult = await _productController.GetProductAsync(clientId, productId);
-				var productResult = getProductResult as OkNegotiatedContentResult<Product>;
 
-				var getCategoryResult = await _categoryController.GetCategoryAsync(clientId, productResult.Content.CategoryId);
-				var categoryResult = getCategoryResult as OkNegotiatedContentResult<Category>;
+				var product = await _productRepository.GetProductAsync(new Guid(productId));
 
-				var getSectionResult = await _sectionController.GetSectionAsync(clientId, categoryResult.Content.SectionId);
-				var sectionResult = getSectionResult as OkNegotiatedContentResult<Section>;
+				var category = await _categoryRepository.GetCategoryAsync(new Guid(clientId), product.Category.CategoryUUID);
 
-				var addEditProductVm = new AddEditProductVm
+				var section = await _sectionRepository.GetSectionAsync(category.Section.SectionUUID);
+
+				var editProductVm = new EditProductVm
 				{
-					Section = sectionResult.Content,
-					Category = categoryResult.Content,
-					Product = productResult.Content,
+					Section = section.ToDomainSection(),
+					Category = category.ToDomainCategory(),
+					Product = product.ToDomainProduct(),
 				};
 
-				return View(addEditProductVm);
+				return View(editProductVm);
 			}
 			catch (Exception ex)
 			{
@@ -488,75 +409,41 @@ namespace NoMatterWebApi.Controllers.v1
 
 		[HttpPost]
 		[ValidateInput(false)]
-		public async Task<ActionResult> ProductEdit(AddEditProductVm addEditProductVm)
+		public async Task<ActionResult> ProductEdit(EditProductVm editProductVm)
 		{
 			try
 			{
-				var token = ((CustomPrincipal)HttpContext.User).Token;
+				var client = await _clientRepository.GetClientAsync(new Guid(editProductVm.Section.ClientId));
 
-				_productController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-				
-				if (addEditProductVm.Picture1 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture1);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				if (editProductVm.Picture1 != null)
+					editProductVm.Product.Picture1 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(editProductVm.Picture1), client.ClientId);
 
-					addEditProductVm.Product.Picture1 = pictureResult.Content;
-				}
+				if (editProductVm.Picture2 != null)
+					editProductVm.Product.Picture2 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(editProductVm.Picture2), client.ClientId);
 
-				if (addEditProductVm.Picture2 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture2);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				if (editProductVm.Picture3 != null)
+					editProductVm.Product.Picture3 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(editProductVm.Picture3), client.ClientId);
 
-					addEditProductVm.Product.Picture2 = pictureResult.Content;
-				}
+				if (editProductVm.Picture4 != null)
+					editProductVm.Product.Picture4 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(editProductVm.Picture4), client.ClientId);
 
-				if (addEditProductVm.Picture3 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture3);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				if (editProductVm.Picture5 != null)
+					editProductVm.Product.Picture5 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(editProductVm.Picture5), client.ClientId);
 
-					addEditProductVm.Product.Picture3 = pictureResult.Content;
-				}
+				if (editProductVm.PictureOther != null)
+					editProductVm.Product.PictureOther = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(editProductVm.PictureOther), client.ClientId);
 
-				if (addEditProductVm.Picture4 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture4);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
 
-					addEditProductVm.Product.Picture4 = pictureResult.Content;
-				}
+				var productDb = await _productRepository.GetProductAsync(new Guid(editProductVm.Product.ProductId));
 
-				if (addEditProductVm.Picture5 != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.Picture5);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				productDb = ProductHelper.UpdateProductDbModel(productDb, editProductVm.Product);
 
-					addEditProductVm.Product.Picture5 = pictureResult.Content;
-				}
-
-				if (addEditProductVm.PictureOther != null)
-				{
-					var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditProductVm.PictureOther);
-					var uploadImageResult = await _imageController.UploadImageAsync(addEditProductVm.Section.ClientId, imageBase64String);
-					var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-					addEditProductVm.Product.PictureOther = pictureResult.Content;
-				}
-
-				var updateCategoryProductResult = await _productController.UpdateProductAsync(addEditProductVm.Section.ClientId, addEditProductVm.Product.ProductId, addEditProductVm.Product);
-				var productResult = updateCategoryProductResult as OkNegotiatedContentResult<Product>;
+				await _productRepository.UpdateProductAsync(productDb);
 
 				return RedirectToAction("CategoryProducts", "Admin", new
 					{
-						clientId = addEditProductVm.Section.ClientId,
-						categoryId = addEditProductVm.Product.CategoryId
+						clientId = editProductVm.Section.ClientId,
+						categoryId = editProductVm.Product.CategoryId
 					});
 
 			}
@@ -571,11 +458,11 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				var token = ((CustomPrincipal)HttpContext.User).Token;
+				var product = await _productRepository.GetProductAsync(new Guid(productId));
 
-				_productController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-				
-				await _productController.DeleteProductAsync(clientId, productId);
+				ProductHelper.DeleteProductPictures(product, _generalHelper);
+
+				await _productRepository.DeleteProductAsync(product);
 
 				return RedirectToAction("CategoryProducts", "Admin", new { clientId = clientId, categoryId = categoryId });
 			}
@@ -591,13 +478,12 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				var getProductResult = await _productController.GetProductAsync(clientId, productId);
-				var productResult = getProductResult as OkNegotiatedContentResult<Product>;
+				var product = await _productRepository.GetProductAsync(new Guid(productId));
 
 				var viewProductVm = new ViewProductVm
 					{
 						ClientId = clientId,
-						Product = productResult.Content
+						Product = product.ToDomainProduct()
 					};
 
 				return View(viewProductVm);
@@ -614,17 +500,20 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(clientId)) clientId = ((CustomPrincipal)HttpContext.User).ClientId;
+				if (string.IsNullOrEmpty(clientId))
+				{
+					var claimsPrincipal = (ClaimsPrincipal)User;
+					clientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+				}
 
-				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				var client = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-				var clientControllerResult = await _clientController.GetClientPagesAsync(clientId);
-				var clientPagesResult = clientControllerResult as OkNegotiatedContentResult<List<ClientPage>>;
+				var pages = await _clientRepository.GetClientPagesAsync(new Guid(clientId));
 
 				var clientPagesVm = new ClientPagesVm
 					{
-						Client = clientDb.ToDomainClient(),
-						ClientPages = clientPagesResult.Content
+						Client = client.ToDomainClient(),
+						ClientPages = pages.Select(x=>x.ToDomainClientPage()).ToList()
 					};
 
 				return View(clientPagesVm);
@@ -662,12 +551,9 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> ClientPageAdd(ClientPageVm clientPageVm)
 		{
+			var client = await _clientRepository.GetClientAsync(new Guid(clientPageVm.Client.ClientId));
 
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			var result = await _clientController.AddClientPageAsync(clientPageVm.Client.ClientId, clientPageVm.ClientPage);
+			await _clientRepository.AddClientPageAsync(clientPageVm.ClientPage.ToDatabaseClientPage(client.ClientId));
 
 			return RedirectToAction("ClientPages", "Admin", new { clientId = clientPageVm.Client.ClientId });
 		}
@@ -678,13 +564,12 @@ namespace NoMatterWebApi.Controllers.v1
 			{
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-				var clientControllerResult = await _clientController.GetClientPageAsync(clientId, pageName);
-				var clientPageResult = clientControllerResult as OkNegotiatedContentResult<ClientPage>;
+				var page = await _clientRepository.GetClientPageAsync(new Guid(clientId), pageName);
 
 				var clientPageVm = new ClientPageVm
 				{
 					Client = clientDb.ToDomainClient(),
-					ClientPage = clientPageResult.Content
+					ClientPage = page.ToDomainClientPage()
 				};
 
 				return View(clientPageVm);
@@ -701,23 +586,16 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> ClientPageEdit(ClientPageVm clientPageVm)
 		{
+			var client = await _clientRepository.GetClientAsync(new Guid(clientPageVm.Client.ClientId));
 
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			await _clientController.UpdateClientPageAsync(clientPageVm.Client.ClientId, clientPageVm.ClientPage.PageName, clientPageVm.ClientPage);
+			await _clientRepository.AddClientPageAsync(clientPageVm.ClientPage.ToDatabaseClientPage(client.ClientId));
 
 			return RedirectToAction("ClientPages", "Admin", new { clientId = clientPageVm .Client.ClientId});
 		}
 
 		public async Task<ActionResult> ClientPageDelete(string clientId, string pageName)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_categoryController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			await _clientController.DeleteClientPageAsync(clientId, pageName);
+			await _clientRepository.DeleteClientPageAsync(new Guid(clientId), pageName);
 
 			return RedirectToAction("ClientPages", new { clientId = clientId});
 		}
@@ -726,17 +604,20 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(clientId)) clientId = ((CustomPrincipal)HttpContext.User).ClientId;
+				if (string.IsNullOrEmpty(clientId))
+				{
+					var claimsPrincipal = (ClaimsPrincipal)User;
+					clientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+				}
 
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-				var getClientSettingsResult = await _clientController.GetClientSettingsAsync(clientId);
-				var clientSettingsResult = getClientSettingsResult as OkNegotiatedContentResult<List<ClientSetting>>;
+				var settings = await _clientRepository.GetClientSettingsAsync(new Guid(clientId));
 
 				var clientSettingsVm = new ClientSettingsVm
 				{
 					Client = clientDb.ToDomainClient(),
-					ClientSettings = clientSettingsResult.Content
+					ClientSettings = settings.Select(x=>x.ToDomainClientSetting()).ToList()
 				};
 
 				return View(clientSettingsVm);
@@ -753,11 +634,15 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				var token = ((CustomPrincipal)HttpContext.User).Token;
+				var client = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-				_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
+				//Get the current settings
+				var clientSettings = await _clientRepository.GetClientSettingsAsync(new Guid(clientId));
 
-				await _clientController.AllocateMissingClientSettingsAsync(clientId);
+				//Get the ids
+				var settingsIds = clientSettings.Select(x => x.SettingId).ToList();
+
+				await _clientRepository.AllocateMissingClientSettingsAsync(client, settingsIds);
 
 				return RedirectToAction("ClientSettings", "Admin", new { clientId = clientId });
 			}
@@ -794,11 +679,9 @@ namespace NoMatterWebApi.Controllers.v1
 		public async Task<ActionResult> ClientSettingAdd(ClientSettingVm clientSettingVm)
 		{
 
-			var token = ((CustomPrincipal)HttpContext.User).Token;
+			var client = await _clientRepository.GetClientAsync(new Guid(clientSettingVm.Client.ClientId));
 
-			_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			var result = await _clientController.AddClientSettingAsync(clientSettingVm.Client.ClientId, clientSettingVm.ClientSetting);
+			await _clientRepository.AddClientSettingAsync(clientSettingVm.ClientSetting.ToDatabaseClientSetting(client.ClientId));
 
 			return RedirectToAction("ClientSettings", "Admin", new { clientId = clientSettingVm.Client.ClientId });
 		}
@@ -809,13 +692,12 @@ namespace NoMatterWebApi.Controllers.v1
 			{
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));;
 
-				var getClientSettingResult = await _clientController.GetClientSettingAsync(clientId, clientSettingId);
-				var clientSettingResult = getClientSettingResult as OkNegotiatedContentResult<ClientSetting>;
+				var setting = await _clientRepository.GetClientSettingAsync(new Guid(clientId), clientSettingId);
 
 				var clientPageVm = new ClientSettingVm
 				{
 					Client = clientDb.ToDomainClient(),
-					ClientSetting = clientSettingResult.Content
+					ClientSetting = setting.ToDomainClientSetting()
 				};
 
 				return View(clientPageVm);
@@ -832,53 +714,43 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> ClientSettingEdit(ClientSettingVm clientSettingVm)
 		{
+			var setting = await _globalRepository.GetSettingAsync(clientSettingVm.ClientSetting.Setting.SettingId);
 
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			//TODO: do the regex validation here
-
-			if (!string.IsNullOrEmpty(clientSettingVm.ClientSetting.Setting.RegexValidation) && !string.IsNullOrEmpty(clientSettingVm.ClientSetting.StringValue))
+			//Regex validation
+			if (!string.IsNullOrEmpty(setting.RegexValidation) && !string.IsNullOrEmpty(clientSettingVm.ClientSetting.StringValue))
 			{
 				//Do the validation
-				var regex = new Regex(clientSettingVm.ClientSetting.Setting.RegexValidation);
+				var regex = new Regex(setting.RegexValidation);
 				var match = regex.Match(clientSettingVm.ClientSetting.StringValue);
 
 				if (!match.Success)
 				{
-					ModelState.AddModelError("", "Validation Failed");
+					ModelState.AddModelError("", "Value Validation Failed");
 
 					var clientDb = await _clientRepository.GetClientAsync(new Guid(clientSettingVm.Client.ClientId));
 
-					var getClientSettingResult = await _clientController.GetClientSettingAsync(clientSettingVm.Client.ClientId, clientSettingVm.ClientSetting.ClientSettingId);
-					var clientSettingResult = getClientSettingResult as OkNegotiatedContentResult<ClientSetting>;
+					//var getClientSettingResult = await _clientController.GetClientSettingAsync(clientSettingVm.Client.ClientId, clientSettingVm.ClientSetting.ClientSettingId);
+					//var clientSettingResult = getClientSettingResult as OkNegotiatedContentResult<ClientSetting>;
 
-					var clientPageVm = new ClientSettingVm
-					{
-						Client = clientDb.ToDomainClient(),
-						ClientSetting = clientSettingResult.Content
-					};
+					//var clientSetting = await _clientRepository.GetClientSettingAsync(new Guid(clientSettingVm.Client.ClientId), clientSettingVm.ClientSetting.ClientSettingId);
 
-					return View(clientPageVm);
+					return View(clientSettingVm);
 				}
 
 			}
 
+			var client = await _clientRepository.GetClientAsync(new Guid(clientSettingVm.Client.ClientId));
 
+			var clientSetting = await _clientRepository.GetClientSettingAsync(new Guid(clientSettingVm.Client.ClientId), clientSettingVm.ClientSetting.ClientSettingId);
 
-			await _clientController.UpdateClientSettingAsync(clientSettingVm.Client.ClientId, clientSettingVm.ClientSetting.ClientSettingId, clientSettingVm.ClientSetting);
+			await _clientRepository.UpdateClientSettingAsync(clientSettingVm.ClientSetting.ToDatabaseClientSetting(client.ClientId), clientSetting.ToDomainClientSetting());
 
 			return RedirectToAction("ClientSettings", "Admin", new { clientId = clientSettingVm.Client.ClientId });
 		}
 
 		public async Task<ActionResult> ClientSettingDelete(string clientId, short settingId)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_categoryController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			await _clientController.DeleteClientSettingAsync(clientId, settingId);
+			await _clientRepository.DeleteClientSettingAsync(new Guid(clientId), settingId);
 
 			return RedirectToAction("ClientSettings", new { clientId = clientId });
 		}
@@ -887,17 +759,20 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(clientId)) clientId = ((CustomPrincipal)HttpContext.User).ClientId;
+				if (string.IsNullOrEmpty(clientId))
+				{
+					var claimsPrincipal = (ClaimsPrincipal)User;
+					clientId = claimsPrincipal.FindFirst(x => x.Type == CustomAuthentication.ClientId).Value;
+				}
 
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-				var getClientDeliveryOptionsResult = await _clientController.GetClientDeliveryOptions(clientId);
-				var clientDeliveryOptionsResult = getClientDeliveryOptionsResult as OkNegotiatedContentResult<List<ClientDeliveryOption>>;
+				var deliveryOptions = await _clientRepository.GetClientDeliveryOptionsAsync(new Guid(clientId));
 
 				var clientDeliveryOptionsVm = new ClientDeliveryOptionsVm
 				{
 					Client = clientDb.ToDomainClient(),
-					ClientDeliveryOptions = clientDeliveryOptionsResult.Content
+					ClientDeliveryOptions = deliveryOptions.Select(x=>x.ToDomainClientDeliveryOption()).ToList()
 				};
 
 				return View(clientDeliveryOptionsVm);
@@ -936,11 +811,10 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> ClientPostageAdd(ClientDeliveryOptionVm clientDeliveryOptionVm)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
+			var client = await _clientRepository.GetClientAsync(new Guid(clientDeliveryOptionVm.Client.ClientId));
 
-			var result = await _clientController.AddClientDeliveryOptionAsync(clientDeliveryOptionVm.Client.ClientId, clientDeliveryOptionVm.ClientDeliveryOption);
+			await _clientRepository.AddClientDeliveryOptionAsync(clientDeliveryOptionVm.ClientDeliveryOption.ToDatabaseClientDeliveryOption(client.ClientId));
 
 			return RedirectToAction("ClientPostage", "Admin", new { clientId = clientDeliveryOptionVm.Client.ClientId });
 		}
@@ -949,15 +823,14 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId)); ;
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-				var getClientDeliveryOptionResult = await _clientController.GetClientDeliveryOptionAsync(clientId, clientDeliveryOptionId);
-				var clientDeliveryOptionResult = getClientDeliveryOptionResult as OkNegotiatedContentResult<ClientDeliveryOption>;
+				var deliveryOption = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionId);
 
 				var clientDeliveryOptionVm = new ClientDeliveryOptionVm
 				{
 					Client = clientDb.ToDomainClient(),
-					ClientDeliveryOption = clientDeliveryOptionResult.Content
+					ClientDeliveryOption = deliveryOption.ToDomainClientDeliveryOption()
 				};
 
 				return View(clientDeliveryOptionVm);
@@ -974,23 +847,16 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> ClientPostageEdit(ClientDeliveryOptionVm clientDeliveryOptionVm)
 		{
+			var deliveryOption = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionVm.ClientDeliveryOption.ClientDeliveryOptionId);
 
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			await _clientController.UpdateClientDeliveryOptionAsync(clientDeliveryOptionVm.Client.ClientId, clientDeliveryOptionVm.ClientDeliveryOption.ClientDeliveryOptionId, clientDeliveryOptionVm.ClientDeliveryOption);
+			await _clientRepository.UpdateClientDeliveryOptionAsync(deliveryOption, clientDeliveryOptionVm.ClientDeliveryOption);
 
 			return RedirectToAction("ClientPostage", "Admin", new { clientId = clientDeliveryOptionVm.Client.ClientId });
 		}
 
 		public async Task<ActionResult> ClientPostageDelete(string clientId, short clientDeliveryOptionId)
 		{
-			var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			_categoryController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			await _clientController.DeleteClientDeliveryOptionAsync(clientId, clientDeliveryOptionId);
+			await _clientRepository.DeleteClientDeliveryOptionAsync(new Guid(clientId), clientDeliveryOptionId);
 
 			return RedirectToAction("ClientPostage", new { clientId = clientId });
 		}

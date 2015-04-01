@@ -7,11 +7,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using CustomAuthLib;
 using NoMatterDatabaseModel;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.CustomAuth;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
+using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
 using Category = NoMatterWebApiModels.Models.Category;
@@ -97,17 +98,7 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var sectionCategories = await _categoryRepository.GetSectionCategoriesAsync(new Guid(sectionId), true);
-
-				//Delete the default Latest Items and Sale categories
-				foreach (var category in sectionCategories)
-				{
-					if (category.ActionName == "Latest" || category.ActionName == "Sale")
-					{
-						//Delete latest item and sale categories
-						await _categoryRepository.DeleteCategoryAsync(category.CategoryUUID);
-					}
-				}
+				await SectionHelper.DeleteDefaultSectionCategories(_categoryRepository, sectionId);
 
 				//Delete the section
 				await _sectionRepository.DeleteSectionAsync(new Guid(sectionId));
@@ -120,6 +111,8 @@ namespace NoMatterWebApi.Controllers.V1
 				return InternalServerError(ex);
 			}
 		}
+
+		
 
 		[Route("api/v1/clients/{clientId}/sections/{sectionId}/categories")]
 		[ResponseType(typeof(List<Category>))]

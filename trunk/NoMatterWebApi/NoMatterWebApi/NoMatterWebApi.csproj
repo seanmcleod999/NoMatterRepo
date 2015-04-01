@@ -67,7 +67,28 @@
     <Reference Include="Imazen.SlimResponse">
       <HintPath>..\..\Packages\Imazen.SlimResponse.0.2.4936.26457\lib\net40\Imazen.SlimResponse.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\..\Packages\Microsoft.AspNet.Identity.Core.2.2.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\..\Packages\Microsoft.AspNet.Identity.Owin.2.2.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\..\Packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\Packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\..\Packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\..\Packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\..\Packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
@@ -100,12 +121,14 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\Packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\Packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -185,6 +208,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\ClientImages\" />
+    <Folder Include="CustomAuth\" />
+    <Folder Include="Providers\" />
     <Folder Include="ResultCodes\" />
     <Folder Include="Views\Product\" />
   </ItemGroup>
@@ -236,9 +261,6 @@
     <Compile Include="Controllers\V1\ProductController.cs" />
     <Compile Include="Controllers\V1\SectionController.cs" />
     <Compile Include="Controllers\V1\UserController.cs" />
-    <Compile Include="CustomAuth\AuthenticationFailureResult.cs" />
-    <Compile Include="CustomAuth\CustomAuthentication.cs" />
-    <Compile Include="CustomAuth\CustomAuthenticationFilter.cs" />
     <Compile Include="DAL\CartRepository.cs" />
     <Compile Include="DAL\GlobalRepository.cs" />
     <Compile Include="DAL\OrderRepository.cs" />
@@ -250,15 +272,19 @@
     <Compile Include="Extensions\ClientExtension.cs" />
     <Compile Include="Extensions\ClientPaymentTypeExtension.cs" />
     <Compile Include="Extensions\ClientSettingExtension.cs" />
-    <Compile Include="Extensions\ClientPagesExtension.cs" />
+    <Compile Include="Extensions\ClientPageExtension.cs" />
     <Compile Include="Extensions\SettingExtension.cs" />
     <Compile Include="Extensions\GlobalSettingExtension.cs" />
     <Compile Include="Extensions\OrderExtension.cs" />
     <Compile Include="Extensions\ProductExtension.cs" />
     <Compile Include="Extensions\SectionExtension.cs" />
     <Compile Include="Extensions\UserExtension.cs" />
-    <Compile Include="Helpers\WebApiGeneralHelper.cs" />
-    <Compile Include="Helpers\WebApiGlobalSettings.cs">
+    <Compile Include="Helpers\ProductHelper.cs" />
+    <Compile Include="Helpers\SectionHelper.cs" />
+    <Compile Include="Helpers\StaticGlobalSettings.cs" />
+    <Compile Include="Helpers\SuperuserHelper.cs" />
+    <Compile Include="Helpers\GeneralHelper.cs" />
+    <Compile Include="Helpers\GlobalSettings.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\ImageDeleteHelper.cs">
@@ -270,6 +296,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\CartProduct.cs" />
     <Compile Include="Models\FacebookUser.cs" />
     <Compile Include="Models\NewSection.cs" />
@@ -281,7 +308,9 @@
     <Compile Include="DAL\ProductRepository.cs" />
     <Compile Include="DAL\SectionRepository.cs" />
     <Compile Include="DAL\UserRepository.cs" />
+    <Compile Include="App_Start\Startup.cs" />
     <Compile Include="ViewModels\AddEditClientVm.cs" />
+    <Compile Include="ViewModels\SettingVm.cs" />
     <Compile Include="ViewModels\RunMySqlScriptVm.cs" />
     <Compile Include="ViewModels\SettingsVm.cs" />
     <Compile Include="ViewModels\ViewClientsVm.cs" />
@@ -418,6 +447,7 @@
     <Content Include="Content\images\icon_view.png" />
     <Content Include="Content\images\nomatter.jpg" />
     <Content Include="Content\images\ReservedLayer.png" />
+    <Content Include="Content\images\rotator.gif" />
     <Content Include="Content\images\SaleLayer.png" />
     <Content Include="Content\images\SaleLayer2.png" />
     <Content Include="Content\images\SaleLayerLarge.png" />
@@ -514,11 +544,13 @@
     <Content Include="Views\Admin\ClientSettingAdd.cshtml" />
     <Content Include="Views\Home\Portfolio.cshtml" />
     <Content Include="Views\Superuser\ClientAdd.cshtml" />
+    <Content Include="Views\Admin\ClientPostageEdit.cshtml" />
     <None Include="Views\Superuser\ClientEdit.cshtml" />
     <Content Include="Views\Superuser\RunSqlScriptResult.cshtml" />
     <Content Include="Views\Admin\ClientPostage.cshtml" />
     <Content Include="Views\Admin\ClientPostageAdd.cshtml" />
     <Content Include="Views\Superuser\SiteSettings.cshtml" />
+    <Content Include="Views\Superuser\SiteSettingEdit.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
@@ -549,6 +581,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CustomAuthLib\CustomAuthLib.csproj">
+      <Project>{c07bff89-e083-463c-ad65-f2b3c2f2a2c6}</Project>
+      <Name>CustomAuthLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NoMatterDatabaseModel\NoMatterDatabaseModel.csproj">
       <Project>{ef31712d-d1b4-4db6-8e10-6d805a0be9ba}</Project>
       <Name>NoMatterDatabaseModel</Name>
@@ -556,10 +592,6 @@
     <ProjectReference Include="..\..\NoMatterWebApiModels\NoMatterWebApiModels.csproj">
       <Project>{61b3d61b-1ef7-4553-99f3-9ecf07a087ab}</Project>
       <Name>NoMatterWebApiModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Websites\NoMatterWebApiWebHelper\NoMatterWebApiWebHelper.csproj">
-      <Project>{4f3e76b1-cd94-4634-a510-616f51c7a06c}</Project>
-      <Name>NoMatterWebApiWebHelper</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

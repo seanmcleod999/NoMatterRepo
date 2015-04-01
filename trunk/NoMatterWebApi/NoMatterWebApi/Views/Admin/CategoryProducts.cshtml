@@ -1,4 +1,4 @@
-﻿@using NoMatterWebApiWebHelper.OtherHelpers
+﻿@using NoMatterWebApi.Helpers
 @model NoMatterWebApiModels.ViewModels.CategoryProductsVm
 @{
     ViewBag.Title = "Products";
@@ -55,8 +55,15 @@ Category: <b>@Model.Category.CategoryName</b><br/><br/>
 @foreach (var product in Model.CategoryProducts)
 {
     <tr>
-        <td>
-            <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=30"/>
+        <td>                    
+            @if (!string.IsNullOrEmpty(@product.Picture1))
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=30"/>
+            }
+            else
+            {
+                <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=30"/>
+            }  
         </td>
         <td>
             @product.Title

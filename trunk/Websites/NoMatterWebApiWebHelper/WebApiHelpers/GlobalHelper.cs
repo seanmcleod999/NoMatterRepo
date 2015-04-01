@@ -18,38 +18,12 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 
 	class GlobalHelper : IGlobalHelper
 	{
-		private IGlobalSettings _globalSettings;
-		
-		public GlobalHelper()
-		{
-			_globalSettings = new GlobalSettings();
-		}
-
-		public GlobalHelper(IGlobalSettings globalSettings)
-		{
-			_globalSettings = globalSettings;
-		}
-
 		public List<GlobalSetting> GetGlobalSettings()
 		{
-			using (var client = new HttpClient())
-			{
-				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			var settings = WebApiService.Instance.GetAsync<List<GlobalSetting>>(
+				"api/v1/globals/settings").Result;
 
-				var response = client.GetAsync("api/v1/globals/settings").Result;
-
-				if (!response.IsSuccessStatusCode)
-				{
-					GeneralHelper.HandleWebApiFailedResult(response);
-				}
-
-				var globalSettings = response.Content.ReadAsAsync<List<GlobalSetting>>().Result;
-
-				return globalSettings;
-
-			}
+			return settings;
 		}
 	}
 }

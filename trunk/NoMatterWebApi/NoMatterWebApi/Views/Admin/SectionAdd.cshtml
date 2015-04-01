@@ -32,7 +32,7 @@
         Title
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Section.SectionName, new {style = "width:300px;"})
+        @Html.TextBoxFor(model => model.Section.SectionName, new {style = "width:100%;"})
         @Html.ValidationMessageFor(model => model.Section.SectionName)
     </div>
     
@@ -40,7 +40,7 @@
         Description
     </div>
     <div class="editor-field">
-        @Html.TextAreaFor(model => model.Section.SectionDescription, new {style = "width:600px;"})
+        @Html.TextAreaFor(model => model.Section.SectionDescription, new {style = "width:100%;"})
         @Html.ValidationMessageFor(model => model.Section.SectionDescription)
         <script>
             CKEDITOR.replace('Section_SectionDescription');
@@ -67,7 +67,7 @@
         Picture
     </div>
     <div class="editor-field">
-         @Html.TextBoxFor(m => m.Picture, new { type = "file", @class="form-control" })
+         @Html.TextBoxFor(m => m.Picture, new { type = "file", @class="form-control"})
          @Html.ValidationMessageFor(m => m.Picture)
     </div>
    

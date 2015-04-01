@@ -4,155 +4,218 @@
 
 @{
     ViewBag.Title = "Order Summary";
-    
+
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>REVIEW ORDER</h2>
+<h1>Review Order</h1>
 
 Review your order before continuing.
-<br/>
+<br/><br/>
 
-<h3>Shopping cart contents</h3>
+ <fieldset class="account form-wrapper" id="summary-account">
+     <legend>
+         <span class="fieldset-legend">Cart Contents</span>
+     </legend>
+     
+     <div class="CheckoutSectionWrapper">
 
-<table class="">
-    <thead>
-        <tr>
-           @* <th class="views-field views-field-line-item-picture">
+     <table class="">
+         <thead>
+             <tr>
+                 @* <th class="views-field views-field-line-item-picture">
                          
             </th>*@
-            <th class="views-field views-field-line-item-title">
-                Product          
-            </th>
-            <th class="views-field views-field-commerce-unit-price">
-                Price          
-            </th>
-            <th class="views-field views-field-quantity">
-                Quantity          
-            </th>
-            <th class="views-field views-field-commerce-total views-align-right">
-                Total          
-            </th>
-        </tr>
-    </thead>
-    <tbody>
+                 <th class="views-field views-field-line-item-title">
+                     Product          
+                 </th>
+             
+                 <th class="views-field views-field-commerce-total views-align-right">
+                     Total          
+                 </th>
+             </tr>
+         </thead>
+         <tbody>
         
-        @foreach (var product in Model.Order.Products)
-        {
+             @foreach (var product in Model.Order.Products)
+             {
            
 
 
-            <tr class="odd views-row-first views-row-last">
-                @*<td>
+                 <tr class="odd views-row-first views-row-last">
+                     @*<td>
                      <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)" width="50px"/>
                 </td>*@
-                <td class="views-field views-field-line-item-title">
-                    @product.Title
-                </td>
-                <td class="views-field views-field-commerce-unit-price price">
-                    <span class="ZAR-amount currency-on">R @product.DiscountDetails.DiscountedPrice</span>
-                </td>
-                <td class="views-field views-field-quantity">
-                    1          </td>
-                <td class="views-field views-field-commerce-total views-align-right price">
-                    <span class="ZAR-amount currency-on">R @product.DiscountDetails.DiscountedPrice</span>
-                </td>
-            </tr>
-        }
+                     <td class="views-field views-field-line-item-title">
+                         @product.Title
+                     </td>
+                     <td class="views-field views-field-commerce-unit-price price">
+                         <span class="ZAR-amount currency-on">R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)</span>
+                     </td>
+                 
+                 </tr>
+             }
         
-        
+         </tbody>
+     </table>
+         
+         </div>
+     
+ </fieldset>
 
-
-    </tbody>
-</table>
-
+ <br/>
+Sub total: R @String.Format("{0:0}", Model.Order.ProductAmount)
 <br/>
-Sub total: R @Model.Order.ProductAmount
+Delivery: R @String.Format("{0:0}", Model.Order.DeliveryAmount)
 <br/>
-Delivery: R @Model.Order.DeliveryAmount
+Total: <b>R @String.Format("{0:0}", Model.Order.TotalAmount)</b>
 <br/>
-Total: <b>R @Model.Order.TotalAmount</b>
 <br/>
-
-<h3>Account information</h3>
-
-@Model.Order.User.Email
-
-<h3>Shipping Information</h3>
-
-@Model.Order.User.Fullname
-<br/>
-@Model.Order.User.Address
-<br/>
-@Model.Order.User.Suburb
-<br/>
-@Model.Order.User.City
-<br/>
-@Model.Order.User.Country
-<br/>
-@Model.Order.User.PostalCode
-<br/><br/>
-<b>Phone Number</b>
-<br/>
-@Model.Order.User.ContactNumber
+ <fieldset class="account form-wrapper" id="summary-account">
+     <legend>
+         <span class="fieldset-legend">Account Information</span>
+     </legend>
+     
+     <div class="form-horizontal">
+         <br/>
+         <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10">
+                  @Model.Order.User.Email
+             </div>
+         </div>
+     </div>
+     
+ </fieldset>
 
 <br/>
 
-<h3>Payment</h3>
+
+<fieldset class="account form-wrapper" id="summary-shipping">
+    <legend>
+        <span class="fieldset-legend">Shipping Information</span>
+    </legend> 
+    
+     <div class="form-horizontal">
+         <br/>
+         <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10">
+                @Model.Order.User.Fullname
+                <br/>
+                @Model.Order.User.Address
+                <br/>
+                @Model.Order.User.Suburb
+                <br/>
+                @Model.Order.User.City
+                <br/>
+                @Model.Order.User.Country
+                <br/>
+                @Model.Order.User.PostalCode
+                 
+                 @if (!string.IsNullOrEmpty(Model.Order.User.ContactNumber))
+                 {
+                    <br/><br/>
+                    <b>Phone Number</b>
+                    <br/>
+                    @Model.Order.User.ContactNumber
+                 }
+                 
+             </div>
+         </div>
+     </div>
+    
+</fieldset>
+ <br/>
+
+
 
 @Html.ValidationSummary(true)
 
 @using (Html.BeginForm())
 {
-    @Html.HiddenFor(x => x.Order.OrderId);
+    @Html.HiddenFor(x => x.Order.OrderId)
 
-    if (Model.PaymentTypes.Any())
-    {
-        <div class="PaymentTypeHeader">
-        <table>
-            @foreach (var paymentType in Model.PaymentTypes)
-            {
-                <tr>
-                    <td>
-                        @if (paymentType.Selected)
-                        {
-                            <input type="radio" name="PaymentType" value="@paymentType.PaymentTypeId" checked="checked" />
-                        }
-                        else
-                        {
-                            <input type="radio" name="PaymentType" value="@paymentType.PaymentTypeId" />
-                        }
-                    </td>
-                    <td align="left">
-                        @if (!string.IsNullOrEmpty(paymentType.PaymentTypePicture))
-                        {
-                            <img src="@Url.Content(paymentType.PaymentTypePicture)"/>
-                        }
-                        else
-                        {
-                            @paymentType.PaymentTypeName @:- @paymentType.PaymentTypeDetails
-                        }
-                    </td>
-                    <td>
+     <fieldset class="account form-wrapper" id="summary-payment">
+     <legend>
+        <span class="fieldset-legend">Payment Information</span>
+     </legend>           
+         
+    <div class="form-horizontal">
+    <br/>
+
+    @if (Model.PaymentTypes.Any())
+    {         
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+    
+                <table>
+                    @foreach (var paymentType in Model.PaymentTypes)
+                    {
+                        <tr>
+                            <td>
+                                @if (paymentType.Selected)
+                                {
+                                    <input type="radio" name="PaymentType" value="@paymentType.PaymentTypeId" checked="checked" />
+                                }
+                                else
+                                {
+                                    <input type="radio" name="PaymentType" value="@paymentType.PaymentTypeId" />
+                                }
+                            </td>
+                            <td align="left">
+                                @if (!string.IsNullOrEmpty(paymentType.PaymentTypePicture))
+                                {
+                                    <img src="@Url.Content(paymentType.PaymentTypePicture)"/>
+                                }
+                                else
+                                {
+                                    @paymentType.PaymentTypeName @:- @paymentType.PaymentTypeDetails
+                                }
+                            </td>
+                            <td>
                                         
                                         
-                    </td>
-                </tr>
-            }  
-        </table>            
-    </div>
+                            </td>
+                        </tr>
+                    }  
+                </table>                                   
+            </div>
+        </div>                    
     }
     else
     {
         @:No payment types defined!
     }
-    
+        
     <br/>
-    <p>
-        <input type="submit" class="btn btn-default"  value="Continue to next step" />
-    </p> 
+    
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button onclick="submitForm()" class="btn btn-default">Continue to next step</button>
+            <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
+        </div>
+    </div>   
+
+    </div>
+    </fieldset>   
+ 
     
     <br/>
 }
+
+
+<script type="text/javascript">
+
+  function submitForm() {
+      
+      if ($("form").valid()) {
+          
+          $(".loader").show();      
+          $('form').submit();
+      } 
+  }
+</script>
+    
+
+
 
 

@@ -16,7 +16,7 @@ Client: <b>@Model.Client.ClientName</b><br/>
 
 @if (User.IsInRole("SuperUser"))
 {  
-    @Html.ActionLink("back to clients", "Clients", "Admin", null, new { @class = "BackLink" })
+    @Html.ActionLink("back to clients", "Clients", "Superuser", null, new { @class = "BackLink" })
 }
 else
 {

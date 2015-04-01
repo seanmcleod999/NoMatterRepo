@@ -13,6 +13,8 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 {
 	public interface IUserHelper
 	{
+		Task RegisterUser(string clientId, RegisterModel registerModel);
+		Task<SignInResult> SignInUser(string clientId, SignInModel signInModel);
 		Task<UserAuthenticatedResult> Login(string clientId, string facebookToken, string email, string password);
 		Task<string> CreateOrUpdateUser(string clientId, UserModel userModel);
 	}
@@ -60,8 +62,18 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}		
 		}
 
-		
+		public async Task RegisterUser(string clientId, RegisterModel registerModel)
+		{
+			await WebApiService.Instance.PostAsync(string.Format("/api/v1/clients/{0}/users/register", clientId), registerModel);						
+		}
 
+		public async Task<SignInResult> SignInUser(string clientId, SignInModel signInModel)
+		{
+			var result = await WebApiService.Instance.AuthenticateAsync<SignInResult>(signInModel.Email, signInModel.Password);
+
+			return result;
+		}
+		
 		public async Task<string> CreateOrUpdateUser(string clientId, UserModel userModel)
 		{
 

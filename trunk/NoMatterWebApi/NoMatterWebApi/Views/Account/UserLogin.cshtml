@@ -8,37 +8,59 @@
 
 @using (Html.BeginForm())
 {
-    <div>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="form-horizontal">
         
-        <div class="editor-label">
-        Client
-        </div>
-        <div class="editor-field">
-            @Html.DropDownListFor(model => model.SelectedClientId, new SelectList(Model.Clients, "ClientId", "ClientName"), "-- Please Select --")
-            @Html.ValidationMessageFor(model => model.SelectedClientId)
-        </div>
-        
-        <div class="editor-label">
-            Email
-        </div>
-        <div class="editor-field">
-            @Html.TextBoxFor(m => m.Username, new { style = "width:300px;" })
-            @Html.ValidationMessageFor(m => m.Username)
+        <div class="form-group">
+            @Html.LabelFor(m => m.SelectedClientId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SelectedClientId, new SelectList(Model.Clients, "ClientId", "ClientName"), "-- Please Select --", new { @class = "form-control", placeholder = "SelectedClientId", autofocus = true })
+            </div>
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationMessageFor(m => m.SelectedClientId)
+            </div>
         </div>
 
-        <div class="editor-label">
-            Password
+        
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email", autofocus = true })
+            </div>
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationMessageFor(m => m.Email)
+            </div>
         </div>
-        <div class="editor-field">
-            @Html.PasswordFor(m => m.Password)
-            @Html.ValidationMessageFor(m => m.Password)
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+            </div>
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        @Html.CheckBoxFor(m => m.RememberMe)@Html.DisplayNameFor(m => m.RememberMe)
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Sign In</button>
+            </div>
         </div>
        
        
-        <br/>
-        <p>
-            <input type="submit" value="Login" class="btn btn-default"/>
-        </p>
 
     </div>
 }

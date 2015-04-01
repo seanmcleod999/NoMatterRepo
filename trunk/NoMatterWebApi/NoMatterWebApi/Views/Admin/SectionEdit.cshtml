@@ -1,4 +1,4 @@
-﻿@using NoMatterWebApiWebHelper.OtherHelpers
+﻿@using NoMatterWebApi.Helpers
 @model NoMatterWebApiModels.ViewModels.AddEditSectionVm
 
 @{
@@ -34,7 +34,7 @@
         Title
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Section.SectionName, new {style = "width:300px;"})
+        @Html.TextBoxFor(model => model.Section.SectionName, new {style = "width:100%;"})
         @Html.ValidationMessageFor(model => model.Section.SectionName)
     </div>
     
@@ -42,7 +42,7 @@
         Description
     </div>
     <div class="editor-field">
-        @Html.TextAreaFor(model => model.Section.SectionDescription, new {style = "width:600px;"})
+        @Html.TextAreaFor(model => model.Section.SectionDescription, new {style = "width:100%;"})
         @Html.ValidationMessageFor(model => model.Section.SectionDescription)
         <script>
             CKEDITOR.replace('Section_SectionDescription');

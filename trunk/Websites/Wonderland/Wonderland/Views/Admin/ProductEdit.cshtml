@@ -1,5 +1,5 @@
 ﻿@using NoMatterWebApiWebHelper.OtherHelpers
-@model NoMatterWebApiModels.ViewModels.AddEditProductVm
+@model NoMatterWebApiModels.ViewModels.EditProductVm
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,10 +7,12 @@
     ViewBag.Title = "Edit Product";
 }
 
+<script src="~/ckeditor/ckeditor.js"></script>
+
 <h1>Edit Product</h1>
 
 <div class="PageNavigationBar">
-    @Html.ActionLink("back to products", "CategoryProducts", "Admin", new { categoryId = @Model.Product.CategoryId }, new { @class = "BackLink" })
+    @Html.ActionLink("back to products", "CategoryProducts", "Admin", new { categoryId = @Model.Category.CategoryId }, new { @class = "BackLink" })
 </div>
 
 @using (Html.BeginForm("ProductEdit", "Admin", FormMethod.Post, new {enctype = "multipart/form-data"}))
@@ -33,7 +35,7 @@
         Title
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Product.Title, new {style = "width:300px;"})
+        @Html.TextBoxFor(model => model.Product.Title, new {style = "width:100%;"})
         @Html.ValidationMessageFor(model => model.Product.Title)
     </div>
 
@@ -41,21 +43,24 @@
         Description
     </div>
     <div class="editor-field">
-        @Html.TextAreaFor(model => model.Product.Description, new {style = "width:500px;"})
+        @Html.TextAreaFor(model => model.Product.Description, new {style = "width:100%;"})
+         <script>
+             CKEDITOR.replace('Product_Description');
+        </script>
     </div>
     
        <div class="editor-label">
         Hidden Notes
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Product.AdminNotes, new { style = "width:300px;" })
+        @Html.TextBoxFor(model => model.Product.AdminNotes, new { style = "width:100%;" })
     </div>
     
     <div class="editor-label">
         Key Words
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Product.Keywords, new { style = "width:300px;" })
+        @Html.TextBoxFor(model => model.Product.Keywords, new { style = "width:100%;" })
     </div>
     
     <div class="editor-label">
@@ -187,7 +192,7 @@
    
     <br/>
     <p>
-        <input type="submit" value="Save"  class="btn btn-default"/> &nbsp; @Html.ActionLink("cancel", "CategoryProducts", new { categoryId = @Model.CategoryId } , new {onclick = "return confirm('Are you sure you wish to delete this product? Note that this will also delete the products history.');"  })
+        <input type="submit" value="Save"  class="btn btn-default"/> &nbsp; @Html.ActionLink("cancel", "CategoryProducts", new { categoryId = @Model.Category.CategoryId } , new {onclick = "return confirm('Are you sure you wish to delete this product? Note that this will also delete the products history.');"  })
     </p>
 
 }

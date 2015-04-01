@@ -92,6 +92,8 @@ namespace NoMatterWebApi.DAL
 		{
 			var category = await databaseConnection.Categories.Where(x => x.CategoryUUID == categoryUuid).SingleOrDefaultAsync();
 
+			if (category == null) return;
+
 			databaseConnection.Categories.Remove(category);
 			await databaseConnection.SaveChangesAsync();
 
@@ -108,8 +110,6 @@ namespace NoMatterWebApi.DAL
 
 		public async Task<List<Product>> GetCategoryProductsByTypeAsync(int sectionId, int categoryId, string type)
 		{
-			//todo: only show products after release date
-
 			var todaysDate = DateTime.Now;
 
 			IEnumerable<Product> products = databaseConnection.Products.Where(x=>!x.Hidden && x.ReleaseDate < todaysDate).OrderByDescending(x => x.ReleaseDate);

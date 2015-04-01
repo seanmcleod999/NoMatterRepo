@@ -1,0 +1,59 @@
+﻿@model NoMatterWebApi.ViewModels.SettingVm
+
+@{
+    ViewBag.Title = "Setting Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.env.isCompatible = true;
+
+    $(function () {
+        CKEDITOR.config.height = 300;
+    });
+</script>
+
+<h1>Edit Setting</h1>
+
+<div class="PageNavigationBar">
+    @Html.ActionLink("back to settings", "SiteSettings", "Superuser", null, new { @class = "BackLink" })
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Setting.SettingId)
+    @Html.HiddenFor(model => model.Setting.SettingCategoryId)
+    @Html.HiddenFor(model => model.Setting.SettingTypeId)
+   
+    <div class="editor-label">
+       Setting Name
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Setting.SettingName, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.Setting.SettingName)
+    </div>
+    
+     <div class="editor-label">
+       Description
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.Setting.SettingDescription)
+        @Html.ValidationMessageFor(model => model.Setting.SettingDescription)
+        <script>
+            CKEDITOR.replace('Setting_SettingDescription');
+        </script>
+    </div>
+   
+    <br/>
+    <p>
+        <input type="submit" value="Save" class="btn btn-default"/> &nbsp;@Html.ActionLink("cancel", "SiteSettings", "Superuser",  null, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" }) 
+    </p>
+}
+
+
+
+
+

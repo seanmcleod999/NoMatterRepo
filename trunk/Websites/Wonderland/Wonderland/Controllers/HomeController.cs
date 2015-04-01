@@ -25,7 +25,9 @@ namespace RedOrange.Controllers
 
         public ActionResult Index()
         {
-            return View();
+
+	        return RedirectToAction("Index", "Shop");
+	        //return View();
         }
 
         public async Task<ActionResult> About()
@@ -59,27 +61,29 @@ namespace RedOrange.Controllers
 			{
 				var page = await _clientHelper.GetClientPage(_globalSettings.SiteClientId, "ContactPage");
 
-				var viewClientPageVm = new ViewClientPageVm();
+				var contactsUsVm = new ContactUsVm();
 
-				if (page != null)
-				{
-					//String html = "<p>[SLIDER]Something[\\SLIDER]</p>";
+				contactsUsVm.PageText = page.PageText;
 
-					String html = page.PageText;
+				//if (page != null)
+				//{
+				//	//String html = "<p>[SLIDER]Something[\\SLIDER]</p>";
 
-					//String replacementHtml = "<iframe src=\"//www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>";
-					String replacementHtml = "@{Html.RenderPartial(\"partialTest\");}";
+				//	String html = page.PageText;
 
-					Regex shortcodeRegex = new Regex(@"\[SLIDER\]([^\[\\]+)\[/SLIDER\]");
+				//	//String replacementHtml = "<iframe src=\"//www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>";
+				//	String replacementHtml = "@{Html.RenderPartial(\"partialTest\");}";
 
-					String result = shortcodeRegex.Replace(html, replacementHtml);
+				//	Regex shortcodeRegex = new Regex(@"\[SLIDER\]([^\[\\]+)\[/SLIDER\]");
 
-
-					viewClientPageVm.PageText = result;
-				}
+				//	String result = shortcodeRegex.Replace(html, replacementHtml);
 
 
-				return View(viewClientPageVm);
+				//	contactsUsVm.PageText = result;
+				//}
+
+
+				return View(contactsUsVm);
 			}
 			catch (Exception ex)
 			{

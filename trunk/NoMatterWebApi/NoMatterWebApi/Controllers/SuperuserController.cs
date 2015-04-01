@@ -44,6 +44,133 @@ namespace NoMatterWebApi.Controllers.v1
             return View();
         }
 
+		
+
+		public async Task<ActionResult> Clients()
+		{
+			var clients = await _clientRepository.GetClientsAsync();
+
+			var viewClientsVm = new ViewClientsVm
+			{
+				Clients = clients.Select(x=>x.ToDomainClient()).ToList()
+			};
+
+			return View(viewClientsVm);
+		}
+
+		public ActionResult ClientAdd()
+		{
+			var addClientVm = new AddEditClientVm
+			{
+				Client = new NoMatterWebApiModels.Models.Client()
+				{
+					Enabled = true
+				}
+			};
+
+			return View(addClientVm);
+		}
+
+		[HttpPost]
+		[ValidateInput(false)]
+		public async Task<ActionResult> ClientAdd(AddEditClientVm addEditClientVm)
+		{
+
+			//var imageController = new ImageController();
+
+			//if (addEditSectionVm.Picture != null)
+			//{
+			//	var imageBase64String = WebApiGeneralHelper.ConvertPicToBase64String(addEditSectionVm.Picture);
+			//	var uploadImageResult = await imageController.UploadImageAsync(addEditSectionVm.Section.ClientId, imageBase64String);
+			//	var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+
+			//	addEditSectionVm.Section.Picture = pictureResult.Content;
+			//}
+
+			await _clientRepository.AddClientAsync(addEditClientVm.Client.ToDatabaseClient());
+
+			return RedirectToAction("Clients");
+		}
+
+		public async Task<ActionResult> ClientEdit(string clientId)
+		{
+
+			var client = await _clientRepository.GetClientAsync(new Guid(clientId));
+
+			var editClientVm = new AddEditClientVm
+			{
+				Client = client.ToDomainClient()
+			};
+
+			return View(editClientVm);
+
+		}
+
+		[HttpPost]
+		public async Task<ActionResult> ClientEdit(AddEditClientVm addEditClientVm)
+		{
+			//if (addEditClientVm.Client.Logo != null)
+			//{
+			//	var imageBase64String = WebApiGeneralHelper.ConvertPicToBase64String(addEditSectionVm.Picture);
+			//	var uploadImageResult = await _imageController.UploadImageAsync(addEditSectionVm.Section.ClientId, imageBase64String);
+			//	var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+
+			//	addEditSectionVm.Section.Picture = pictureResult.Content;
+			//}
+
+			var clientDb = await _clientRepository.GetClientAsync(new Guid(addEditClientVm.Client.ClientId));
+
+			await _clientRepository.UpdateClientAsync(clientDb, addEditClientVm.Client);
+
+			return RedirectToAction("Clients");
+
+		}
+
+		public async Task<ActionResult> SiteSettings()
+		{
+			try
+			{
+				var settings = await _globalRepository.GetSettingsAsync();
+
+				var settingsVm = new SettingsVm
+				{
+					Settings = settings.Select(x=>x.ToDomainSetting()).ToList()
+				};
+
+				return View(settingsVm);
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+		}
+
+		public async Task<ActionResult> SiteSettingEdit(short settingId)
+		{
+			var setting = await _globalRepository.GetSettingAsync(settingId);
+
+			var settingVm = new SettingVm
+			{
+				Setting = setting.ToDomainSetting()
+			};
+
+			return View(settingVm);
+		}
+
+		[HttpPost]
+		[ValidateInput(false)]
+		public async Task<ActionResult> SiteSettingEdit(SettingVm settingVm)
+		{
+			var settingDb = await _globalRepository.GetSettingAsync(settingVm.Setting.SettingId);
+
+			await _globalRepository.UpdateSettingAsync(settingDb, settingVm.Setting);
+
+			return RedirectToAction("SiteSettings");
+		}
+
+
 		public ActionResult ViewSqlResults()
 		{
 			var runMySqlScriptVm = new RunMySqlScriptVm();
@@ -101,6 +228,7 @@ namespace NoMatterWebApi.Controllers.v1
 		}
 
 		[HttpPost]
+		[ValidateInput(false)]
 		public ActionResult RunSqlScript(RunMySqlScriptVm runMySqlScriptVm)
 		{
 			try
@@ -110,15 +238,7 @@ namespace NoMatterWebApi.Controllers.v1
 
 				var myConn = new SqlConnection(s_ConnectionString);
 
-				ExecuteBatchNonQuery(query, myConn);
-
-				//var myCmd = new SqlCommand(query, myConn);;
-
-				//myConn.Open();
-
-				//runMySqlScriptVm.ScriptExecuted = true;
-
-				//myCmd.ExecuteNonQuery();     
+				SuperuserHelper.ExecuteBatchNonQuery(query, myConn);
 
 				myConn.Close();
 
@@ -137,146 +257,7 @@ namespace NoMatterWebApi.Controllers.v1
 				return View("RunSqlScriptResult", runMySqlScriptVm);
 			}
 
-		}
-
-		private void ExecuteBatchNonQuery(string sql, SqlConnection conn)
-		{
-			string sqlBatch = string.Empty;
-			SqlCommand cmd = new SqlCommand(string.Empty, conn);
-			conn.Open();
-			sql += "\nGO";   // make sure last batch is executed.
-			try
-			{
-				foreach (string line in sql.Split(new string[2] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries))
-				{
-					if (line.ToUpperInvariant().Trim() == "GO")
-					{
-						cmd.CommandText = sqlBatch;
-						cmd.ExecuteNonQuery();
-						sqlBatch = string.Empty;
-					}
-					else
-					{
-						sqlBatch += line + "\n";
-					}
-				}
-			}
-			finally
-			{
-				conn.Close();
-			}
-		}
-
-		public async Task<ActionResult> Clients()
-		{
-			var clients = await _clientRepository.GetClientsAsync();
-
-			var viewClientsVm = new ViewClientsVm
-			{
-				Clients = clients.Select(x=>x.ToDomainClient()).ToList()
-			};
-
-			return View(viewClientsVm);
-		}
-
-		public ActionResult ClientAdd()
-		{
-			var addClientVm = new AddEditClientVm
-			{
-				Client = new NoMatterWebApiModels.Models.Client()
-				{
-					Enabled = true
-				}
-			};
-
-			return View(addClientVm);
-		}
-
-		[HttpPost]
-		[ValidateInput(false)]
-		public async Task<ActionResult> ClientAdd(AddEditClientVm addEditClientVm)
-		{
-			//var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			//var imageController = new ImageController();
-
-			//_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-			//if (addEditSectionVm.Picture != null)
-			//{
-			//	var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditSectionVm.Picture);
-			//	var uploadImageResult = await imageController.UploadImageAsync(addEditSectionVm.Section.ClientId, imageBase64String);
-			//	var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-			//	addEditSectionVm.Section.Picture = pictureResult.Content;
-			//}
-
-			await _clientRepository.AddClientAsync(addEditClientVm.Client.ToDatabaseClient());
-
-			return RedirectToAction("Clients");
-		}
-
-		public async Task<ActionResult> ClientEdit(string clientId)
-		{
-			//var getClientResult = await _clientController.GetClientAsync(clientId);
-			//var clientResult = getClientResult as OkNegotiatedContentResult<Client>;
-
-			var client = await _clientRepository.GetClientAsync(new Guid(clientId));
-
-			var editClientVm = new AddEditClientVm
-			{
-				Client = client.ToDomainClient()
-			};
-
-			return View(editClientVm);
-
-		}
-
-		[HttpPost]
-		public async Task<ActionResult> ClientEdit(AddEditClientVm addEditClientVm)
-		{
-			//var token = ((CustomPrincipal)HttpContext.User).Token;
-
-			//_clientController.User = new ClaimsPrincipal(WebApiGeneralHelper.GenerateClaimsIdentity(token));
-
-
-			//if (addEditClientVm.Client.Logo != null)
-			//{
-			//	var imageBase64String = WebApiGeneralHelper.ConvertPictureFileToBase64String(addEditSectionVm.Picture);
-			//	var uploadImageResult = await _imageController.UploadImageAsync(addEditSectionVm.Section.ClientId, imageBase64String);
-			//	var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
-
-			//	addEditSectionVm.Section.Picture = pictureResult.Content;
-			//}
-
-			var clientDb = await _clientRepository.GetClientAsync(new Guid(addEditClientVm.Client.ClientId));
-
-			await _clientRepository.UpdateClientAsync(clientDb, addEditClientVm.Client);
-
-			return RedirectToAction("Clients");
-
-		}
-
-		public async Task<ActionResult> SiteSettings()
-		{
-			try
-			{
-				var settings = await _globalRepository.GetSettingsAsync();
-
-				var settingsVm = new SettingsVm
-				{
-					Settings = settings.Select(x=>x.ToDomainSetting()).ToList()
-				};
-
-				return View(settingsVm);
-
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				throw;
-			}
-		}
+		}	
 		
     }
 }

@@ -15,18 +15,19 @@
             
             <div class="footerLinks">       
                 <ul>
+                    <li>@Html.ActionLink("Shop", "Index", "Home")</li> 
                     <li>@Html.ActionLink("About", "About", "Home")</li>                       
                     <li>@Html.ActionLink("Contact", "ContactUs", "Home")</li> 
                     @if (currentUser.IsLoggedIn())
                     {
-                         <li>@Html.ActionLink("Logoff", "LogOff", "Account")</li> 
+                        <li>@Html.ActionLink("Logoff", "LogOff", "Account")</li> 
                     }
                     else
                     {
-                        <li>@Html.ActionLink("Login", "Login", "Account")</li> 
+                        <li>@Html.ActionLink("Login", "SignIn", "Account")</li> 
                     }   
                     
-                    @if (currentUser.IsAdmin())
+                    @if (currentUser.IsLoggedIn())
                     {
                         <li>@Html.ActionLink("Admin", "Index", "Admin")</li> 
                     }           
@@ -48,11 +49,11 @@
         <div class="footerLinkCol3">
             <div class="footerLinks">       
                 <ul>
-                    @*<li><a href="@StaticGlobalSettings.FacebookPageUrl" target="_blank">Facebook</a></li>
+                    <li><a href="@StaticGlobalSettings.FacebookPageUrl" target="_blank">Facebook</a></li>
                     <li><a href="@StaticGlobalSettings.TwitterUrl" target="_blank">Twitter</a></li>
                     <li><a href="@StaticGlobalSettings.InstagramUrl" target="_blank">Instagram</a></li>                       
                     <li><a href="@StaticGlobalSettings.PintrestUrl" target="_blank">Pintrest</a></li>  
-                     <li><a href="@StaticGlobalSettings.GooglePlusUrl" target="_blank">Google+</a></li>   *@         
+                     <li><a href="@StaticGlobalSettings.GooglePlusUrl" target="_blank">Google+</a></li>        
                 </ul>                
             </div>      
         </div>
@@ -62,5 +63,5 @@
 </div>
 
 <div class="footerAllRightsReserved">
- All Rights Reserved © @DateTime.Now.Year @StaticGlobalSettings.SiteNameFriendly   
+    All Rights Reserved © @DateTime.Now.Year @StaticGlobalSettings.SiteNameFriendly. Website by <a href="http://www.xyzwebsites.co.za">XYZWebsites</a>   
 </div>

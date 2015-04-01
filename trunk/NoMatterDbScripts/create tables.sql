@@ -46,7 +46,8 @@ CREATE TABLE [dbo].[Client](
 	[ClientUUID] [uniqueidentifier] NOT NULL,
 	[ClientName] [varchar](50) NOT NULL,
 	[Enabled] [bit] NOT NULL,
-	[Logo] [varchar](50) NULL
+	[Logo] [varchar](50) NULL,
+	[SiteUrl] [varchar](100) NULL
 ) ON [PRIMARY]
 GO
 
@@ -72,11 +73,40 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+CREATE TABLE [dbo].[ClientPage](
+	[ClientPageId] [int] IDENTITY(1,1) NOT NULL,
+	[PageName] [varchar](50) NOT NULL,
+	[ClientId] [int] NOT NULL,
+	[PageText] [varchar](max) NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[ClientPaymentType](
 	[ClientPaymentTypeId] [smallint] IDENTITY(1,1) NOT NULL,
 	[ClientId] [int] NOT NULL,
 	[PaymentTypeId] [smallint] NOT NULL,
 	[PaymentTypeOrder] [tinyint] NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ClientSetting](
+	[ClientSettingId] [int] IDENTITY(1,1) NOT NULL,
+	[ClientId] [int] NOT NULL,
+	[SettingId] [smallint] NOT NULL,
+	[StringValue] [varchar](200) NULL,
+	[IntValue] [int] NULL
 ) ON [PRIMARY]
 GO
 
@@ -146,6 +176,22 @@ GO
 
 CREATE TABLE [dbo].[GlobalSetting](
 	[GlobalSettingId] [tinyint] IDENTITY(1,1) NOT NULL,
+	[SettingName] [varchar](50) NOT NULL,
+	[SettingType] [tinyint] NOT NULL,
+	[StringValue] [varchar](200) NULL,
+	[IntValue] [smallint] NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[OldSetting](
+	[SettingId] [smallint] IDENTITY(1,1) NOT NULL,
+	[ClientId] [int] NOT NULL,
 	[SettingName] [varchar](50) NOT NULL,
 	[SettingType] [tinyint] NOT NULL,
 	[StringValue] [varchar](200) NULL,
@@ -285,12 +331,48 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Setting](
-	[SettingId] [smallint] IDENTITY(1,1) NOT NULL,
-	[ClientId] [int] NOT NULL,
+	[SettingId] [smallint] NOT NULL,
 	[SettingName] [varchar](50) NOT NULL,
-	[SettingType] [tinyint] NOT NULL,
-	[StringValue] [varchar](200) NULL,
-	[IntValue] [smallint] NULL
+	[SettingDescription] [varchar](500) NULL,
+	[SettingTypeId] [tinyint] NOT NULL,
+	[SettingCategoryId] [smallint] NOT NULL,
+	[RegexValidation] [nvarchar](100) NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SettingCategory](
+	[SettingCategoryId] [smallint] NOT NULL,
+	[Category] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SettingType](
+	[SettingTypeId] [tinyint] NOT NULL,
+	[Type] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[temp](
+	[tempid] [nchar](10) NULL,
+	[tegfhg] [nchar](10) NULL
 ) ON [PRIMARY]
 GO
 
@@ -353,8 +435,25 @@ GO
 ALTER TABLE [dbo].[Section] ADD  CONSTRAINT [DF_Section_SectionOrder]  DEFAULT ((0)) FOR [SectionOrder]
 GO
 
+ALTER TABLE [dbo].[Setting] ADD  CONSTRAINT [DF_SiteSetting_SiteSettingTypeId]  DEFAULT ((0)) FOR [SettingCategoryId]
+GO
+
 
 -- INDEXES
+
+CREATE UNIQUE NONCLUSTERED INDEX [IX_ClientPage] ON [dbo].[ClientPage] 
+(
+	[ClientId] ASC,
+	[PageName] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Setting_ClientId_SettingName] ON [dbo].[OldSetting] 
+(
+	[ClientId] ASC,
+	[SettingName] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
 
 ALTER TABLE [dbo].[CartProduct] ADD  CONSTRAINT [PK_CartProduct] PRIMARY KEY CLUSTERED 
 (
@@ -380,15 +479,27 @@ ALTER TABLE [dbo].[Enquiry] ADD  CONSTRAINT [PK_ClientEnquiry] PRIMARY KEY CLUST
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[ClientPage] ADD  CONSTRAINT [PK_ClientPage_1] PRIMARY KEY CLUSTERED 
+(
+	[ClientPageId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
 ALTER TABLE [dbo].[ClientPaymentType] ADD  CONSTRAINT [PK_ClientPaymentType] PRIMARY KEY CLUSTERED 
 (
 	[ClientPaymentTypeId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Setting] ADD  CONSTRAINT [PK_ClientSetting] PRIMARY KEY CLUSTERED 
+ALTER TABLE [dbo].[OldSetting] ADD  CONSTRAINT [PK_ClientSetting] PRIMARY KEY CLUSTERED 
 (
 	[SettingId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ClientSetting] ADD  CONSTRAINT [PK_ClientSiteSetting] PRIMARY KEY CLUSTERED 
+(
+	[ClientSettingId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
@@ -454,6 +565,24 @@ ALTER TABLE [dbo].[Category] ADD  CONSTRAINT [PK_SectionCategory] PRIMARY KEY CL
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[SettingType] ADD  CONSTRAINT [PK_SettingType] PRIMARY KEY CLUSTERED 
+(
+	[SettingTypeId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Setting] ADD  CONSTRAINT [PK_SiteSetting] PRIMARY KEY CLUSTERED 
+(
+	[SettingId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[SettingCategory] ADD  CONSTRAINT [PK_SiteSettingType] PRIMARY KEY CLUSTERED 
+(
+	[SettingCategoryId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
 ALTER TABLE [dbo].[User] ADD  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[UserId] ASC
@@ -510,6 +639,13 @@ GO
 ALTER TABLE [dbo].[Enquiry] CHECK CONSTRAINT [FK_ClientEnquiry_Client]
 GO
 
+ALTER TABLE [dbo].[ClientPage]  WITH CHECK ADD  CONSTRAINT [FK_ClientPage_Client] FOREIGN KEY([ClientId])
+REFERENCES [Client] ([ClientId])
+GO
+
+ALTER TABLE [dbo].[ClientPage] CHECK CONSTRAINT [FK_ClientPage_Client]
+GO
+
 ALTER TABLE [dbo].[ClientPaymentType]  WITH CHECK ADD  CONSTRAINT [FK_ClientPaymentType_Client] FOREIGN KEY([ClientId])
 REFERENCES [Client] ([ClientId])
 GO
@@ -524,11 +660,25 @@ GO
 ALTER TABLE [dbo].[ClientPaymentType] CHECK CONSTRAINT [FK_ClientPaymentType_PaymentType]
 GO
 
-ALTER TABLE [dbo].[Setting]  WITH CHECK ADD  CONSTRAINT [FK_ClientSetting_Client] FOREIGN KEY([ClientId])
+ALTER TABLE [dbo].[OldSetting]  WITH CHECK ADD  CONSTRAINT [FK_ClientSetting_Client] FOREIGN KEY([ClientId])
 REFERENCES [Client] ([ClientId])
 GO
 
-ALTER TABLE [dbo].[Setting] CHECK CONSTRAINT [FK_ClientSetting_Client]
+ALTER TABLE [dbo].[OldSetting] CHECK CONSTRAINT [FK_ClientSetting_Client]
+GO
+
+ALTER TABLE [dbo].[ClientSetting]  WITH CHECK ADD  CONSTRAINT [FK_ClientSetting_Client1] FOREIGN KEY([ClientId])
+REFERENCES [Client] ([ClientId])
+GO
+
+ALTER TABLE [dbo].[ClientSetting] CHECK CONSTRAINT [FK_ClientSetting_Client1]
+GO
+
+ALTER TABLE [dbo].[ClientSetting]  WITH CHECK ADD  CONSTRAINT [FK_ClientSetting_Setting] FOREIGN KEY([SettingId])
+REFERENCES [Setting] ([SettingId])
+GO
+
+ALTER TABLE [dbo].[ClientSetting] CHECK CONSTRAINT [FK_ClientSetting_Setting]
 GO
 
 ALTER TABLE [dbo].[Discount]  WITH CHECK ADD  CONSTRAINT [FK_Discount_Client] FOREIGN KEY([ClientId])
@@ -603,6 +753,20 @@ REFERENCES [Client] ([ClientId])
 GO
 
 ALTER TABLE [dbo].[Section] CHECK CONSTRAINT [FK_Section_Section]
+GO
+
+ALTER TABLE [dbo].[Setting]  WITH CHECK ADD  CONSTRAINT [FK_Setting_SettingCategory] FOREIGN KEY([SettingCategoryId])
+REFERENCES [SettingCategory] ([SettingCategoryId])
+GO
+
+ALTER TABLE [dbo].[Setting] CHECK CONSTRAINT [FK_Setting_SettingCategory]
+GO
+
+ALTER TABLE [dbo].[Setting]  WITH CHECK ADD  CONSTRAINT [FK_Setting_SettingType] FOREIGN KEY([SettingTypeId])
+REFERENCES [SettingType] ([SettingTypeId])
+GO
+
+ALTER TABLE [dbo].[Setting] CHECK CONSTRAINT [FK_Setting_SettingType]
 GO
 
 ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_UserOrder_User] FOREIGN KEY([UserId])

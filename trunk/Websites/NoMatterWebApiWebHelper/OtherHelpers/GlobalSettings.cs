@@ -59,6 +59,8 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		string SiteClientId { get; }
 
+		string DefaultSectionName { get; }
+
 	}
 
 	public class GlobalSettings : IGlobalSettings
@@ -71,9 +73,10 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public string ShopItemPath { get { return SiteUrl + ConfigurationManager.AppSettings["ShopItemPath"]; } }
 
 		public string SiteClientId { get { return ConfigurationManager.AppSettings["SiteClientId"]; } }
+		public string DefaultSectionName { get { return ConfigurationManager.AppSettings["DefaultSectionName"]; } }
 
-		public string SiteName { get { return ConfigurationManager.AppSettings["SiteName"]; } }
-		public string SiteUrl { get { return ConfigurationManager.AppSettings["SiteUrl"]; } }
+		public string SiteName { get { return StaticGlobalSettings.SiteName; } }
+		public string SiteUrl { get { return StaticGlobalSettings.SiteUrl; } }
 
 		public string PayfastPaymentMode { get { return ConfigurationManager.AppSettings["PayfastPaymentMode"]; } }
 		public string PayfastMerchantId { get { return ConfigurationManager.AppSettings["PayfastMerchantId"]; } }

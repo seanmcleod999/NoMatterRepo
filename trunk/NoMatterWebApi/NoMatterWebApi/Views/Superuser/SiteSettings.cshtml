@@ -8,7 +8,7 @@
 <h1>Site Settings</h1>
 
 <div class="PageNavigationBar">
-    @Html.ActionLink("add setting", "ClientSettingAdd", "Admin", null, new { @class = "AddLink" })
+    @Html.ActionLink("add setting", "SiteSettingAdd", "Admin", null, new { @class = "AddLink" })
     &nbsp; 
     @Html.ActionLink("back to admin", "Index", "Admin", null, new {@class = "BackLink"})
 </div>
@@ -55,7 +55,7 @@
          </td>        
               
         <td>
-            @Html.ActionLink("edit", "SettingEdit", "Superuser", new { settingId = @setting.SettingId }, null)
+            @Html.ActionLink("edit", "SiteSettingEdit", "Superuser", new { settingId = @setting.SettingId }, null)
         </td>
         
          <td>

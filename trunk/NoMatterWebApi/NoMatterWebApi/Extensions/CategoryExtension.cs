@@ -18,6 +18,7 @@ namespace NoMatterWebApi.Extensions
 				CategoryDescription = category.CategoryDescription,
 				ActionName = category.ActionName,
 				Conditional = category.Conditional,
+				Hidden = category.Hidden,
 				Picture = category.Picture,
 				VisibleProductCount = category.Products.Count(x => !x.Sold && !x.Hidden), //TODO may have to include release date in this
 				FullProductCount = category.Products.Count() 

@@ -5,9 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using CustomAuthLib;
 using NoMatterDatabaseModel;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.CustomAuth;
 using NoMatterWebApi.DAL;
 using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
@@ -32,7 +32,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_productRepository = new ProductRepository(databaseEntity);
 			_categoryRepository = new CategoryRepository(databaseEntity);
-			_generalHelper = new WebApiGeneralHelper();
+			_generalHelper = new GeneralHelper();
 			
 		}
 
@@ -40,7 +40,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			_productRepository = productRepository;
 			_categoryRepository = categoryRepository;;
-			_generalHelper = generalHelper;
+			generalHelper = generalHelper;
 		}
 
 	
@@ -83,19 +83,8 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-
-				//var userToken = User.Identity.Name;
-
-				//var userDb = await _userRepository.GetClientUserByTokenAsync(userToken);
-				//if (userDb == null) return new CustomBadRequest(Request, ApiResultCode.UserNotFound);
-
-				//var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
-				//if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
-
 				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
 				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
-
-				//if (userDb.Client != null && userDb.ClientId != clientDb.ClientId) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
 				//Update the section
 				await _categoryRepository.UpdateCategoryAsync(categoryDb, category);
@@ -186,59 +175,17 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var productUuid = Guid.NewGuid();
 
 				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
 
 				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
 
-				var productDb = new NoMatterDatabaseModel.Product
-				{
-					ProductUUID = productUuid,
-					Category = categoryDb,
-					Title = model.Title,
-					Description = model.Description,
-					Size = model.Size,
-					Price = model.Price,
-					Reserved = model.Reserved,
-					Hidden = model.Hidden,
-					AdminNotes = model.AdminNotes,
-					Picture1 = model.Picture1,
-					Picture2 = model.Picture2,
-					Picture3 = model.Picture3,
-					Picture4 = model.Picture4,
-					Picture5 = model.Picture5,
-					PictureOther = model.PictureOther,
-					ReleaseDate = Convert.ToDateTime(model.ReleaseDate),
-
-				};
-
-				//Handle the keywords
-				if (model.Keywords != null)
-				{
-					var keywords = model.Keywords.Split(',');
-
-					foreach (var productKeyword in keywords.Select(keyword => new NoMatterDatabaseModel.ProductKeyword
-					{
-						Product = productDb,
-						Keyword = keyword.Trim().ToLower()
-					}))
-					{
-						productDb.ProductKeywords.Add(productKeyword);
-					}
-				}
-
-				//Generate the short url
-				productDb.ProductShortUrl = _generalHelper.MakeGoogleShortUrl(model.ViewProductUrl + productUuid);
+				var productDb = ProductHelper.GenerateProductDbModel(model, categoryDb.CategoryId, _generalHelper);
 
 				//Save the product
-				var productId = await _productRepository.AddProductAsync(productDb);
+				await _productRepository.AddProductAsync(productDb);
 
-				//Get the product to return the details
-				var product = await _productRepository.GetProductAsync(productId);
-
-				//TODO: change to created response
-				return Ok(product.ToDomainProduct());
+				return Ok();
 
 			}
 			catch (Exception ex)

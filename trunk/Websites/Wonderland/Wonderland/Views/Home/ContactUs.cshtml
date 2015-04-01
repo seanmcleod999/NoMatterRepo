@@ -1,5 +1,5 @@
 ﻿@using NoMatterWebApiWebHelper.OtherHelpers
-@model NoMatterWebApiModels.ViewModels.ViewClientPageVm
+@model NoMatterWebApiModels.ViewModels.ContactUsVm
 
 @{
     ViewBag.Title = "Contact";
@@ -7,8 +7,8 @@
 
 <style>
     #map-canvas {
-        height: 400px;
-        width: 600px;
+        height: 350px;
+        width: 500px;
         margin: 20px;
         padding: 20px 0;
         margin:0 auto;
@@ -20,7 +20,7 @@
         var map;
         function initialize() {
             
-            var myLatlng = new google.maps.LatLng('@StaticGlobalSettings.ClientLatitude', '@StaticGlobalSettings.ClientLongitude');
+            var myLatlng = new google.maps.LatLng('@StaticGlobalSettings.MapLatitude', '@StaticGlobalSettings.MapLongitude');
             
             var mapOptions = {
                 zoom: 16,
@@ -48,5 +48,63 @@
 
  @Html.Raw(Model.PageText)
 
+@*
+
+@using (Html.BeginForm())
+{ 
+    
+     <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+     </div>
+     <div class="editor-field">
+            @Html.TextBoxFor(model => model.Name, new { style = "width:100%;" })
+            @Html.ValidationMessageFor(model => model.Name)
+     </div>
+    
+      <div class="editor-label">
+            @Html.LabelFor(model => model.EmailAddress)
+     </div>
+     <div class="editor-field">
+            @Html.TextBoxFor(model => model.EmailAddress, new { style = "width:100%;" })
+            @Html.ValidationMessageFor(model => model.EmailAddress)
+     </div>
+    
+     <div class="editor-label">
+        @Html.LabelFor(model => model.ContactNumber) 
+     </div>
+     <div class="editor-field">
+            @Html.TextBoxFor(model => model.ContactNumber, new { style = "width:100%;" }) (Not required)
+            @Html.ValidationMessageFor(model => model.ContactNumber)
+     </div>
+    
+     <div class="editor-label">
+             @Html.LabelFor(model => model.Message)
+     </div>
+     <div class="editor-field">
+             @Html.TextAreaFor(model => model.Message, new { style = "width:100%;" })
+                @Html.ValidationMessageFor(model => model.Message)
+     </div>@*
+        
+    <input type="submit" value="Send" />
+    <br/>
+    <a href="javascript:void(0);" class="btn btn-default" onclick="submitForm();">Send</a>  <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
+    
+    <br /><br />
+                        
+}*@
 
 <div id="map-canvas"></div>
+
+
+<script type="text/javascript">
+
+    function submitForm() {
+
+        if ($("form").valid()) {
+
+            $(".loader").show();
+            $('form').submit();
+        }
+    }
+</script>
+    

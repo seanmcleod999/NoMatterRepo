@@ -1,8 +1,10 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper.Exceptions;
 
@@ -55,6 +57,24 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 			}
 			
 		}
+
+		//public static void HandleWebApiFailedResult2(HttpStatusCode statusCode, string jsonData)
+		//{
+		//	if (statusCode == HttpStatusCode.BadRequest)
+		//	{
+
+		//		var badRequestData = JsonConvert.DeserializeObject<JsonBadRequest>(jsonData);
+
+		//		//var resultContentErrorModel = response.Content.ReadAsAsync<WebApiErrorModel>().Result;
+		//		//throw new WebApiException(resultContentErrorModel.Text, response);
+		//	}
+		//	else
+		//	{
+		//		throw new Exception("WebApiError", jsonData);
+		//		//throw new WebApiException(response);
+		//	}
+
+		//}
 
 		public static WebApiResult HandleWebApiSuccessfulResult(object resultObject)
 		{

@@ -1,4 +1,4 @@
-﻿@model NoMatterWebApiModels.ViewModels.AddEditProductVm
+﻿@model NoMatterWebApiModels.ViewModels.AddProductVm
 
 @{
     ViewBag.Title = "Product Add";
@@ -25,7 +25,7 @@
         Title
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Product.Title, new { style = "width:300px;" })
+        @Html.TextBoxFor(model => model.Product.Title, new { style = "width:100%;" })
         @Html.ValidationMessageFor(model => model.Product.Title)
     </div>
     
@@ -33,7 +33,7 @@
         Description
     </div>
     <div class="editor-field">
-        @Html.TextAreaFor(model => model.Product.Description, new { style = "width:500px;" })
+        @Html.TextAreaFor(model => model.Product.Description, new { style = "width:100%;" })
         <script>
             CKEDITOR.replace('Product_Description');
         </script>
@@ -43,14 +43,14 @@
         Hidden Notes
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Product.AdminNotes, new { style = "width:300px;" })
+        @Html.TextBoxFor(model => model.Product.AdminNotes, new { style = "width:100%;" })
     </div>
     
     <div class="editor-label">
         Key Words
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(model => model.Product.Keywords, new { style = "width:300px;" })
+        @Html.TextBoxFor(model => model.Product.Keywords, new { style = "width:100%;" })
     </div>
     
     <div class="editor-label">
@@ -167,9 +167,25 @@
    
     <br/>
     <p>
-        <input type="submit" value="Create"  class="btn btn-default"/>&nbsp; @Html.ActionLink("cancel", "CategoryProducts", new { clientId = Model.Section.ClientId, categoryId = @Model.Category.CategoryId } , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+        <a href="javascript:void(0);" class="btn btn-default" onclick="submitForm();">Save</a>
+        &nbsp;       
+        @Html.ActionLink("cancel", "CategoryProducts", new { clientId = Model.Section.ClientId, categoryId = @Model.Category.CategoryId } , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+         &nbsp; 
+        <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
     </p>
 
 }
+
+<script type="text/javascript">
+
+    function submitForm() {
+
+        if ($("form").valid()) {
+
+            $(".loader").show();
+            $('form').submit();
+        }
+    }
+</script>
 
 

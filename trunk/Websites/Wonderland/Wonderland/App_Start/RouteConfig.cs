@@ -13,6 +13,23 @@ namespace RedOrange
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+			routes.MapRoute(
+				"Shop",
+				"Shop",
+				new { Controller = "Shop", action = "Index" });
+
+			//routes.MapRoute(
+			//	"ShopCategoryPartial",
+			//	"Shop/ShopCategoryPartial/{id}",
+			//	new { Controller = "Shop", action = "ShopCategoryPartial", id = UrlParameter.Optional });
+
+			routes.MapRoute(
+				"ShopCategory",
+				"Shop/{id}",
+				new { Controller = "Shop", action = "Category", id = UrlParameter.Optional });
+
+			
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

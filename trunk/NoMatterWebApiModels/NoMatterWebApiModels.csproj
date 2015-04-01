@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\NoMatterWebApi\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -47,9 +53,14 @@
     <Compile Include="Models\ClientDeliveryOption.cs" />
     <Compile Include="Models\ClientPage.cs" />
     <Compile Include="Models\ClientPaymentType.cs" />
+    <Compile Include="Models\JsonBadRequest.cs" />
+    <Compile Include="Models\RegisterModel.cs" />
+    <Compile Include="Models\SectionsAndCategories.cs" />
     <Compile Include="Models\CustomPrincipal.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Setting.cs" />
+    <Compile Include="Models\SignInModel.cs" />
+    <Compile Include="Models\SignInResult.cs" />
     <Compile Include="Models\UploadImageModel.cs" />
     <Compile Include="Models\UploadImageResponse.cs" />
     <Compile Include="Models\User.cs" />
@@ -86,8 +97,10 @@
     <Compile Include="ViewModels\ClientSectionsVm.cs" />
     <Compile Include="ViewModels\ClientSettingsVm.cs" />
     <Compile Include="ViewModels\ClientSettingVm.cs" />
+    <Compile Include="ViewModels\ContactUsVm.cs" />
+    <Compile Include="ViewModels\EditProductVm.cs" />
     <Compile Include="ViewModels\GlobalSettingsVm.cs" />
-    <Compile Include="ViewModels\AddEditProductVm.cs" />
+    <Compile Include="ViewModels\AddProductVm.cs" />
     <Compile Include="ViewModels\SectionCategoriesVm.cs" />
     <Compile Include="ViewModels\UserLoginVm.cs" />
     <Compile Include="ViewModels\ViewCategoryProductsVm.cs" />
@@ -96,7 +109,17 @@
     <Compile Include="ViewModels\ViewGoalVm.cs" />
     <Compile Include="ViewModels\ViewProductVm.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

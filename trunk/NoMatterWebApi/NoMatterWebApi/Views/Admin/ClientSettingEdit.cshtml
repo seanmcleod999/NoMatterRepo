@@ -19,7 +19,7 @@
 
     @Html.HiddenFor(model => model.ClientSetting.ClientSettingId)
     @Html.HiddenFor(model => model.Client.ClientId)
-    @Html.HiddenFor(model => model.ClientSetting.Setting.RegexValidation)
+    @Html.HiddenFor(model => model.ClientSetting.Setting.SettingId)
 
    
     <div class="editor-label">
@@ -62,7 +62,8 @@
     <br/>
     <b>Setting Description</b>
     <br/>
-    @Model.ClientSetting.Setting.SettingDescription
+
+    @Html.Raw(Model.ClientSetting.Setting.SettingDescription)
 
 }
 

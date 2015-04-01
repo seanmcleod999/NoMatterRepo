@@ -29,11 +29,11 @@
     
     if (bag.ImageUrl != null)
     {
-        <meta property="og:image" content="@StaticGlobalSettings.SiteUrl@bag.ImageUrl" />
+        <meta property="og:image" content="@bag.ImageUrl" />
     }
     else
     { 
-        <meta property="og:image" content="@StaticGlobalSettings.SiteUrl@StaticGlobalSettings.SiteLogoPath" />      
+        <meta property="og:image" content="@StaticGlobalSettings.SiteLogoPath" />      
     }
     
     if (bag.Description != null)

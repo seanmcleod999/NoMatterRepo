@@ -22,7 +22,7 @@ namespace NoMatterWebApi.Controllers.V1
 		
 		private ICartRepository _cartRepository;
 		private IProductRepository _productRepository;
-		private IWebApiGlobalSettings _webApiGlobalSettings;
+		private IGlobalSettings _globalSettings;
 		
 
 		public CartController()
@@ -31,16 +31,16 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_cartRepository = new CartRepository(databaseEntity);
 			_productRepository = new ProductRepository(databaseEntity);
-			_webApiGlobalSettings = new WebApiGlobalSettings();
+			_globalSettings = new GlobalSettings();
 			
 			
 		}
 
-		public CartController(ICartRepository cartRepository, IProductRepository productRepository, IWebApiGlobalSettings webApiGlobalSettings)
+		public CartController(ICartRepository cartRepository, IProductRepository productRepository, IGlobalSettings globalSettings)
 		{
 			_cartRepository = cartRepository;
 			_productRepository = productRepository;
-			_webApiGlobalSettings = webApiGlobalSettings;
+			_globalSettings = globalSettings;
 		}
 
 		// GET api/v1/cart/{cartId}

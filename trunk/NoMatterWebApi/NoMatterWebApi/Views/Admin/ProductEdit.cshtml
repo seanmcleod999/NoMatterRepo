@@ -1,5 +1,5 @@
-﻿@using NoMatterWebApiWebHelper.OtherHelpers
-@model NoMatterWebApiModels.ViewModels.AddEditProductVm
+﻿@using NoMatterWebApi.Helpers
+@model NoMatterWebApiModels.ViewModels.EditProductVm
 
 @{
     ViewBag.Title = "Product Edit";
@@ -192,7 +192,11 @@
    
     <br/>
     <p>
-        <input type="submit" value="Save"  class="btn btn-default"/> &nbsp; @Html.ActionLink("cancel", "CategoryProducts", new { clientId = @Model.Section.ClientId, categoryId = @Model.Category.CategoryId } , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+`       <a href="javascript:void(0);" class="btn btn-default" onclick="submitForm();">Save</a>
+        &nbsp;       
+        @Html.ActionLink("cancel", "CategoryProducts", new { clientId = Model.Section.ClientId, categoryId = @Model.Category.CategoryId } , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+         &nbsp; 
+        <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
     </p>
 
 }
@@ -251,3 +255,18 @@ else
 {
     <img src="@StaticGlobalSettings.ImagesBaseAddress@StaticGlobalSettings.NoImageImage?w=100"/>
 }
+
+
+
+<script type="text/javascript">
+
+    function submitForm() {
+
+        if ($("form").valid()) {
+
+            $(".loader").show();
+            $('form').submit();
+        }
+    }
+</script>
+
