@@ -32,9 +32,15 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public static string TwitterUrl { get { return ClientSettingsStaticCache.GetStringSetting("TwitterUrl"); } }
 		public static string InstagramUrl { get { return ClientSettingsStaticCache.GetStringSetting("InstagramUrl"); } }
 		public static string PintrestUrl { get { return ClientSettingsStaticCache.GetStringSetting("PintrestUrl"); } }
-		public static string GooglePlusUrl { get { return ClientSettingsStaticCache.GetStringSetting("GooglePlusUrl"); } }
 
+		public static string EmailAddressSales { get { return ClientSettingsStaticCache.GetStringSetting("EmailAddressSales"); } }
+		public static string EmailAddressInfo { get { return ClientSettingsStaticCache.GetStringSetting("EmailAddressInfo"); } }
 
+		public static string BankName { get { return ClientSettingsStaticCache.GetStringSetting("BankName"); } }
+		public static string AccountName { get { return ClientSettingsStaticCache.GetStringSetting("AccountName"); } }
+		public static string AccountNumber { get { return ClientSettingsStaticCache.GetStringSetting("AccountNumber"); } }
+		public static string BranchName { get { return ClientSettingsStaticCache.GetStringSetting("BranchName"); } }
+		public static string BranchNumber { get { return ClientSettingsStaticCache.GetStringSetting("BranchNumber"); } }
 
 	}
 }

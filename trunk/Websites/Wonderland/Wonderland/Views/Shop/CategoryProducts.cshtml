@@ -15,14 +15,15 @@
                                 
                 @foreach (var category in Model.Categories)
                 {
+                    @*
                     if (!string.IsNullOrEmpty(category.ActionName))
                     {
                         <li>@Html.ActionLink((string)category.CategoryName, "Category", "Shop", new {id = category.ActionName}, null)</li>
                     }
                     else
                     {
-                        <li>@Html.ActionLink((string)category.CategoryName, "Category", "Shop", new {id = category.CategoryName}, null)</li>
-                    }
+                        *@<li>@Html.ActionLink((string)category.CategoryName, "Category", "Shop", new { id = Url.Encode(category.CategoryName) }, null)</li>
+                   @* }*@
                                         
                                         
                                         
@@ -53,7 +54,7 @@
         
         $.ajax({
             type: "GET",
-            url: "@Url.Action("ShopCategoryPartial","Shop")",
+            url: "@Url.Action("ShopCategoryPartial", "Shop")",
             data: category,
             datatype: "html",
             success: function (data) {

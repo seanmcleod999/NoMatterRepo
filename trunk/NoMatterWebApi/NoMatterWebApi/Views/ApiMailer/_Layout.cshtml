@@ -1,0 +1,26 @@
+@using Mvc.Mailer
+<html>
+	<head>
+        <style type="text.css">
+        div { font-family: Verdana, Arial, Sans-Serif; font-size:12px;}
+        #mail-message {padding: 10px}
+        #mail-footer {padding: 10px}
+        </style>
+    </head>
+	<body>
+    <div id="mail-message">
+		@RenderBody()
+    </div>
+
+    <div id="mail-footer">
+        Regards,
+        <br />
+        
+        @Html.InlineImage("logo", "Pretty Damn Thrifty Logo")
+        
+        <br />
+        <a href="http://www.prettydamnthrifty.co.za">www.prettydamnthrifty.co.za</a>
+       
+    </div>
+	</body>
+</html>

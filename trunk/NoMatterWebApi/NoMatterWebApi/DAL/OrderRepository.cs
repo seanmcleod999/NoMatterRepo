@@ -13,7 +13,7 @@ namespace NoMatterWebApi.DAL
 	{
 		Task<int> AddOrderAsync(Order order);
 		Task<Order> GetOrderAsync(int orderId);
-		
+		Task UpdateOrderPaymentTypeAsync(Order order, short paymentTypeId);		
 	}
 
 	public class OrderRepository : IOrderRepository
@@ -45,6 +45,15 @@ namespace NoMatterWebApi.DAL
 				.Include("User").Where(x => x.OrderId == orderId).SingleOrDefaultAsync();
 
 			return order;
+		}
+
+		public async Task UpdateOrderPaymentTypeAsync(Order order, short paymentTypeId)
+		{
+			databaseConnection.Orders.Attach(order);
+
+			order.PaymentTypeId = paymentTypeId;
+
+			await databaseConnection.SaveChangesAsync();
 		}
 
 		public void Save()

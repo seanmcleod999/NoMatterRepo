@@ -119,6 +119,9 @@
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
       <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
+    <Reference Include="Mvc.Mailer">
+      <HintPath>..\..\Packages\MvcMailer.4.5\lib\45\Mvc.Mailer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -208,7 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\ClientImages\" />
-    <Folder Include="CustomAuth\" />
     <Folder Include="Providers\" />
     <Folder Include="ResultCodes\" />
     <Folder Include="Views\Product\" />
@@ -266,6 +268,7 @@
     <Compile Include="DAL\OrderRepository.cs" />
     <Compile Include="Enums\CredentialTypeEnum.cs" />
     <Compile Include="Enums\DiscountTypeEnum.cs" />
+    <Compile Include="Enums\SettingEnum.cs" />
     <Compile Include="Extensions\CartProductsExtension.cs" />
     <Compile Include="Extensions\CategoryExtension.cs" />
     <Compile Include="Extensions\ClientDeliveryOptionExtension.cs" />
@@ -279,6 +282,7 @@
     <Compile Include="Extensions\ProductExtension.cs" />
     <Compile Include="Extensions\SectionExtension.cs" />
     <Compile Include="Extensions\UserExtension.cs" />
+    <Compile Include="Helpers\ClientHelper.cs" />
     <Compile Include="Helpers\ProductHelper.cs" />
     <Compile Include="Helpers\SectionHelper.cs" />
     <Compile Include="Helpers\StaticGlobalSettings.cs" />
@@ -296,6 +300,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Mailers\ApiMailer.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\CartProduct.cs" />
     <Compile Include="Models\FacebookUser.cs" />
@@ -545,6 +550,17 @@
     <Content Include="Views\Home\Portfolio.cshtml" />
     <Content Include="Views\Superuser\ClientAdd.cshtml" />
     <Content Include="Views\Admin\ClientPostageEdit.cshtml" />
+    <Content Include="Views\ApiMailer\ConfirmEftOrder.cshtml" />
+    <Content Include="Views\ApiMailer\ConfirmPayfastOrder.cshtml" />
+    <Content Include="Views\ApiMailer\CustomerOrder.cshtml" />
+    <Content Include="Views\ApiMailer\CustomerQuery.cshtml" />
+    <Content Include="Views\ApiMailer\CustomerQueryResponse.cshtml" />
+    <Content Include="Views\ApiMailer\CustomerQueryResponse.text.cshtml" />
+    <Content Include="Views\ApiMailer\Hello.cshtml" />
+    <Content Include="Views\ApiMailer\Hello.text.cshtml" />
+    <Content Include="Views\ApiMailer\UserRegistration.cshtml" />
+    <Content Include="Views\ApiMailer\_Layout.cshtml" />
+    <Content Include="Views\ApiMailer\_Layout.text.cshtml" />
     <None Include="Views\Superuser\ClientEdit.cshtml" />
     <Content Include="Views\Superuser\RunSqlScriptResult.cshtml" />
     <Content Include="Views\Admin\ClientPostage.cshtml" />
@@ -592,6 +608,10 @@
     <ProjectReference Include="..\..\NoMatterWebApiModels\NoMatterWebApiModels.csproj">
       <Project>{61b3d61b-1ef7-4553-99f3-9ecf07a087ab}</Project>
       <Name>NoMatterWebApiModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NotificationLib\NotificationLib.csproj">
+      <Project>{503c1105-3622-471f-b10a-ad34b98902f7}</Project>
+      <Name>NotificationLib</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

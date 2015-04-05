@@ -17,8 +17,10 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	{
 		Task<string> GenerateUserOrderAsync(string userId, GenerateUserOrder generateUserOrder);
 		Task<Order> GetOrderAsync(int orderId);
+		Task<Order> ProcessEftOrderAsync(int orderId);
 		Task<Order> ProcessPayfastOrderAsync(NameValueCollection req, bool testing = false);
 		string GeneratePayfastRedirectUrl(string orderId, string amount);
+		Task<Order> UpdateOrderPaymentType(int orderId, short paymentTypeId);	
 	}
 	
 
@@ -67,7 +69,51 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = await client.GetAsync(string.Format("api/v1/orders/{0}", orderId));
+				var response = await client.GetAsync(string.Format("api/v1/clients/{0}/orders/{1}", _globalSettings.SiteClientId, orderId));
+
+				if (!response.IsSuccessStatusCode)
+					GeneralHelper.HandleWebApiFailedResult(response);
+
+				var order = await response.Content.ReadAsAsync<Order>();
+
+				return order;
+
+			}
+		}
+
+		public async Task<Order> ProcessEftOrderAsync(int orderId)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				var model = new ProcessEftOrderModel();
+
+				var response = await client.PostAsJsonAsync(string.Format("api/v1/clients/{0}/orders/{1}/processeft", _globalSettings.SiteClientId, orderId), model);
+
+				if (!response.IsSuccessStatusCode)
+					GeneralHelper.HandleWebApiFailedResult(response);
+
+				var order = await response.Content.ReadAsAsync<Order>();
+
+				return order;
+
+			}
+		}
+
+		public async Task<Order> UpdateOrderPaymentType(int orderId, short paymentTypeId)
+		{
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(_globalSettings.ApiBaseAddress);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+				var model = new UpdateOrderPaymentTypeModel();
+
+				var response = await client.PostAsJsonAsync(string.Format("api/v1/clients/{0}/orders/{1}/updatepaymenttype", _globalSettings.SiteClientId, orderId), model);
 
 				if (!response.IsSuccessStatusCode)
 					GeneralHelper.HandleWebApiFailedResult(response);

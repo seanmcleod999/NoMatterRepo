@@ -30,7 +30,7 @@ namespace RedOrange.Controllers
 			return View(shoppingCartDetails);
 	    }
 
-	    public async Task<string> AddProductToCart(string productId, int quantity = 1)
+	    public async Task<int> AddProductToCart(string productId, int quantity = 1)
         {
 		
 
@@ -39,19 +39,23 @@ namespace RedOrange.Controllers
 				int cartItemCount = await _cartHelper.AddProductToCartAsync(_currentUser.CartId(), productId, quantity);
 
 				Session["CartItemCount"] = cartItemCount;
+
+				return cartItemCount;
 			}
 			catch (Exception ex)
 			{
 				Logger.WriteGeneralError(ex);
-				return "False";
+				return 0;
 			}
 
-			return "Success";
+			
         }
 
 		public async Task<ActionResult> RemoveProductFromCart(string productId)
 		{
-			await _cartHelper.DeleteProductFromCartAsync(_currentUser.CartId(), productId);
+			int cartItemCount = await _cartHelper.DeleteProductFromCartAsync(_currentUser.CartId(), productId);
+
+			Session["CartItemCount"] = cartItemCount;
 
 			return RedirectToAction("ViewCart");
 		}

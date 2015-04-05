@@ -32,6 +32,20 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 
 		}
 
+		public static BankDetails GetBankDetails()
+		{
+			var bankDetails = new BankDetails
+				{
+					AccountName = StaticGlobalSettings.AccountName,
+					BankName = StaticGlobalSettings.BankName,
+					BranchName = StaticGlobalSettings.BranchName,
+					BranchNumber = StaticGlobalSettings.BranchNumber,
+					AccountNumber = StaticGlobalSettings.AccountNumber
+				};
+
+			return bankDetails;
+		}
+
 		public static int? ExtractWebApiFailedResultCode(HttpResponseMessage response)
 		{
 			if (response.StatusCode == HttpStatusCode.BadRequest)

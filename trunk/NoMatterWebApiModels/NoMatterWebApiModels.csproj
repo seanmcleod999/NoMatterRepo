@@ -49,11 +49,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\PaymentType.cs" />
     <Compile Include="Models\AddProductToCartModel.cs" />
+    <Compile Include="Models\BankDetails.cs" />
     <Compile Include="Models\ClientDeliveryOption.cs" />
     <Compile Include="Models\ClientPage.cs" />
     <Compile Include="Models\ClientPaymentType.cs" />
+    <Compile Include="Models\UpdateOrderPaymentTypeModel.cs" />
+    <Compile Include="ViewModels\EftOrderProcessedVm.cs" />
     <Compile Include="Models\JsonBadRequest.cs" />
+    <Compile Include="Models\ProcessEftOrderModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\SectionsAndCategories.cs" />
     <Compile Include="Models\CustomPrincipal.cs" />

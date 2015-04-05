@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using NoMatterWebApiModels.Enums;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
@@ -105,55 +106,45 @@ namespace RedOrange.Controllers
 	    }
 
 		[HttpPost]
-		public async Task<ActionResult> Summary(CheckoutSummaryVm checkoutSummaryVm)
+		public async Task<ActionResult> ProcessOrder(CheckoutSummaryVm checkoutSummaryVm)
 		{
 
-			var order = await _orderHelper.GetOrderAsync(checkoutSummaryVm.Order.OrderId);
+			//var order = await _orderHelper.GetOrderAsync(checkoutSummaryVm.Order.OrderId);
 
 			//and redirect to relevant place depending on payment type
 			switch (Convert.ToInt16(checkoutSummaryVm.PaymentType))
 			{
 				case (short)PaymentTypeEnum.EFT:
-					//return RedirectToAction("ProcessEftPayment", new { OrderId = orderId});
-
-					//Process the eft order
-					//TODO: move the emailing to the ProcessEftOrder function
-					//_orderHelper.ProcessEftOrder(checkoutSummaryVm.Order.OrderId);
-
-					//var bankDetails = _globalSettings.BankDetails;
-
-					//var mailer = new PDTMailer();
-
-					////Send an EFT Related email to the user
-					//mailer.ConfirmEftOrder(orderResult, bankDetails).Send();
-
-					////Send an email to the administrator
-					//mailer.CustomerOrder(orderResult, _globalSettings.EmailAddressSales).Send();
+					
+					var eftOrder = await _orderHelper.ProcessEftOrderAsync(checkoutSummaryVm.Order.OrderId);
 
 					//Just a notification to the user that the payment was a success
-					//var eftPaymentVm = new EftPaymentVm
-					//{
-					//	Order = orderResult,
-					//	BankDetails = bankDetails
-					//};
+					var eftOrderProcessedVm = new EftOrderProcessedVm
+					{
+						Order = eftOrder,
+						BankDetails = GeneralHelper.GetBankDetails()
+					};
 
 					//_cartHelper.EmptyCart(_currentUser.CartId());
 					//Session["CartItemCount"] = 0;
 
 					//return View("ProcessEftPayment", eftPaymentVm);
-					
-					return View("ProcessEftPayment");
+
+					return View("EftPaymentDetails", eftOrderProcessedVm);
 
 				//break;
 
 				case (short)PaymentTypeEnum.Payfast:
 					//return RedirectToAction("ProcessPayfastPayment", new { OrderId = orderId, Total = cart.CartTotal });
 
-					var payFastRedirectUrl = _orderHelper.GeneratePayfastRedirectUrl(order.OrderId.ToString(), order.TotalAmount.ToString("#.##"));
+					var payFastOrder = await _orderHelper.UpdateOrderPaymentType(checkoutSummaryVm.Order.OrderId, Convert.ToInt16(checkoutSummaryVm.PaymentType));
+
+					var payFastRedirectUrl = _orderHelper.GeneratePayfastRedirectUrl(checkoutSummaryVm.Order.OrderId.ToString(), payFastOrder.TotalAmount.ToString("#.##"));
 
 					return new RedirectResult(payFastRedirectUrl, true);
+					//return View();
 
-				//break;
+					//break;
 			}
 
 			return RedirectToAction("Complete");

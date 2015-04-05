@@ -94,10 +94,13 @@ namespace NoMatterWebApi.Controllers.V1
 					};
 
 					await _cartRepository.AddCartProductAsync(cartProduct);
+
 				}
+
+				var cartProductCount = await _cartRepository.GetCartProductCountAsync(cartId);
 				
-				
-				return Ok();
+				return Ok(cartProductCount);
+
 			}
 			catch (Exception ex)
 			{
@@ -121,8 +124,10 @@ namespace NoMatterWebApi.Controllers.V1
 				{
 					await _cartRepository.DeleteCartProductAsync(cartProduct);
 				}
-				
-				return Ok();
+
+				var cartProductCount = await _cartRepository.GetCartProductCountAsync(cartId);
+
+				return Ok(cartProductCount);
 			}
 			catch (Exception ex)
 			{

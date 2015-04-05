@@ -93,7 +93,7 @@ namespace RedOrange.Controllers
 
 				GenerateAuthenticationCookie(model.RememberMe, authenticatedUser.TokenDetails.AccessToken, authenticatedUser.Id, authenticatedUser.Fullname, authenticatedUser.UserRoles);
 
-				return View("LoginSuccess", authenticatedUser);
+				return RedirectToAction("Index", "Admin");
 
 			}
 			catch (Exception ex)

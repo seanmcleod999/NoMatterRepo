@@ -30,10 +30,11 @@ namespace NoMatterDatabaseModel
         public short ClientDeliveryOptionId { get; set; }
         public short OrderStatusId { get; set; }
         public decimal DeliveryAmount { get; set; }
-        public string PaymentType { get; set; }
+        public Nullable<short> PaymentTypeId { get; set; }
     
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
         public virtual User User { get; set; }
         public virtual ClientDeliveryOption ClientDeliveryOption { get; set; }
+        public virtual PaymentType PaymentType1 { get; set; }
     }
 }

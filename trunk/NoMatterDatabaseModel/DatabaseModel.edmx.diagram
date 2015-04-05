@@ -55,6 +55,7 @@
         <EntityTypeShape EntityType="DatabaseModel.SettingType" Width="1.5" PointX="11.25" PointY="8.125" />
         <AssociationConnector Association="DatabaseModel.FK_Setting_SettingCategory" />
         <AssociationConnector Association="DatabaseModel.FK_Setting_SettingType" />
+        <AssociationConnector Association="DatabaseModel.FK_Order_PaymentType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

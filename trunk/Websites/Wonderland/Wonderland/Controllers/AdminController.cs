@@ -53,7 +53,7 @@ namespace RedOrange.Controllers
 			ClientSectionsStaticCache.LoadClientSectionsCache();
 			ClientSettingsStaticCache.LoadClientSettingsCache();
 
-			return View();
+			return View("CacheCleared");
 		}
 
 		public async Task<ActionResult> Products()
@@ -237,11 +237,11 @@ namespace RedOrange.Controllers
 
 		}
 
-		public async Task<ActionResult> CategoryDelete(string clientId, string categoryId, string sectionId)
+		public async Task<ActionResult> CategoryDelete(string categoryId, string sectionId)
 		{
 			var token = ((CustomPrincipal)HttpContext.User).Token;
 
-			await _categoryHelper.DeleteCategoryAsync(clientId, categoryId, token);
+			await _categoryHelper.DeleteCategoryAsync(_globalSettings.SiteClientId, categoryId, token);
 
 			return RedirectToAction("SectionCategories", new { sectionId = sectionId });
 		}

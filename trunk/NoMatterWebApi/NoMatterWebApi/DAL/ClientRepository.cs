@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using NoMatterDatabaseModel;
+using NoMatterWebApi.Enums;
 
 namespace NoMatterWebApi.DAL
 {
@@ -31,6 +32,9 @@ namespace NoMatterWebApi.DAL
 		Task UpdateClientDeliveryOptionAsync(ClientDeliveryOption clientDeliveryOptionDb, NoMatterWebApiModels.Models.ClientDeliveryOption clientDeliveryOption);
 		Task DeleteClientDeliveryOptionAsync(Guid clientUuid, short clientDeliveryOptionId);
 		Task AllocateMissingClientSettingsAsync(Client client, List<short> currentSettingIds);
+
+		Task<string> GetClientStringSettingsAsync(int clientId, SettingEnum setting);
+		Task<int> GetClientIntSettingsAsync(int clientId, SettingEnum settingName);
 	}
 
 	public class ClientRepository : IClientRepository
@@ -258,6 +262,26 @@ namespace NoMatterWebApi.DAL
 			}
 
 			await databaseConnection.SaveChangesAsync();
+		}
+
+		public async Task<string> GetClientStringSettingsAsync(int clientId, SettingEnum setting)
+		{
+			var clientSetting = await databaseConnection.ClientSettings.Where(x => x.ClientId == clientId && x.SettingId == (short) setting)
+				                  .FirstOrDefaultAsync();
+
+			return clientSetting == null ? "" : clientSetting.StringValue;
+		}
+
+		public async Task<int> GetClientIntSettingsAsync(int clientId, SettingEnum setting)
+		{
+			var clientSetting = await databaseConnection.ClientSettings.Where(x => x.ClientId == clientId && x.SettingId == (short)setting)
+								  .FirstOrDefaultAsync();
+
+			if (clientSetting == null) return 0;
+
+			if (clientSetting.IntValue == null) return 0;
+			
+			return clientSetting.IntValue.Value;
 		}
 
 		public void Save()

@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiModels.ViewModels;
-using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using RedOrange.Logging;
@@ -16,30 +13,26 @@ namespace RedOrange.Controllers
 {
 	public class ShopController : WebApiController
 	{
-		private IClientHelper _clientHelper;
-		private ISectionHelper _sectionHelper;
-		private ICategoryHelper _categoryHelper;
-		private IProductHelper _productHelper;
-		//private IPictureHelper _pictureHelper;
-		private IGlobalSettings _globalSettings;
+		private readonly ICategoryHelper _categoryHelper;
+		private readonly IProductHelper _productHelper;
+		private readonly IGlobalSettings _globalSettings;
 
 		public ShopController()
 		{
-			_clientHelper = new ClientHelper();
-			_sectionHelper = new SectionHelper();
 			_categoryHelper = new CategoryHelper();
 			_productHelper = new ProductHelper();
 			_globalSettings = new GlobalSettings();
-
 		}
 
 		public async Task<ActionResult> Index()
 		{
 			try
 			{	
-				var defaultSectionName = _globalSettings.DefaultSectionName;
+				//This site only has one section.. so that that sectionId
+				var sectionName = _globalSettings.DefaultSectionName;
 
-				var categories = ClientSectionsCategoriesStaticCache.GetSectionCategories(defaultSectionName).OrderBy(x=>x.CategoryOrder).ToList();
+				//Get the categories for this section from the cache
+				var categories = ClientSectionsCategoriesStaticCache.GetSectionCategories(sectionName).OrderBy(x=>x.CategoryOrder).ToList();
 
 				List<Product> products = null;
 				Category category = null;
@@ -73,15 +66,19 @@ namespace RedOrange.Controllers
 		{
 			try
 			{
-				var defaultSectionName = _globalSettings.DefaultSectionName;
-
-				var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryByName(defaultSectionName, id);
+				//This site only has one section.. so that that sectionId
+				var sectionName = _globalSettings.DefaultSectionName;
 
 				//Get all the other categories for this section from the cache
-				var categories = ClientSectionsCategoriesStaticCache.GetSectionCategories(defaultSectionName).OrderBy(x => x.CategoryOrder).ToList();
+				var categories = ClientSectionsCategoriesStaticCache.GetSectionCategories(sectionName).OrderBy(x => x.CategoryOrder).ToList();
 
+				//Get the selected category
+				var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryByName(sectionName, id);
+
+				if (category == null) throw new Exception("Category not found");
+				
 				//Get the products for the selected category
-				var products = (await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, category.CategoryId));
+				var products = await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, category.CategoryId);
 
 				var categoryShopVm = new CategoryShopVm
 				{
@@ -102,36 +99,36 @@ namespace RedOrange.Controllers
 		}
 
 
-		public async Task<ActionResult> ShopCategoryPartial(string id)
-		{
-			try
-			{		
-				ViewBag.PageTitle = "Shop";
+		//public async Task<ActionResult> ShopCategoryPartial(string id)
+		//{
+		//	try
+		//	{		
+		//		ViewBag.PageTitle = "Shop";
 
-				var defaultSectionName = _globalSettings.DefaultSectionName;
+		//		var defaultSectionName = _globalSettings.DefaultSectionName;
 
-				var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryByName(defaultSectionName, id);
+		//		var category = ClientSectionsCategoriesStaticCache.GetSectionCategoryByName(defaultSectionName, id);
 
-				//Get the products for the selected category
-				var products = await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, category.CategoryId);
+		//		//Get the products for the selected category
+		//		var products = await _categoryHelper.GetCategoryProductsAsync(_globalSettings.SiteClientId, category.CategoryId);
 
-				var categoryShopVm = new CategoryShopVm
-				{
-					//Section = section,
-					Category = category,
-					//Categories = categories,
-					Products = products
-				};
+		//		var categoryShopVm = new CategoryShopVm
+		//		{
+		//			//Section = section,
+		//			Category = category,
+		//			//Categories = categories,
+		//			Products = products
+		//		};
 
-				return PartialView("partialCategoryProducts", categoryShopVm);
+		//		return PartialView("partialCategoryProducts", categoryShopVm);
 
-			}
-			catch (Exception ex)
-			{
-				Logger.WriteGeneralError(ex);
-				throw;
-			}
-		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Logger.WriteGeneralError(ex);
+		//		throw;
+		//	}
+		//}
 
 		public async Task<ActionResult> Product(string id, string category = null)
 		{
@@ -149,16 +146,10 @@ namespace RedOrange.Controllers
 
 				return View("ViewProduct", viewProductVm);
 			}
-			catch (ApiException ex)
-			{
-				HandleBadRequest(ex);
-
-				return View("ApiError", ModelState);
-			}
 			catch (Exception ex)
 			{
 				Logger.WriteGeneralError(ex);
-				return View("GeneralError");
+				throw;
 			}
 			
 		}

@@ -17,6 +17,7 @@ namespace NoMatterDatabaseModel
         public PaymentType()
         {
             this.ClientPaymentTypes = new HashSet<ClientPaymentType>();
+            this.Orders = new HashSet<Order>();
         }
     
         public short PaymentTypeId { get; set; }
@@ -25,5 +26,6 @@ namespace NoMatterDatabaseModel
         public string Picture { get; set; }
     
         public virtual ICollection<ClientPaymentType> ClientPaymentTypes { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

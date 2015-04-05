@@ -497,11 +497,17 @@ list-style:none;
     text-align: left;     
 }
 
+.viewItemLeftThumbnails
+{
 
+}
 
-.viewItemLeftThumbnails 
-{ 
-    
+.viewItemLeftThumb 
+{
+    display: inline-block;
+    padding: 4px 2px 2px 0px;
+
+     cursor: pointer; 
 }
 
 

@@ -23,7 +23,10 @@ namespace NoMatterWebApi
 		CategoryNotFound = 18,
 		ClientPageNotFound = 19,
 		ClientSettingNotFound = 20,
-		ClientDeliveryOptionNotFound = 21
+		ClientDeliveryOptionNotFound = 21,
+		SalesEmailAddressNotDefined = 22,
+		BankDetailsIncomplete = 23,
+		ClientSiteFriendlyNameNotDefined = 24
 
 	}
 }

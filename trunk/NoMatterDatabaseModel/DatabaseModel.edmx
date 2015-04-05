@@ -142,9 +142,9 @@
           <Property Name="CourierName" Type="varchar" MaxLength="50" />
           <Property Name="TrackingNumber" Type="varchar" MaxLength="50" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
-          <Property Name="PaymentType" Type="varchar" MaxLength="20" />
           <Property Name="Paid" Type="bit" Nullable="false" />
           <Property Name="OrderStatusId" Type="smallint" Nullable="false" />
+          <Property Name="PaymentTypeId" Type="smallint" />
         </EntityType>
         <EntityType Name="OrderProduct">
           <Key>
@@ -448,6 +448,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_PaymentType">
+          <End Role="PaymentType" Type="Self.PaymentType" Multiplicity="0..1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentType">
+              <PropertyRef Name="PaymentTypeId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="PaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OrderProduct_Order">
           <End Role="Order" Type="Self.Order" Multiplicity="1" />
           <End Role="OrderProduct" Type="Self.OrderProduct" Multiplicity="*" />
@@ -655,6 +667,10 @@
             <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOption" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
+          <AssociationSet Name="FK_Order_PaymentType" Association="Self.FK_Order_PaymentType">
+            <End Role="PaymentType" EntitySet="PaymentType" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
           <AssociationSet Name="FK_OrderProduct_Order" Association="Self.FK_OrderProduct_Order">
             <End Role="Order" EntitySet="Order" />
             <End Role="OrderProduct" EntitySet="OrderProduct" />
@@ -832,7 +848,8 @@
           <NavigationProperty Name="ClientDeliveryOption" Relationship="DatabaseModel.FK_Order_ClientDeliveryOption" FromRole="Order" ToRole="ClientDeliveryOption" />
           <Property Name="OrderStatusId" Type="Int16" Nullable="false" />
           <Property Name="DeliveryAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PaymentType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentTypeId" Type="Int16" />
+          <NavigationProperty Name="PaymentType1" Relationship="DatabaseModel.FK_Order_PaymentType" FromRole="Order" ToRole="PaymentType" />
         </EntityType>
         <EntityType Name="OrderProduct">
           <Key>
@@ -853,6 +870,7 @@
           <Property Name="Details" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Picture" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ClientPaymentTypes" Relationship="Self.FK_ClientPaymentType_PaymentType" FromRole="PaymentType" ToRole="ClientPaymentType" />
+          <NavigationProperty Name="Orders" Relationship="DatabaseModel.FK_Order_PaymentType" FromRole="PaymentType" ToRole="Order" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -1233,6 +1251,10 @@
             <End Role="SettingType" EntitySet="SettingTypes" />
             <End Role="Setting" EntitySet="Settings" />
           </AssociationSet>
+          <AssociationSet Name="FK_Order_PaymentType" Association="DatabaseModel.FK_Order_PaymentType">
+            <End Role="PaymentType" EntitySet="PaymentTypes" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
           <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
@@ -1447,6 +1469,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_PaymentType">
+          <End Type="DatabaseModel.PaymentType" Role="PaymentType" Multiplicity="0..1" />
+          <End Type="DatabaseModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentType">
+              <PropertyRef Name="PaymentTypeId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="PaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1558,7 +1592,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="DatabaseModel.Order">
               <MappingFragment StoreEntitySet="Order">
-                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
                 <ScalarProperty Name="DeliveryAmount" ColumnName="DeliveryAmount" />
                 <ScalarProperty Name="OrderStatusId" ColumnName="OrderStatusId" />
                 <ScalarProperty Name="ClientDeliveryOptionId" ColumnName="ClientDeliveryOptionId" />

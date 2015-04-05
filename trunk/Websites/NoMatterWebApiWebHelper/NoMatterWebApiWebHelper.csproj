@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiException.cs" />
-    <Compile Include="Enums\PaymentType.cs" />
     <Compile Include="Enums\ProductStatusEnum.cs" />
     <Compile Include="OtherHelpers\ClientSectionsStaticCache.cs" />
     <Compile Include="OtherHelpers\ClientSectionsCategoriesStaticCache.cs" />
@@ -67,7 +66,6 @@
     <Compile Include="WebApiHelpers\CartHelper.cs" />
     <Compile Include="WebApiHelpers\CategoryHelper.cs" />
     <Compile Include="WebApiHelpers\ClientHelper.cs" />
-    <Compile Include="Enums\PictureTypeEnum.cs" />
     <Compile Include="Exceptions\WebApiException.cs" />
     <Compile Include="WebApiHelpers\GlobalHelper.cs" />
     <Compile Include="OtherHelpers\ClientSettingsStaticCache.cs">

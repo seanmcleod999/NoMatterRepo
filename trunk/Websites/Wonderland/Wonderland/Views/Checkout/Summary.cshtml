@@ -130,7 +130,7 @@ Total: <b>R @String.Format("{0:0}", Model.Order.TotalAmount)</b>
 
 @Html.ValidationSummary(true)
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ProcessOrder", "Checkout"))
 {
     @Html.HiddenFor(x => x.Order.OrderId)
 

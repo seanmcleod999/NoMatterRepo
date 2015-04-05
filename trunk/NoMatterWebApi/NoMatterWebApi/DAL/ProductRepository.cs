@@ -16,6 +16,7 @@ namespace NoMatterWebApi.DAL
 		Task UpdateProductAsync(Product product);
 		Task DeleteProductAsync(Product product);
 		Task<List<Product>> GetRelatedProductsByKeywordsAsync(Guid productUuid, List<string> keywords, int relatedItemsCount);
+
 	}
 
 	public class ProductRepository : IProductRepository
@@ -80,6 +81,8 @@ namespace NoMatterWebApi.DAL
 			await databaseConnection.SaveChangesAsync();
 
 		}
+
+		
 
 		public async Task<List<Product>> GetRelatedProductsByKeywordsAsync(Guid productUuid, List<string> keywords, int relatedItemsCount)
 		{

@@ -355,6 +355,9 @@
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\Account\Registered.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Shop\ViewProductBackup.cshtml" />
+    <Content Include="Views\Admin\CacheCleared.cshtml" />
+    <Content Include="Views\Checkout\EftPaymentDetails.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
