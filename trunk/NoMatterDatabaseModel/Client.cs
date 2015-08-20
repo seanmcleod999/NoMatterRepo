@@ -24,6 +24,7 @@ namespace NoMatterDatabaseModel
             this.ClientDeliveryOptions = new HashSet<ClientDeliveryOption>();
             this.ClientPages = new HashSet<ClientPage>();
             this.ClientSettings = new HashSet<ClientSetting>();
+            this.ClientEmails = new HashSet<ClientEmail>();
         }
     
         public int ClientId { get; set; }
@@ -41,5 +42,6 @@ namespace NoMatterDatabaseModel
         public virtual ICollection<ClientDeliveryOption> ClientDeliveryOptions { get; set; }
         public virtual ICollection<ClientPage> ClientPages { get; set; }
         public virtual ICollection<ClientSetting> ClientSettings { get; set; }
+        public virtual ICollection<ClientEmail> ClientEmails { get; set; }
     }
 }

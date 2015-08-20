@@ -20,7 +20,7 @@ namespace NoMatterWebApi.Helpers
 	{
 		Task<FacebookUser> VerifyFacebookTokenAsync(string accessToken);
 		string MakeGoogleShortUrl(string accessToken);
-		string SaveImage(string ImageData, int clientId);
+		string SaveImage(string ImageData, string clientUuid);
 		void DeleteImage(string imagePath);
 	}
 
@@ -57,11 +57,11 @@ namespace NoMatterWebApi.Helpers
 			}
 		}
 
-		public string SaveImage(string ImageData, int clientId)
+		public string SaveImage(string ImageData, string clientUuid)
 		{
 			byte[] imageData = Convert.FromBase64String(ImageData);
 
-			var path = System.Web.Hosting.HostingEnvironment.MapPath("~/Images/" + clientId + "/");
+			var path = System.Web.Hosting.HostingEnvironment.MapPath("~/Images/" + clientUuid + "/");
 
 			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
@@ -75,7 +75,7 @@ namespace NoMatterWebApi.Helpers
 					false,
 					true));
 
-			var imageId = string.Format("{0}/{1}.jpg", clientId, imageGuid);
+			var imageId = string.Format("{0}/{1}.jpg", clientUuid, imageGuid);
 			return imageId;
 		}
 

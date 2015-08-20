@@ -11,9 +11,9 @@
 Client: <b>@Model.Client.ClientName</b><br/>
 <br/>
 <div class="PageNavigationBar">
-@*@Html.ActionLink("add setting", "ClientSettingAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+@*@Html.ActionLink("add setting", "ClientSettingAdd", "Admin", new { clientId = @Model.Client.ClientUuid }, new { @class = "AddLink" })
     &nbsp; *@
-@Html.ActionLink("add missing settings", "ClientSettingAddMissing", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+@Html.ActionLink("add missing settings", "ClientSettingAddMissing", "Admin", new { clientId = @Model.Client.ClientUuid }, new { @class = "AddLink" })
 &nbsp; 
     @if (User.IsInRole("SuperUser"))
 {   
@@ -76,11 +76,11 @@ else
         </td>      
               
         <td>
-            @Html.ActionLink("edit", "ClientSettingEdit", "Admin", new { clientId = @Model.Client.ClientId, clientSettingId = @clientSetting.ClientSettingId }, null)
+            @Html.ActionLink("edit", "ClientSettingEdit", "Admin", new { clientId = @Model.Client.ClientUuid, clientSettingId = @clientSetting.ClientSettingId }, null)
         </td>
         
       @*   <td>
-            @Html.ActionLink("delete", "ClientSettingDelete", "Admin", new { clientId = @Model.Client.ClientId, clientSettingId = @clientSetting.ClientSettingId }, new { onclick = "return confirm('Are you sure you wish to delete this setting?');" })
+            @Html.ActionLink("delete", "ClientSettingDelete", "Admin", new { clientId = @Model.Client.ClientUuid, clientSettingId = @clientSetting.ClientSettingId }, new { onclick = "return confirm('Are you sure you wish to delete this setting?');" })
         </td>*@
        
     </tr>

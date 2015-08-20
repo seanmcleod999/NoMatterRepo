@@ -11,6 +11,8 @@ namespace NoMatterWebApiModels.Models
 	{
 		public short ClientDeliveryOptionId { get; set; }
 
+		public Client Client { get; set; }
+
 		[Required(ErrorMessage = "required")]
 		[StringLength(50, ErrorMessage = "Must be under 50 characters")]
 		public string Description { get; set; }

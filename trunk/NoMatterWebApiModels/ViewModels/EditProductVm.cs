@@ -9,9 +9,9 @@ namespace NoMatterWebApiModels.ViewModels
 {
 	public class EditProductVm
 	{
-		public Section Section { get; set; }
+		//public Section Section { get; set; }
 
-		public Category Category { get; set; }
+		//public Category Category { get; set; }
 
 		public Product Product { get; set; }
 

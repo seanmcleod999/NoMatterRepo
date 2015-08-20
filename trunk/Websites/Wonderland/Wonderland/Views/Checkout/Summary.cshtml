@@ -19,58 +19,72 @@ Review your order before continuing.
      </legend>
      
      <div class="CheckoutSectionWrapper">
-
-     <table class="">
-         <thead>
-             <tr>
-                 @* <th class="views-field views-field-line-item-picture">
-                         
-            </th>*@
-                 <th class="views-field views-field-line-item-title">
-                     Product          
-                 </th>
-             
-                 <th class="views-field views-field-commerce-total views-align-right">
-                     Total          
-                 </th>
-             </tr>
-         </thead>
-         <tbody>
-        
-             @foreach (var product in Model.Order.Products)
-             {
-           
-
-
-                 <tr class="odd views-row-first views-row-last">
-                     @*<td>
-                     <img src="@Url.Content(globalSettings.ShopImagesPath + product.Picture1)" width="50px"/>
-                </td>*@
-                     <td class="views-field views-field-line-item-title">
-                         @product.Title
-                     </td>
-                     <td class="views-field views-field-commerce-unit-price price">
-                         <span class="ZAR-amount currency-on">R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)</span>
-                     </td>
-                 
-                 </tr>
-             }
-        
-         </tbody>
-     </table>
          
-         </div>
+         <div class="form-horizontal">
+                
+             <div class="form-group">
+                 <div class="col-sm-offset-2 col-sm-10">
+                     <br/>
+
+                     <div id="viewCartProductsHeader" class="clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="product-title">Title</span>
+                         <span class="product-price">Price</span>                            
+                         <div class="clear"><!-- --></div>    
+                     </div>   
+                    
+                     <ul id="viewCartProductList">
+                    
+                         @foreach (var product in Model.Order.Products)
+                         {
+                             <li>
+                                 <div id="viewCartProductWrapper" class="clearfix">
+                                     <div id="viewCartProductPicture">              
+                                         <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=40" />
+                                     </div>
+                                     <div id="viewCartProductDetails">
+                                         <span class="product-title">@product.Title</span>
+                                         <span class="product-price">R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)</span>
+                                         <div class="clear"><!-- --></div>
+                                     </div>
+                                 </div>
+                             </li>
+                         }
+                         
+                            
+                      
+                                             
+             </ul>
+                 
+                    <div class="viewCartSubtotals clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="heading">Sub Total</span>
+                         <span class="amount">R @String.Format("{0:0}", Model.Order.ProductAmount)</span>                            
+                         <div class="clear"><!-- --></div> 
+                    </div> 
+                     <div class="viewCartSubtotals clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="heading">Shipping</span>
+                         <span class="amount">R @String.Format("{0:0}", Model.Order.DeliveryAmount)</span>                            
+                         <div class="clear"><!-- --></div> 
+                     </div> 
+                     <div class="viewCartSubtotals clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="heading">Total</span>
+                         <span class="amount"><b>R @String.Format("{0:0}", Model.Order.TotalAmount)</b></span>                            
+                         <div class="clear"><!-- --></div> 
+                 </div> 
+                        
+                 </div>
+                
+             </div>
+             </div>
+         
+            </div>
      
  </fieldset>
 
- <br/>
-Sub total: R @String.Format("{0:0}", Model.Order.ProductAmount)
-<br/>
-Delivery: R @String.Format("{0:0}", Model.Order.DeliveryAmount)
-<br/>
-Total: <b>R @String.Format("{0:0}", Model.Order.TotalAmount)</b>
-<br/>
-<br/>
+ 
  <fieldset class="account form-wrapper" id="summary-account">
      <legend>
          <span class="fieldset-legend">Account Information</span>

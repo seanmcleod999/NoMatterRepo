@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using NoMatterDatabaseModel;
+using NoMatterWebApi.Enums;
 
 namespace NoMatterWebApi.DAL
 {
@@ -13,7 +14,10 @@ namespace NoMatterWebApi.DAL
 	{
 		Task<int> AddOrderAsync(Order order);
 		Task<Order> GetOrderAsync(int orderId);
-		Task UpdateOrderPaymentTypeAsync(Order order, short paymentTypeId);		
+		Task UpdateOrderPaymentTypeAsync(Order order, short paymentTypeId);
+		Task UpdateOrderPaid(Order order, bool paid);
+		Task UpdateOrderFailed(Order order);
+		Task UpdateOrderProductsAsSold(Order order);
 	}
 
 	public class OrderRepository : IOrderRepository
@@ -40,6 +44,7 @@ namespace NoMatterWebApi.DAL
 		public async Task<Order> GetOrderAsync(int orderId)
 		{
 			var order = await databaseConnection.Orders
+				.Include(x=>x.PaymentType1)
 				.Include("OrderProducts")
 				.Include("OrderProducts.Product")
 				.Include("User").Where(x => x.OrderId == orderId).SingleOrDefaultAsync();
@@ -54,6 +59,40 @@ namespace NoMatterWebApi.DAL
 			order.PaymentTypeId = paymentTypeId;
 
 			await databaseConnection.SaveChangesAsync();
+		}
+
+		public async Task UpdateOrderPaid(Order order, bool paid)
+		{
+			databaseConnection.Orders.Attach(order);
+
+			order.Paid = paid;
+			order.OrderStatusId = (byte)OrderStatusEnum.Complete;
+
+			await databaseConnection.SaveChangesAsync();
+		}
+
+		public async Task UpdateOrderFailed(Order order)
+		{
+			databaseConnection.Orders.Attach(order);
+
+			order.OrderStatusId = (byte)OrderStatusEnum.Failed;
+
+			await databaseConnection.SaveChangesAsync();
+		}
+
+		public async Task UpdateOrderProductsAsSold(Order order)
+		{
+			foreach(var orderProduct in order.OrderProducts)
+			{
+				var product = orderProduct.Product;
+
+				databaseConnection.Products.Attach(product);
+
+				orderProduct.Product.DateSold = DateTime.Today;
+				orderProduct.Product.Sold = true;
+
+				await databaseConnection.SaveChangesAsync();
+			}
 		}
 
 		public void Save()

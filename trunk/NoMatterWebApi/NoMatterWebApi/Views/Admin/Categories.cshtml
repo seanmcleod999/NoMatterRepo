@@ -9,13 +9,13 @@
 
 <h1>Categories</h1>
 
-Client: <b>@Model.Client.ClientName</b><br/>
+Client: <b>@Model.Section.Client.ClientName</b><br/>
 Section: <b>@Model.Section.SectionName</b><br/><br/>
 
 <div class="PageNavigationBar">
-@Html.ActionLink("add category", "CategoryAdd", "Admin", new { clientId = @Model.Section.ClientId, sectionId = @Model.Section.SectionId }, new { @class = "AddLink" })
+@Html.ActionLink("add category", "CategoryAdd", "Admin", new { clientUuid = @Model.Section.Client.ClientUuid, sectionId = @Model.Section.SectionId }, new { @class = "AddLink" })
 &nbsp;    
-@Html.ActionLink("back to sections", "Sections", "Admin", new { clientId = Model.Section.ClientId}, new { @class = "BackLink" })
+@Html.ActionLink("back to sections", "Sections", "Admin", new { clientUuid = Model.Section.Client.ClientUuid}, new { @class = "BackLink" })
 </div>
 
 <table class="table_grid">
@@ -77,19 +77,19 @@ Section: <b>@Model.Section.SectionName</b><br/><br/>
             @category.VisibleProductCount
         </td>
         <td>
-            @Html.ActionLink("edit", "CategoryEdit", "Admin", new { clientId = @Model.Section.ClientId, categoryId = @category.CategoryId }, null)
+            @Html.ActionLink("edit", "CategoryEdit", "Admin", new { clientUuid = @Model.Section.Client.ClientUuid, categoryId = @category.CategoryId }, null)
         </td>
         <td>
             @if (!category.Conditional && category.FullProductCount == 0)
             {
-                @Html.ActionLink("delete", "CategoryDelete", "Admin", new { clientId = @Model.Section.ClientId, categoryId = @category.CategoryId, sectionId = @Model.Section.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this category? Note that you can only delete categories that have no products.');" })
+                @Html.ActionLink("delete", "CategoryDelete", "Admin", new { clientUuid = @Model.Section.Client.ClientUuid, categoryId = @category.CategoryId, sectionId = @Model.Section.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this category? Note that you can only delete categories that have no products.');" })
             }
             
         </td>
         <td>
             @if (!category.Conditional)
             {
-                @Html.ActionLink("products", "CategoryProducts", "Admin", new {categoryId = @category.CategoryId, clientId = @Model.Section.ClientId}, null)
+                @Html.ActionLink("products", "CategoryProducts", "Admin", new {categoryId = @category.CategoryId, clientUuid = @Model.Section.Client.ClientUuid}, null)
             }
         </td>
        

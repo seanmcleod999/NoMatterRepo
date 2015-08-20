@@ -6,9 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NoMatterDatabaseModel;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
+using NoMatterDataLibrary;
 using NoMatterWebApi.Logging;
 using GlobalSetting = NoMatterWebApiModels.Models.GlobalSetting;
 
@@ -22,9 +20,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 		public GlobalController()
 		{
-			var databaseEntity = new DatabaseEntities();
-
-			_globalRepository = new GlobalRepository(databaseEntity);
+			_globalRepository = new GlobalRepository();
 		}
 
 		public GlobalController(IGlobalRepository productRepository)
@@ -39,9 +35,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var settingsDb = await _globalRepository.GetGlobalSettingsAsync();
-
-				var settings = settingsDb.Select(x => x.ToDomainGlobalSetting()).ToList();
+				var settings = await _globalRepository.GetGlobalSettingsAsync();
 
 				return Ok(settings);
 			}

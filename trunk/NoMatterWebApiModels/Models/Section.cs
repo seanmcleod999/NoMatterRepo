@@ -8,9 +8,9 @@ namespace NoMatterWebApiModels.Models
 {
 	public class Section
 	{
-		public string SectionId { get; set; }
+		public int SectionId { get; set; }
 
-		public string ClientId { get; set; }
+		public Client Client { get; set; }
 
 		[Required(ErrorMessage = "required")]
 		[StringLength(50, ErrorMessage = "Must be under 50 characters")]

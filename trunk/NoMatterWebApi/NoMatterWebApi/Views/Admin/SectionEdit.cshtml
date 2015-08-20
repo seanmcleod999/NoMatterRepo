@@ -18,14 +18,14 @@
 <h1>Edit Section</h1>
 
 <div class="PageNavigationBar">
-    @Html.ActionLink("back to sections", "Sections", "Admin", new {clientId = @Model.Section.ClientId}, new { @class = "BackLink" })
+    @Html.ActionLink("back to sections", "Sections", "Admin", new {clientId = @Model.Section.Client.ClientUuid}, new { @class = "BackLink" })
 </div>
 
 @using (Html.BeginForm("SectionEdit", "Admin", FormMethod.Post, new {enctype = "multipart/form-data"}))
 {
     @Html.ValidationSummary(true)
 
-    @Html.HiddenFor(model => model.Section.ClientId)
+    @Html.HiddenFor(model => model.Section.Client.ClientUuid)
     @Html.HiddenFor(model => model.Section.SectionId)
     @Html.HiddenFor(model => model.Section.Picture)
 
@@ -75,7 +75,7 @@
 
     <br/>
     <p>
-        <input type="submit" value="Save" class="btn btn-default"/> &nbsp;@Html.ActionLink("cancel", "Sections", "Admin", new {clientId = @Model.Section.ClientId} , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+        <input type="submit" value="Save" class="btn btn-default"/> &nbsp;@Html.ActionLink("cancel", "Sections", "Admin", new {clientId = @Model.Section.Client.ClientUuid} , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
     </p>
 
     <br/>

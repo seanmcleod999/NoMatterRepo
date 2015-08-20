@@ -8,7 +8,7 @@ namespace NoMatterWebApiModels.ViewModels
 {
 	public class ViewProductVm
 	{
-		public string ClientId { get; set; }
+		public string ClientUuid { get; set; }
 
 		public string FromCategory { get; set; }
 

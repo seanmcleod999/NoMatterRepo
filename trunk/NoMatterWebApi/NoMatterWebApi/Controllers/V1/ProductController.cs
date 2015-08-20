@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CustomAuthLib;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
@@ -26,9 +24,8 @@ namespace NoMatterWebApi.Controllers.V1
 
 		public ProductController()
 		{
-			var databaseEntity = new DatabaseEntities();
 
-			_productRepository = new ProductRepository(databaseEntity);
+			_productRepository = new ProductRepository();
 			_generalHelper = new GeneralHelper();
 		}
 
@@ -51,26 +48,24 @@ namespace NoMatterWebApi.Controllers.V1
 				//TODO: make sure the user can access this product
 				//Need to get bearer token, and lookup the user so we know which client the user is from
 
-				var productDb = await _productRepository.GetProductAsync(new Guid(productId));
+				var product = await _productRepository.GetProductAsync(new Guid(productId));
 
-				var product = productDb.ToDomainProduct();
+				//if (relatedProducts)
+				//{
 
-				if (relatedProducts)
-				{
+				//	//Get the products keywords so we can lookup similar products
+				//	var productKeywordsList = product.ProductKeywords.Select(x => x.Keyword).ToList();
 
-					//Get the products keywords so we can lookup similar products
-					var productKeywordsList = productDb.ProductKeywords.Select(x => x.Keyword).ToList();
+				//	//Get some related products
+				//	var relatedProductDb =
+				//		await _productRepository.GetRelatedProductsByKeywordsAsync(new Guid(productId), productKeywordsList, 5);
 
-					//Get some related products
-					var relatedProductDb =
-						await _productRepository.GetRelatedProductsByKeywordsAsync(new Guid(productId), productKeywordsList, 5);
-
-					product.RelatedProductDetails = new RelatedProductDetails()
-						{
-							RelatedProducts = relatedProductDb.Select(x => x.ToDomainProduct()).ToList(),
-							RelatedProductIds = relatedProductDb.Select(x => x.ProductUUID.ToString()).ToList()
-						};
-				}
+				//	product.RelatedProductDetails = new RelatedProductDetails()
+				//		{
+				//			RelatedProducts = relatedProductDb.Select(x => x.ToDomainProduct()).ToList(),
+				//			RelatedProductIds = relatedProductDb.Select(x => x.ProductUUID.ToString()).ToList()
+				//		};
+				//}
 
 				return Ok(product);
 
@@ -99,26 +94,26 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var productDb = await _productRepository.GetProductAsync(new Guid(productId));
+				var product = await _productRepository.GetProductAsync(new Guid(productId));
 
-				//productDb.CategoryId = model.CategoryId,
-				productDb.Title = model.Title;
-				productDb.Description = model.Description;
-				productDb.Size = model.Size;
-				productDb.Price = model.Price;
-				productDb.Reserved = model.Reserved;
-				productDb.Hidden = model.Hidden;
-				productDb.AdminNotes = model.AdminNotes;
-				productDb.Picture1 = model.Picture1;
-				productDb.Picture2 = model.Picture2;
-				productDb.Picture3 = model.Picture3;
-				productDb.Picture4 = model.Picture4;
-				productDb.Picture5 = model.Picture5;
-				productDb.PictureOther = model.PictureOther;
-				productDb.ReleaseDate = Convert.ToDateTime(model.ReleaseDate);
+				////productDb.CategoryId = model.CategoryId,
+				//productDb.Title = model.Title;
+				//productDb.Description = model.Description;
+				//productDb.Size = model.Size;
+				//productDb.Price = model.Price;
+				//productDb.Reserved = model.Reserved;
+				//productDb.Hidden = model.Hidden;
+				//productDb.AdminNotes = model.AdminNotes;
+				//productDb.Picture1 = model.Picture1;
+				//productDb.Picture2 = model.Picture2;
+				//productDb.Picture3 = model.Picture3;
+				//productDb.Picture4 = model.Picture4;
+				//productDb.Picture5 = model.Picture5;
+				//productDb.PictureOther = model.PictureOther;
+				//productDb.ReleaseDate = Convert.ToDateTime(model.ReleaseDate);
 
-				productDb.Sold = model.DateSold != null;
-				productDb.DateSold = model.DateSold;
+				//productDb.Sold = model.DateSold != null;
+				//productDb.DateSold = model.DateSold;
 
 				//Remove all previous keyword
 				//foreach (var productKeyword in productDb.ProductKeywords)
@@ -142,9 +137,7 @@ namespace NoMatterWebApi.Controllers.V1
 				//	}
 				//}
 
-				await _productRepository.UpdateProductAsync(productDb);
-
-				var product = productDb.ToDomainProduct();
+				await _productRepository.UpdateProductAsync(product);
 
 				return Ok(product);
 			}
@@ -169,7 +162,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 				ProductHelper.DeleteProductPictures(product, _generalHelper);
 
-				await _productRepository.DeleteProductAsync(product);
+				await _productRepository.DeleteProductAsync(product.ProductId);
 
 				return Ok();
 			}

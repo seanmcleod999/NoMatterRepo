@@ -40,7 +40,7 @@ namespace NoMatterWebApiModels.Models
 		//	get { return _profileId; }
 		//}
 
-		//public string ClientId
+		//public string ClientUuid
 		//{
 		//	get { return _clientId; }
 		//}

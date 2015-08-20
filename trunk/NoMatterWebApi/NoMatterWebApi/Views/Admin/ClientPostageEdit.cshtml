@@ -9,14 +9,14 @@
 <h1>Edit Postage Option</h1>
 
 <div class="PageNavigationBar">
-    @Html.ActionLink("back to pages", "ClientPostage", "Admin", new {clientId = @Model.Client.ClientId}, new { @class = "BackLink" })
+    @Html.ActionLink("back to pages", "ClientPostage", "Admin", new {clientId = @Model.Client.ClientUuid}, new { @class = "BackLink" })
 </div>
 
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
 
-    @Html.HiddenFor(model => model.Client.ClientId)
+    @Html.HiddenFor(model => model.Client.ClientUuid)
     @Html.HiddenFor(model => model.ClientDeliveryOption.ClientDeliveryOptionId)
 
    
@@ -54,7 +54,7 @@
  
     <br/>
     <p>
-        <input type="submit" value="Save" class="btn btn-default" /> &nbsp;@Html.ActionLink("cancel", "ClientPostage", "Admin", new { clientId = Model.Client.ClientId }, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+        <input type="submit" value="Save" class="btn btn-default" /> &nbsp;@Html.ActionLink("cancel", "ClientPostage", "Admin", new { clientId = Model.Client.ClientUuid }, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
     </p>
 
 }

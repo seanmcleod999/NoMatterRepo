@@ -27,5 +27,11 @@ namespace NoMatterWebApiModels.Models
 		public List<Product> Products { get; set; }
 
 		public User User { get; set; }
+
+		public short? PaymentTypeId { get; set; }
+
+		public string PaymentType { get; set; }
+
+		public short ClientDeliveryOptionId { get; set; }
 	}
 }

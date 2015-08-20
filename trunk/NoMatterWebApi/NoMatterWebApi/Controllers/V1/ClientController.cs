@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CustomAuthLib;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
@@ -34,12 +32,11 @@ namespace NoMatterWebApi.Controllers.V1
 
 		public ClientController()
 		{
-			var databaseEntity = new DatabaseEntities();
 
-			_clientRepository = new ClientRepository(databaseEntity);
-			_userRepository = new UserRepository(databaseEntity);
-			_sectionRepository = new SectionRepository(databaseEntity);
-			_categoryRepository = new CategoryRepository(databaseEntity);
+			_clientRepository = new ClientRepository();
+			_userRepository = new UserRepository();
+			_sectionRepository = new SectionRepository();
+			_categoryRepository = new CategoryRepository();
 		}
 
 		public ClientController(IClientRepository clientRepository, IUserRepository userRepository, SectionRepository sectionRepository, CategoryRepository categoryRepository)
@@ -58,9 +55,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var clientsDb = await _clientRepository.GetClientsAsync();
-
-				var clients = clientsDb.Select(x => x.ToDomainClient()).ToList();
+				var clients = await _clientRepository.GetClientsAsync();
 
 				return Ok(clients);
 			}
@@ -68,8 +63,7 @@ namespace NoMatterWebApi.Controllers.V1
 			{
 				Logger.WriteGeneralError(ex);
 				return InternalServerError(ex);
-			}
-			
+			}			
 		}
 
 		//// GET api/v1/clients/{clientId}
@@ -105,9 +99,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var clientSettingsDb = await _clientRepository.GetClientSettingsAsync(new Guid(clientId));
-
-				var clientSettings = clientSettingsDb.Select(x => x.ToDomainClientSetting()).ToList();
+				var clientSettings = await _clientRepository.GetClientSettingsAsync(new Guid(clientId));
 
 				return Ok(clientSettings);
 			}
@@ -120,15 +112,13 @@ namespace NoMatterWebApi.Controllers.V1
 		}
 
 		[HttpGet]
-		[Route("api/v1/clients/{clientId}/setting/{settingId}")]
+		[Route("api/v1/clients/{clientId}/settings/{clientSettingId}")]
 		[ResponseType(typeof(ClientSetting))]
 		public async Task<IHttpActionResult> GetClientSettingAsync(string clientId, int clientSettingId)
 		{
 			try
 			{
-				var clientSettingDb = await _clientRepository.GetClientSettingAsync(new Guid(clientId), clientSettingId);
-
-				var clientSetting = clientSettingDb.ToDomainClientSetting();
+				var clientSetting = await _clientRepository.GetClientSettingAsync(new Guid(clientId), clientSettingId);
 
 				return Ok(clientSetting);
 			}
@@ -157,10 +147,8 @@ namespace NoMatterWebApi.Controllers.V1
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				var clienSettingDb = clientSetting.ToDatabaseClientSetting(clientDb.ClientId);
-
 				//Save the section
-				await _clientRepository.AddClientSettingAsync(clienSettingDb);
+				await _clientRepository.AddClientSettingAsync(clientSetting);
 
 				return Ok();
 
@@ -224,11 +212,11 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var clientSettingDb = await _clientRepository.GetClientSettingAsync(new Guid(clientId), clientSettingId);
-				if (clientSettingDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientSettingNotFound);
+				//var clientSettingDb = await _clientRepository.GetClientSettingAsync(new Guid(clientId), clientSettingId);
+				//if (clientSettingDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientSettingNotFound);
 
 				//Update the page
-				await _clientRepository.UpdateClientSettingAsync(clientSettingDb, clientSetting);
+				await _clientRepository.UpdateClientSettingAsync(clientSetting);
 
 				return Ok();
 
@@ -272,9 +260,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var clientDeliveryOptionsDb = await _clientRepository.GetClientDeliveryOptionsAsync(new Guid(clientId));
-
-				var clientDeliveryOptions = clientDeliveryOptionsDb.Select(x => x.ToDomainClientDeliveryOption()).ToList();
+				var clientDeliveryOptions = await _clientRepository.GetClientDeliveryOptionsAsync(new Guid(clientId));
 
 				if (clientDeliveryOptions.Any())
 				{
@@ -298,9 +284,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var clientPaymentTypesDb = await _clientRepository.GetClientPaymentTypesAsync(new Guid(clientId));
-
-				var clientPaymentTypes = clientPaymentTypesDb.Select(x => x.ToDomainClientPaymentType()).ToList();
+				var clientPaymentTypes = await _clientRepository.GetClientPaymentTypesAsync(new Guid(clientId));
 
 				if (clientPaymentTypes.Any())
 				{
@@ -324,9 +308,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var clientPagesDb = await _clientRepository.GetClientPagesAsync(new Guid(clientId));
-
-				var clientPages = clientPagesDb.Select(x => x.ToDomainClientPage()).ToList();
+				var clientPages = await _clientRepository.GetClientPagesAsync(new Guid(clientId));
 
 				return Ok(clientPages);
 			}
@@ -345,9 +327,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var clientPageDb = await _clientRepository.GetClientPageAsync(new Guid(clientId), pageName);
-
-				var clientPage = clientPageDb.ToDomainClientPage();
+				var clientPage = await _clientRepository.GetClientPageAsync(new Guid(clientId), pageName);
 
 				return Ok(clientPage);
 			}
@@ -379,10 +359,9 @@ namespace NoMatterWebApi.Controllers.V1
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				var clientPageDb = clientPage.ToDatabaseClientPage(clientDb.ClientId);
 
 				//Save the section
-				await _clientRepository.AddClientPageAsync(clientPageDb);
+				await _clientRepository.AddClientPageAsync(clientPage);
 				return Ok();
 
 			}
@@ -409,11 +388,11 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var clientPageDb = await _clientRepository.GetClientPageAsync(new Guid(clientId), pageName);
-				if (clientPageDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientPageNotFound);
+				//var clientPageDb = await _clientRepository.GetClientPageAsync(new Guid(clientId), pageName);
+				//if (clientPageDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientPageNotFound);
 				
 				//Update the page
-				await _clientRepository.UpdateClientPageAsync(clientPageDb, clientPage);
+				await _clientRepository.UpdateClientPageAsync(clientPage);
 
 				return Ok();
 
@@ -458,9 +437,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var sectionsDb = await _sectionRepository.GetClientSectionsAsync(new Guid(clientId), includeHidden);
-
-				var sections = sectionsDb.Select(x => x.ToDomainSection()).ToList();
+				var sections = await _sectionRepository.GetClientSectionsAsync(new Guid(clientId), includeHidden);
 
 				if (!includeEmpty)
 				{
@@ -484,16 +461,16 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var sectionsDb = await _sectionRepository.GetClientSectionsAndCategoriesAsync(new Guid(clientId), includeHidden);
+				var sections = await _sectionRepository.GetClientSectionsAndCategoriesAsync(new Guid(clientId), includeHidden);
 
-				var sectionsAndCategories = sectionsDb.Select(x => x.ToDomainSectionsAndCategories()).ToList();
+				//var sectionsAndCategories = sectionsDb.Select(x => x.ToDomainSectionsAndCategories()).ToList();
 
-				if (!includeEmpty)
-				{
-					sectionsAndCategories = sectionsAndCategories.Where(x => x.VisibleCategoryCount > 0).ToList();
-				}
+				//if (!includeEmpty)
+				//{
+				//	sectionsAndCategories = sectionsAndCategories.Where(x => x.VisibleCategoryCount > 0).ToList();
+				//}
 
-				return Ok(sectionsAndCategories);
+				return Ok(sections);
 
 			}
 			catch (Exception ex)
@@ -520,10 +497,9 @@ namespace NoMatterWebApi.Controllers.V1
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				var sectionDb = section.ToDatabaseSection(clientDb.ClientId);
 
 				//Save the section
-				var sectionId = await _sectionRepository.AddSectionAsync(sectionDb);
+				var sectionId = await _sectionRepository.AddSectionAsync(section);
 
 				await SectionHelper.AddDefaultSectionCategories(sectionId, _categoryRepository);
 
@@ -547,9 +523,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var clientDeliveryOptionDb = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionId);
-
-				var clientDeliveryOption = clientDeliveryOptionDb.ToDomainClientDeliveryOption();
+				var clientDeliveryOption = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionId);
 
 				return Ok(clientDeliveryOption);
 			}
@@ -578,10 +552,8 @@ namespace NoMatterWebApi.Controllers.V1
 				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				var clientDeliveryOptionDb = clientDeliveryOption.ToDatabaseClientDeliveryOption(clientDb.ClientId);
-
 				//Save the section
-				await _clientRepository.AddClientDeliveryOptionAsync(clientDeliveryOptionDb);
+				await _clientRepository.AddClientDeliveryOptionAsync(clientDeliveryOption);
 
 				return Ok();
 
@@ -608,11 +580,11 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var clientDeliveryOptionDb = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionId);
-				if (clientDeliveryOptionDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientDeliveryOptionNotFound);
+				//var clientDeliveryOptionDb = await _clientRepository.GetClientDeliveryOptionAsync(clientDeliveryOptionId);
+				//if (clientDeliveryOptionDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientDeliveryOptionNotFound);
 
 				//Update the page
-				await _clientRepository.UpdateClientDeliveryOptionAsync(clientDeliveryOptionDb, clientDeliveryOption);
+				await _clientRepository.UpdateClientDeliveryOptionAsync(clientDeliveryOption);
 
 				return Ok();
 

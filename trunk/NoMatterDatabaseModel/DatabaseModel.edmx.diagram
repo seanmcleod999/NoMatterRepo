@@ -56,6 +56,10 @@
         <AssociationConnector Association="DatabaseModel.FK_Setting_SettingCategory" />
         <AssociationConnector Association="DatabaseModel.FK_Setting_SettingType" />
         <AssociationConnector Association="DatabaseModel.FK_Order_PaymentType" />
+        <EntityTypeShape EntityType="DatabaseModel.ClientEmail" Width="1.5" PointX="6" PointY="18.875" />
+        <EntityTypeShape EntityType="DatabaseModel.EmailEvent" Width="1.5" PointX="3.75" PointY="6.125" />
+        <AssociationConnector Association="DatabaseModel.FK_ClientEmail_Client" />
+        <AssociationConnector Association="DatabaseModel.FK_ClientEmail_EmailEvent" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

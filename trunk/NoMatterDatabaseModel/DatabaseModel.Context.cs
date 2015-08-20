@@ -49,5 +49,7 @@ namespace NoMatterDatabaseModel
         public virtual DbSet<ClientSetting> ClientSettings { get; set; }
         public virtual DbSet<SettingCategory> SettingCategories { get; set; }
         public virtual DbSet<SettingType> SettingTypes { get; set; }
+        public virtual DbSet<ClientEmail> ClientEmails { get; set; }
+        public virtual DbSet<EmailEvent> EmailEvents { get; set; }
     }
 }

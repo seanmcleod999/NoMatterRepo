@@ -23,6 +23,7 @@
           <Property Name="SectionId" Type="int" Nullable="false" />
           <Property Name="CategoryUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CategoryName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CategoryFriendlyName" Type="varchar" MaxLength="50" />
           <Property Name="CategoryDescription" Type="varchar(max)" />
           <Property Name="CategoryOrder" Type="smallint" Nullable="false" />
           <Property Name="ActionName" Type="varchar" MaxLength="20" />
@@ -51,6 +52,16 @@
           <Property Name="DeliveryAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="OptionOrder" Type="tinyint" Nullable="false" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientEmail">
+          <Key>
+            <PropertyRef Name="ClientEmailId" />
+          </Key>
+          <Property Name="ClientEmailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientID" Type="int" Nullable="false" />
+          <Property Name="EmailEventId" Type="smallint" Nullable="false" />
+          <Property Name="Success" Type="bit" Nullable="false" />
+          <Property Name="ErrorMessage" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="ClientPage">
           <Key>
@@ -106,6 +117,14 @@
           </Key>
           <Property Name="DiscountTypeId" Type="smallint" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmailEvent">
+          <Key>
+            <PropertyRef Name="EmailEventId" />
+          </Key>
+          <Property Name="EmailEventId" Type="smallint" Nullable="false" />
+          <Property Name="EventName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefaultTemplateName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Enquiry">
           <Key>
@@ -179,12 +198,12 @@
           <Property Name="Reserved" Type="bit" Nullable="false" />
           <Property Name="Sold" Type="bit" Nullable="false" />
           <Property Name="DateSold" Type="datetime" />
-          <Property Name="Picture1" Type="varchar" MaxLength="50" />
-          <Property Name="Picture2" Type="varchar" MaxLength="50" />
-          <Property Name="Picture3" Type="varchar" MaxLength="50" />
-          <Property Name="Picture4" Type="varchar" MaxLength="50" />
-          <Property Name="Picture5" Type="varchar" MaxLength="50" />
-          <Property Name="PictureOther" Type="varchar" MaxLength="50" />
+          <Property Name="Picture1" Type="varchar" MaxLength="80" />
+          <Property Name="Picture2" Type="varchar" MaxLength="80" />
+          <Property Name="Picture3" Type="varchar" MaxLength="80" />
+          <Property Name="Picture4" Type="varchar" MaxLength="80" />
+          <Property Name="Picture5" Type="varchar" MaxLength="80" />
+          <Property Name="PictureOther" Type="varchar" MaxLength="80" />
           <Property Name="FacebookPostId" Type="varchar" MaxLength="20" />
           <Property Name="TwitterPostId" Type="varchar" MaxLength="20" />
           <Property Name="ProductShortUrl" Type="varchar" MaxLength="50" />
@@ -217,7 +236,7 @@
           <Property Name="ControllerName" Type="varchar" MaxLength="50" />
           <Property Name="SectionDescription" Type="varchar(max)" />
           <Property Name="Hidden" Type="bit" Nullable="false" />
-          <Property Name="Picture" Type="varchar" MaxLength="50" />
+          <Property Name="Picture" Type="varchar" MaxLength="80" />
           <Property Name="SectionOrder" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="Setting">
@@ -254,8 +273,7 @@
           <Property Name="UserUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CredentialTypeId" Type="tinyint" Nullable="false" />
           <Property Name="Identifier" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Password" Type="binary" MaxLength="200" />
-          <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" />
+          <Property Name="Password" Type="varbinary" MaxLength="24" />
           <Property Name="Email" Type="varchar" MaxLength="100" />
           <Property Name="FullName" Type="varchar" MaxLength="100" />
           <Property Name="ContactNumber" Type="varchar" MaxLength="100" />
@@ -311,6 +329,30 @@
             </Principal>
             <Dependent Role="ClientDeliveryOption">
               <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientEmail_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientEmail" Type="Self.ClientEmail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientEmail">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientEmail_EmailEvent">
+          <End Role="EmailEvent" Type="Self.EmailEvent" Multiplicity="1" />
+          <End Role="ClientEmail" Type="Self.ClientEmail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmailEvent">
+              <PropertyRef Name="EmailEventId" />
+            </Principal>
+            <Dependent Role="ClientEmail">
+              <PropertyRef Name="EmailEventId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -591,12 +633,14 @@
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientDeliveryOption" EntityType="Self.ClientDeliveryOption" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientEmail" EntityType="Self.ClientEmail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientPage" EntityType="Self.ClientPage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientPaymentType" EntityType="Self.ClientPaymentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ClientSetting" EntityType="Self.ClientSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscountProduct" EntityType="Self.DiscountProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DiscountType" EntityType="Self.DiscountType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmailEvent" EntityType="Self.EmailEvent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Enquiry" EntityType="Self.Enquiry" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GlobalSetting" EntityType="Self.GlobalSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
@@ -622,6 +666,14 @@
           <AssociationSet Name="FK_ClientDeliveryOption_Client" Association="Self.FK_ClientDeliveryOption_Client">
             <End Role="Client" EntitySet="Client" />
             <End Role="ClientDeliveryOption" EntitySet="ClientDeliveryOption" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientEmail_Client" Association="Self.FK_ClientEmail_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ClientEmail" EntitySet="ClientEmail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientEmail_EmailEvent" Association="Self.FK_ClientEmail_EmailEvent">
+            <End Role="EmailEvent" EntitySet="EmailEvent" />
+            <End Role="ClientEmail" EntitySet="ClientEmail" />
           </AssociationSet>
           <AssociationSet Name="FK_ClientEnquiry_Client" Association="Self.FK_ClientEnquiry_Client">
             <End Role="Client" EntitySet="Client" />
@@ -743,6 +795,7 @@
           <NavigationProperty Name="Section" Relationship="Self.FK_Category_Section" FromRole="Category" ToRole="Section" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Product_Category" FromRole="Category" ToRole="Product" />
           <Property Name="ActionName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CategoryFriendlyName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Client">
           <Key>
@@ -762,6 +815,7 @@
           <NavigationProperty Name="ClientPages" Relationship="DatabaseModel.FK_ClientPage_Client" FromRole="Client" ToRole="ClientPage" />
           <Property Name="SiteUrl" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ClientSettings" Relationship="DatabaseModel.FK_ClientSetting_Client1" FromRole="Client" ToRole="ClientSetting" />
+          <NavigationProperty Name="ClientEmails" Relationship="DatabaseModel.FK_ClientEmail_Client" FromRole="Client" ToRole="ClientEmail" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -888,12 +942,12 @@
           <Property Name="Reserved" Type="Boolean" Nullable="false" />
           <Property Name="Sold" Type="Boolean" Nullable="false" />
           <Property Name="DateSold" Type="DateTime" Precision="3" />
-          <Property Name="Picture1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Picture2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Picture3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Picture4" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Picture5" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PictureOther" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picture1" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Picture2" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Picture3" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Picture4" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Picture5" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="PictureOther" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="FacebookPostId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="TwitterPostId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ProductShortUrl" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -927,7 +981,7 @@
           <NavigationProperty Name="Client" Relationship="Self.FK_Section_Section" FromRole="Section" ToRole="Client" />
           <Property Name="SectionDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Hidden" Type="Boolean" Nullable="false" />
-          <Property Name="Picture" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picture" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
           <Property Name="SectionOrder" Type="Int16" Nullable="false" />
         </EntityType>
         <EntityType Name="Setting">
@@ -953,8 +1007,7 @@
           <Property Name="UserUUID" Type="Guid" Nullable="false" />
           <Property Name="CredentialTypeId" Type="Byte" Nullable="false" />
           <Property Name="Identifier" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Password" Type="Binary" MaxLength="200" FixedLength="true" />
-          <Property Name="PasswordSalt" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="Binary" MaxLength="24" FixedLength="false" />
           <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateUpdated" Type="DateTime" Nullable="false" Precision="3" />
@@ -1255,6 +1308,16 @@
             <End Role="PaymentType" EntitySet="PaymentTypes" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
+          <EntitySet Name="ClientEmails" EntityType="DatabaseModel.ClientEmail" />
+          <EntitySet Name="EmailEvents" EntityType="DatabaseModel.EmailEvent" />
+          <AssociationSet Name="FK_ClientEmail_Client" Association="DatabaseModel.FK_ClientEmail_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientEmail" EntitySet="ClientEmails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientEmail_EmailEvent" Association="DatabaseModel.FK_ClientEmail_EmailEvent">
+            <End Role="EmailEvent" EntitySet="EmailEvents" />
+            <End Role="ClientEmail" EntitySet="ClientEmails" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
           <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
@@ -1481,6 +1544,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ClientEmail">
+          <Key>
+            <PropertyRef Name="ClientEmailId" />
+          </Key>
+          <Property Name="ClientEmailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="Int32" Nullable="false" />
+          <Property Name="EmailEventId" Type="Int16" Nullable="false" />
+          <Property Name="Success" Type="Boolean" Nullable="false" />
+          <Property Name="ErrorMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_ClientEmail_Client" FromRole="ClientEmail" ToRole="Client" />
+          <NavigationProperty Name="EmailEvent" Relationship="DatabaseModel.FK_ClientEmail_EmailEvent" FromRole="ClientEmail" ToRole="EmailEvent" />
+        </EntityType>
+        <EntityType Name="EmailEvent">
+          <Key>
+            <PropertyRef Name="EmailEventId" />
+          </Key>
+          <Property Name="EmailEventId" Type="Int16" Nullable="false" />
+          <Property Name="EventName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DefaultTemplateName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClientEmails" Relationship="DatabaseModel.FK_ClientEmail_EmailEvent" FromRole="EmailEvent" ToRole="ClientEmail" />
+        </EntityType>
+        <Association Name="FK_ClientEmail_Client">
+          <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DatabaseModel.ClientEmail" Role="ClientEmail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientEmail">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientEmail_EmailEvent">
+          <End Type="DatabaseModel.EmailEvent" Role="EmailEvent" Multiplicity="1" />
+          <End Type="DatabaseModel.ClientEmail" Role="ClientEmail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmailEvent">
+              <PropertyRef Name="EmailEventId" />
+            </Principal>
+            <Dependent Role="ClientEmail">
+              <PropertyRef Name="EmailEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1501,6 +1609,7 @@
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="DatabaseModel.Category">
               <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="CategoryFriendlyName" ColumnName="CategoryFriendlyName" />
                 <ScalarProperty Name="ActionName" ColumnName="ActionName" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="SectionId" ColumnName="SectionId" />
@@ -1707,7 +1816,6 @@
                 <ScalarProperty Name="CredentialTypeId" ColumnName="CredentialTypeId" />
                 <ScalarProperty Name="Identifier" ColumnName="Identifier" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
@@ -1777,6 +1885,26 @@
               <MappingFragment StoreEntitySet="SettingType">
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="SettingTypeId" ColumnName="SettingTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientEmails">
+            <EntityTypeMapping TypeName="DatabaseModel.ClientEmail">
+              <MappingFragment StoreEntitySet="ClientEmail">
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="Success" ColumnName="Success" />
+                <ScalarProperty Name="EmailEventId" ColumnName="EmailEventId" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="ClientEmailId" ColumnName="ClientEmailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailEvents">
+            <EntityTypeMapping TypeName="DatabaseModel.EmailEvent">
+              <MappingFragment StoreEntitySet="EmailEvent">
+                <ScalarProperty Name="DefaultTemplateName" ColumnName="DefaultTemplateName" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="EmailEventId" ColumnName="EmailEventId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

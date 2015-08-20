@@ -30,53 +30,37 @@
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <br/>
-                    <table>
-                        <tr>
-                            <th>
-                
-                            </th>
-                            <th>
-                                Product
-                            </th>
-                            <th>
-                                Price
-                            </th>
-                            <th>
-                
-                            </th>
-                        </tr>
-       
+                    
+                    <div id="viewCartProductsHeader" class="clearfix">
+                        <span class="product-picture">&nbsp;</span>
+                        <span class="product-title">Title</span>
+                        <span class="product-price">Price</span>                            
+                        <div class="clear"><!-- --></div>    
+                    </div>   
+                    
+                    <ul id="viewCartProductList">
+                    
                         @foreach (var product in Model.Products)
                         {
-              
-                            <tr>
-                                <td>
-                                    <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=40" />
-                                </td>
-                                <td>
-                                    @product.Title  
-                                </td>
-                                <td>
-                                    R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)
-                                </td>
-                                <td>
-                                    @Html.ActionLink("remove", "RemoveProductFromCart", "Cart", new { productId = @product.ProductId }, new { @class = "RemoveFromCartLink" })
-                                </td>
-                            </tr>
-     
-                
+                            <li>
+                                <div id="viewCartProductWrapper" class="clearfix">
+                                    <div id="viewCartProductPicture">              
+                                        <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=40" />
+                                    </div>
+                                    <div id="viewCartProductDetails">
+                                        <span class="product-title">@product.Title</span>
+                                        <span class="product-price">R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)</span>
+                                        <span class="product-remove">@Html.ActionLink("remove", "RemoveProductFromCart", "Cart", new { productId = @product.ProductId }, new { @class = "RemoveFromCartLink" })</span>
+                                        <div class="clear"><!-- --></div>
+                                    </div>
+                                </div>
+                            </li>
                         }
-        
-                    </table>
-                
-                    
-
+                                             
+                    </ul>
+                                                        
                 </div>
-                
-                
-                    
-                       
-
+               
             </div>
             
              <br/>

@@ -51,8 +51,6 @@ namespace NoMatterWebApi.DAL
 			return user;
 		}
 
-		
-
 		public async Task<string> SaveUserAsync(User user)
 		{
 			user.UserUUID = Guid.NewGuid();

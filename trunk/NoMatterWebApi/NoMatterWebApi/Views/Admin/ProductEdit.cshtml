@@ -11,14 +11,14 @@
 <h1>Edit Product</h1>
 
 <div class="PageNavigationBar">
-    @Html.ActionLink("back to products", "CategoryProducts", "Admin", new { clientId = @Model.Section.ClientId, categoryId = @Model.Product.CategoryId }, new { @class = "BackLink" })
+    @Html.ActionLink("back to products", "CategoryProducts", "Admin", new { clientId = @Model.Product.Category.Section.Client.ClientUuid, categoryId = @Model.Product.CategoryId }, new { @class = "BackLink" })
 </div>
 
 @using (Html.BeginForm("ProductEdit", "Admin", FormMethod.Post, new {enctype = "multipart/form-data"}))
 {
     @Html.ValidationSummary(true)
 
-    @Html.HiddenFor(model => model.Section.ClientId)
+    @Html.HiddenFor(model => model.Product.Category.Section.Client.ClientUuid)
     @Html.HiddenFor(model => model.Product.ProductId)
     @Html.HiddenFor(model => model.Product.CategoryId)
 
@@ -194,7 +194,7 @@
     <p>
 `       <a href="javascript:void(0);" class="btn btn-default" onclick="submitForm();">Save</a>
         &nbsp;       
-        @Html.ActionLink("cancel", "CategoryProducts", new { clientId = Model.Section.ClientId, categoryId = @Model.Category.CategoryId } , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+        @Html.ActionLink("cancel", "CategoryProducts", new { clientId = Model.Product.Category.Section.Client.ClientUuid, categoryId = @Model.Product.CategoryId } , new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
          &nbsp; 
         <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
     </p>

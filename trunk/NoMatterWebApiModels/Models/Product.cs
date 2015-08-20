@@ -9,9 +9,11 @@ namespace NoMatterWebApiModels.Models
 {
 	public class Product
 	{
-		public string ProductId { get; set; }
+		public int ProductId { get; set; }
 
-		public string CategoryId { get; set; }
+		public Category Category { get; set; }
+
+		public int CategoryId { get; set; }
 
 		[Required(ErrorMessage = "required")]
 		[StringLength(50, ErrorMessage = "Must be under 50 characters")]

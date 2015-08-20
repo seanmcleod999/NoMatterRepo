@@ -37,6 +37,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = 1.505.0\lib\NET35;terception.2.1.505.0\lib\NET35;seLibrary.Common.5.0.505.0\lib\NET35;seLibrary.Logging.5.0.505.0\lib\NET35
+		EnterpriseLibraryConfigurationToolBinariesPath = 1.505.0\lib\NET35;terception.2.1.505.0\lib\NET35;seLibrary.Common.5.0.505.0\lib\NET35;seLibrary.Logging.5.0.505.0\lib\NET35;505.0\lib\NET35;rception.2.1.505.0\lib\NET35;Library.Common.5.0.505.0\lib\NET35;Library.Logging.5.0.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal

@@ -17,7 +17,7 @@ namespace NoMatterWebApiModels.Models
 
 		public string SettingDescription { get; set; }
 
-		//public string RegexValidation { get; set; }
+		public string RegexValidation { get; set; }
 
 		public byte SettingTypeId { get; set; }
 

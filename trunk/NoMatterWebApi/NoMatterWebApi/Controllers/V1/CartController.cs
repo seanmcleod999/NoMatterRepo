@@ -6,10 +6,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
@@ -27,10 +25,9 @@ namespace NoMatterWebApi.Controllers.V1
 
 		public CartController()
 		{
-			var databaseEntity = new DatabaseEntities();
 
-			_cartRepository = new CartRepository(databaseEntity);
-			_productRepository = new ProductRepository(databaseEntity);
+			_cartRepository = new CartRepository();
+			_productRepository = new ProductRepository();
 			_globalSettings = new GlobalSettings();
 			
 			
@@ -50,9 +47,7 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var cartProductsDb = await _cartRepository.GetCartProductsAsync(cartId);
-
-				var cartProducts = cartProductsDb.Select(x => x.ToDomainCartProduct()).ToList();
+				var cartProducts = await _cartRepository.GetCartProductsAsync(cartId);
 
 				var shoppingCartDetails = new ShoppingCartDetails();
 
@@ -122,7 +117,7 @@ namespace NoMatterWebApi.Controllers.V1
 
 				if (cartProduct != null)
 				{
-					await _cartRepository.DeleteCartProductAsync(cartProduct);
+					await _cartRepository.DeleteCartProductAsync(cartProduct.CartProductId);
 				}
 
 				var cartProductCount = await _cartRepository.GetCartProductCountAsync(cartId);

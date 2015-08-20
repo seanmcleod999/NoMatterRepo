@@ -8,7 +8,11 @@ namespace NoMatterWebApiModels.Models
 {
 	public class User
 	{
+		public Client Client { get; set; }
+
 		public string UserId { get; set; }
+
+		public byte[] Password { get; set; }
 
 		public string Email { get; set; }
 
@@ -27,6 +31,8 @@ namespace NoMatterWebApiModels.Models
 		public string Country { get; set; }
 
 		public string PostalCode { get; set; }
+
+		public string UserRolesString { get; set; }
 
 	}
 }

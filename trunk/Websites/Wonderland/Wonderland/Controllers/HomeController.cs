@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using NoMatterWebApiModels.ViewModels;
+using NoMatterWebApiWebHelper.Logging;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
-using RedOrange.Logging;
 
 namespace RedOrange.Controllers
 {

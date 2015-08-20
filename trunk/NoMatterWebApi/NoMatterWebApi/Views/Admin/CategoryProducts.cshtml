@@ -7,14 +7,14 @@
 
 <h1>Products</h1>
 
-Client: <b>@Model.Client.ClientName</b><br/>
-Section: <b>@Model.Section.SectionName</b><br/>
+Client: <b>@Model.Category.Section.Client.ClientName</b><br/>
+Section: <b>@Model.Category.Section.SectionName</b><br/>
 Category: <b>@Model.Category.CategoryName</b><br/><br/>
 
 <div class="PageNavigationBar">
-@Html.ActionLink("add product", "ProductAdd", "Admin", new { clientId = Model.Section.ClientId, categoryId = @Model.Category.CategoryId }, new { @class = "AddLink" })
+@Html.ActionLink("add product", "ProductAdd", "Admin", new { clientUuid = Model.Category.Section.Client.ClientUuid, categoryId = @Model.Category.CategoryId }, new { @class = "AddLink" })
 &nbsp;    
-@Html.ActionLink("back to categories", "SectionCategories", "Admin", new { clientId = Model.Section.ClientId, sectionId = Model.Section.SectionId}, new { @class = "BackLink" })
+@Html.ActionLink("back to categories", "SectionCategories", "Admin", new { clientUuid = Model.Category.Section.Client.ClientUuid, sectionId = Model.Category.Section.SectionId}, new { @class = "BackLink" })
 </div>
 
 
@@ -86,13 +86,13 @@ Category: <b>@Model.Category.CategoryName</b><br/><br/>
         
           
         <td>
-            @Html.ActionLink("edit", "ProductEdit", "Admin", new { clientId = @Model.Section.ClientId, productId = @product.ProductId }, null)
+            @Html.ActionLink("edit", "ProductEdit", "Admin", new { clientUuid = @Model.Category.Section.Client.ClientUuid, productId = @product.ProductId }, null)
         </td>
         <td>
-            @Html.ActionLink("view", "ViewProduct", "Admin", new { clientId = @Model.Section.ClientId, productId = @product.ProductId }, null)
+            @Html.ActionLink("view", "ViewProduct", "Admin", new { clientUuid = @Model.Category.Section.Client.ClientUuid, productId = @product.ProductId }, null)
         </td>
          <td>
-            @Html.ActionLink("delete", "DeleteProduct", "Admin", new {clientId = @Model.Section.ClientId, productId = @product.ProductId, categoryId = @Model.Category.CategoryId },  new { onclick = "return confirm('Are you sure you wish to delete this product? Note that this will also delete the products history.');" })
+            @Html.ActionLink("delete", "DeleteProduct", "Admin", new {clientUuid = @Model.Category.Section.Client.ClientUuid, productId = @product.ProductId, categoryId = @Model.Category.CategoryId },  new { onclick = "return confirm('Are you sure you wish to delete this product? Note that this will also delete the products history.');" })
         </td>
 
        

@@ -82,6 +82,12 @@ h2 {
     padding-right: 40px;
 }
 
+@media (max-width: 650px) {
+     #sidebar {
+      display: none !important;
+   }
+}
+
 .PageNavigationBar {
     padding: 15px 0 20px 0;
 }
@@ -104,6 +110,15 @@ padding: 0 30px;
 
 .field-validation-error {
     color: red
+}
+
+.clearfix:after {
+visibility: hidden;
+display: block;
+font-size: 0;
+content: " ";
+clear: both;
+height: 0;
 }
 
 /* Header Stuff
@@ -652,6 +667,88 @@ list-style:none;
 .CheckoutSectionWrapper {
     padding: 10px 0;
 }
+
+/* View Cart
+-----------------------------------------------------------*/
+
+#viewCartProductsHeader {
+    border-bottom: 1px solid #e6e6e6;
+    max-width: 420px;
+}
+
+#viewCartProductsHeader span.product-picture {
+    float: left;
+    width: 50px; 
+}
+
+#viewCartProductsHeader span.product-title {
+    float: left;
+    width: 200px;
+    font-style:italic  
+}
+
+#viewCartProductsHeader span.product-price {
+    float: left;
+    width: 50px;
+    font-style: italic  
+}
+
+.viewCartSubtotals span.heading {
+   float: left;
+    width: 240px;
+    font-style: italic;
+    text-align: right  
+}
+
+#viewCartProductList {
+/* width: 100%; */
+list-style: none;
+width: 100%;
+margin: 14px 0 5px 0;
+}
+
+
+
+#viewCartProductWrapper {
+    display: table;
+    padding: 5px 0;
+    height: 100%;
+    max-width: 420px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+#viewCartProductPicture {
+    display: block; 
+    float: left;
+    padding: 0 5px 0 0;
+}
+
+
+#viewCartProductDetails {    
+    display: table-cell;
+    vertical-align: middle;
+   /*line-height: 60px;*/
+}
+
+#viewCartProductList { margin: 0; padding: 0 0 0 5px; }
+
+#viewCartProductList li span.product-title {
+    float: left;
+    width: 200px;
+    font-style: italic  
+}
+
+#viewCartProductList li span.product-price {
+ float: left;
+    width: 50px;
+}
+
+#viewCartProductList li span.product-remove {
+    float: left;
+    width: 50px;
+}
+
+
 
 /* Table grids
 -----------------------------------------------------------*/

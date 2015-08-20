@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
-using NoMatterDatabaseModel;
+
 
 namespace NoMatterWebApi.Models
 {
@@ -77,6 +77,6 @@ namespace NoMatterWebApi.Models
 		/// </summary>
 		public string LastName { get; set; }
 
-		public ICollection<UserRole> Roles { get; set; }
+		//public ICollection<UserRole> Roles { get; set; }
 	}
 }

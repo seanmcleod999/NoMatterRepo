@@ -68,27 +68,27 @@
         </td>
         
         <td>
-            @Html.ActionLink("edit", "ClientEdit", "Superuser", new { clientId = @client.ClientId }, null)
+            @Html.ActionLink("edit", "ClientEdit", "Superuser", new { clientUuid = @client.ClientUuid }, null)
         </td>
        
         <td>
-            @Html.ActionLink("sections", "Sections", "Admin", new { clientId = @client.ClientId }, null)
+            @Html.ActionLink("sections", "Sections", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
         
         <td>
-            @Html.ActionLink("discounts", "Discounts", "Admin", new { clientId = @client.ClientId }, null)
+            @Html.ActionLink("discounts", "Discounts", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
         
          <td>
-            @Html.ActionLink("postage", "ClientPostage", "Admin", new { clientId = @client.ClientId }, null)
+            @Html.ActionLink("postage", "ClientPostage", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
         
         <td>
-            @Html.ActionLink("pages", "ClientPages", "Admin", new { clientId = @client.ClientId }, null)
+            @Html.ActionLink("pages", "ClientPages", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
         
         <td>
-            @Html.ActionLink("settings", "ClientSettings", "Admin", new { clientId = @client.ClientId }, null)
+            @Html.ActionLink("settings", "ClientSettings", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
        
     </tr>

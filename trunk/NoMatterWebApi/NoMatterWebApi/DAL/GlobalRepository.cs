@@ -18,6 +18,7 @@ namespace NoMatterWebApi.DAL
 		Task DeleteSettingAsync(short settingId);
 		Task AddSettingAsync(Setting setting);
 		Task UpdateSettingAsync(Setting settingDb, NoMatterWebApiModels.Models.Setting setting);
+		Task InsertClientEmailSendLog(ClientEmail clientEmail);
 	}
 
 	public class GlobalRepository : IGlobalRepository
@@ -79,6 +80,13 @@ namespace NoMatterWebApi.DAL
 
 			await databaseConnection.SaveChangesAsync();
 
+		}
+
+		public async Task InsertClientEmailSendLog(ClientEmail clientEmail)
+		{
+			databaseConnection.ClientEmails.Add(clientEmail);
+
+			await databaseConnection.SaveChangesAsync();
 		}
 
 		public void Save()

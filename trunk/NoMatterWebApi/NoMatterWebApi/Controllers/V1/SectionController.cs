@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CustomAuthLib;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
@@ -29,9 +27,8 @@ namespace NoMatterWebApi.Controllers.V1
 
 		public SectionController()
 		{
-			var databaseEntity = new DatabaseEntities();
-			_sectionRepository = new SectionRepository(databaseEntity);
-			_categoryRepository = new CategoryRepository(databaseEntity);
+			_sectionRepository = new SectionRepository();
+			_categoryRepository = new CategoryRepository();
 		}
 
 		public SectionController(ISectionRepository sectionRepository, ICategoryRepository categoryRepository)
@@ -43,11 +40,9 @@ namespace NoMatterWebApi.Controllers.V1
 	
 		[Route("api/v1/clients/{clientId}/sections/{sectionId}")]
 		[ResponseType(typeof(List<Section>))]
-		public async Task<IHttpActionResult> GetSectionAsync(string clientId, string sectionId)
+		public async Task<IHttpActionResult> GetSectionAsync(string clientId, int sectionId)
 		{
-			var sectionDb = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
-
-			var section = sectionDb.ToDomainSection();
+			var section = await _sectionRepository.GetSectionAsync(sectionId);
 
 			return Ok(section);
 		}
@@ -56,7 +51,7 @@ namespace NoMatterWebApi.Controllers.V1
 		[HttpPut]
 		[Authorize]
 		[Route("api/v1/clients/{clientId}/sections/{sectionId}")]
-		public async Task<IHttpActionResult> UpdateSectionAsync(string clientId, string sectionId, Section section)
+		public async Task<IHttpActionResult> UpdateSectionAsync(string clientId, int sectionId, Section section)
 		{
 			try
 			{
@@ -67,12 +62,12 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				//Get the section
-				var sectionDb = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
-				if (sectionDb == null) return new CustomBadRequest(Request, ApiResultCode.SectionNotFound);
+				////Get the section
+				//var sectionDb = await _sectionRepository.GetSectionAsync(sectionId);
+				//if (sectionDb == null) return new CustomBadRequest(Request, ApiResultCode.SectionNotFound);
 
 				//Update the section
-				await _sectionRepository.UpdateSectionAsync(sectionDb, section);
+				await _sectionRepository.UpdateSectionAsync(section);
 
 				return Ok();
 
@@ -87,7 +82,7 @@ namespace NoMatterWebApi.Controllers.V1
 		[HttpDelete]
 		[Authorize]
 		[Route("api/v1/clients/{clientId}/sections/{sectionId}")]
-		public async Task<IHttpActionResult> DeleteSectionAsync(string clientId, string sectionId)
+		public async Task<IHttpActionResult> DeleteSectionAsync(string clientId, int sectionId)
 		{
 			try
 			{
@@ -101,7 +96,7 @@ namespace NoMatterWebApi.Controllers.V1
 				await SectionHelper.DeleteDefaultSectionCategories(_categoryRepository, sectionId);
 
 				//Delete the section
-				await _sectionRepository.DeleteSectionAsync(new Guid(sectionId));
+				await _sectionRepository.DeleteSectionAsync(sectionId);
 
 				return Ok();
 			}
@@ -116,12 +111,10 @@ namespace NoMatterWebApi.Controllers.V1
 
 		[Route("api/v1/clients/{clientId}/sections/{sectionId}/categories")]
 		[ResponseType(typeof(List<Category>))]
-		public async Task<IHttpActionResult> GetSectionCategoriesAsync(string clientId, string sectionId, bool includeEmpty = false, bool includeHidden = false)
+		public async Task<IHttpActionResult> GetSectionCategoriesAsync(string clientId, int sectionId, bool includeEmpty = false, bool includeHidden = false)
 		{
 
-			var categoriesDb = await _categoryRepository.GetSectionCategoriesAsync(new Guid(sectionId), includeHidden);
-
-			var categories = categoriesDb.Select(x => x.ToDomainCategory()).ToList();
+			var categories = await _categoryRepository.GetSectionCategoriesAsync(sectionId, includeHidden);
 
 			if (!includeEmpty)
 			{
@@ -134,7 +127,7 @@ namespace NoMatterWebApi.Controllers.V1
 		[Authorize]
 		[HttpPost]
 		[Route("api/v1/clients/{clientId}/sections/{sectionId}/categories")]
-		public async Task<IHttpActionResult> AddSectionCategory(string clientId, string sectionId, Category category)
+		public async Task<IHttpActionResult> AddSectionCategory(string clientId, int sectionId, Category category)
 		{
 			try
 			{
@@ -145,13 +138,13 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var section = await _sectionRepository.GetSectionAsync(new Guid(sectionId));
+				var section = await _sectionRepository.GetSectionAsync(sectionId);
 				if (section == null) return new CustomBadRequest(Request, ApiResultCode.SectionNotFound);
 
-				var categoryDb = category.ToDatabaseCategory(section.SectionId);
+				//var categoryDb = category.ToDatabaseCategory(section.SectionId);
 
 				//Save the section
-				await _categoryRepository.AddSectionCategoryAsync(categoryDb);
+				await _categoryRepository.AddSectionCategoryAsync(category);
 
 				return Ok();
 

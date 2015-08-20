@@ -11,7 +11,7 @@
 Client: <b>@Model.Client.ClientName</b><br/>
 <br/>
 <div class="PageNavigationBar">
-@Html.ActionLink("add page", "ClientPageAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+@Html.ActionLink("add page", "ClientPageAdd", "Admin", new { clientId = @Model.Client.ClientUuid }, new { @class = "AddLink" })
 &nbsp;    
 @if (User.IsInRole("SuperUser"))
 {  
@@ -51,11 +51,11 @@ else
         
               
         <td>
-            @Html.ActionLink("edit", "ClientPageEdit", "Admin", new { clientId = @Model.Client.ClientId, pageName = @clientPage.PageName }, null)
+            @Html.ActionLink("edit", "ClientPageEdit", "Admin", new { clientId = @Model.Client.ClientUuid, pageName = @clientPage.PageName }, null)
         </td>
         
          <td>
-            @Html.ActionLink("delete", "ClientPageDelete", "Admin", new { clientId = @Model.Client.ClientId, pageName = @clientPage.PageName }, new { onclick = "return confirm('Are you sure you wish to delete this page?');" })
+            @Html.ActionLink("delete", "ClientPageDelete", "Admin", new { clientId = @Model.Client.ClientUuid, pageName = @clientPage.PageName }, new { onclick = "return confirm('Are you sure you wish to delete this page?');" })
         </td>
        
     </tr>

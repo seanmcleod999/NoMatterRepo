@@ -26,7 +26,8 @@ namespace NoMatterWebApi
 		ClientDeliveryOptionNotFound = 21,
 		SalesEmailAddressNotDefined = 22,
 		BankDetailsIncomplete = 23,
-		ClientSiteFriendlyNameNotDefined = 24
+		ClientSiteFriendlyNameNotDefined = 24,
+		UserDoesNotBelongToAClient = 25
 
 	}
 }

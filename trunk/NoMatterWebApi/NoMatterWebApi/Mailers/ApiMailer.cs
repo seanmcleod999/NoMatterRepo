@@ -1,13 +1,10 @@
 using System.Collections.Generic;
-
 using System.Net.Mail;
 using Mvc.Mailer;
 using NoMatterWebApi.Helpers;
-using NoMatterWebApi.Models;
 using NoMatterWebApiModels.Models;
 
-
-namespace PrettyDamnThriftyWeb.Mailers
+namespace NoMatterWebApi.Mailers
 {
 	public class ApiMailer : MailerBase
 	{
@@ -36,60 +33,76 @@ namespace PrettyDamnThriftyWeb.Mailers
 		//	});
 		//}
 
-		//public virtual MvcMailMessage ConfirmPayfastOrder(Order order)
-		//{
-		//	ViewBag.Order = order;
+		public virtual MvcMailMessage CustomerPaidOrder(string clientUuid, string siteFriendlyName, Order order, string salesEmailAddress, string viewName = "CustomerPaidOrder")
+		{
+			ViewBag.Order = order;
+			ViewBag.SiteFriendlyName = siteFriendlyName;
+			ViewBag.SalesEmailAddress = salesEmailAddress;
 
-		//	var resources = new Dictionary<string, string>();
-		//	resources["logo"] = System.Web.HttpContext.Current.Server.MapPath("~/Content/images/logoemail.png");
+			var resources = new Dictionary<string, string>();
 
-		//	return Populate(x =>
-		//	{
-		//		x.Subject = _globalSettings.SiteNameFriendly + " Order";
-		//		x.ViewName = "ConfirmPayfastOrder";
-		//		x.LinkedResources = resources;
-		//		x.To.Add(order.User.Email);
-		//	});
-		//}
+			resources["logo"] = System.Web.Hosting.HostingEnvironment.MapPath("~/Images/" + clientUuid + "/logo.jpg");
 
-		public virtual MvcMailMessage ConfirmEftOrder(string siteFriendlyName, Order order, BankDetails bankDetails,
-		                                              string fromEmailAddress, string viewName = "ConfirmEftOrder")
+			return Populate(x =>
+			{
+				x.Subject = siteFriendlyName + " Order";
+				x.ViewName = viewName;
+				x.LinkedResources = resources;
+				x.To.Add(order.User.Email);
+				x.From = new MailAddress(salesEmailAddress);
+				x.Sender = new MailAddress(salesEmailAddress);
+			});
+		}
+
+		public virtual MvcMailMessage CustomerEftOrder(string clientUuid, string siteFriendlyName, Order order, BankDetails bankDetails,
+													  string salesEmailAddress, string viewName = "CustomerEftOrder")
 		{
 			ViewBag.Order = order;
 			ViewBag.BankDetails = bankDetails;
+			ViewBag.SiteFriendlyName = siteFriendlyName;
+			ViewBag.SalesEmailAddress = salesEmailAddress;
 
 			var resources = new Dictionary<string, string>();
 
 			//TODO: httpContect ?
 			//resources["logo"] = System.Web.HttpContext.Current.Server.MapPath("~/Content/images/logoemail.png");
 
+			resources["logo"] = System.Web.Hosting.HostingEnvironment.MapPath("~/Images/" + clientUuid + "/logo.jpg");
+
 			return Populate(x =>
 				{
 					x.Subject = siteFriendlyName + " Order";
 					x.ViewName = viewName;
-					//x.LinkedResources = resources;
+					x.LinkedResources = resources;
 					x.To.Add(order.User.Email);
-					x.From = new MailAddress(fromEmailAddress);
-					x.Sender = new MailAddress(fromEmailAddress);
+					x.From = new MailAddress(salesEmailAddress);
+					x.Sender = new MailAddress(salesEmailAddress);
 				});
 		}
-	}
 
-	//	public virtual MvcMailMessage CustomerOrder(Order order, string salesEmailAddress)
-	//	{
-	//		ViewBag.Order = order;
 
-	//		var resources = new Dictionary<string, string>();
-	//		resources["logo"] = System.Web.HttpContext.Current.Server.MapPath("~/Content/images/logoemail.png");
+		public virtual MvcMailMessage ClientOrder(string clientUuid, string siteFriendlyName, Order order, string salesEmailAddress, string viewName = "ClientOrder")
+		{
+			ViewBag.Order = order;
+			ViewBag.SiteFriendlyName = siteFriendlyName;
+			//ViewBag.SalesEmailAddress = salesEmailAddress;
 
-	//		return Populate(x =>
-	//		{
-	//			x.Subject = _globalSettings.SiteNameFriendly + " Customer Order";
-	//			x.ViewName = "CustomerOrder";
-	//			x.LinkedResources = resources;
-	//			x.To.Add(salesEmailAddress);
-	//		});
-	//	}
+			var resources = new Dictionary<string, string>();
+
+			//resources["logo"] = System.Web.HttpContext.Current.Server.MapPath("~/Content/images/logoemail.png");
+
+			resources["logo"] = System.Web.Hosting.HostingEnvironment.MapPath("~/Images/" + clientUuid + "/logo.jpg");
+
+			return Populate(x =>
+			{
+				x.Subject = siteFriendlyName + " Customer Order";
+				x.ViewName = viewName;
+				x.LinkedResources = resources;
+				x.To.Add(salesEmailAddress);
+				x.From = new MailAddress(salesEmailAddress);
+				x.Sender = new MailAddress(salesEmailAddress);
+			});
+		}
 
 	//	public virtual MvcMailMessage CustomerQuery(ContactUsVm contactUsVm, string infoEmailAddress)
 	//	{
@@ -124,5 +137,5 @@ namespace PrettyDamnThriftyWeb.Mailers
 	//			x.To.Add(toEmailAddress);
 	//		});
 	//	}
-	//}
+	}
 }

@@ -481,51 +481,5 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
-        <member name="M:NoMatterWebApi.Models.User.#ctor">
-            <summary>
-            Creates a new empty User.
-            </summary>
-        </member>
-        <member name="M:NoMatterWebApi.Models.User.#ctor(System.String)">
-            <summary>
-            Creates a new User entity with the given <paramref name="userName"/>
-            </summary>
-            <param name="userName"></param>
-        </member>
-        <member name="P:NoMatterWebApi.Models.User.Id">
-            <summary>
-            The Id
-            </summary>
-        </member>
-        <member name="P:NoMatterWebApi.Models.User.UserName">
-            <summary>
-            The username 
-            </summary>
-        </member>
-        <member name="P:NoMatterWebApi.Models.User.Email">
-            <summary>
-            The users email address
-            </summary>
-        </member>
-        <member name="P:NoMatterWebApi.Models.User.PasswordHash">
-            <summary>
-            The salted/hashed form of the user password
-            </summary>
-        </member>
-        <member name="P:NoMatterWebApi.Models.User.SecurityStamp">
-            <summary>
-            A random value that should change whenever a users credentials have changed (password changed, login removed)
-            </summary>
-        </member>
-        <member name="P:NoMatterWebApi.Models.User.FirstName">
-            <summary>
-            The users first name
-            </summary>
-        </member>
-        <member name="P:NoMatterWebApi.Models.User.LastName">
-            <summary>
-            The users surname
-            </summary>
-        </member>
     </members>
 </doc>

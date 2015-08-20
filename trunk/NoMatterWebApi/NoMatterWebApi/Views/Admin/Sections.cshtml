@@ -11,7 +11,7 @@
 Client: <b>@Model.Client.ClientName</b><br/><br/>
 
 <div class="PageNavigationBar">
-@Html.ActionLink("add section", "SectionAdd", "Admin", new {clientId = Model.Client.ClientId}, new { @class = "AddLink" })&nbsp;
+@Html.ActionLink("add section", "SectionAdd", "Admin", new {clientUuid = Model.Client.ClientUuid}, new { @class = "AddLink" })&nbsp;
     
 @if (User.IsInRole("SuperUser"))
 {       
@@ -84,17 +84,17 @@ else
            @Html.DisplayFor(modelItem => section1.VisibleCategoryCount)
         </td>*@
         <td>
-            @Html.ActionLink("edit", "SectionEdit", "Admin", new { clientId = @Model.Client.ClientId, sectionId = @section1.SectionId }, null)
+            @Html.ActionLink("edit", "SectionEdit", "Admin", new { clientUuid = @Model.Client.ClientUuid, sectionId = @section1.SectionId }, null)
         </td>
         <td>
             @if (section1.FullCategoryCount == 0)
             {
-                @Html.ActionLink("delete", "SectionDelete", "Admin", new { clientId = @Model.Client.ClientId, sectionId = @section1.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this section? Note that you can only delete sections that have no categories.');" })
+                @Html.ActionLink("delete", "SectionDelete", "Admin", new { clientUuid = @Model.Client.ClientUuid, sectionId = @section1.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this section? Note that you can only delete sections that have no categories.');" })
             }
             
         </td>
         <td>
-            @Html.ActionLink("categories", "SectionCategories", "Admin", new { clientId = @Model.Client.ClientId, sectionId = @section1.SectionId }, null)
+            @Html.ActionLink("categories", "SectionCategories", "Admin", new { clientUuid = @Model.Client.ClientUuid, sectionId = @section1.SectionId }, null)
         </td>
        
     </tr>

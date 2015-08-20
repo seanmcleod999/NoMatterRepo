@@ -15,15 +15,15 @@
                                 
                 @foreach (var category in Model.Categories)
                 {
-                    @*
-                    if (!string.IsNullOrEmpty(category.ActionName))
+                    
+                    if (!string.IsNullOrEmpty(category.CategoryFriendlyName))
                     {
-                        <li>@Html.ActionLink((string)category.CategoryName, "Category", "Shop", new {id = category.ActionName}, null)</li>
+                        <li>@Html.ActionLink((string)category.CategoryFriendlyName, "Category", "Shop", new {id = category.CategoryName}, null)</li>
                     }
                     else
                     {
-                        *@<li>@Html.ActionLink((string)category.CategoryName, "Category", "Shop", new { id = Url.Encode(category.CategoryName) }, null)</li>
-                   @* }*@
+                        <li>@Html.ActionLink((string)category.CategoryName, "Category", "Shop", new { id = Url.Encode(category.CategoryName) }, null)</li>
+                    }
                                         
                                         
                                         

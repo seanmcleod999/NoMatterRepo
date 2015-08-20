@@ -132,7 +132,7 @@
             }  
             
             <div class="PageNavigationBar">
-                @Html.ActionLink("Back to Products", "CategoryProducts", "Admin", new { clientId = Model.ClientId, categoryId = Model.Product.CategoryId }, new { @class = "BackLink" })
+                @Html.ActionLink("Back to Products", "CategoryProducts", "Admin", new { clientId = Model.ClientUuid, categoryId = Model.Product.CategoryId }, new { @class = "BackLink" })
             </div>
                 
         </div>

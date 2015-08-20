@@ -26,7 +26,6 @@ namespace NoMatterDatabaseModel
         public byte CredentialTypeId { get; set; }
         public string Identifier { get; set; }
         public byte[] Password { get; set; }
-        public string PasswordSalt { get; set; }
         public string Email { get; set; }
         public System.DateTime DateAdded { get; set; }
         public System.DateTime DateUpdated { get; set; }

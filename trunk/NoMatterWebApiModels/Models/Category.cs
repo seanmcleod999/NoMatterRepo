@@ -9,13 +9,19 @@ namespace NoMatterWebApiModels.Models
 {
     public class Category
     {
-		public string SectionId { get; set; }
+		public Section Section { get; set; }
 
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
+		[Display(Name = "Category Name")]
 		[Required(ErrorMessage = "required")]
+		[RegularExpression("([a-zA-Z0-9]+)", ErrorMessage = "only letters and numbers")]
 		[StringLength(50, ErrorMessage = "Must be under 50 characters")]
         public string CategoryName { get; set; }
+
+		[Display(Name = "Friendly Name")]
+		[StringLength(50, ErrorMessage = "Must be under 50 characters")]
+		public string CategoryFriendlyName { get; set; }
 
         public string CategoryDescription { get; set; }
 

@@ -6,11 +6,11 @@ namespace NoMatterWebApiModels.Models
 {
 	public class ClientSetting
 	{
+		public Client Client { get; set; }
+
 		public int ClientSettingId { get; set; }
 
-		//[Required(ErrorMessage = "required")]
-		//[StringLength(50, ErrorMessage = "Must be under 50 characters")]
-		//public string SettingName { get; set; }
+		public short SettingId { get; set; }
 
 		public byte SettingType { get; set; }
 

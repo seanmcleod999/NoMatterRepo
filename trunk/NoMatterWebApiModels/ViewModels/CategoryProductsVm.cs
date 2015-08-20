@@ -8,9 +8,9 @@ namespace NoMatterWebApiModels.ViewModels
 {
 	public class CategoryProductsVm
 	{
-		public Client Client { get; set; }
+		//public Client Client { get; set; }
 
-		public Section Section { get; set; }
+		//public Section Section { get; set; }
 
 		public Category Category { get; set; }
 

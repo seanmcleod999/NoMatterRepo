@@ -1,0 +1,30 @@
+@using NoMatterWebApiModels.Models
+
+@{
+    Order order = ViewBag.Order;
+}
+
+Hi @order.User.Fullname
+<br /><br />
+Thank you so much for your order!
+<br />
+Your order number is <b>@ViewBag.Order.OrderId</b>.
+<br /><br />
+<u>Order Details:</u><br />
+@foreach (var item in order.Products)
+{
+    if (item.DiscountDetails.Discounted == true)
+    {
+        @item.Title @:- R @String.Format("{0:0}", item.DiscountDetails.DiscountAmount)<br />
+    }
+    else
+    {
+        @item.Description @:- R @String.Format("{0:0}", item.Price)<br />
+    }
+}
+
+<br /><br />
+Your items will be sent via courier as soon as poosible.
+<br /><br />
+Thanks for shopping with us!
+<br /><br />

@@ -16,7 +16,7 @@
         <div class="form-group">
             @Html.LabelFor(m => m.SelectedClientId, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.SelectedClientId, new SelectList(Model.Clients, "ClientId", "ClientName"), "-- Please Select --", new { @class = "form-control", placeholder = "SelectedClientId", autofocus = true })
+                @Html.DropDownListFor(model => model.SelectedClientId, new SelectList(Model.Clients, "ClientUuid", "ClientName"), "-- Please Select --", new { @class = "form-control", placeholder = "SelectedClientUuid", autofocus = true })
             </div>
             <div class="col-md-offset-2 col-md-10">
                 @Html.ValidationMessageFor(m => m.SelectedClientId)

@@ -6,17 +6,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.DAL;
 using NoMatterWebApi.Enums;
-using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.Models;
 using NoMatterWebApiModels.Enums;
 using NoMatterWebApiModels.Models;
-using PrettyDamnThriftyWeb.Mailers;
 using Order = NoMatterWebApiModels.Models.Order;
 
 namespace NoMatterWebApi.Controllers.V1
@@ -27,25 +24,24 @@ namespace NoMatterWebApi.Controllers.V1
 		
 		private IOrderRepository _orderRepository;
 		private IClientRepository _clientRepository;
-		private IGlobalSettings _globalSettings;
+		private IGlobalRepository _globalRepository;
+		private IEmailHelper _emailHelper;
 		
-
 		public OrderController()
 		{
-			var databaseEntity = new DatabaseEntities();
 
-			_orderRepository = new OrderRepository(databaseEntity);
-			_clientRepository = new ClientRepository(databaseEntity);
-			_globalSettings = new GlobalSettings();
-			
-			
+			_orderRepository = new OrderRepository();
+			_clientRepository = new ClientRepository();
+			_globalRepository = new GlobalRepository();
+			_emailHelper = new EmailHelper();		
 		}
 
-		public OrderController(IOrderRepository orderRepository, IClientRepository clientRepository, IGlobalSettings globalSettings)
+		public OrderController(IOrderRepository orderRepository, IClientRepository clientRepository, IEmailHelper emailHelper, IGlobalRepository globalRepository)
 		{
 			_clientRepository = clientRepository;
 			_orderRepository = orderRepository;
-			_globalSettings = globalSettings;
+			_globalRepository = globalRepository;
+			_emailHelper = emailHelper;
 		}
 
 
@@ -55,11 +51,9 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var orderDb = await _orderRepository.GetOrderAsync(orderId);
+				var order = await _orderRepository.GetOrderAsync(orderId);
 
-				if (orderDb == null) return new CustomBadRequest(Request, ApiResultCode.OrderNotFound);
-
-				var order = orderDb.ToDomainOrder();
+				if (order == null) return new CustomBadRequest(Request, ApiResultCode.OrderNotFound);
 
 				return Ok(order);
 			}
@@ -68,7 +62,6 @@ namespace NoMatterWebApi.Controllers.V1
 				Logger.WriteGeneralError(ex);
 				return InternalServerError(ex);
 			}
-
 		}
 
 
@@ -78,41 +71,25 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 			try
 			{
-				var orderDb = await _orderRepository.GetOrderAsync(orderId);
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				if (orderDb == null) return new CustomBadRequest(Request, ApiResultCode.OrderNotFound);
+				var order = await _orderRepository.GetOrderAsync(orderId);
+				if (order == null) return new CustomBadRequest(Request, ApiResultCode.OrderNotFound);
 
-				//if (orderDb.User.ClientId == null) throw new Exception("UserDoesNotBelongToAClient");
+				if (order.User.Client.ClientUuid == null) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToAClient);
 
 				//Update the paymentType for the order
-				await _orderRepository.UpdateOrderPaymentTypeAsync(orderDb, (short)PaymentTypeEnum.EFT);
+				await _orderRepository.UpdateOrderPaymentTypeAsync(order, (short)PaymentTypeEnum.EFT);
 
-				var order = orderDb.ToDomainOrder();
 
-		
-				//Need to get the clients bank details
-				var bankDetails = await ClientHelper.GetClientBankDetails(_clientRepository, orderDb.User.ClientId.Value);
-				if (string.IsNullOrEmpty(bankDetails.AccountName) || 
-					string.IsNullOrEmpty(bankDetails.BankName) || 
-					string.IsNullOrEmpty(bankDetails.BranchName) ||
-					string.IsNullOrEmpty(bankDetails.BranchNumber)) return new CustomBadRequest(Request, ApiResultCode.BankDetailsIncomplete);
+				//Send the emails
+				await _emailHelper.SendCustomerEftOrderEmail(new Guid(clientDb.ClientUuid), order, _clientRepository, _globalRepository);
 
-				var salesEmailAddress = await ClientHelper.GetClientSalesEmailAddress(_clientRepository, orderDb.User.ClientId.Value);
-				if (string.IsNullOrEmpty(salesEmailAddress)) return new CustomBadRequest(Request, ApiResultCode.SalesEmailAddressNotDefined);
-
-				var clientSiteFriendlyName = await ClientHelper.GetClientSiteFriendlyName(_clientRepository, orderDb.User.ClientId.Value);
-				if (string.IsNullOrEmpty(clientSiteFriendlyName)) return new CustomBadRequest(Request, ApiResultCode.ClientSiteFriendlyNameNotDefined);
-
-				//Send EFT Emails
-				var mailer = new ApiMailer();
-
-				//Send an EFT Related email to the user
-				mailer.ConfirmEftOrder(clientSiteFriendlyName, order, bankDetails, salesEmailAddress).Send();
-
-				//Send an email to the administrator
-				//mailer.CustomerOrder(orderResult, salesEmailAddress).Send();
+				await _emailHelper.ClientOrder(new Guid(clientDb.ClientUuid), order, _clientRepository, _globalRepository);
 
 				return Ok(order);
+
 			}
 			catch (Exception ex)
 			{
@@ -122,20 +99,21 @@ namespace NoMatterWebApi.Controllers.V1
 
 		}
 
+		[HttpPost]
 		[Route("api/v1/clients/{clientId}/orders/{orderId}/updatepaymenttype")]
 		[ResponseType(typeof (Order))]
 		public async Task<IHttpActionResult> UpdateOrderPaymentType(string clientId, int orderId, UpdateOrderPaymentTypeModel model)
 		{
 			try
 			{
-				var orderDb = await _orderRepository.GetOrderAsync(orderId);
+				var order = await _orderRepository.GetOrderAsync(orderId);
 
-				if (orderDb == null) return new CustomBadRequest(Request, ApiResultCode.OrderNotFound);
+				if (order == null) return new CustomBadRequest(Request, ApiResultCode.OrderNotFound);
 
 				//Update the paymentType for the order
-				await _orderRepository.UpdateOrderPaymentTypeAsync(orderDb, model.PaymentTypeId);
+				await _orderRepository.UpdateOrderPaymentTypeAsync(order, model.PaymentTypeId);
 
-				var order = orderDb.ToDomainOrder();
+				//var order = orderDb;
 
 				return Ok(order);
 			}
@@ -147,14 +125,23 @@ namespace NoMatterWebApi.Controllers.V1
 		}
 
 		[Route("api/v1/clients/{clientId}/orders/{orderId}/paid")]
-		[HttpGet]
-		public async Task<IHttpActionResult> ProcessPaidOrder(int orderId)
+		[HttpPost]
+		public async Task<IHttpActionResult> ProcessPaidOrder(string clientId, int orderId, ProcessPaidOrderModel model)
 		{
 			try
 			{
-				//await _orderRepository.UpdateOrderPaid(orderId);
+				var client = await _clientRepository.GetClientAsync(new Guid(clientId));
+				if (client == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				//await _orderRepository.UpdateOrderProductsAsSold(orderId);
+				var order = await _orderRepository.GetOrderAsync(orderId);
+
+				await _orderRepository.UpdateOrderPaid(order, true);
+
+				await _orderRepository.UpdateOrderProductsAsSold(order);
+
+				await _emailHelper.SendCustomerPaidOrderEmail(new Guid(client.ClientUuid), order, _clientRepository, _globalRepository);
+
+				await _emailHelper.ClientOrder(new Guid(client.ClientUuid), order, _clientRepository, _globalRepository);
 
 				return Ok();
 			}
@@ -163,8 +150,25 @@ namespace NoMatterWebApi.Controllers.V1
 				Logger.WriteGeneralError(ex);
 				return InternalServerError(ex);
 			}
-
 		}
 
+		[Route("api/v1/clients/{clientId}/orders/{orderId}/failed")]
+		[HttpPost]
+		public async Task<IHttpActionResult> ProcessFailedOrder(string clientId, int orderId, ProcessFailedOrderModel model)
+		{
+			try
+			{
+				var orderDb = await _orderRepository.GetOrderAsync(orderId);
+
+				await _orderRepository.UpdateOrderFailed(orderDb);
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
 	}
 }

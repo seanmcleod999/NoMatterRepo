@@ -17,23 +17,31 @@
 <h1>Add Category - @Model.Section.SectionName</h1>
 
 <div class="PageNavigationBar">
-    @Html.ActionLink("back to categories", "SectionCategories", "Admin", new { clientId = Model.Section.ClientId, sectionId = Model.Category.SectionId}, new { @class = "BackLink" })
+    @Html.ActionLink("back to categories", "SectionCategories", "Admin", new { clientUuid = Model.Section.Client.ClientUuid, sectionId = Model.Category.Section.SectionId}, new { @class = "BackLink" })
 </div>
 
 @using (Html.BeginForm("CategoryAdd", "Admin", FormMethod.Post, new {enctype = "multipart/form-data"}))
 {
     @Html.ValidationSummary(true)
 
-    @Html.HiddenFor(model => model.Section.ClientId)
-    @Html.HiddenFor(model => model.Category.SectionId)
+    @Html.HiddenFor(model => model.Section.Client.ClientUuid)
+    @Html.HiddenFor(model => model.Category.Section.SectionId)
 
    
     <div class="editor-label">
-       Name
+       Name (cannot contain spaces or special characters)
     </div>
     <div class="editor-field">
         @Html.TextBoxFor(model => model.Category.CategoryName, new {style = "width:300px;"})
         @Html.ValidationMessageFor(model => model.Category.CategoryName)
+    </div>
+    
+    <div class="editor-label">
+      Friendly Name (not required. overrides the one above if spaces and special characters are required etc)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Category.CategoryFriendlyName, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.Category.CategoryFriendlyName)
     </div>
     
      <div class="editor-label">
@@ -74,7 +82,7 @@
 
     <br/>
     <p>
-        <input type="submit" value="Save" class="btn btn-default"/> &nbsp;@Html.ActionLink("cancel", "SectionCategories", "Admin",  new { clientId = Model.Section.ClientId, sectionId = Model.Category.SectionId}, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
+        <input type="submit" value="Save" class="btn btn-default"/> &nbsp;@Html.ActionLink("cancel", "SectionCategories", "Admin",  new { clientId = Model.Section.Client.ClientUuid, sectionId = Model.Category.Section.SectionId}, new { onclick = "return confirm('Are you sure you wish to cancel? Note that all unsaved information will be lost.');" })
         
         
 

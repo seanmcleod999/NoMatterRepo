@@ -14,11 +14,11 @@ Your order number is <b>@Model.Order.OrderId</b>.
 {
     if (item.DiscountDetails.Discounted == true)
     {
-        @item.Description @: - R @String.Format("{0:0}", item.DiscountDetails.DiscountedPrice)<br />
+        @item.Title @: - R @String.Format("{0:0}", item.DiscountDetails.DiscountedPrice)<br />
     }
     else
     {
-        @item.Description @: - R @String.Format("{0:0}", item.Price)<br />
+        @item.Title @: - R @String.Format("{0:0}", item.Price)<br />
     }
 }
 

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using NoMatterWebApi.DAL;
+﻿using System.Threading.Tasks;
+using NoMatterDataLibrary;
+using NoMatterWebApiModels.Models;
 
 namespace NoMatterWebApi.Helpers
 {
@@ -13,33 +10,33 @@ namespace NoMatterWebApi.Helpers
 		public static async Task AddDefaultSectionCategories(int sectionId, ICategoryRepository categoryRepository)
 		{
 			//Now add the defualt system categories
-			var latestItemsCategory = new NoMatterDatabaseModel.Category
+			var latestItemsCategory = new Category
 			{
 				CategoryName = "Latest Items",
 				ActionName = "Latest",
 				CategoryOrder = 1,
 				Conditional = true,
 				Hidden = false,
-				SectionId = sectionId
+				Section = new Section { SectionId = sectionId }
 			};
 
-			var salesItemsCategory = new NoMatterDatabaseModel.Category()
+			var salesItemsCategory = new Category
 			{
 				CategoryName = "Sale Items",
 				ActionName = "Sale",
 				CategoryOrder = 2,
 				Conditional = true,
 				Hidden = false,
-				SectionId = sectionId
+				Section = new Section { SectionId = sectionId }
 			};
 
 			await categoryRepository.AddSectionCategoryAsync(latestItemsCategory);
 			await categoryRepository.AddSectionCategoryAsync(salesItemsCategory);
 		}
 
-		public static async Task DeleteDefaultSectionCategories(ICategoryRepository categoryRepository, string sectionId)
+		public static async Task DeleteDefaultSectionCategories(ICategoryRepository categoryRepository, int sectionId)
 		{
-			var sectionCategories = await categoryRepository.GetSectionCategoriesAsync(new Guid(sectionId), true);
+			var sectionCategories = await categoryRepository.GetSectionCategoriesAsync(sectionId, true);
 
 			//Delete the default Latest Items and Sale categories
 			foreach (var category in sectionCategories)
@@ -47,7 +44,7 @@ namespace NoMatterWebApi.Helpers
 				if (category.ActionName == "Latest" || category.ActionName == "Sale")
 				{
 					//Delete latest item and sale categories
-					await categoryRepository.DeleteCategoryAsync(category.CategoryUUID);
+					await categoryRepository.DeleteCategoryAsync(category.CategoryId);
 				}
 			}
 		}

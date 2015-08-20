@@ -11,7 +11,7 @@
 Client: <b>@Model.Client.ClientName</b><br/>
 <br/>
 <div class="PageNavigationBar">
-@Html.ActionLink("add postage option", "ClientPostageAdd", "Admin", new { clientId = @Model.Client.ClientId }, new { @class = "AddLink" })
+@Html.ActionLink("add postage option", "ClientPostageAdd", "Admin", new { clientId = @Model.Client.ClientUuid }, new { @class = "AddLink" })
 &nbsp;  
 
 @if (User.IsInRole("SuperUser"))
@@ -76,11 +76,11 @@ else
         </td>
                             
         <td>
-            @Html.ActionLink("edit", "ClientPostageEdit", "Admin", new { clientId = @Model.Client.ClientId, ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId }, null)
+            @Html.ActionLink("edit", "ClientPostageEdit", "Admin", new { clientId = @Model.Client.ClientUuid, ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId }, null)
         </td>
         
          <td>
-            @Html.ActionLink("delete", "ClientPostageDelete", "Admin", new { clientId = @Model.Client.ClientId, ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId }, new { onclick = "return confirm('Are you sure you wish to delete this page?');" })
+            @Html.ActionLink("delete", "ClientPostageDelete", "Admin", new { clientId = @Model.Client.ClientUuid, ClientDeliveryOptionId = clientDeliveryOption.ClientDeliveryOptionId }, new { onclick = "return confirm('Are you sure you wish to delete this page?');" })
         </td>
        
     </tr>

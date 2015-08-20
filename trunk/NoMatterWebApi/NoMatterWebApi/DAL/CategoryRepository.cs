@@ -79,6 +79,7 @@ namespace NoMatterWebApi.DAL
 			databaseConnection.Categories.Attach(categoryDb);
 
 			categoryDb.CategoryName = category.CategoryName;
+			categoryDb.CategoryFriendlyName = category.CategoryFriendlyName;
 			categoryDb.CategoryDescription = category.CategoryDescription;
 			categoryDb.CategoryOrder = category.CategoryOrder;
 			categoryDb.Hidden = category.Hidden;

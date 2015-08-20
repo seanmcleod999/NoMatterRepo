@@ -1,0 +1,51 @@
+@using NoMatterWebApiModels.Models
+
+@{
+    Order order = ViewBag.Order;
+}
+
+Hello @ViewBag.SiteFriendlyName
+<br /><br />
+There was an order from your website!
+<br /><br />
+Order Number: <b>@order.OrderId</b>
+<br /><br />
+
+<u>Cart Items: </u><br />
+
+@foreach (var item in order.Products)
+{
+    if (item.DiscountDetails.Discounted == true)
+    {
+        @item.Description @:R @String.Format("{0:0}", item.DiscountDetails.DiscountAmount)<br />
+    }
+     else
+     {
+        @item.Description @:R @String.Format("{0:0}", item.Price)<br />
+    }
+}
+
+Shipping R @String.Format("{0:0}", order.DeliveryAmount)
+<br />
+Total cart is <b> R @String.Format("{0:0}", order.TotalAmount)</b>
+
+<br /><br />
+
+Name: <b>@order.User.Fullname</b> <br />
+Contact Number: <b>@order.User.ContactNumber</b> <br />
+Email Address: <b>@order.User.Email </b><br /><br />
+
+Address: <b>@order.User.Address</b> <br />
+City: <b>@order.User.City</b> <br />
+Postal Code: <b>@order.User.PostalCode</b> <br />
+Province: <b>@order.User.Province</b> <br />
+Country: <b>@order.User.Country</b> <br /><br />
+
+Payment Type: @order.PaymentType
+
+<br /><br />
+@if (!string.IsNullOrEmpty(order.Message))
+{
+    @:Message: <b>@order.Message </b><br /><br />
+}
+<br />

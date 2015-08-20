@@ -1,16 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using ImageResizer;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.DAL;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
-using Client = NoMatterDatabaseModel.Client;
 
 namespace NoMatterWebApi.Controllers.V1
 {
@@ -23,9 +19,8 @@ namespace NoMatterWebApi.Controllers.V1
 
 		public ImageController()
 		{
-			var databaseEntity = new DatabaseEntities();
 
-			_clientRepository = new ClientRepository(databaseEntity);		
+			_clientRepository = new ClientRepository();		
 			_globalSettings = new GlobalSettings();
 			_generalHelper = new GeneralHelper();
 		}
@@ -50,7 +45,7 @@ namespace NoMatterWebApi.Controllers.V1
 				var client = await _clientRepository.GetClientAsync(new Guid(clientId));
 				if (client == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-				var imagepath = _generalHelper.SaveImage(ImageData, client.ClientId);
+				var imagepath = _generalHelper.SaveImage(ImageData, client.ClientUuid);
 
 				return Created(new Uri(_globalSettings.ImagesBaseUrl + imagepath), imagepath);
 
@@ -58,7 +53,6 @@ namespace NoMatterWebApi.Controllers.V1
 			catch (Exception ex)
 			{
 				Logger.WriteGeneralError(ex);
-
 				return InternalServerError(ex);
 			}
 		}

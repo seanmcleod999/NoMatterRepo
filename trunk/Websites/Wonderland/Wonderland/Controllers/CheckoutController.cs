@@ -13,10 +13,10 @@ using NoMatterWebApiModels.Enums;
 using NoMatterWebApiModels.Models;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Enums;
+using NoMatterWebApiWebHelper.Logging;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
 using NoMatterWebApiModels.ViewModels;
-using RedOrange.Logging;
 
 namespace RedOrange.Controllers
 {
@@ -26,6 +26,7 @@ namespace RedOrange.Controllers
 		private IUserHelper _userHelper;
 		private IClientHelper _clientHelper;
 		private IOrderHelper _orderHelper;
+		private IPayfastHelper _payfastHelper;
 		
 		private IGlobalSettings _globalSettings;
 		private ICurrentUser _currentUser;
@@ -38,7 +39,8 @@ namespace RedOrange.Controllers
 			_orderHelper = new OrderHelper();
 			_globalSettings = new GlobalSettings();
 			_currentUser = new CurrentUser();
-			
+			_payfastHelper = new PayfastHelper();
+
 		}
 
 		public ActionResult Index()
@@ -118,6 +120,9 @@ namespace RedOrange.Controllers
 					
 					var eftOrder = await _orderHelper.ProcessEftOrderAsync(checkoutSummaryVm.Order.OrderId);
 
+					await _cartHelper.EmptyCartAsync(_currentUser.CartId());
+					//Session["CartItemCount"] = 0;
+
 					//Just a notification to the user that the payment was a success
 					var eftOrderProcessedVm = new EftOrderProcessedVm
 					{
@@ -125,26 +130,17 @@ namespace RedOrange.Controllers
 						BankDetails = GeneralHelper.GetBankDetails()
 					};
 
-					//_cartHelper.EmptyCart(_currentUser.CartId());
-					//Session["CartItemCount"] = 0;
-
-					//return View("ProcessEftPayment", eftPaymentVm);
-
 					return View("EftPaymentDetails", eftOrderProcessedVm);
 
-				//break;
 
 				case (short)PaymentTypeEnum.Payfast:
-					//return RedirectToAction("ProcessPayfastPayment", new { OrderId = orderId, Total = cart.CartTotal });
 
 					var payFastOrder = await _orderHelper.UpdateOrderPaymentType(checkoutSummaryVm.Order.OrderId, Convert.ToInt16(checkoutSummaryVm.PaymentType));
 
-					var payFastRedirectUrl = _orderHelper.GeneratePayfastRedirectUrl(checkoutSummaryVm.Order.OrderId.ToString(), payFastOrder.TotalAmount.ToString("#.##"));
+					var payFastRedirectUrl = _payfastHelper.GeneratePayfastRedirectUrl(checkoutSummaryVm.Order.OrderId.ToString(), payFastOrder.TotalAmount.ToString("#.##"), _globalSettings);
 
 					return new RedirectResult(payFastRedirectUrl, true);
-					//return View();
 
-					//break;
 			}
 
 			return RedirectToAction("Complete");
@@ -174,7 +170,19 @@ namespace RedOrange.Controllers
 		{
 			try
 			{
-				var order = await _orderHelper.ProcessPayfastOrderAsync(Request.Form);
+				Logger.WriteGeneralInformationLog("Recieved PayfastNotifyPayment request..");
+
+				await _payfastHelper.ProcessOrder(Request.Form);
+								
+				//var orderId = Convert.ToInt32(Request.Form["m_payment_id"]);
+
+				//Logger.WriteGeneralInformationLog("Order id is... " + orderId);
+
+				//var paymentStatus = PayfastHelper.GetPayfastPaymentStatus(Request.Form, _globalSettings, _currentUser);
+
+				//Logger.WriteGeneralInformationLog("Payment Status is... " + paymentStatus.ToString());
+
+				//var payfastOrder = await _orderHelper.ProcessPayfastOrderAsync(orderId, paymentStatus);
 
 				////Send the emails
 				//var mailer = new PDTMailer();

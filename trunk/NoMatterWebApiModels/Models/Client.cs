@@ -7,7 +7,7 @@ namespace NoMatterWebApiModels.Models
 {
 	public class Client
 	{
-		public string ClientId { get; set; }
+		public string ClientUuid { get; set; }
 
 		public string ClientName { get; set; }
 

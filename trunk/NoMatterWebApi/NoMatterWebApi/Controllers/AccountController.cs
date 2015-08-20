@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using NoMatterDatabaseModel;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
+using NoMatterDataLibrary;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.ViewModels;
@@ -24,10 +22,8 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public AccountController()
 		{
-			var databaseEntity = new DatabaseEntities();
-
-			_userRepository = new UserRepository(databaseEntity);
-			_clientRepository = new ClientRepository(databaseEntity);
+			_userRepository = new UserRepository();
+			_clientRepository = new ClientRepository();
 		}
 
 		public AccountController(IUserRepository userRepository, IClientRepository clientRepository)
@@ -51,11 +47,9 @@ namespace NoMatterWebApi.Controllers.v1
 
 		private async Task<List<Client>> GetClientsForDropDown()
 		{
-			var clientsDb = await _clientRepository.GetClientsAsync();
+			var clients = await _clientRepository.GetClientsAsync();
 
-			var clients = clientsDb.Select(x => x.ToDomainClient()).ToList();
-
-			clients.Add(new Client() { ClientId = "sys", ClientName = "System" });
+			clients.Add(new Client() { ClientUuid = "sys", ClientName = "System" });
 
 			return clients;
 
@@ -70,36 +64,22 @@ namespace NoMatterWebApi.Controllers.v1
 
 				if (userLoginVm.SelectedClientId != "sys") clientUuid = new Guid(userLoginVm.SelectedClientId);
 
-				var userDb = await _userRepository.GetClientUserByEmailAsync(clientUuid, userLoginVm.Email);
+				var user = await _userRepository.GetClientUserByEmailAsync(clientUuid, userLoginVm.Email);
 
-				if (userDb != null)				
+				if (user == null || !PasswordCrypto.CheckPassword(user.Password, userLoginVm.Password))
 				{
-					//var user = userDb.toM
-					var dBytes = userDb.Password;
-					var enc = new UTF8Encoding();
-					var length = dBytes.TakeWhile(b => b != 0).Count();
-					var strDbPassword = enc.GetString(dBytes, 0, length);
+					var clients = await GetClientsForDropDown();
 
-					if (strDbPassword == PasswordHelper.CreatePasswordHash(userLoginVm.Password, userDb.PasswordSalt))
-					{
-						var userRoles = String.Join(",", userDb.UserRoles.Select(x => x.Role.RoleName));
+					userLoginVm.Clients = clients;
 
-						GenerateAuthenticationCookie(userDb.UserId.ToString(), userDb.FullName, userRoles, clientUuid.ToString(), userLoginVm.RememberMe);
-
-						return RedirectToAction("Index", "Admin");
-					}
-
+					ModelState.AddModelError(string.Empty, "Authentication Failed");
+					return View(userLoginVm);
 				}
 
-				ModelState.AddModelError(string.Empty, "Authentication Failed");
+				GenerateAuthenticationCookie(user.UserId, user.Fullname, user.UserRolesString, clientUuid.ToString(), userLoginVm.RememberMe);
 
-				//Get the list of clients again for the dropdown
-				var clients = await GetClientsForDropDown();
-
-				userLoginVm.Clients = clients;
-
-				return View(userLoginVm);
-
+				return RedirectToAction("Index", "Admin");					
+				
 			}
 			catch (Exception ex)
 			{

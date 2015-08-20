@@ -1,0 +1,50 @@
+
+@using NoMatterWebApi.Models
+@using NoMatterWebApiModels.Models
+
+@{
+    Order order = ViewBag.Order;
+    BankDetails bankDetails = ViewBag.BankDetails;
+}
+
+Hi @order.User.Fullname
+<br /><br />
+Thank you so much for your order!
+<br />
+Your order number is <b>@ViewBag.Order.OrderId</b>.
+<br /><br />
+<u>Order Details:</u><br />
+@foreach (var item in order.Products)
+{
+    if (item.DiscountDetails.Discounted == true)
+    {
+        @item.Title @:- R @String.Format("{0:0}", item.DiscountDetails.DiscountAmount)<br />
+    }
+    else
+    {
+        @item.Description @:- R @String.Format("{0:0}", item.Price)<br />
+    }
+}
+
+Shipping - R @order.DeliveryAmount 
+<br />
+Your total amount is <b> R @String.Format("{0:0}", order.TotalAmount)</b>
+
+<br /><br />
+<u>Please pay the total due amount into the bank details below:</u>
+<br />
+Name: <b>@bankDetails.AccountName</b><br />
+Bank: <b>@bankDetails.BankName</b><br />
+Branch: <b>@bankDetails.BranchName</b><br />
+Branch Code: <b>@bankDetails.BranchNumber</b><br />
+Account Number: <b>@bankDetails.AccountNumber</b><br />
+Reference: (please use your name & order number)
+<br /><br />
+*Payment needs to be made within 24hrs or goods will be unreserved & sold to the next customer. 
+Kindly send proof of payment to <b><i>@ViewBag.SalesEmailAddress</i></b> asap to confirm your items as SOLD. 
+<br /><br/>
+*Please note that we cannot courier your item(s) until the funds have cleared. 
+<br /><br /><br/>
+
+Thanks for shopping with us!
+<br /><br />

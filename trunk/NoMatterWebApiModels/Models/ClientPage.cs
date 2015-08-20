@@ -9,6 +9,10 @@ namespace NoMatterWebApiModels.Models
 {
 	public class ClientPage
 	{
+		public int ClientPageId { get; set; }
+
+		public Client Client { get; set; }
+
 		[Required(ErrorMessage = "required")]
 		[StringLength(50, ErrorMessage = "Must be under 50 characters")]
 		public string PageName { get; set; }

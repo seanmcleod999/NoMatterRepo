@@ -14,9 +14,9 @@ using NoMatterWebApiModels.Models;
 using NoMatterWebApiModels.ViewModels;
 using NoMatterWebApiWebHelper;
 using NoMatterWebApiWebHelper.Exceptions;
+using NoMatterWebApiWebHelper.Logging;
 using NoMatterWebApiWebHelper.OtherHelpers;
 using NoMatterWebApiWebHelper.WebApiHelpers;
-using RedOrange.Logging;
 
 namespace RedOrange.Controllers
 {

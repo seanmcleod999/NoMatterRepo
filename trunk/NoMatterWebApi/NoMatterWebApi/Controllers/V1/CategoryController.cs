@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CustomAuthLib;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using Category = NoMatterWebApiModels.Models.Category;
@@ -28,10 +26,8 @@ namespace NoMatterWebApi.Controllers.V1
 
 		public CategoryController()
 		{
-			var databaseEntity = new DatabaseEntities();
-
-			_productRepository = new ProductRepository(databaseEntity);
-			_categoryRepository = new CategoryRepository(databaseEntity);
+			_productRepository = new ProductRepository();
+			_categoryRepository = new CategoryRepository();
 			_generalHelper = new GeneralHelper();
 			
 		}
@@ -47,17 +43,15 @@ namespace NoMatterWebApi.Controllers.V1
 		[HttpGet]
 		[Route("api/v1/clients/{clientId}/categories/{categoryId}")]
 		[ResponseType(typeof(Category))]
-		public async Task<IHttpActionResult> GetCategoryAsync(string clientId, string categoryid)
+		public async Task<IHttpActionResult> GetCategoryAsync(string clientId, int categoryid)
 		{
 			try
 			{
 				//TODO: make sure the category is part of this client
 
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryid));
+				var category = await _categoryRepository.GetCategoryAsync(new Guid(clientId), categoryid);
 
-				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
-
-				var category = categoryDb.ToDomainCategory();
+				if (category == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
 
 				return Ok(category);
 
@@ -83,11 +77,8 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
-				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
-
 				//Update the section
-				await _categoryRepository.UpdateCategoryAsync(categoryDb, category);
+				await _categoryRepository.UpdateCategoryAsync(category);
 
 				return Ok();
 
@@ -103,7 +94,7 @@ namespace NoMatterWebApi.Controllers.V1
 		[Authorize]
 		[HttpDelete]
 		[Route("api/v1/clients/{clientId}/categories/{categoryId}")]
-		public async Task<IHttpActionResult> DeleteCategoryAsync(string clientId, string categoryId)
+		public async Task<IHttpActionResult> DeleteCategoryAsync(string clientId, int categoryId)
 		{
 			try
 			{
@@ -114,7 +105,7 @@ namespace NoMatterWebApi.Controllers.V1
 				if (!string.IsNullOrEmpty(authUserClientId) && clientId != authUserClientId)
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
-				await _categoryRepository.DeleteCategoryAsync(new Guid(categoryId));
+				await _categoryRepository.DeleteCategoryAsync(categoryId);
 
 				return Ok();
 			}
@@ -129,23 +120,21 @@ namespace NoMatterWebApi.Controllers.V1
 		[HttpGet]
 		[Route("api/v1/clients/{clientId}/categories/{categoryid}/products")]
 		[ResponseType(typeof(List<Product>))]
-		public async Task<IHttpActionResult> GetCategoryProducts(string clientId, string categoryid)
+		public async Task<IHttpActionResult> GetCategoryProducts(string clientId, int categoryid)
 		{
 			try
 			{	
 				//TODO: make sure the user can get products for this category
 				//Need to get bearer token, and lookup the user so we know which client the user is from
 
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryid));
+				var category = await _categoryRepository.GetCategoryAsync(new Guid(clientId), categoryid);
 
-				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
+				if (category == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
 
-				var productsDb = await _categoryRepository.GetCategoryProductsByTypeAsync(categoryDb.SectionId, categoryDb.CategoryId, categoryDb.ActionName);
-
-				var products = productsDb.Select(x => x.ToDomainProduct()).ToList();
+				var products = await _categoryRepository.GetCategoryProductsByTypeAsync(category.Section.SectionId, category.CategoryId, category.ActionName);
 
 				//If its the Sale category.. filter out sale items
-				if (categoryDb.ActionName != null && categoryDb.ActionName.ToLower() == "sale")
+				if (category.ActionName != null && category.ActionName.ToLower() == "sale")
 				{
 					products = products.Where(x => x.DiscountDetails.Discounted).ToList();
 				}
@@ -163,7 +152,7 @@ namespace NoMatterWebApi.Controllers.V1
 		[HttpPost]
 		[Route("api/v1/clients/{clientId}/categories/{categoryId}/products")]
 		[ResponseType(typeof(Product))]
-		public async Task<IHttpActionResult> AddCategoryProductAsync(string clientId, string categoryId, Product model)
+		public async Task<IHttpActionResult> AddCategoryProductAsync(string clientId, int categoryId, Product product)
 		{
 			try
 			{
@@ -176,14 +165,16 @@ namespace NoMatterWebApi.Controllers.V1
 					return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToClient);
 
 
-				var categoryDb = await _categoryRepository.GetCategoryAsync(new Guid(clientId), new Guid(categoryId));
+				var category = await _categoryRepository.GetCategoryAsync(new Guid(clientId), categoryId);
 
-				if (categoryDb == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
+				if (category == null) return new CustomBadRequest(Request, ApiResultCode.CategoryNotFound);
 
-				var productDb = ProductHelper.GenerateProductDbModel(model, categoryDb.CategoryId, _generalHelper);
+				//var productDb = ProductHelper.GenerateProductDbModel(model, categoryDb.CategoryId, _generalHelper);
+
+				product.CategoryId = categoryId;
 
 				//Save the product
-				await _productRepository.AddProductAsync(productDb);
+				await _productRepository.AddProductAsync(product);
 
 				return Ok();
 

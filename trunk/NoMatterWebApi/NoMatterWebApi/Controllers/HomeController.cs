@@ -7,10 +7,8 @@ using System.Web;
 using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Web.Security;
-using NoMatterDatabaseModel;
+using NoMatterDataLibrary;
 using NoMatterWebApi.Controllers.V1;
-using NoMatterWebApi.DAL;
-using NoMatterWebApi.Extensions;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApi.ViewModels;
@@ -26,9 +24,8 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public HomeController()
 		{
-			var databaseEntity = new DatabaseEntities();
 
-			_clientRepository = new ClientRepository(databaseEntity);
+			_clientRepository = new ClientRepository();
 		}
 
 		public HomeController(IClientRepository clientRepository)
@@ -50,7 +47,7 @@ namespace NoMatterWebApi.Controllers.v1
 
 			var viewClientsVm = new ViewClientsVm
 			{
-				Clients = clients.Select(x => x.ToDomainClient()).ToList()
+				Clients = clients
 			};
 
 			return View(viewClientsVm);
