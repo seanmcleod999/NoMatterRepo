@@ -40,7 +40,7 @@ namespace NoMatterWebApi.Controllers.V1
 		[HttpGet]
 		[Route("api/v1/clients/{clientId}/products/{productId}")]
 		[ResponseType(typeof(Product))]
-		public async Task<IHttpActionResult> GetProductAsync(string clientId, string productId, bool relatedProducts = true)
+		public async Task<IHttpActionResult> GetProductAsync(string clientId, int productId, bool relatedProducts = true)
 		{
 			try
 			{
@@ -48,7 +48,7 @@ namespace NoMatterWebApi.Controllers.V1
 				//TODO: make sure the user can access this product
 				//Need to get bearer token, and lookup the user so we know which client the user is from
 
-				var product = await _productRepository.GetProductAsync(new Guid(productId));
+				var product = await _productRepository.GetProductAsync(productId);
 
 				//if (relatedProducts)
 				//{

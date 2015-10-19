@@ -20,6 +20,10 @@ textarea {
     max-width: 400px;
 }
 
+.InfoMessage {
+    color: blue
+}
+
 /* styles for validation helpers */
 .field-validation-error {
     color: #b94a48;

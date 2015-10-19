@@ -8,7 +8,8 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	public interface IClientHelper
 	{
 		Task PostClientSectionAsync(string clientId, Section section, string token);
-		Task<Client> GetClientAsync(string clientId);
+		//Task<Client> GetClientAsync(string clientId);
+		Client GetClient(string clientId);
 		Task<List<Client>> GetClientsAsync();
 		Task<List<Section>> GetClientSectionsAsync(string clientId, bool includeEmpty, bool includeHidden);
 		List<Section> GetClientSections(string clientId, bool includeEmpty, bool includeHidden);
@@ -27,9 +28,16 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			await WebApiService.Instance.PostAsync(string.Format("api/v1/clients/{0}/sections", clientId), section, token);
 		}
 
-		public async Task<Client> GetClientAsync(string clientId)
+		//public async Task<Client> GetClientAsync(string clientId)
+		//{
+		//	var client = await WebApiService.Instance.GetAsync<Client>(string.Format("api/v1/clients/{0}", clientId));
+
+		//	return client;
+		//}
+
+		public Client GetClient(string clientId)
 		{
-			var client = await WebApiService.Instance.GetAsync<Client>(string.Format("api/v1/clients/{0}", clientId));
+			var client = WebApiService.Instance.GetAsync<Client>(string.Format("api/v1/clients/{0}", clientId)).Result;
 
 			return client;
 		}

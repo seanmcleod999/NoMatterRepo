@@ -66,28 +66,28 @@ namespace NoMatterWebApi.Controllers.V1
 			}			
 		}
 
-		//// GET api/v1/clients/{clientId}
-		//[Route("api/v1/clients/{clientId}")]
-		//[ResponseType(typeof(List<Client>))]
-		//public async Task<IHttpActionResult> GetClientAsync(string clientId)
-		//{
-		//	try
-		//	{
-		//		var clientDb = await _clientRepository.GetClientAsync(new Guid(clientId));
+		// GET api/v1/clients/{clientId}
+		[Route("api/v1/clients/{clientId}")]
+		[ResponseType(typeof(List<Client>))]
+		public async Task<IHttpActionResult> GetClientAsync(string clientId)
+		{
+			try
+			{
+				var client = await _clientRepository.GetClientAsync(new Guid(clientId));
 
-		//		if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+				if (client == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-		//		var client = clientDb.ToDomainClient();
+				//var client = clientDb.ToDomainClient();
 
-		//		return Ok(client);
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Logger.WriteGeneralError(ex);
-		//		return InternalServerError(ex);
-		//	}
+				return Ok(client);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
 
-		//}
+		}
 
 		// POST api/v1/clients/{clientId}/sections
 		

@@ -22,17 +22,20 @@ namespace NoMatterWebApi.Controllers.v1
 
 	   private IGlobalRepository _globalRepository;
 	   private IClientRepository _clientRepository;
+	   private IGeneralHelper _generalHelper;
 
 		public SuperuserController()
 		{
 			_globalRepository = new GlobalRepository();
 			_clientRepository = new ClientRepository();
+			_generalHelper = new GeneralHelper();
 		}
 
-		public SuperuserController(IGlobalRepository productRepository, IClientRepository clientRepository)
+		public SuperuserController(IGlobalRepository productRepository, IClientRepository clientRepository, IGeneralHelper generalHelper)
 		{
 			_globalRepository = productRepository;
 			_clientRepository = clientRepository;
+			_generalHelper = generalHelper;
 		}
 
         public ActionResult Index()
@@ -71,21 +74,28 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> ClientAdd(AddEditClientVm addEditClientVm)
 		{
+			try
+			{
 
-			//var imageController = new ImageController();
+				if (addEditClientVm.Logo != null)
+					addEditClientVm.Client.Logo = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addEditClientVm.Logo), addEditClientVm.Client.ClientUuid);			
 
-			//if (addEditSectionVm.Picture != null)
-			//{
-			//	var imageBase64String = WebApiGeneralHelper.ConvertPicToBase64String(addEditSectionVm.Picture);
-			//	var uploadImageResult = await imageController.UploadImageAsync(addEditSectionVm.Section.ClientUuid, imageBase64String);
-			//	var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+				string clientUuid = await _clientRepository.AddClientAsync(addEditClientVm.Client);
 
-			//	addEditSectionVm.Section.Picture = pictureResult.Content;
-			//}
+				await ClientHelper.ClientSettingsAddMissing(_clientRepository, new Guid(clientUuid));
 
-			await _clientRepository.AddClientAsync(addEditClientVm.Client);
+				var password = PasswordCrypto.HashPassword("@dmin123");
 
-			return RedirectToAction("Clients");
+				await _clientRepository.AddClientDefaultAdminUserAsync(new Guid(clientUuid), addEditClientVm.Client.DomainName, password); 
+
+				return RedirectToAction("ClientSettings", "Admin", new { ClientUuid = clientUuid, fromCreateClient = true });
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
 		}
 
 		public async Task<ActionResult> ClientEdit(string clientUuid)
@@ -105,19 +115,22 @@ namespace NoMatterWebApi.Controllers.v1
 		[HttpPost]
 		public async Task<ActionResult> ClientEdit(AddEditClientVm addEditClientVm)
 		{
-			//if (addEditClientVm.Client.Logo != null)
-			//{
-			//	var imageBase64String = WebApiGeneralHelper.ConvertPicToBase64String(addEditSectionVm.Picture);
-			//	var uploadImageResult = await _imageController.UploadImageAsync(addEditSectionVm.Section.ClientUuid, imageBase64String);
-			//	var pictureResult = uploadImageResult as CreatedNegotiatedContentResult<string>;
+			try
+			{
+				if (addEditClientVm.Logo != null)
+					addEditClientVm.Client.Logo = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addEditClientVm.Logo), addEditClientVm.Client.ClientUuid);
 
-			//	addEditSectionVm.Section.Picture = pictureResult.Content;
-			//}
+				await _clientRepository.UpdateClientAsync(addEditClientVm.Client);
 
-			await _clientRepository.UpdateClientAsync(addEditClientVm.Client);
-
-			return RedirectToAction("Clients");
-
+				return RedirectToAction("Clients");
+			}
+			
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+			
 		}
 
 		public async Task<ActionResult> SiteSettings()
@@ -143,6 +156,7 @@ namespace NoMatterWebApi.Controllers.v1
 
 		public async Task<ActionResult> SiteSettingEdit(short settingId)
 		{
+			
 			var setting = await _globalRepository.GetSettingAsync(settingId);
 
 			var settingVm = new SettingVm
@@ -157,11 +171,20 @@ namespace NoMatterWebApi.Controllers.v1
 		[ValidateInput(false)]
 		public async Task<ActionResult> SiteSettingEdit(SettingVm settingVm)
 		{
-			//var settingDb = await _globalRepository.GetSettingAsync(settingVm.Setting.SettingId);
+			try
+			{
+				//var settingDb = await _globalRepository.GetSettingAsync(settingVm.Setting.SettingId);
 
-			await _globalRepository.UpdateSettingAsync(settingVm.Setting);
+				await _globalRepository.UpdateSettingAsync(settingVm.Setting);
 
-			return RedirectToAction("SiteSettings");
+				return RedirectToAction("SiteSettings");
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+			
 		}
 
 

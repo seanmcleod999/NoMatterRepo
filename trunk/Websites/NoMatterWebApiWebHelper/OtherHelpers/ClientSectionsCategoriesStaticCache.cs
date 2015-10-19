@@ -35,7 +35,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 			return _clientSectionsCategories;
 		}
 
-		public static SectionsAndCategories GetClientSectionById(string sectionId)
+		public static SectionsAndCategories GetClientSectionById(int sectionId)
 		{
 			return _clientSectionsCategories.SingleOrDefault(x => x.SectionId == sectionId);
 		}
@@ -61,7 +61,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 			return null;
 		}
 
-		public static Category GetSectionCategoryById(string categoryId)
+		public static Category GetSectionCategoryById(int categoryId)
 		{
 			var category = _clientSectionsCategories.SelectMany(x => x.Categories).FirstOrDefault(x => x.CategoryId == categoryId);
 

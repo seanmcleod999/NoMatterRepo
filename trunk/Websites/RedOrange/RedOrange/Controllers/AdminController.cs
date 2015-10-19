@@ -258,7 +258,7 @@ namespace RedOrange.Controllers
 		{
 			var category = await _categoryHelper.GetCategoryAsync(_globalSettings.SiteClientId, categoryId);
 
-			var addEditProductVm = new AddEditProductVm
+			var addEditProductVm = new AddProductVm
 			{
 				Category = category,
 				Product = new Product()
@@ -273,7 +273,7 @@ namespace RedOrange.Controllers
 
 		[HttpPost]
 		[ValidateInput(false)]
-		public async Task<ActionResult> ProductAdd(AddEditProductVm addEditProductVm)
+		public async Task<ActionResult> ProductAdd(AddProductVm addEditProductVm)
 		{
 			try
 			{
@@ -315,7 +315,7 @@ namespace RedOrange.Controllers
 			{
 				var product = await _productHelper.GetProductNoRelatedProductsAsync(productId);
 
-				var addEditProductVm = new AddEditProductVm
+				var addEditProductVm = new AddProductVm
 				{
 					Product = product,
 				};
@@ -332,7 +332,7 @@ namespace RedOrange.Controllers
 
 		[Authorize]
 		[HttpPost]
-		public async Task<ActionResult> ProductEdit(AddEditProductVm addEditProductVm)
+		public async Task<ActionResult> ProductEdit(AddProductVm addEditProductVm)
 		{
 			try
 			{

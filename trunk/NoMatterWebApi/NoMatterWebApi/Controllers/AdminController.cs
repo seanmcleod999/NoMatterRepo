@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
@@ -26,6 +27,7 @@ namespace NoMatterWebApi.Controllers.v1
 		private IProductRepository _productRepository;
 		private IGlobalRepository _globalRepository;
 		private IGeneralHelper _generalHelper;
+		private IFacebookHelper _facebookHelper;
 
 		public AdminController()
 		{
@@ -349,13 +351,17 @@ namespace NoMatterWebApi.Controllers.v1
 
 				if (addProductVm.PictureOther != null)
 					addProductVm.Product.PictureOther = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.PictureOther), addProductVm.Category.Section.Client.ClientUuid);
+
+
 				
 
-				//TODO: generate the short URL
-				//addProductVm.Product.ProductShortUrl = "";
-
 				//Save the product
-				await _productRepository.AddProductAsync(addProductVm.Product);
+				 var productUuid = await _productRepository.AddProductAsync(addProductVm.Product);
+
+				 //TODO: generate the short URL
+				 //addProductVm.Product.ProductShortUrl = "";
+
+				//TODO: then save the short url
 
 				return RedirectToAction("CategoryProducts", new
 				{
@@ -454,11 +460,11 @@ namespace NoMatterWebApi.Controllers.v1
 
 		}
 
-		public async Task<ActionResult> ViewProduct(string clientUuid, string productId)
+		public async Task<ActionResult> ViewProduct(string clientUuid, int productId)
 		{
 			try
 			{
-				var product = await _productRepository.GetProductAsync(new Guid(productId));
+				var product = await _productRepository.GetProductAsync(productId);
 
 				var viewProductVm = new ViewProductVm
 					{
@@ -473,6 +479,63 @@ namespace NoMatterWebApi.Controllers.v1
 				Logger.WriteGeneralError(ex);
 				throw;
 			}
+
+		}
+
+		public async Task<ActionResult> ProductFacebookPost(string clientUuid, int productId)
+		{
+			try
+			{
+				var product = await _productRepository.GetProductAsync(productId);
+
+				//string facebookMessageTemplate = Globals.FacebookItemPostMessage;
+
+				//var facebookPostText = String.Format(facebookMessageTemplate,
+				//	product.Description,
+				//	product.Price,
+				//	String.IsNullOrEmpty(product.Size) ? "" : "Size: " + product.Size,
+				//	product.ItemShortUrl);
+
+
+				var postToFacebookVm = new PostToFacebookVm
+				{
+					ClientUuid = clientUuid,
+					Product = product,
+					SelectedPicturePath = product.Picture1
+				};
+
+
+				return View(postToFacebookVm);
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				throw;
+			}
+		}
+
+		[Authorize]
+		[HttpPost]
+		public ActionResult ProductFacebookPost(PostToFacebookVm postToFacebookVm)
+		{
+			//var path = Path.Combine(Server.MapPath(.ShopImagesPath), picturePath);
+
+			var path = Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/Images/" + postToFacebookVm.ClientUuid + "/"), postToFacebookVm.SelectedPicturePath);
+
+			//Try post to facebook
+			var facebookPostId = _facebookHelper.PostItemToFacebook(postToFacebookVm.FacebookPostText, postToFacebookVm.FacebookAlbumId, path);
+
+			//if (!string.IsNullOrEmpty(facebookPostId))
+			//{
+
+			//	//ShopAdminHelper.UpdateFacebookPostId(shopItemId, facebookPostId);
+
+			//	return RedirectToAction("Edit", new { id = shopItemId });
+			//}
+
+			//ViewBag.ShopItemId = shopItemId;
+
+			return View("FacebookPostFailed");
 
 		}
 
@@ -580,7 +643,7 @@ namespace NoMatterWebApi.Controllers.v1
 			return RedirectToAction("ClientPages", new { clientUuid = clientUuid});
 		}
 
-		public async Task<ActionResult> ClientSettings(string clientUuid = null)
+		public async Task<ActionResult> ClientSettings(string clientUuid = null, bool fromCreateClient = false)
 		{
 			try
 			{
@@ -597,7 +660,8 @@ namespace NoMatterWebApi.Controllers.v1
 				var clientSettingsVm = new ClientSettingsVm
 				{
 					Client = client,
-					ClientSettings = settings
+					ClientSettings = settings,
+					FromCreateClient = fromCreateClient
 				};
 
 				return View(clientSettingsVm);
@@ -614,15 +678,7 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				var client = await _clientRepository.GetClientAsync(new Guid(clientUuid));
-
-				//Get the current settings
-				var clientSettings = await _clientRepository.GetClientSettingsAsync(new Guid(clientUuid));
-
-				//Get the ids
-				var settingsIds = clientSettings.Select(x => x.SettingId).ToList();
-
-				await _clientRepository.AllocateMissingClientSettingsAsync(client, settingsIds);
+				await ClientHelper.ClientSettingsAddMissing(_clientRepository, new Guid(clientUuid));
 
 				return RedirectToAction("ClientSettings", "Admin", new { clientUuid = clientUuid });
 			}

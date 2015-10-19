@@ -14,7 +14,7 @@ namespace NoMatterDataLibrary
 	{
 		Task<Product> GetProductAsync(int productId);
 		Task<Product> GetProductAsync(Guid productUuid);
-		Task<int> AddProductAsync(Product product);
+		Task<string> AddProductAsync(Product product);
 		Task UpdateProductAsync(Product product);
 		Task DeleteProductAsync(int productId);
 		Task<List<Product>> GetRelatedProductsByKeywordsAsync(Guid productUuid, List<string> keywords, int relatedItemsCount);
@@ -54,12 +54,13 @@ namespace NoMatterDataLibrary
 			
 		}
 
-		public async Task<int> AddProductAsync(Product product)
+		public async Task<string> AddProductAsync(Product product)
 		{
 			var productDb = product.ToDatabaseProduct();
 
 			using (var mainDb = new DatabaseEntities())
 			{
+				productDb.ProductUUID = Guid.NewGuid();
 				productDb.DateCreated = DateTime.Now;
 				productDb.Sold = false;
 
@@ -67,7 +68,7 @@ namespace NoMatterDataLibrary
 
 				await mainDb.SaveChangesAsync();
 
-				return productDb.ProductId;
+				return productDb.ProductUUID.ToString();
 
 			}
 			

@@ -14,11 +14,11 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 {
 	public interface ISectionHelper
 	{
-		Task<Section> GetSectionAsync(string clientId, string sectionId);
+		Task<Section> GetSectionAsync(string clientId, int sectionId);
 		
 		Task DeleteSectionAsync(string sectionId, string token);
 		Task UpdateSectionAsync(string clientId, Section section, string token);
-		Task<List<Category>> GetSectionCategoriesAsync(string sectionId, bool includeEmpty, bool includeHidden);
+		Task<List<Category>> GetSectionCategoriesAsync(int sectionId, bool includeEmpty, bool includeHidden);
 		Task PostSectionCategoryAsync(string clientId, Category category, string token);
 	}
 
@@ -39,7 +39,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 		public async Task PostSectionCategoryAsync(string clientId, Category category, string token)
 		{
 
-			await WebApiService.Instance.PostAsync(string.Format("api/v1/clients/{0}/sections/{1}/categories", clientId, category.SectionId), category, token);
+			await WebApiService.Instance.PostAsync(string.Format("api/v1/clients/{0}/sections/{1}/categories", clientId, category.Section.SectionId), category, token);
 
 			//using (var client = new HttpClient())
 			//{
@@ -59,7 +59,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			//}
 		}
 
-		public async Task<Section> GetSectionAsync(string clientId, string sectionId)
+		public async Task<Section> GetSectionAsync(string clientId, int sectionId)
 		{
 			var section = await WebApiService.Instance.GetAsync<Section>(string.Format("api/v1/clients/{0}/sections/{1}", clientId, sectionId));
 
@@ -76,7 +76,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			await WebApiService.Instance.PutAsync(string.Format("api/v1/clients/{0}/sections/{1}", clientId, section.SectionId), section, token);
 		}
 
-		public async Task<List<Category>> GetSectionCategoriesAsync(string sectionId, bool includeEmpty, bool includeHidden)
+		public async Task<List<Category>> GetSectionCategoriesAsync(int sectionId, bool includeEmpty, bool includeHidden)
         {
 			var categories = await WebApiService.Instance.GetAsync<List<Category>>(string.Format("api/v1/clients/{0}/sections/{1}/categories?includeEmpty={2}&includeHidden={3}", _globalSettings.SiteClientId, sectionId, includeEmpty, includeHidden));
 

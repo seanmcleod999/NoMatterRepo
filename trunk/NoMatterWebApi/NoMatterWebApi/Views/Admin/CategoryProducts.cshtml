@@ -48,6 +48,9 @@ Category: <b>@Model.Category.CategoryName</b><br/><br/>
             
         </th>
         <th>
+
+        </th>
+        <th>
             
         </th>
     </tr>
@@ -94,7 +97,9 @@ Category: <b>@Model.Category.CategoryName</b><br/><br/>
          <td>
             @Html.ActionLink("delete", "DeleteProduct", "Admin", new {clientUuid = @Model.Category.Section.Client.ClientUuid, productId = @product.ProductId, categoryId = @Model.Category.CategoryId },  new { onclick = "return confirm('Are you sure you wish to delete this product? Note that this will also delete the products history.');" })
         </td>
-
+         <td>
+            @Html.ActionLink("facebook post", "ProductFacebookPost", "Admin", new {clientUuid = @Model.Category.Section.Client.ClientUuid, productId = @product.ProductId, categoryId = @Model.Category.CategoryId }, null )
+        </td>
        
     </tr>
     

@@ -104,142 +104,139 @@ namespace NoMatterWebApi.Controllers.V1
 		//	return Ok();
 		//}
 
-		//// POST api/v1/clients/{clientUuid}/users/register>
-		//[Route("{clientUuid}/users/register2")]
-		//[ResponseType(typeof(UserAuthenticatedResult))]
-		//[HttpPost]
-		//public async Task<IHttpActionResult> RegisterUser(string clientUuid, NewUser model)
-		//{
-		//	try
-		//	{
-		//		var passwordSalt = PasswordHelper.CreateSalt();
+		// POST api/v1/clients/{clientUuid}/users/register>
+		[Route("{clientUuid}/users/register")]
+		[ResponseType(typeof(UserAuthenticatedResult))]
+		[HttpPost]
+		public async Task<IHttpActionResult> RegisterUser(string clientUuid, NewUser model)
+		{
+			try
+			{
+				var passwordSalt = PasswordHelper.CreateSalt();
 
-		//		var clientDb = await _clientRepository.GetClientAsync(new Guid(clientUuid));
-		//		if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientUuid));
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-		//		var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
-		//		if (userDb != null) return new CustomBadRequest(Request, ApiResultCode.UserAlreadyExists);
+				var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
+				if (userDb != null) return new CustomBadRequest(Request, ApiResultCode.UserAlreadyExists);
 
-		//		if (string.IsNullOrEmpty(model.FacebookToken))
-		//		{
-		//			//Non facebook user
-		//			userDb = new User
-		//			{
-		//				Client = clientDb,
-		//				CredentialTypeId = (byte)CredentialTypeEnum.UsernameAndPassword,
-		//				FullName = model.FirstName + " " + model.LastName,
-		//				Identifier = model.Email,
-		//				Email = model.Email,
-		//				PasswordSalt = passwordSalt,
-		//				Password = PasswordHelper.StrToByteArray(PasswordHelper.CreatePasswordHash(model.Password, passwordSalt))
-		//			};
-		//		}
-		//		else
-		//		{
-		//			//Facebook User.. need to validate the token etc
-		//			var facebookUser = await generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
+				if (string.IsNullOrEmpty(model.FacebookToken))
+				{
+					//Non facebook user
+					userDb = new User
+					{
+						Client = clientDb,
+						CredentialTypeId = (byte)CredentialTypeEnum.UsernameAndPassword,
+						Fullname = model.Fullname,
+						Identifier = model.Email,
+						Email = model.Email,
+						//PasswordSalt = passwordSalt,
+						Password = PasswordCrypto.HashPassword(model.Password)
+					};
+				}
+				else
+				{
+					//Facebook User.. need to validate the token etc
+					var facebookUser = await generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
 
-		//			userDb = new User
-		//			{
-		//				Client = clientDb,
-		//				CredentialTypeId = (byte)CredentialTypeEnum.Facebook,
-		//				Identifier = facebookUser.Id,
-		//				FullName = facebookUser.First_Name + " " + facebookUser.Last_Name,
-		//				Email = facebookUser.Email,
-		//				PasswordSalt = passwordSalt,
-		//			};
-		//		}
+					userDb = new User
+					{
+						Client = clientDb,
+						CredentialTypeId = (byte)CredentialTypeEnum.Facebook,
+						Identifier = facebookUser.Id,
+						Fullname = facebookUser.First_Name + " " + facebookUser.Last_Name,
+						Email = facebookUser.Email,
+					};
+				}
 
-		//		var userUuid = await _userRepository.SaveUserAsync(userDb);
+				var userUuid = await _userRepository.SaveUserAsync(userDb);
 
-		//		//Return the user details and token etc
-		//		var user = new UserAuthenticatedResult()
-		//		{
-		//			Id = userUuid,
-		//			Fullname = model.FirstName + " " + model.LastName,
-		//			Email = model.Email,
-		//			TokenDetails = new TokenDetails()
-		//			{
-		//				AccessToken = passwordSalt
-		//			}
-		//		};
+				//Return the user details and token etc
+				var user = new UserAuthenticatedResult()
+				{
+					Id = userUuid,
+					Fullname = model.Fullname,
+					Email = model.Email,
+					TokenDetails = new TokenDetails()
+					{
+						AccessToken = passwordSalt
+					}
+				};
 
-		//		return Ok(user);
+				return Ok(user);
 
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Logger.WriteGeneralError(ex);
-		//		return InternalServerError(ex);
-		//	}
-		//}
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
 
-		//// POST api/v1/clients/{clientId}/users>
-		//[Route("{clientId}/users/authenticate")]
-		//[ResponseType(typeof(UserAuthenticatedResult))]
-		//[HttpPost]
-		//public async Task<IHttpActionResult> AuthenticateUser(string clientId, UserAuthenticateModel model)
-		//{
-		//	User user;
+		// POST api/v1/clients/{clientId}/users>
+		[Route("{clientId}/users/authenticate")]
+		[ResponseType(typeof(UserAuthenticatedResult))]
+		[HttpPost]
+		public async Task<IHttpActionResult> AuthenticateUser(string clientId, UserAuthenticateModel model)
+		{
+			User user;
 
-		//	Guid? clientUuid = null;
+			Guid? clientUuid = null;
 
-		//	if (clientId != "sys") clientUuid = new Guid(clientId);
+			if (clientId != "sys") clientUuid = new Guid(clientId);
 
-		//	if (!string.IsNullOrEmpty(model.FacebookToken))
-		//	{
-		//		//Facebook User.. need to validate the token etc
-		//		var facebookUser = await generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
+			if (!string.IsNullOrEmpty(model.FacebookToken))
+			{
+				//Facebook User.. need to validate the token etc
+				var facebookUser = await generalHelper.VerifyFacebookTokenAsync(model.FacebookToken);
 
-		//		user = await _userRepository.GetClientUserByFacebookIdAsync(clientUuid, facebookUser.Id);
+				user = await _userRepository.GetClientUserByFacebookIdAsync(clientUuid, facebookUser.Id);
 
-		//		if (user == null)
-		//		{
-		//			return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
-		//		}
-		//	}
-		//	else
-		//	{
-		//		user = await _userRepository.GetClientUserByEmailAsync(clientUuid, model.Email);
+				if (user == null)
+				{
+					return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
+				}
+			}
+			else
+			{
+				user = await _userRepository.GetClientUserByEmailAsync(clientUuid, model.Email);
 
-		//		if (user == null)
-		//		{
-		//			return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
-		//		}
+				if (user == null)
+				{
+					return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
+				}
 
-		//		var dBytes = user.Password;
-		//		var enc = new UTF8Encoding();
-		//		var length = dBytes.TakeWhile(b => b != 0).Count();
-		//		var strDbPassword = enc.GetString(dBytes, 0, length);
+				var dBytes = user.Password;
+				//var enc = new UTF8Encoding();
+				//var length = dBytes.TakeWhile(b => b != 0).Count();
+				//var strDbPassword = enc.GetString(dBytes, 0, length);
 
-		//		if (strDbPassword != PasswordHelper.CreatePasswordHash(model.Password, userDb.PasswordSalt))
-		//		{
-		//			return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
-		//		}
-		//	}
+				if (!PasswordCrypto.CheckPassword(user.Password, model.Password))
+				{
+					return new CustomBadRequest(Request, ApiResultCode.AuthenticationFailed);
+				}
+			}
 
-		//	//Profile successfully authenticated, so generate the response with token details etc
-		//	var accessToken = _customAuthentication.CreateAccessToken(userDb.UserUUID.ToString(), userDb.Client.ClientUUID.ToString());
+			//Profile successfully authenticated, so generate the response with token details etc
+			var accessToken = _customAuthentication.CreateAccessToken(user.UserId, user.Client.ClientUuid);
 
-		//	var userRoles = String.Join(",", userDb.UserRoles.Select(x=>x.Role.RoleName));
+			//Return the user details and token etc
+			var userAuthenticated = new UserAuthenticatedResult()
+			{
+				Id = user.UserId,
+				ClientId = user.Client != null ? user.Client.ClientUuid.ToString() : null,
+				Fullname = user.Fullname,
+				Email = user.Email,
+				UserRoles =user.UserRolesString,
+				TokenDetails = new TokenDetails()
+				{
+					AccessToken = accessToken.Token,
+					AccessTokenExpiryUtc = accessToken.Expires,
+				}
+			};
 
-		//	//Return the user details and token etc
-		//	var userAuthenticated = new UserAuthenticatedResult()
-		//	{
-		//		Id = userDb.UserUUID.ToString(),
-		//		ClientId = userDb.Client != null ? userDb.Client.ClientUUID.ToString() : null,
-		//		Fullname = userDb.FullName,
-		//		Email = userDb.Email,
-		//		UserRoles = userRoles,
-		//		TokenDetails = new TokenDetails()
-		//		{
-		//			AccessToken = accessToken.Token,
-		//			AccessTokenExpiryUtc = accessToken.Expires,
-		//		}
-		//	};
-
-		//	return Ok(userAuthenticated);
-		//}
+			return Ok(userAuthenticated);
+		}
 
 		//// POST api/v1/clients/{id}/users/createorupdate>
 		//[Route("{clientUuid}/users")]

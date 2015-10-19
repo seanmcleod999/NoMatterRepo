@@ -18,6 +18,13 @@
     @Html.HiddenFor(model => model.Client.ClientUuid)
    
     <div class="editor-label">
+       UUID
+    </div>
+    <div class="editor-field">
+        @Model.Client.ClientUuid
+    </div>
+    
+    <div class="editor-label">
        Client Name
     </div>
     <div class="editor-field">
@@ -33,6 +40,14 @@
         @Html.ValidationMessageFor(model => model.Client.SiteUrl)
     </div>
     
+    <div class="editor-label">
+       Domain Name
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.Client.DomainName, new {style = "width:300px;"})
+        @Html.ValidationMessageFor(model => model.Client.DomainName)
+    </div>
+    
      <div class="editor-label">
          Enabled
     </div>
@@ -45,8 +60,8 @@
         Logo
     </div>
     <div class="editor-field">
-         @Html.TextBoxFor(m => m.Client.Logo, new { type = "file", @class="form-control" })
-         @Html.ValidationMessageFor(m => m.Client.Logo)
+         @Html.TextBoxFor(m => m.Logo, new { type = "file", @class="form-control" })
+         @Html.ValidationMessageFor(m => m.Logo)
     </div>
    
 

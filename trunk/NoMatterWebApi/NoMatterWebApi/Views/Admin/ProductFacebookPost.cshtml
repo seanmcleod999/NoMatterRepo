@@ -1,0 +1,87 @@
+﻿@using NoMatterWebApi.Helpers
+@model NoMatterWebApiModels.ViewModels.PostToFacebookVm
+
+@{
+    ViewBag.Title = "PostToFacebook";
+}
+<h1>Post to facebook</h1>
+<br/>
+
+@Html.ActionLink("Back to Products", "CategoryProducts", "Admin", new { categoryId = Model.Product.CategoryId }, new { @class = "BackLink" }) 
+
+<br/><br/>
+
+<img class="facebookPostImages socialMediaImageSelected" src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture1?w=100" src2="@Model.Product.Picture1" alt="View Image" />
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture2))
+{
+    <img class="facebookPostImages" src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture2?w=100" src2="@Model.Product.Picture2" alt="View Image"  />   
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture3))
+{
+    <img class="facebookPostImages" src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture2?w=100" src2="@Model.Product.Picture3" alt="View Image"  />   
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture4))
+{
+    <img class="facebookPostImages" src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture3?w=100" src2="@Model.Product.Picture4" alt="View Image"  />   
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.Picture5))
+{
+    <img class="facebookPostImages" src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.Picture4?w=100" src2="@Model.Product.Picture4" alt="View Image"  />   
+}
+
+@if (!string.IsNullOrEmpty(Model.Product.PictureOther))
+{
+    <img class="facebookPostImages" src="@StaticGlobalSettings.ImagesBaseAddress@Model.Product.PictureOther?w=100" src2="@Model.Product.PictureOther" alt="View Image" />   
+}
+
+<br/><br/>
+
+
+
+@using (Html.BeginForm("ProductFacebookPost", "Admin", FormMethod.Post, new { id = "PostForm" }))
+{
+    @Html.ValidationSummary(true)
+  
+    
+    @Html.TextAreaFor(m => m.FacebookPostText, new { style = "max-width:600px; width: 98%; height:150px" })                 
+    @Html.ValidationMessageFor(m => m.FacebookPostText)
+    <br />
+    
+    @Html.HiddenFor(m=>m.ClientUuid)
+    @Html.HiddenFor(m=>m.Product.ProductId)
+    @Html.HiddenFor(m=>m.SelectedPicturePath)
+
+    @*   
+     @Html.DropDownListFor(model => model.FacebookAlbumId, new SelectList(Model.FacebookAlbumList, "FacebookPageAlbumId", "AlbumName"), "Facebook Timeline")
+    *@
+
+    <br/><br/>
+    <input type="submit" value="Post to Facebook" /> @Html.ActionLink("cancel", "Edit", new { id = Model.Product.ProductId }) 
+    <br /><br />
+
+}
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $('img.facebookPostImages').click(function () {
+
+            $('img.facebookPostImages').removeClass('socialMediaImageSelected');
+
+            $(this).addClass('socialMediaImageSelected');
+
+            $('#picturePath').val($(this).attr("src2"));
+
+        });
+
+        jQuery.validator.unobtrusive.parse("form");
+
+    });
+
+</script>

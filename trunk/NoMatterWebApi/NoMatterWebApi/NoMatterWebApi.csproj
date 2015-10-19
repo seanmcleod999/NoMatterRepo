@@ -267,6 +267,7 @@
     <Compile Include="Enums\EmailEventEnum.cs" />
     <Compile Include="Helpers\ClientHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
+    <Compile Include="Helpers\FacebookHelper.cs" />
     <Compile Include="Helpers\PasswordCrypto.cs" />
     <Compile Include="Helpers\ProductHelper.cs" />
     <Compile Include="Helpers\SectionHelper.cs" />
@@ -539,6 +540,7 @@
     <Content Include="Views\ApiMailer\UserRegistration.cshtml" />
     <Content Include="Views\ApiMailer\_Layout.cshtml" />
     <Content Include="Views\ApiMailer\_Layout.text.cshtml" />
+    <Content Include="Views\Admin\ProductFacebookPost.cshtml" />
     <None Include="Views\Superuser\ClientEdit.cshtml" />
     <Content Include="Views\Superuser\RunSqlScriptResult.cshtml" />
     <Content Include="Views\Admin\ClientPostage.cshtml" />
@@ -583,7 +585,7 @@
       <Project>{036be2d8-6cf5-4e36-adb6-5c7bd8568019}</Project>
       <Name>NoMatterDataLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NoMatterWebApiModels\NoMatterWebApiShared.csproj">
+    <ProjectReference Include="..\..\NoMatterWebApiShared\NoMatterWebApiShared.csproj">
       <Project>{61b3d61b-1ef7-4553-99f3-9ecf07a087ab}</Project>
       <Name>NoMatterWebApiShared</Name>
     </ProjectReference>

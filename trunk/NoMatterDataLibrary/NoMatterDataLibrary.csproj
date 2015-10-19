@@ -84,7 +84,7 @@
       <Project>{ef31712d-d1b4-4db6-8e10-6d805a0be9ba}</Project>
       <Name>NoMatterDatabaseModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NoMatterWebApiModels\NoMatterWebApiShared.csproj">
+    <ProjectReference Include="..\NoMatterWebApiShared\NoMatterWebApiShared.csproj">
       <Project>{61b3d61b-1ef7-4553-99f3-9ecf07a087ab}</Project>
       <Name>NoMatterWebApiShared</Name>
     </ProjectReference>

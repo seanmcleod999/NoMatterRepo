@@ -12,7 +12,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 	public static class SectionCategoriesSessionCache
 	{
 
-		public static async Task<List<Category>> GetSectionCategories(ISectionHelper sectionHelper, string sectionId)
+		public static async Task<List<Category>> GetSectionCategories(ISectionHelper sectionHelper, int sectionId)
 		{
 			if (HttpContext.Current.Session["section-" + sectionId] == null)
 			{
@@ -24,7 +24,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 			return (List<Category>)HttpContext.Current.Session["section-" + sectionId];
 		}
 
-		public static async Task<Category> GetSectionCategory(ISectionHelper sectionHelper, string sectionId, string categoryId)
+		public static async Task<Category> GetSectionCategory(ISectionHelper sectionHelper, int sectionId, int categoryId)
 		{
 			var categories = new List<Category>();
 

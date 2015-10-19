@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using NoMatterWebApiModels.Models;
 
 namespace NoMatterDataLibrary.Extensions
 {
@@ -28,6 +29,18 @@ namespace NoMatterDataLibrary.Extensions
 				UserRolesString = String.Join(",", user.UserRoles.Select(x => x.Role.RoleName)),
 				//UserRoles = user.UserRoles.Select(x => x.ToModelUserRole()).ToList()
 			};
-		}	
+		}
+
+		public static NoMatterDatabaseModel.User ToDatabaseUser(this  User user)
+		{
+			return new NoMatterDatabaseModel.User
+			{
+				FullName = user.Fullname,
+				Email = user.Email,
+				Identifier = user.Identifier,
+				CredentialTypeId = user.CredentialTypeId,
+				Password = user.Password,
+			};
+		}
 	}
 }

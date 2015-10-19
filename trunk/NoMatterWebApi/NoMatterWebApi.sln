@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMatterWebApi", "NoMatterWebApi\NoMatterWebApi.csproj", "{23EA4141-5D9F-43B4-9388-F798EAB7258B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMatterWebApiShared", "..\NoMatterWebApiModels\NoMatterWebApiShared.csproj", "{61B3D61B-1EF7-4553-99F3-9ECF07A087AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMatterWebApiShared", "..\NoMatterWebApiShared\NoMatterWebApiShared.csproj", "{61B3D61B-1EF7-4553-99F3-9ECF07A087AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE275924-A4E6-47FA-B04B-EFC6D6D3E975}"
 	ProjectSection(SolutionItems) = preProject

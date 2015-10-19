@@ -1,0 +1,80 @@
+﻿@model NoMatterWebApiModels.ViewModels.ClientSectionsVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.Title = "Sections";
+}
+<h1>Sections</h1>
+
+<div class="PageNavigationBar">
+@Html.ActionLink("add section", "SectionAdd", "Admin", new {clientId = Model.Client.ClientId}, new { @class = "AddLink" })
+</div>
+
+<table class="table_grid">
+    <tr>
+        <th>
+            Section
+        </th>
+        <th>
+            Order
+        </th>
+        <th>
+            Hidden
+        </th>
+        <th>
+            Categories
+        </th>
+        @*<th>
+             Visible Categories
+        </th>*@
+         <th>
+           
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+
+@foreach (var section1 in Model.Sections)
+{
+    <tr>
+        
+        <td>
+            @Html.DisplayFor(modelItem => section1.SectionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => section1.SectionOrder)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => section1.Hidden)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => section1.FullCategoryCount)
+        </td>
+        @* <td>
+           @Html.DisplayFor(modelItem => section1.VisibleCategoryCount)
+        </td>*@
+        <td>
+            @Html.ActionLink("edit", "SectionEdit", "Admin", new { sectionId = @section1.SectionId }, null)
+        </td>
+        <td>
+            @if (section1.FullCategoryCount == 0)
+            {
+                @Html.ActionLink("delete", "SectionDelete", "Admin", new { sectionId = @section1.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this section? Note that you can only delete sections that have no categories.');" })
+            }
+            
+        </td>
+        <td>
+            @Html.ActionLink("get categories", "SectionCategories", "Admin", new { sectionId = @section1.SectionId }, null)
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>

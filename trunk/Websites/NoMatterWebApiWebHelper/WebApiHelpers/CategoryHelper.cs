@@ -12,7 +12,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	public interface ICategoryHelper
 	{
 		Task<Category> GetCategoryAsync(string clientId, string categoryId);
-		Task<List<Product>> GetCategoryProductsAsync(string clientId, string categoryId);
+		Task<List<Product>> GetCategoryProductsAsync(string clientId, int categoryId);
 		Task PostCategoryProductAsync(string clientId, string categoryId, Product newProduct, string token);
 		Task UpdateCategoryAsync(string clientId, Category category, string token);
 		Task DeleteCategoryAsync(string clientId, string categoryId, string token);
@@ -33,7 +33,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			await WebApiService.Instance.DeleteAsync(string.Format("api/v1/clients/{0}/categories/{1}", clientId, categoryId));
 		}
 
-		public async Task<List<Product>> GetCategoryProductsAsync(string clientId, string categoryId)
+		public async Task<List<Product>> GetCategoryProductsAsync(string clientId, int categoryId)
 		{
 			var products = await WebApiService.Instance.GetAsync<List<Product>>(string.Format("api/v1/clients/{0}/categories/{1}/products", clientId, categoryId));
 

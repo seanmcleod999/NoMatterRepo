@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.Title = "Admin";
+}
+
+
+<h2>Admin Section</h2>
+
+<br/>
+@Html.ActionLink("Sections & Categories", "Sections", "Admin") 
+<br/>
+<br/>
+@Html.ActionLink("Products", "Products", "Admin") 
+<br/>
+<br/>
+@Html.ActionLink("Discounts", "Discounts", "Admin") 
+<br/>
+<br/>
+@Html.ActionLink("Users", "Users", "Admin") 
+<br/>
+<br/>
+@Html.ActionLink("Postage Options", "Postage", "Admin")
+<br/>
+<br/>
+@Html.ActionLink("Payment Options", "Postage", "Admin")
+<br/>
+<br/>
+@Html.ActionLink("My Profile", "UserProfile", "Admin") 
+
+@if (User.IsInRole("SuperUser"))
+{
+    <br/>
+    <br/>    
+    @Html.ActionLink("Clear Cache", "ClearCache", "Admin")    
+}

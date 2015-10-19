@@ -39,8 +39,11 @@
           <Property Name="ClientUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ClientName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
-          <Property Name="Logo" Type="varchar" MaxLength="50" />
+          <Property Name="Logo" Type="varchar" MaxLength="100" />
           <Property Name="SiteUrl" Type="varchar" MaxLength="100" />
+          <Property Name="DomainName" Type="varchar" MaxLength="50" />
+          <Property Name="FacebookAppId" Type="varchar" MaxLength="50" />
+          <Property Name="FacebookAppSecret" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="ClientDeliveryOption">
           <Key>
@@ -321,7 +324,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ClientDeliveryOption_Client">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="ClientDeliveryOption" Type="Self.ClientDeliveryOption" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Client">
@@ -405,7 +410,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ClientSetting_Client1">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="ClientSetting" Type="Self.ClientSetting" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Client">
@@ -417,7 +424,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ClientSetting_Setting">
-          <End Role="Setting" Type="Self.Setting" Multiplicity="1" />
+          <End Role="Setting" Type="Self.Setting" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="ClientSetting" Type="Self.ClientSetting" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Setting">
@@ -811,11 +820,14 @@
           <NavigationProperty Name="Sections" Relationship="Self.FK_Section_Section" FromRole="Client" ToRole="Section" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_Client" FromRole="Client" ToRole="User" />
           <NavigationProperty Name="ClientDeliveryOptions" Relationship="DatabaseModel.FK_ClientDeliveryOption_Client1" FromRole="Client" ToRole="ClientDeliveryOption" />
-          <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Logo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ClientPages" Relationship="DatabaseModel.FK_ClientPage_Client" FromRole="Client" ToRole="ClientPage" />
           <Property Name="SiteUrl" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ClientSettings" Relationship="DatabaseModel.FK_ClientSetting_Client1" FromRole="Client" ToRole="ClientSetting" />
           <NavigationProperty Name="ClientEmails" Relationship="DatabaseModel.FK_ClientEmail_Client" FromRole="Client" ToRole="ClientEmail" />
+          <Property Name="DomainName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FacebookAppId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FacebookAppSecret" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -1626,6 +1638,9 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="DatabaseModel.Client">
               <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="FacebookAppSecret" ColumnName="FacebookAppSecret" />
+                <ScalarProperty Name="FacebookAppId" ColumnName="FacebookAppId" />
+                <ScalarProperty Name="DomainName" ColumnName="DomainName" />
                 <ScalarProperty Name="SiteUrl" ColumnName="SiteUrl" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />

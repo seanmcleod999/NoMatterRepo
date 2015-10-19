@@ -70,19 +70,18 @@ namespace NoMatterDataLibrary
 		{
 			using (var mainDb = new DatabaseEntities())
 			{
-				//var userDb = user.ToDatabaseModel();
+				var userDb = user.ToDatabaseUser();
 
-				//userDb.UserUUID = Guid.NewGuid();
-				//userDb.DateAdded = DateTime.Now;
-				//userDb.DateUpdated = DateTime.Now;
+				userDb.UserUUID = Guid.NewGuid();
+				userDb.DateAdded = DateTime.Now;
+				userDb.DateUpdated = DateTime.Now;
 
-				//mainDb.Users.Add(userDb);
+				mainDb.Users.Add(userDb);
 
-				//await mainDb.SaveChangesAsync();
+				await mainDb.SaveChangesAsync();
 
-				//return userDb.UserUUID.ToString();
+				return userDb.UserUUID.ToString();
 
-				return Guid.NewGuid().ToString();
 			}
 			
 		}

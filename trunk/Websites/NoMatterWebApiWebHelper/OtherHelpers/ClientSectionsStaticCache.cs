@@ -35,7 +35,7 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 			return _clientSections;
 		}
 
-		public static Section GetClientSection(string sectionId)
+		public static Section GetClientSection(int sectionId)
 		{
 			return _clientSections.SingleOrDefault(x => x.SectionId == sectionId);
 		}

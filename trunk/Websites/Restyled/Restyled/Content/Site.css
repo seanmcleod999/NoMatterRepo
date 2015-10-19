@@ -1,0 +1,333 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+ 
+    font-size:medium;
+    font-family: 'Muli', sans-serif;
+    color: gray;
+    
+    margin: 0;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right:auto;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+h1 {
+    font-family: inherit;
+    font-weight: bold;
+    color: #555555;
+    font-size: 24px;
+}
+
+h2 {
+    font-family: inherit;
+    font-weight: bold;
+    color: #555555;
+    font-size: 20px;
+}
+
+h2 {
+    font-family: inherit;
+    font-weight: bold;
+    color: #555555;
+    font-size: 18px;
+}
+
+/* General Stuff
+-----------------------------------------------------------*/
+.PageNavigationBar {
+    padding: 5px 0 15px 0;
+}
+
+/*.siteButton {
+    border-radius:20px;
+    border-color: #7c7c7c;
+    border-style: solid;
+    border-width: 2px;
+	padding:4px 20px;
+    text-decoration: none;
+    background-color:black;
+    color: white;
+
+}*/
+
+
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+    cursor: pointer;
+    -webkit-appearance: button;
+}
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-color: #ccc;
+}
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.428571429;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.form-control {
+display: block;
+width: 100%;
+height: 34px;
+padding: 6px 12px;
+font-size: 14px;
+line-height: 1.428571429;
+color: #555;
+vertical-align: middle;
+background-color: #fff;
+border: 1px solid #ccc;
+border-radius: 4px;
+-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+-webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+select {
+font-family: inherit;
+font-size: inherit;
+border: 1px solid #A9A9A9;
+padding: 5px 1px 5px 1px;
+}
+
+input[type="text"]
+{
+    padding: 5px 1px 5px 1px;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input[type="password"]
+{
+    padding: 5px 1px 5px 1px;
+    font-family: inherit;
+    font-size: inherit;
+    border: 1px solid #A9A9A9;
+}
+
+input:not([type]), input[type="text"]
+{
+    padding: 5px 1px 5px 1px;
+    font-family: inherit;
+    font-size: inherit;
+    border: 1px solid #A9A9A9;
+}
+
+textarea {
+    border: 1px solid #A9A9A9;
+}
+
+.editor-label {
+margin: 0.6em 0 0 0;
+}
+
+/* View Shop Products
+-----------------------------------------------------------*/
+.ShopProduct {
+    display: inline-block;
+    padding: 5px 5px;
+}
+
+/*.ShopProduct img{
+    width: 150px;
+    padding: 0 0px;
+}*/
+
+
+
+.ShopProductImage{
+    position: relative;
+}
+
+.ShopRelatedProduct {
+   display: inline-block
+}
+
+.ShopProductSold
+{
+    position:absolute;
+    top: 100px;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+
+     background-image:url('images/soldLayer2.png'); 
+     width:100px;   
+     text-align: center;     
+     border-radius: 150px;
+      height: 100px
+}
+
+.ShopProductSoldText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;  
+     line-height: 100px;    
+}
+
+.ShopProductReserved
+{
+    position:absolute;
+    top: 100px;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+
+    background-image:url('images/reservedLayer.png'); 
+    width:100px;   
+    text-align: center;     
+    border-radius: 150px;
+    height: 100px;
+    
+}
+
+.ShopProductReservedText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;
+     line-height: 100px;   
+}
+
+.ShopProductSale
+{
+     position: absolute; top: 0px; left: 0px;
+     width:50px;
+     height:50px; 
+     background-image:url('images/SaleLayer2.png');
+     background-repeat:no-repeat; 
+   
+}
+
+/* View Shop Product
+-----------------------------------------------------------*/
+
+.ViewShopProductImageWrapper {
+    
+}
+
+.ViewShopProductMainImage {
+    
+}
+
+.ViewShopProductThumbnailImages {
+
+    padding: 4px 0;
+    
+}
+
+
+.ShopRelatedProduct {
+   display: inline-block
+}
+
+.ShopRelatedProduct img{
+    padding: 0 5px;
+}
+
+.RelatedProductsWrapper {
+    margin: 10px 0;
+    border-top-width:1px;
+     border-top-color:gainsboro;
+     border-top-style: solid; 
+}
+
+
+/* Table grids
+-----------------------------------------------------------*/
+
+
+.table_grid
+{
+    border-collapse:collapse;
+}
+.table_grid, .table_grid th, .table_grid td
+{
+border-bottom: 0px solid #E8E8E8;
+}
+
+.table_grid tr:nth-child(even) {
+    background-color: #F4F4F4;
+}
+
+.table_grid tr:nth-child(odd) {
+    background-color: #EFEFEF;
+}
+
+.table_grid td, .table_grid th {
+    padding: 5px;
+}
+
+.table_grid th
+{
+  color: white;
+  text-align: left;
+  background-color: #00A99D;    
+}
+
+.table_grid th a
+{
+    text-decoration: none;    
+}
+
+/* Links
+-----------------------------------------------------------*/
+
+a.BackLink:link, a.BackLink:visited,  a.BackLink:hover,  a.BackLink:active 
+{
+    margin: 0px 0px 0px 0px;
+    background:url(images/icon_back.png) left center no-repeat;
+    background-size: 18px 18px;
+    padding:  0.2em 0.3em 0.2em 1.6em;
+    text-decoration: none;
+    font-weight: normal; 
+}
+
+a.AddLink:link, a.AddLink:visited,  a.AddLink:hover,  a.AddLink:active 
+{
+    margin: 0px 0px 0px 0px;
+    background:url(images/icon_add.png) left center no-repeat;
+    background-size: 18px 18px;
+    padding:  0.2em 0.3em 0.2em 1.6em;
+    text-decoration: none;
+    font-weight: normal; 
+}

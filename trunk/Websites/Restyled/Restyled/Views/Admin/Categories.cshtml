@@ -1,0 +1,87 @@
+﻿@model NoMatterWebApiModels.ViewModels.SectionCategoriesVm
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.Title = "Categories";
+}
+
+<h1>Categories for @Model.Section.SectionName</h1>
+
+<div class="PageNavigationBar">
+@Html.ActionLink("add category", "CategoryAdd", "Admin", new { sectionId = @Model.Section.SectionId }, new { @class = "AddLink" })
+&nbsp;    
+@Html.ActionLink("back to sections", "Sections", "Admin", new { clientId = Model.Section.ClientId}, new { @class = "BackLink" })
+</div>
+
+<table class="table_grid">
+    <tr>
+        <th>
+            Category
+        </th>
+        <th>
+            Order
+        </th>
+        <th>
+            Hidden
+        </th>
+        <th>
+            Products
+        </th>
+         <th>
+            Visible Products
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+
+@foreach (var category in Model.Categories)
+{
+    <tr>
+        
+        <td>
+            @category.CategoryName
+        </td>
+        <td>
+            @category.CategoryOrder
+        </td>
+        <td>
+             @Html.DisplayFor(modelItem => category.Hidden)
+        </td>
+        <td>
+            @category.FullProductCount
+        </td>
+        <td>
+            @category.VisibleProductCount
+        </td>
+        <td>
+            @Html.ActionLink("edit", "CategoryEdit", "Admin", new { categoryId = @category.CategoryId }, null)
+        </td>
+        <td>
+            @if (!category.Conditional && category.FullProductCount == 0)
+            {
+                @Html.ActionLink("delete", "CategoryDelete", "Admin", new { categoryId = @category.CategoryId, sectionId = @Model.Section.SectionId }, new { onclick = "return confirm('Are you sure you wish to delete this category? Note that you can only delete categories that have no products.');" })
+            }
+            
+        </td>
+        <td>
+            @if (!category.Conditional)
+            {
+                @Html.ActionLink("get products", "CategoryProducts", "Admin", new {categoryId = @category.CategoryId}, null)
+            }
+        </td>
+       
+    </tr>
+    
+    
+}
+     
+</table>
+

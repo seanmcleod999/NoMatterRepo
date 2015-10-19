@@ -86,11 +86,15 @@
         <td>
             @Html.ActionLink("pages", "ClientPages", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
-        
+
         <td>
-            @Html.ActionLink("settings", "ClientSettings", "Admin", new { clientUuid = @client.ClientUuid }, null)
+            @Html.ActionLink("settings", "ClientSettings", "Admin", new {clientUuid = @client.ClientUuid}, null)
         </td>
-       
+
+        <td>
+            @Html.ActionLink("users", "ClientUsers", "Admin", new { clientUuid = @client.ClientUuid }, null)
+        </td>
+
     </tr>
     
     

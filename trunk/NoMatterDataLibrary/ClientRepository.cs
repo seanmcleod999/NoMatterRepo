@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using NoMatterDataLibrary.Enums;
 using NoMatterDataLibrary.Extensions;
@@ -12,11 +13,12 @@ using ClientPaymentType = NoMatterWebApiModels.Models.ClientPaymentType;
 using ClientDeliveryOption = NoMatterWebApiModels.Models.ClientDeliveryOption;
 using ClientPage = NoMatterWebApiModels.Models.ClientPage;
 
+
 namespace NoMatterDataLibrary
 {
 	public interface IClientRepository
 	{
-		Task<int> AddClientAsync(Client client);
+		Task<string> AddClientAsync(Client client);
 		Task<Client> GetClientAsync(int clientId);
 		Task<Client> GetClientAsync(Guid clientUuid);
 		Task<List<Client>> GetClientsAsync();
@@ -41,12 +43,14 @@ namespace NoMatterDataLibrary
 
 		Task<string> GetClientStringSettingsAsync(Guid clientUuid, SettingEnum setting);
 		Task<int> GetClientIntSettingsAsync(Guid clientUuid, SettingEnum settingName);
+
+		Task AddClientDefaultAdminUserAsync(Guid clientUuid, string domainName, byte[] password);
 	}
 
 	public class ClientRepository : IClientRepository
 	{
 
-		public async Task<int> AddClientAsync(Client client)
+		public async Task<string> AddClientAsync(Client client)
 		{
 			using (var mainDb = new DatabaseEntities())
 			{
@@ -56,7 +60,7 @@ namespace NoMatterDataLibrary
 				mainDb.Clients.Add(clientDb);
 				await mainDb.SaveChangesAsync();
 
-				return clientDb.ClientId;
+				return clientDb.ClientUUID.ToString();
 			}
 		}
 
@@ -70,6 +74,7 @@ namespace NoMatterDataLibrary
 				clientDb.ClientName = client.ClientName;
 				clientDb.SiteUrl = client.SiteUrl;
 				clientDb.Enabled = client.Enabled;
+				clientDb.Logo = client.Logo;
 
 				await mainDb.SaveChangesAsync();
 			}
@@ -380,6 +385,43 @@ namespace NoMatterDataLibrary
 				return clientSetting.IntValue.Value;
 			}
 			
+		}
+
+		public async Task AddClientDefaultAdminUserAsync(Guid clientUuid, string domainName, byte[] password)
+		{ 
+			using (var mainDb = new DatabaseEntities())
+			{
+				var client = mainDb.Clients.FirstOrDefault(x => x.ClientUUID == clientUuid);
+
+				var email = "admin@" + domainName;
+
+				var user = mainDb.Users.Create();
+
+				user.Client = client;
+				user.UserUUID = Guid.NewGuid();
+				user.Identifier = email;
+				user.Email = email;
+				user.CredentialTypeId = 1;
+				user.FullName = "Administrator";
+				user.DateAdded = DateTime.Now;
+				user.DateUpdated = DateTime.Now;
+				user.Password = password;
+
+				user.UserRoles = new List<UserRole> {new UserRole() {RoleId = 1}};
+
+				mainDb.Users.Add(user);
+
+				await mainDb.SaveChangesAsync();
+
+				//var userRole = mainDb.UserRoles.Create();
+
+				//userRole.User = user;
+				//userRole.RoleId = 1; //admin role
+
+				//mainDb.UserRoles.Add(userRole);
+
+			}
+
 		}
 	}
 }

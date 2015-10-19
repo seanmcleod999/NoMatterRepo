@@ -12,7 +12,9 @@ namespace NoMatterDataLibrary.Extensions
 				ClientName = client.ClientName,
 				Enabled = client.Enabled,
 				Logo = client.Logo,
-				SiteUrl = client.SiteUrl
+				SiteUrl = client.SiteUrl,
+				DomainName = client.DomainName,
+				FacebookAppId = client.FacebookAppId
 			};
 		}
 
@@ -23,7 +25,8 @@ namespace NoMatterDataLibrary.Extensions
 				ClientName = client.ClientName,
 				Enabled = client.Enabled,
 				Logo = client.Logo,
-				SiteUrl = client.SiteUrl
+				SiteUrl = client.SiteUrl,
+				DomainName = client.DomainName
 			};
 		}
 	}

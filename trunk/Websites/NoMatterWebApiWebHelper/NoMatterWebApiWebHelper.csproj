@@ -83,6 +83,7 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="OtherHelpers\ClientSectionsStaticCache.cs" />
     <Compile Include="OtherHelpers\ClientSectionsCategoriesStaticCache.cs" />
+    <Compile Include="OtherHelpers\ClientStaticCache.cs" />
     <Compile Include="OtherHelpers\CurrentUser.cs" />
     <Compile Include="OtherHelpers\GeneralHelper.cs" />
     <Compile Include="OtherHelpers\PayfastHelper.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="WebApiService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NoMatterWebApiModels\NoMatterWebApiModels.csproj">
+    <ProjectReference Include="..\..\NoMatterWebApiShared\NoMatterWebApiShared.csproj">
       <Project>{61b3d61b-1ef7-4553-99f3-9ecf07a087ab}</Project>
       <Name>NoMatterWebApiModels</Name>
     </ProjectReference>

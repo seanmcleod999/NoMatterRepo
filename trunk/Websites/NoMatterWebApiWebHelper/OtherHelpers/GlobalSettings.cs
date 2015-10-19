@@ -75,7 +75,10 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public string SiteClientId { get { return ConfigurationManager.AppSettings["SiteClientId"]; } }
 		public string DefaultSectionName { get { return ConfigurationManager.AppSettings["DefaultSectionName"]; } }
 
-		public string SiteName { get { return StaticGlobalSettings.SiteName; } }
+		//public string ClientName { get { return StaticGlobalSettings.ClientName; } }
+		//public string SiteUrl { get { return StaticGlobalSettings.SiteUrl; } }
+
+		public string SiteName { get { return StaticGlobalSettings.ClientName; } }
 		public string SiteUrl { get { return StaticGlobalSettings.SiteUrl; } }
 
 		public string PayfastPaymentMode { get { return ConfigurationManager.AppSettings["PayfastPaymentMode"]; } }

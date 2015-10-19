@@ -10,10 +10,17 @@
 
 Client: <b>@Model.Client.ClientName</b><br/>
 <br/>
+@if (Model.FromCreateClient)
+{
+    <div class="InfoMessage">
+    Client was successfully created. Please edit default setting for the client.
+    </div>
+    <br/>
+}
 <div class="PageNavigationBar">
 @*@Html.ActionLink("add setting", "ClientSettingAdd", "Admin", new { clientId = @Model.Client.ClientUuid }, new { @class = "AddLink" })
     &nbsp; *@
-@Html.ActionLink("add missing settings", "ClientSettingAddMissing", "Admin", new { clientId = @Model.Client.ClientUuid }, new { @class = "AddLink" })
+@Html.ActionLink("add missing settings", "ClientSettingAddMissing", "Admin", new { clientUuid = @Model.Client.ClientUuid }, new { @class = "AddLink" })
 &nbsp; 
     @if (User.IsInRole("SuperUser"))
 {   
@@ -76,7 +83,7 @@ else
         </td>      
               
         <td>
-            @Html.ActionLink("edit", "ClientSettingEdit", "Admin", new { clientId = @Model.Client.ClientUuid, clientSettingId = @clientSetting.ClientSettingId }, null)
+            @Html.ActionLink("edit", "ClientSettingEdit", "Admin", new { clientUuid = @Model.Client.ClientUuid, clientSettingId = @clientSetting.ClientSettingId }, null)
         </td>
         
       @*   <td>
