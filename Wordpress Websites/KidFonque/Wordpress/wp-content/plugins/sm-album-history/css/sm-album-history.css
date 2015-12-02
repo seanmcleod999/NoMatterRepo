@@ -1,0 +1,89 @@
+/* 
+
+Copyright (C) 2012 Sean Mcleod
+SM Gig Calendar is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+MF Gig Calendar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+*/
+
+#ArchiveAlbum{
+    
+   padding: 10px 0 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e6e6e6;
+
+}
+
+#ArchiveAlbumCoverPicture {
+    float: left;
+    max-width: 250px;
+    padding-right:  20px;
+    padding-bottom:  10px
+}
+
+#ArchiveAlbumCoverPicture img {
+   
+    max-width: 100%;
+    width: 100%;
+    height: auto
+}
+
+#ArchiveAlbumInformation {
+  display: inline-block;
+    max-width: 350px;
+
+}
+
+#SingleAlbumTop{
+  display: block;
+  padding-bottom:  20px
+ 
+}
+#SingleAlbumBottom {
+  display: block;
+ 
+}
+
+#ArchiveAlbumInformation span{
+    display: block;
+}
+
+#ArchiveAlbumInformation span.AlbumArtist{
+    font-weight: bold;
+}
+
+
+div.widget_sm_album_history_latest_album_widget img{
+    
+    width:100%;
+    max-width: 250px;
+    height: auto;
+    display: block;
+    margin:auto;
+}
+
+div.widget_sm_album_history_latest_album_widget span.albumtitle{
+    
+font-weight: bold;
+}
+
+div.widget_sm_album_history_latest_album_widget{
+    background-color: #e6e6e6;
+    padding: 10px;
+    margin-bottom: 15px;
+     border-radius:10px;
+}
+
+
+

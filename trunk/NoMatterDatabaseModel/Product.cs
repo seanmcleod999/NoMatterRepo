@@ -45,11 +45,18 @@ namespace NoMatterDatabaseModel
         public string ProductShortUrl { get; set; }
         public System.DateTime ReleaseDate { get; set; }
         public System.DateTime DateCreated { get; set; }
+        public int ClientId { get; set; }
+        public Nullable<int> SupplierId { get; set; }
+        public short ProductTypeId { get; set; }
+        public Nullable<short> QuantityRemaining { get; set; }
     
         public virtual ICollection<CartProduct> CartProducts { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<ProductKeyword> ProductKeywords { get; set; }
         public virtual ICollection<DiscountProduct> DiscountProducts { get; set; }
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
+        public virtual Client Client { get; set; }
+        public virtual ProductType ProductType { get; set; }
+        public virtual Supplier Supplier { get; set; }
     }
 }

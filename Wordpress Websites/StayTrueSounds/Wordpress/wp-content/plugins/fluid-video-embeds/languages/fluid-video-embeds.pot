@@ -1,0 +1,105 @@
+# Loco Gettext template
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Fluid Video Embeds\n"
+"Report-Msgid-Bugs-To: Jamie Hamel-Smith\n"
+"POT-Creation-Date: Fri, 14 Feb 2014 04:25:18 +0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz\n"
+"X-Poedit-SourceCharset: UTF-8"
+
+#: Center
+msgid "Center"
+msgstr ""
+
+#: Left
+msgid "Left"
+msgstr ""
+
+#: Right
+msgid "Right"
+msgstr ""
+
+#: Settings
+msgid "Settings"
+msgstr ""
+
+#: container-alignment
+msgid "Container Alignment"
+msgstr ""
+
+#: erase-this-field-and-save-the-settings-to-reset
+msgid "Erase this field and save the settings to reset."
+msgstr ""
+
+#: fluid-video-embeds
+msgid "Fluid Video Embeds"
+msgstr ""
+
+#: http-jamie3d-com
+msgid "http://jamie3d.com"
+msgstr ""
+
+#: http-wordpress-org-extend-plugins-fluid-video-embe
+msgid "http://wordpress.org/extend/plugins/fluid-video-embeds/"
+msgstr ""
+
+#: if-the-width-is-smaller-how-should-the-video-be-al
+msgid "If the width is smaller, how should the video be aligned?"
+msgstr ""
+
+#: jamie3d
+msgid "jamie3d"
+msgstr ""
+
+#: makes-your-youtube-and-vimeo-auto-embeds-fluid-ful
+msgid "Makes your YouTube and Vimeo auto-embeds fluid/full width."
+msgstr ""
+
+#: max-width
+msgid "Max width:"
+msgstr ""
+
+#: maximum-width
+msgid "Maximum Width"
+msgstr ""
+
+#: media-query
+msgid "Media Query:"
+msgstr ""
+
+#: responsive-hyperlink-options
+msgid "Responsive Hyperlink Options"
+msgstr ""
+
+#: save-changes
+msgid "Save Changes"
+msgstr ""
+
+#: set-this-to-x0x-for-no-max-width-otherwise-use-pix
+msgid ""
+"Set this to %1$s0%2$s for no max width. Otherwise, use pixels, or ems. (eg: "
+"%1$s500px%2$s or %1$s22em%2$s)"
+msgstr ""
+
+#: the-responsive-hyperlink-option-will-swap-the-vide
+msgid ""
+"The Responsive Hyperlink option will swap the video iFrame with a simple "
+"hyperlink to the video URL (if the screen is smaller than the specified "
+"breakpoint). On mobile and handheld devices, it is often a better experience to "
+"watch the video in the native application or media player. This option tries to "
+"enable that better experience. When this option is enabled, the video will show "
+"up as a hyperlinked image instead of an actual video player."
+msgstr ""
+
+#: use-responsive-hyperlink
+msgid "Use Responsive Hyperlink?"
+msgstr ""

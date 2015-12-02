@@ -28,21 +28,33 @@ namespace NoMatterDataLibrary
 
 		public async Task<int> AddOrderAsync(Order order)
 		{
-			//var orderDb = order.ToOrderDatabase();
+			var orderDb = order.ToDatabaseOrder();
 
 			using (var mainDb = new DatabaseEntities())
 			{
 
-				//orderDb.DateCreated = DateTime.Now;
-				//orderDb.Paid = false;
+				orderDb.DateCreated = DateTime.Now;
+				orderDb.Paid = false;
 
-				//mainDb.Orders.Add(orderDb);
+				orderDb.UserId = order.User.UserId;
 
-				//await mainDb.SaveChangesAsync();
+				mainDb.Orders.Add(orderDb);
 
-				//return orderDb.OrderId;
+				foreach (var orderProduct in order.Products)
+				{
+					var orderProductDb = mainDb.OrderProducts.Create();
 
-				return 0;
+					orderProductDb.Order = orderDb;
+					orderProductDb.ProductId = orderProduct.ProductId;
+
+					mainDb.OrderProducts.Add(orderProductDb);
+				}
+
+
+				await mainDb.SaveChangesAsync();
+
+				return orderDb.OrderId;
+
 			}
 		}
 
@@ -54,7 +66,8 @@ namespace NoMatterDataLibrary
 				                    .Include(x => x.PaymentType1)
 				                    .Include("OrderProducts")
 				                    .Include("OrderProducts.Product")
-				                    .Include("User").Where(x => x.OrderId == orderId).SingleOrDefaultAsync();
+				                    .Include("User")
+									.Include("User.Client").Where(x => x.OrderId == orderId).SingleOrDefaultAsync();
 
 				return orderDb.ToDomainOrder();
 

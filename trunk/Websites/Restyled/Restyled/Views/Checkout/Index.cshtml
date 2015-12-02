@@ -1,0 +1,222 @@
+﻿@model NoMatterWebApiModels.ViewModels.CheckoutVm
+
+@{
+    ViewBag.Title = "Checkout";
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Checkout</h1>
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+       
+    
+    <fieldset class="account form-wrapper" id="edit-account">
+        <legend>
+            <span class="fieldset-legend">Account information</span>
+        </legend>
+                              
+        <br/>
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.Email, new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.Email, new {@class = "form-control", placeholder = "", autofocus = true})
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.Email)
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="form-horizontal">
+            <div class="form-group">
+
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="checkbox" id="createAccountChk" name="createAccountChk" value="True"> Create account<br>
+                </div>
+            </div>
+        </div>
+
+        <div id="userCheckoutPassword" class="autoUpdate" style="display:none">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Password, new {@class = "form-control", placeholder = "", autofocus = true})
+                    </div>
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </fieldset>   
+    
+    <br/>   <br/> 
+    
+    <fieldset class="account form-wrapper" id="edit-billing">
+        <legend>
+            <span class="fieldset-legend">Billing information</span>
+        </legend> 
+        <br/>
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.ContactNumber, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.ContactNumber, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.ContactNumber)
+                </div>
+            </div>
+         
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.Fullname, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.Fullname, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.Fullname)
+                </div>
+            </div>
+           
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.Address, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.Address, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.Address)
+                </div>
+            </div>
+        
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.Suburb, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.Suburb, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.Suburb)
+                </div>
+            </div>
+       
+         
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.City, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.City, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.City)
+                </div>
+            </div>
+         
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.Province, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.User.Province, new SelectList(Model.Provinces, "Value", "Text"), "-- Please Select --", new { @class = "form-control", placeholder = "Email", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.Province)
+                </div>
+            </div>
+  
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.Country, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.Country, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.Country)
+                </div>
+            </div>      
+        
+            <div class="form-group">
+                @Html.LabelFor(m => m.User.PostalCode, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.User.PostalCode, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.User.PostalCode)
+                </div>
+            </div> 
+            <br/>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button onclick="submitForm()" class="btn btn-default">Continue to next step</button>
+                    <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
+                </div>
+            </div>     
+        </div>       
+    </fieldset>
+}
+   
+<br/>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function() {
+        $('#createAccountChk').change(function () {
+            if (this.checked) {
+                $('#userCheckoutPassword').fadeIn('slow');
+            } else {
+                $('#userCheckoutPassword').fadeOut('slow');
+            }
+        });
+    });
+
+
+$(function()
+    { 
+        //$("#User_Email").change(function () {
+          
+        //    //try and get the users details and update the textboxes from the response
+
+        //    var serviceUrl = "http://localhost/NoMatterApi/api/v1/client/" + clientId + "/users/sean@dm.co.za";
+
+        //    $.ajax({
+        //        type: "GET",
+        //        url: serviceUrl
+        //    }).done(function (data) {
+        //        alert(data.User.ContactNumber);
+        //        $("#User_ContactNumber").val(data.User.ContactNumber);
+        //    }).error(function (jqXHR, textStatus, errorThrown) {
+        //        alert(jqXHR.responseText || textStatus);
+        //        //$('#value1').text(jqXHR.responseText || textStatus);
+        //    });
+          
+        //});
+      
+        function successFunc(data, status) {
+            alert(data);
+          
+            //Update the texboxes with the data         
+        }
+
+        function errorFunc() {
+            alert('error');
+        }
+         
+
+    });
+  
+    $("#User_Country").attr("readOnly", true);
+  
+    function submitForm() {
+      
+        if ($("form").valid()) {
+          
+            $(".loader").show();      
+            $('form').submit();
+        } 
+    }
+</script>

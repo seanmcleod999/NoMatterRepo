@@ -7,6 +7,8 @@ namespace NoMatterWebApiModels.Models
 {
 	public class Client
 	{
+		public int ClientId { get; set; }
+
 		public string ClientUuid { get; set; }
 
 		public string ClientName { get; set; }
@@ -19,7 +21,7 @@ namespace NoMatterWebApiModels.Models
 
 		public string DomainName { get; set; }
 
-		public string FacebookAppId { get; set; }
+		//public string FacebookAppId { get; set; }
 
 	}
 }

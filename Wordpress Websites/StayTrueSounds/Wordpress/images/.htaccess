@@ -1,0 +1,10 @@
+
+# Added 20140922
+<IfModule mod_php5.c>
+php_flag engine off
+</IfModule>
+Options -ExecCGI 
+<Files ~ "\.php.*">
+  Order deny,allow
+  Deny from all
+</Files>

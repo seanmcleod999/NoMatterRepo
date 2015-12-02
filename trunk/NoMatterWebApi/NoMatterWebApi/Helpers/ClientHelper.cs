@@ -37,6 +37,11 @@ namespace NoMatterWebApi.Helpers
 			return await clientRepository.GetClientStringSettingsAsync(clientUuid, SettingEnum.SiteNameFriendly);
 		}
 
+		public static async Task<string> GetClientSetting(IClientRepository clientRepository, Guid clientUuid, SettingEnum setting)
+		{
+			return await clientRepository.GetClientStringSettingsAsync(clientUuid, setting);
+		}
+
 		public static async Task ClientSettingsAddMissing(IClientRepository clientRepository, Guid clientUuid)
 		{
 			var client = await clientRepository.GetClientAsync(clientUuid);

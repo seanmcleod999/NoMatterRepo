@@ -43,5 +43,9 @@ namespace NoMatterWebApiModels.ViewModels
 
 		public UserModel User { get; set; }
 
+		public bool CreateAccount { get; set; }
+
+		public string Password { get; set; }
+
 	}
 }

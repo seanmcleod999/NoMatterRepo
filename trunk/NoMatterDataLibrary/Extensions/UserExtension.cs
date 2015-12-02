@@ -15,7 +15,8 @@ namespace NoMatterDataLibrary.Extensions
 			return new NoMatterWebApiModels.Models.User()
 			{
 				Client = user.Client != null ? user.Client.ToDomainClient() : null,
-				UserId = user.UserUUID.ToString(),
+				UserId = user.UserId,
+				UserUuid = user.UserUUID.ToString(),
 				Password = user.Password,
 				Email = user.Email,
 				Fullname=user.FullName,
@@ -35,11 +36,18 @@ namespace NoMatterDataLibrary.Extensions
 		{
 			return new NoMatterDatabaseModel.User
 			{
+				ClientId = user.Client.ClientId,
 				FullName = user.Fullname,
 				Email = user.Email,
 				Identifier = user.Identifier,
 				CredentialTypeId = user.CredentialTypeId,
 				Password = user.Password,
+				ContactNumber = user.ContactNumber,
+				Address = user.Address,
+				Suburb = user.Suburb,
+				City = user.City,
+				Country = user.Country,
+				PostalCode = user.PostalCode
 			};
 		}
 	}

@@ -51,5 +51,13 @@ namespace NoMatterDatabaseModel
         public virtual DbSet<SettingType> SettingTypes { get; set; }
         public virtual DbSet<ClientEmail> ClientEmails { get; set; }
         public virtual DbSet<EmailEvent> EmailEvents { get; set; }
+        public virtual DbSet<ProductType> ProductTypes { get; set; }
+        public virtual DbSet<Supplier> Suppliers { get; set; }
+        public virtual DbSet<Thing> Things { get; set; }
+        public virtual DbSet<ThingField> ThingFields { get; set; }
+        public virtual DbSet<ThingFieldValue> ThingFieldValues { get; set; }
+        public virtual DbSet<ThingAlert> ThingAlerts { get; set; }
+        public virtual DbSet<ThingAlertFrequency> ThingAlertFrequencies { get; set; }
+        public virtual DbSet<ThingAlertType> ThingAlertTypes { get; set; }
     }
 }

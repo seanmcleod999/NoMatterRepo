@@ -11,7 +11,7 @@
     
     <meta property="fb:app_id" content="@StaticGlobalSettings.FacebookAppId"/>
 
-    <link rel="SHORTCUT ICON" href="~/Content/images/icon.ico" />
+    <link rel="SHORTCUT ICON" href="~/favicon.ico" />
     
      @*GOOGLE FONT*@
      <link href='http://fonts.googleapis.com/css?family=Muli:300' rel='stylesheet' type='text/css'>
@@ -21,6 +21,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+     @Scripts.Render("~/bundles/jqueryval")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -46,21 +47,24 @@
                     }
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Faqs", "Faq", "Home")</li>
+                    <li>@Html.ActionLink("View Cart", "ViewCart", "Cart")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - @StaticGlobalSettings.ClientName</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    @RenderBody()
+  
+
+</div>
+
+     <footer class="footer-main">
+        <p>&copy; @DateTime.Now.Year - @StaticGlobalSettings.ClientName</p>
+     </footer>
 
 
-    @Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -25,6 +25,8 @@ namespace NoMatterDatabaseModel
             this.ClientPages = new HashSet<ClientPage>();
             this.ClientSettings = new HashSet<ClientSetting>();
             this.ClientEmails = new HashSet<ClientEmail>();
+            this.Products = new HashSet<Product>();
+            this.Suppliers = new HashSet<Supplier>();
         }
     
         public int ClientId { get; set; }
@@ -34,8 +36,6 @@ namespace NoMatterDatabaseModel
         public string Logo { get; set; }
         public string SiteUrl { get; set; }
         public string DomainName { get; set; }
-        public string FacebookAppId { get; set; }
-        public string FacebookAppSecret { get; set; }
     
         public virtual ICollection<Enquiry> Enquiries { get; set; }
         public virtual ICollection<ClientPaymentType> ClientPaymentTypes { get; set; }
@@ -46,5 +46,7 @@ namespace NoMatterDatabaseModel
         public virtual ICollection<ClientPage> ClientPages { get; set; }
         public virtual ICollection<ClientSetting> ClientSettings { get; set; }
         public virtual ICollection<ClientEmail> ClientEmails { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Supplier> Suppliers { get; set; }
     }
 }

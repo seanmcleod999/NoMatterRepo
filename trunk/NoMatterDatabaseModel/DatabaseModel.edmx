@@ -42,8 +42,6 @@
           <Property Name="Logo" Type="varchar" MaxLength="100" />
           <Property Name="SiteUrl" Type="varchar" MaxLength="100" />
           <Property Name="DomainName" Type="varchar" MaxLength="50" />
-          <Property Name="FacebookAppId" Type="varchar" MaxLength="50" />
-          <Property Name="FacebookAppSecret" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="ClientDeliveryOption">
           <Key>
@@ -190,13 +188,17 @@
             <PropertyRef Name="ProductId" />
           </Key>
           <Property Name="ProductId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="SupplierId" Type="int" />
+          <Property Name="ProductTypeId" Type="smallint" Nullable="false" />
           <Property Name="ProductUUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Title" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Description" Type="varchar(max)" />
           <Property Name="AdminNotes" Type="varchar" MaxLength="200" />
           <Property Name="Size" Type="varchar" MaxLength="20" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="QuantityRemaining" Type="smallint" />
           <Property Name="Hidden" Type="bit" Nullable="false" />
           <Property Name="Reserved" Type="bit" Nullable="false" />
           <Property Name="Sold" Type="bit" Nullable="false" />
@@ -220,6 +222,13 @@
           </Key>
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="Keyword" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductType">
+          <Key>
+            <PropertyRef Name="ProductTypeId" />
+          </Key>
+          <Property Name="ProductTypeId" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -266,6 +275,74 @@
           </Key>
           <Property Name="SettingTypeId" Type="tinyint" Nullable="false" />
           <Property Name="Type" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="SupplierId" />
+          </Key>
+          <Property Name="SupplierId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="20" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Thing">
+          <Key>
+            <PropertyRef Name="ThingId" />
+          </Key>
+          <Property Name="ThingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ThingName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ThingAlert">
+          <Key>
+            <PropertyRef Name="ThingAlertId" />
+          </Key>
+          <Property Name="ThingAlertId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ThingName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FieldName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ThingAlertTypeId" Type="smallint" Nullable="false" />
+          <Property Name="ThingAlertFrequencyId" Type="smallint" Nullable="false" />
+          <Property Name="Criteria" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
+          <Property Name="AlertSubject" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="AlertBody" Type="varchar(max)" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
+          <Property Name="LastAlertSent" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ThingAlertFrequency">
+          <Key>
+            <PropertyRef Name="ThingAlertFrequencyId" />
+          </Key>
+          <Property Name="ThingAlertFrequencyId" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ThingAlertType">
+          <Key>
+            <PropertyRef Name="ThingAlertTypeId" />
+          </Key>
+          <Property Name="ThingAlertTypeId" Type="smallint" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ThingField">
+          <Key>
+            <PropertyRef Name="ThingFieldId" />
+          </Key>
+          <Property Name="ThingFieldId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ThingId" Type="int" Nullable="false" />
+          <Property Name="FieldName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ThingFieldValue">
+          <Key>
+            <PropertyRef Name="ThingFieldValueId" />
+          </Key>
+          <Property Name="ThingFieldValueId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ThingFieldId" Type="int" Nullable="false" />
+          <Property Name="IntValue" Type="int" />
+          <Property Name="BoolValue" Type="bit" />
+          <Property Name="StringValue" Type="varchar" MaxLength="50" />
+          <Property Name="DateAdded" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -551,6 +628,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Product_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_ProductType">
+          <End Role="ProductType" Type="Self.ProductType" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductType">
+              <PropertyRef Name="ProductTypeId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ProductTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductKeyword_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -598,6 +711,66 @@
             </Principal>
             <Dependent Role="Setting">
               <PropertyRef Name="SettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Supplier_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Supplier">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ThingAlert_ThingAlertFrequency">
+          <End Role="ThingAlertFrequency" Type="Self.ThingAlertFrequency" Multiplicity="1" />
+          <End Role="ThingAlert" Type="Self.ThingAlert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThingAlertFrequency">
+              <PropertyRef Name="ThingAlertFrequencyId" />
+            </Principal>
+            <Dependent Role="ThingAlert">
+              <PropertyRef Name="ThingAlertFrequencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ThingAlert_ThingAlertType">
+          <End Role="ThingAlertType" Type="Self.ThingAlertType" Multiplicity="1" />
+          <End Role="ThingAlert" Type="Self.ThingAlert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThingAlertType">
+              <PropertyRef Name="ThingAlertTypeId" />
+            </Principal>
+            <Dependent Role="ThingAlert">
+              <PropertyRef Name="ThingAlertTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ThingField_Thing">
+          <End Role="Thing" Type="Self.Thing" Multiplicity="1" />
+          <End Role="ThingField" Type="Self.ThingField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingId" />
+            </Principal>
+            <Dependent Role="ThingField">
+              <PropertyRef Name="ThingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ThingFieldValue_ThingField">
+          <End Role="ThingField" Type="Self.ThingField" Multiplicity="1" />
+          <End Role="ThingFieldValue" Type="Self.ThingFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThingField">
+              <PropertyRef Name="ThingFieldId" />
+            </Principal>
+            <Dependent Role="ThingFieldValue">
+              <PropertyRef Name="ThingFieldId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -657,11 +830,19 @@
           <EntitySet Name="PaymentType" EntityType="Self.PaymentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductKeyword" EntityType="Self.ProductKeyword" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductType" EntityType="Self.ProductType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SettingCategory" EntityType="Self.SettingCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SettingType" EntityType="Self.SettingType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Thing" EntityType="Self.Thing" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ThingAlert" EntityType="Self.ThingAlert" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ThingAlertFrequency" EntityType="Self.ThingAlertFrequency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ThingAlertType" EntityType="Self.ThingAlertType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ThingField" EntityType="Self.ThingField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ThingFieldValue" EntityType="Self.ThingFieldValue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CartProduct_Product" Association="Self.FK_CartProduct_Product">
@@ -744,6 +925,18 @@
             <End Role="Category" EntitySet="Category" />
             <End Role="Product" EntitySet="Product" />
           </AssociationSet>
+          <AssociationSet Name="FK_Product_Client" Association="Self.FK_Product_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_ProductType" Association="Self.FK_Product_ProductType">
+            <End Role="ProductType" EntitySet="ProductType" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Supplier" Association="Self.FK_Product_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
           <AssociationSet Name="FK_ProductKeyword_Product" Association="Self.FK_ProductKeyword_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="ProductKeyword" EntitySet="ProductKeyword" />
@@ -759,6 +952,26 @@
           <AssociationSet Name="FK_Setting_SettingType" Association="Self.FK_Setting_SettingType">
             <End Role="SettingType" EntitySet="SettingType" />
             <End Role="Setting" EntitySet="Setting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Supplier_Client" Association="Self.FK_Supplier_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Supplier" EntitySet="Supplier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ThingAlert_ThingAlertFrequency" Association="Self.FK_ThingAlert_ThingAlertFrequency">
+            <End Role="ThingAlertFrequency" EntitySet="ThingAlertFrequency" />
+            <End Role="ThingAlert" EntitySet="ThingAlert" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ThingAlert_ThingAlertType" Association="Self.FK_ThingAlert_ThingAlertType">
+            <End Role="ThingAlertType" EntitySet="ThingAlertType" />
+            <End Role="ThingAlert" EntitySet="ThingAlert" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ThingField_Thing" Association="Self.FK_ThingField_Thing">
+            <End Role="Thing" EntitySet="Thing" />
+            <End Role="ThingField" EntitySet="ThingField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ThingFieldValue_ThingField" Association="Self.FK_ThingFieldValue_ThingField">
+            <End Role="ThingField" EntitySet="ThingField" />
+            <End Role="ThingFieldValue" EntitySet="ThingFieldValue" />
           </AssociationSet>
           <AssociationSet Name="FK_UserOrder_User" Association="Self.FK_UserOrder_User">
             <End Role="User" EntitySet="User" />
@@ -826,8 +1039,8 @@
           <NavigationProperty Name="ClientSettings" Relationship="DatabaseModel.FK_ClientSetting_Client1" FromRole="Client" ToRole="ClientSetting" />
           <NavigationProperty Name="ClientEmails" Relationship="DatabaseModel.FK_ClientEmail_Client" FromRole="Client" ToRole="ClientEmail" />
           <Property Name="DomainName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FacebookAppId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FacebookAppSecret" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Products" Relationship="DatabaseModel.FK_Product_Client" FromRole="Client" ToRole="Product" />
+          <NavigationProperty Name="Suppliers" Relationship="DatabaseModel.FK_Supplier_Client" FromRole="Client" ToRole="Supplier" />
         </EntityType>
         <EntityType Name="ClientPaymentType">
           <Key>
@@ -970,6 +1183,13 @@
           <NavigationProperty Name="ProductKeywords" Relationship="DatabaseModel.FK_ProductKeyword_Product" FromRole="Product" ToRole="ProductKeyword" />
           <NavigationProperty Name="DiscountProducts" Relationship="DatabaseModel.FK_DiscountProduct_Product" FromRole="Product" ToRole="DiscountProduct" />
           <NavigationProperty Name="OrderProducts" Relationship="DatabaseModel.FK_OrderProduct_Product" FromRole="Product" ToRole="OrderProduct" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="SupplierId" Type="Int32" />
+          <Property Name="ProductTypeId" Type="Int16" Nullable="false" />
+          <Property Name="QuantityRemaining" Type="Int16" />
+          <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_Product_Client" FromRole="Product" ToRole="Client" />
+          <NavigationProperty Name="ProductType" Relationship="DatabaseModel.FK_Product_ProductType" FromRole="Product" ToRole="ProductType" />
+          <NavigationProperty Name="Supplier" Relationship="DatabaseModel.FK_Product_Supplier" FromRole="Product" ToRole="Supplier" />
         </EntityType>
         <EntityType Name="ProductKeyword">
           <Key>
@@ -1330,6 +1550,46 @@
             <End Role="EmailEvent" EntitySet="EmailEvents" />
             <End Role="ClientEmail" EntitySet="ClientEmails" />
           </AssociationSet>
+          <EntitySet Name="ProductTypes" EntityType="DatabaseModel.ProductType" />
+          <EntitySet Name="Suppliers" EntityType="DatabaseModel.Supplier" />
+          <AssociationSet Name="FK_Product_Client" Association="DatabaseModel.FK_Product_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Supplier_Client" Association="DatabaseModel.FK_Supplier_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Supplier" EntitySet="Suppliers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_ProductType" Association="DatabaseModel.FK_Product_ProductType">
+            <End Role="ProductType" EntitySet="ProductTypes" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Supplier" Association="DatabaseModel.FK_Product_Supplier">
+            <End Role="Supplier" EntitySet="Suppliers" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <EntitySet Name="Things" EntityType="DatabaseModel.Thing" />
+          <EntitySet Name="ThingFields" EntityType="DatabaseModel.ThingField" />
+          <EntitySet Name="ThingFieldValues" EntityType="DatabaseModel.ThingFieldValue" />
+          <AssociationSet Name="FK_ThingField_Thing" Association="DatabaseModel.FK_ThingField_Thing">
+            <End Role="Thing" EntitySet="Things" />
+            <End Role="ThingField" EntitySet="ThingFields" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ThingFieldValue_ThingField" Association="DatabaseModel.FK_ThingFieldValue_ThingField">
+            <End Role="ThingField" EntitySet="ThingFields" />
+            <End Role="ThingFieldValue" EntitySet="ThingFieldValues" />
+          </AssociationSet>
+          <EntitySet Name="ThingAlerts" EntityType="DatabaseModel.ThingAlert" />
+          <EntitySet Name="ThingAlertFrequencies" EntityType="DatabaseModel.ThingAlertFrequency" />
+          <EntitySet Name="ThingAlertTypes" EntityType="DatabaseModel.ThingAlertType" />
+          <AssociationSet Name="FK_ThingAlert_ThingAlertFrequency" Association="DatabaseModel.FK_ThingAlert_ThingAlertFrequency">
+            <End Role="ThingAlertFrequency" EntitySet="ThingAlertFrequencies" />
+            <End Role="ThingAlert" EntitySet="ThingAlerts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ThingAlert_ThingAlertType" Association="DatabaseModel.FK_ThingAlert_ThingAlertType">
+            <End Role="ThingAlertType" EntitySet="ThingAlertTypes" />
+            <End Role="ThingAlert" EntitySet="ThingAlerts" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ProductKeyword_Product">
           <End Type="DatabaseModel.Product" Role="Product" Multiplicity="1" />
@@ -1601,6 +1861,188 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ProductType">
+          <Key>
+            <PropertyRef Name="ProductTypeId" />
+          </Key>
+          <Property Name="ProductTypeId" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Products" Relationship="DatabaseModel.FK_Product_ProductType" FromRole="ProductType" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="SupplierId" />
+          </Key>
+          <Property Name="SupplierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ContactNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Client" Relationship="DatabaseModel.FK_Supplier_Client" FromRole="Supplier" ToRole="Client" />
+          <NavigationProperty Name="Products" Relationship="DatabaseModel.FK_Product_Supplier" FromRole="Supplier" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_Product_Client">
+          <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DatabaseModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Supplier_Client">
+          <End Type="DatabaseModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DatabaseModel.Supplier" Role="Supplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Supplier">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_ProductType">
+          <End Type="DatabaseModel.ProductType" Role="ProductType" Multiplicity="1" />
+          <End Type="DatabaseModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductType">
+              <PropertyRef Name="ProductTypeId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ProductTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Supplier">
+          <End Type="DatabaseModel.Supplier" Role="Supplier" Multiplicity="0..1" />
+          <End Type="DatabaseModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Thing">
+          <Key>
+            <PropertyRef Name="ThingId" />
+          </Key>
+          <Property Name="ThingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ThingFields" Relationship="DatabaseModel.FK_ThingField_Thing" FromRole="Thing" ToRole="ThingField" />
+        </EntityType>
+        <EntityType Name="ThingField">
+          <Key>
+            <PropertyRef Name="ThingFieldId" />
+          </Key>
+          <Property Name="ThingFieldId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingId" Type="Int32" Nullable="false" />
+          <Property Name="FieldName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Thing" Relationship="DatabaseModel.FK_ThingField_Thing" FromRole="ThingField" ToRole="Thing" />
+          <NavigationProperty Name="ThingFieldValues" Relationship="DatabaseModel.FK_ThingFieldValue_ThingField" FromRole="ThingField" ToRole="ThingFieldValue" />
+        </EntityType>
+        <EntityType Name="ThingFieldValue">
+          <Key>
+            <PropertyRef Name="ThingFieldValueId" />
+          </Key>
+          <Property Name="ThingFieldValueId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingFieldId" Type="Int32" Nullable="false" />
+          <Property Name="IntValue" Type="Int32" />
+          <Property Name="StringValue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ThingField" Relationship="DatabaseModel.FK_ThingFieldValue_ThingField" FromRole="ThingFieldValue" ToRole="ThingField" />
+          <Property Name="BoolValue" Type="Boolean" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <Association Name="FK_ThingField_Thing">
+          <End Type="DatabaseModel.Thing" Role="Thing" Multiplicity="1" />
+          <End Type="DatabaseModel.ThingField" Role="ThingField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingId" />
+            </Principal>
+            <Dependent Role="ThingField">
+              <PropertyRef Name="ThingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ThingFieldValue_ThingField">
+          <End Type="DatabaseModel.ThingField" Role="ThingField" Multiplicity="1" />
+          <End Type="DatabaseModel.ThingFieldValue" Role="ThingFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThingField">
+              <PropertyRef Name="ThingFieldId" />
+            </Principal>
+            <Dependent Role="ThingFieldValue">
+              <PropertyRef Name="ThingFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ThingAlert">
+          <Key>
+            <PropertyRef Name="ThingAlertId" />
+          </Key>
+          <Property Name="ThingAlertId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FieldName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ThingAlertTypeId" Type="Int16" Nullable="false" />
+          <Property Name="ThingAlertFrequencyId" Type="Int16" Nullable="false" />
+          <Property Name="Criteria" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="AlertSubject" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AlertBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ThingAlertFrequency" Relationship="DatabaseModel.FK_ThingAlert_ThingAlertFrequency" FromRole="ThingAlert" ToRole="ThingAlertFrequency" />
+          <NavigationProperty Name="ThingAlertType" Relationship="DatabaseModel.FK_ThingAlert_ThingAlertType" FromRole="ThingAlert" ToRole="ThingAlertType" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastAlertSent" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="ThingAlertFrequency">
+          <Key>
+            <PropertyRef Name="ThingAlertFrequencyId" />
+          </Key>
+          <Property Name="ThingAlertFrequencyId" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ThingAlerts" Relationship="DatabaseModel.FK_ThingAlert_ThingAlertFrequency" FromRole="ThingAlertFrequency" ToRole="ThingAlert" />
+        </EntityType>
+        <EntityType Name="ThingAlertType">
+          <Key>
+            <PropertyRef Name="ThingAlertTypeId" />
+          </Key>
+          <Property Name="ThingAlertTypeId" Type="Int16" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ThingAlerts" Relationship="DatabaseModel.FK_ThingAlert_ThingAlertType" FromRole="ThingAlertType" ToRole="ThingAlert" />
+        </EntityType>
+        <Association Name="FK_ThingAlert_ThingAlertFrequency">
+          <End Type="DatabaseModel.ThingAlertFrequency" Role="ThingAlertFrequency" Multiplicity="1" />
+          <End Type="DatabaseModel.ThingAlert" Role="ThingAlert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThingAlertFrequency">
+              <PropertyRef Name="ThingAlertFrequencyId" />
+            </Principal>
+            <Dependent Role="ThingAlert">
+              <PropertyRef Name="ThingAlertFrequencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ThingAlert_ThingAlertType">
+          <End Type="DatabaseModel.ThingAlertType" Role="ThingAlertType" Multiplicity="1" />
+          <End Type="DatabaseModel.ThingAlert" Role="ThingAlert" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ThingAlertType">
+              <PropertyRef Name="ThingAlertTypeId" />
+            </Principal>
+            <Dependent Role="ThingAlert">
+              <PropertyRef Name="ThingAlertTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1638,8 +2080,6 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="DatabaseModel.Client">
               <MappingFragment StoreEntitySet="Client">
-                <ScalarProperty Name="FacebookAppSecret" ColumnName="FacebookAppSecret" />
-                <ScalarProperty Name="FacebookAppId" ColumnName="FacebookAppId" />
                 <ScalarProperty Name="DomainName" ColumnName="DomainName" />
                 <ScalarProperty Name="SiteUrl" ColumnName="SiteUrl" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
@@ -1753,6 +2193,10 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="DatabaseModel.Product">
               <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="QuantityRemaining" ColumnName="QuantityRemaining" />
+                <ScalarProperty Name="ProductTypeId" ColumnName="ProductTypeId" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="ProductUUID" ColumnName="ProductUUID" />
@@ -1920,6 +2364,89 @@
                 <ScalarProperty Name="DefaultTemplateName" ColumnName="DefaultTemplateName" />
                 <ScalarProperty Name="EventName" ColumnName="EventName" />
                 <ScalarProperty Name="EmailEventId" ColumnName="EmailEventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductTypes">
+            <EntityTypeMapping TypeName="DatabaseModel.ProductType">
+              <MappingFragment StoreEntitySet="ProductType">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ProductTypeId" ColumnName="ProductTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="DatabaseModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Things">
+            <EntityTypeMapping TypeName="DatabaseModel.Thing">
+              <MappingFragment StoreEntitySet="Thing">
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="ThingName" ColumnName="ThingName" />
+                <ScalarProperty Name="ThingId" ColumnName="ThingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ThingFields">
+            <EntityTypeMapping TypeName="DatabaseModel.ThingField">
+              <MappingFragment StoreEntitySet="ThingField">
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="ThingId" ColumnName="ThingId" />
+                <ScalarProperty Name="ThingFieldId" ColumnName="ThingFieldId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ThingFieldValues">
+            <EntityTypeMapping TypeName="DatabaseModel.ThingFieldValue">
+              <MappingFragment StoreEntitySet="ThingFieldValue">
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="BoolValue" ColumnName="BoolValue" />
+                <ScalarProperty Name="StringValue" ColumnName="StringValue" />
+                <ScalarProperty Name="IntValue" ColumnName="IntValue" />
+                <ScalarProperty Name="ThingFieldId" ColumnName="ThingFieldId" />
+                <ScalarProperty Name="ThingFieldValueId" ColumnName="ThingFieldValueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ThingAlerts">
+            <EntityTypeMapping TypeName="DatabaseModel.ThingAlert">
+              <MappingFragment StoreEntitySet="ThingAlert">
+                <ScalarProperty Name="LastAlertSent" ColumnName="LastAlertSent" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="AlertBody" ColumnName="AlertBody" />
+                <ScalarProperty Name="AlertSubject" ColumnName="AlertSubject" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Criteria" ColumnName="Criteria" />
+                <ScalarProperty Name="ThingAlertFrequencyId" ColumnName="ThingAlertFrequencyId" />
+                <ScalarProperty Name="ThingAlertTypeId" ColumnName="ThingAlertTypeId" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="ThingName" ColumnName="ThingName" />
+                <ScalarProperty Name="ThingAlertId" ColumnName="ThingAlertId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ThingAlertFrequencies">
+            <EntityTypeMapping TypeName="DatabaseModel.ThingAlertFrequency">
+              <MappingFragment StoreEntitySet="ThingAlertFrequency">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ThingAlertFrequencyId" ColumnName="ThingAlertFrequencyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ThingAlertTypes">
+            <EntityTypeMapping TypeName="DatabaseModel.ThingAlertType">
+              <MappingFragment StoreEntitySet="ThingAlertType">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ThingAlertTypeId" ColumnName="ThingAlertTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,0 +1,274 @@
+[20-Jun-2014 19:50:16 UTC] PHP Warning:  require(/home/kidfovih/public_html/wp-includes/load.php): failed to open stream: No such file or directory in /home/kidfovih/public_html/wp-settings.php on line 21
+[20-Jun-2014 19:50:16 UTC] PHP Fatal error:  require(): Failed opening required '/home/kidfovih/public_html/wp-includes/load.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/kidfovih/public_html/wp-settings.php on line 21
+[20-Jun-2014 20:14:51 UTC] PHP Warning:  mysql_connect(): Access denied for user 'wordpressuser150'@'localhost' (using password: YES) in /home/kidfovih/public_html/wp-includes/wp-db.php on line 1372
+[20-Jun-2014 20:16:39 UTC] PHP Warning:  mysql_connect(): Access denied for user 'wordpressuser150'@'localhost' (using password: YES) in /home/kidfovih/public_html/wp-includes/wp-db.php on line 1372
+[20-Jun-2014 20:16:53 UTC] PHP Strict Standards:  Declaration of c2c_ConfigureSMTP::options_page_description() should be compatible with C2C_Plugin_023::options_page_description($localized_heading_text = '') in /home/kidfovih/public_html/wp-content/plugins/configure-smtp/configure-smtp.php on line 47
+[20-Jun-2014 20:16:54 UTC] PHP Notice:  wp_specialchars is <strong>deprecated</strong> since version 2.8! Use esc_html() instead. in /home/kidfovih/public_html/wp-includes/functions.php on line 3078
+[20-Jun-2014 20:16:54 UTC] PHP Notice:  wp_specialchars is <strong>deprecated</strong> since version 2.8! Use esc_html() instead. in /home/kidfovih/public_html/wp-includes/functions.php on line 3078
+[20-Jun-2014 20:16:55 UTC] PHP Strict Standards:  Declaration of c2c_ConfigureSMTP::options_page_description() should be compatible with C2C_Plugin_023::options_page_description($localized_heading_text = '') in /home/kidfovih/public_html/wp-content/plugins/configure-smtp/configure-smtp.php on line 47
+[21-Jun-2014 12:43:19 UTC] PHP Warning:  scandir(C:\Users\sean\Documents\My Web Sites\Fid Fonque Live\wp-content\plugins\easy-instagram/cache/): failed to open dir: No such file or directory in /home/kidfovih/public_html/wp-content/plugins/easy-instagram/include/class-easy-instagram-cache.php on line 228
+[21-Jun-2014 12:43:19 UTC] PHP Warning:  scandir(): (errno 2): No such file or directory in /home/kidfovih/public_html/wp-content/plugins/easy-instagram/include/class-easy-instagram-cache.php on line 228
+[22-Jun-2014 14:51:16 UTC] PHP Warning:  scandir(C:\Users\sean\Documents\My Web Sites\Fid Fonque Live\wp-content\plugins\easy-instagram/cache/): failed to open dir: No such file or directory in /home/kidfovih/public_html/wp-content/plugins/easy-instagram/include/class-easy-instagram-cache.php on line 228
+[22-Jun-2014 14:51:16 UTC] PHP Warning:  scandir(): (errno 2): No such file or directory in /home/kidfovih/public_html/wp-content/plugins/easy-instagram/include/class-easy-instagram-cache.php on line 228
+[23-Jun-2014 12:44:00 UTC] PHP Warning:  scandir(C:\Users\sean\Documents\My Web Sites\Fid Fonque Live\wp-content\plugins\easy-instagram/cache/): failed to open dir: No such file or directory in /home/kidfovih/public_html/wp-content/plugins/easy-instagram/include/class-easy-instagram-cache.php on line 228
+[23-Jun-2014 12:44:00 UTC] PHP Warning:  scandir(): (errno 2): No such file or directory in /home/kidfovih/public_html/wp-content/plugins/easy-instagram/include/class-easy-instagram-cache.php on line 228
+[17-Aug-2014 19:53:09 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[17-Aug-2014 19:53:09 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[17-Aug-2014 19:53:09 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[17-Aug-2014 19:53:10 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:51 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:54 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:55 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:47:59 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:04 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:05 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:07 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:11 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:13 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[21-Sep-2014 22:48:17 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/plugin.php on line 622
+[26-Oct-2014 19:49:44 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[26-Oct-2014 19:49:44 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[26-Oct-2014 19:49:44 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[26-Oct-2014 19:49:45 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[04-May-2015 16:59:56 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[04-May-2015 16:59:56 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[04-May-2015 16:59:56 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[04-May-2015 17:00:06 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[04-May-2015 17:00:06 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[04-May-2015 17:00:37 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[04-May-2015 17:01:13 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 119
+[04-May-2015 17:02:13 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[04-May-2015 17:02:51 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[04-May-2015 17:02:51 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[04-May-2015 17:02:51 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[04-May-2015 17:02:51 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[04-May-2015 17:03:19 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[04-May-2015 17:03:19 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[04-May-2015 22:02:18 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[04-May-2015 22:02:19 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[04-May-2015 22:02:19 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[04-May-2015 22:02:23 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[04-May-2015 22:02:23 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[06-May-2015 10:15:46 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[06-May-2015 10:15:46 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 10:15:46 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 10:15:47 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[06-May-2015 10:15:47 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[06-May-2015 10:16:17 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[06-May-2015 10:16:47 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 119
+[06-May-2015 10:17:18 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[06-May-2015 10:17:49 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[06-May-2015 10:17:49 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[06-May-2015 10:17:49 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 10:17:49 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 10:17:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[06-May-2015 10:17:50 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[06-May-2015 10:18:20 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[06-May-2015 10:18:20 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[06-May-2015 10:18:20 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 10:18:20 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 10:18:21 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[06-May-2015 10:18:21 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[06-May-2015 11:23:38 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[06-May-2015 11:23:38 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 11:23:38 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 11:23:39 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[06-May-2015 11:23:39 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[06-May-2015 11:24:09 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[06-May-2015 11:24:40 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 119
+[06-May-2015 11:25:10 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[06-May-2015 11:25:41 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[06-May-2015 11:25:41 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[06-May-2015 11:25:41 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 11:25:41 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[06-May-2015 11:25:42 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[06-May-2015 11:25:42 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307
+[30-Jul-2015 19:35:24 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[30-Jul-2015 19:35:24 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[30-Jul-2015 19:35:24 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[30-Jul-2015 19:36:21 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[30-Jul-2015 19:37:17 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 119
+[30-Jul-2015 19:38:14 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 457
+[30-Jul-2015 19:39:11 UTC] PHP Warning:  An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>. (WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.) in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[30-Jul-2015 19:39:11 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[30-Jul-2015 19:39:11 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[30-Jul-2015 19:39:11 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[19-Aug-2015 10:16:46 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[19-Aug-2015 10:16:47 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[19-Aug-2015 10:16:47 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[19-Aug-2015 10:16:47 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 303
+[19-Aug-2015 10:16:47 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 307

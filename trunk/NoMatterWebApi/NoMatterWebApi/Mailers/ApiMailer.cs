@@ -8,12 +8,12 @@ namespace NoMatterWebApi.Mailers
 {
 	public class ApiMailer : MailerBase
 	{
-		private IGlobalSettings _globalSettings;
+		//private IGlobalSettings _globalSettings;
 
 		public ApiMailer()
 		{
 			MasterName = "_Layout";
-			_globalSettings = new GlobalSettings();
+			//_globalSettings = new GlobalSettings();
 		}
 
 		//public virtual MvcMailMessage RegisterUser(string emailAddress, string fullname)

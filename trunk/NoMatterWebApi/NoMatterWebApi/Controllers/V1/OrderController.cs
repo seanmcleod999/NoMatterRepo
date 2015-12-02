@@ -77,7 +77,7 @@ namespace NoMatterWebApi.Controllers.V1
 				var order = await _orderRepository.GetOrderAsync(orderId);
 				if (order == null) return new CustomBadRequest(Request, ApiResultCode.OrderNotFound);
 
-				if (order.User.Client.ClientUuid == null) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToAClient);
+				//if (order.User.order.User.Client.ClientUuid == null) return new CustomBadRequest(Request, ApiResultCode.UserDoesNotBelongToAClient);
 
 				//Update the paymentType for the order
 				await _orderRepository.UpdateOrderPaymentTypeAsync(order, (short)PaymentTypeEnum.EFT);

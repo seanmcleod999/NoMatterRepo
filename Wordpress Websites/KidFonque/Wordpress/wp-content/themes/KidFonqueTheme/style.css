@@ -1,0 +1,591 @@
+/*
+Theme Name: KidFonqueTheme
+Theme URI:
+Description: Kid Fonques WordPress theme.
+Author: SeanMcleod
+Author URI: http://www.nomatter.co.za
+Version: 0.1
+Tags: seanmcleod
+
+This theme is property of Sean Mcleod and is not available for public use.
+ 
+*/
+
+/*** GLOBAL : GENERAL STYLE DEFAULTS ***/
+
+* {
+margin: 0;
+padding: 0;
+}
+
+
+body
+{
+    line-height: 22px;
+    background-color: #ffffff;
+    margin-top: 10px;
+       
+}
+
+body, input, textarea
+{
+	color: #222;    
+	font-family: Arial, sans-serif;
+
+}
+
+input
+{
+    padding: 3px;
+    margin:  2px;
+}
+h1, h2, h3, h4, h5, h6
+{ 
+	font-weight: normal;
+	clear: both;
+     margin:5px 0px 10px 0px;
+     line-height:110%;
+}
+
+.nivoSlider img{
+border-radius:10px;
+}
+
+ol
+{
+margin: 0;
+padding: 30px;
+
+}
+
+p {
+   margin-bottom: 15px;
+}
+
+#WebsiteDetails
+{
+    color:  #e6e6e6;
+    text-align: center
+}
+
+/*** PAGE LAYOUT ***/
+
+
+/* Styles that affect the entire layout of the page */
+
+#wrapper
+{
+    max-width:1100px;
+    margin-left: auto;
+    margin-right:auto;  
+}
+
+#header {
+     width: 100%; /* for IE 6 */
+    position:  relative;
+  text-align: center;
+
+}
+
+#headerNav {
+   position: absolute; 
+   top: 0px; 
+   left: 90px; 
+   width: 100%; 
+}
+
+#header img {
+   width:  100%;
+   max-width: 1000px;
+    
+}
+
+#headerLogo {
+   position: absolute; 
+   top: 0px; 
+   right: 100px; 
+   width: 350px; 
+}
+
+#outerContainer
+{ 
+    max-width: 1200px;
+    background: url("../KidFonqueTheme/images/kf-bg-middle.png"), url("../KidFonqueTheme/images/kf-bg-bottomFiller.png"), url("../KidFonqueTheme/images/kf-bg-middleFiller2.png");
+    background-repeat: no-repeat, no-repeat, repeat-y;
+    background-position:center top , center bottom, top;
+}
+
+#container
+{
+    background-color:black;
+    max-width:910px;
+    width: 100%; 
+    margin: 0 auto;   
+}
+
+#containerPadding
+{
+    padding: 10px;  
+}
+
+
+#content {
+
+    width: 74%;
+    float: left;
+    margin-bottom: 0px;
+  
+}
+
+#contentPage.NonHomePageContent {
+
+    background-color: #ffffff;
+    padding:  15px;
+    border-radius:15px;
+    margin-bottom: 10px;
+  
+}
+
+.TopDrippingPaint {
+    background: url("../KidFonqueTheme/images/topSplatter.png");
+    background-repeat: no-repeat;
+    background-position:left top; 
+}
+
+.TopDrippingPaint2 {
+    background: url("../KidFonqueTheme/images/topSplatter2.png");
+    background-repeat: no-repeat;
+    background-position:left top; 
+}
+
+a:link
+{
+    color: #003899;
+    text-decoration: none;
+}
+a:visited
+{
+    color: #003899;
+}
+a:hover
+{
+    color: #034af3;
+    text-decoration: none;
+}
+a:active
+{
+    color: #12eb87;
+}
+
+a.button {
+    background-color:#808080 !important;
+    display: block;
+    float: left;
+    width: 120px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 14px;
+    /*font-family: BG-Bold;*/
+    height: 28px;
+    line-height: 27px;
+    margin-top: 4px;
+    margin-top: 4px;
+    max-width: 230px;
+    border-radius:6px;
+}
+
+
+div.metaslider-96
+{
+     background-color: black;
+     padding: 0px 0px 15px 0px;
+      border-radius:15px;
+      margin-bottom: 20px
+}
+
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+
+/*** SIDEBAR ***/
+
+#sidebar {
+    width: 220px;
+    float: right;
+}
+
+
+/*** FOOTER ***/
+div#footer
+{
+    width: 100%;
+    display: block;
+    position: relative;
+    color: #e6e6e6;
+    font-size: small;
+    text-align: center;
+}
+
+div#footer a
+{
+    color: #e6e6e6;
+}
+
+
+#footerImage
+{
+    width:  100%;
+     max-width: 950px;
+}
+
+#footer-sidebar
+{
+    position: absolute;
+    top: 0px;
+    left:  120px;
+}
+
+
+
+/*** MENU ***/
+
+.menu-header
+{ 
+    position: relative;
+    top: 10px;  
+    left: 20px;
+    float: left; 
+    text-align:  left
+   
+    /*background-color: white; */    
+}
+
+.menu ul
+{
+        
+   
+}
+.menu ul ul
+{
+    display: none;
+}
+.menu li
+{
+    display: block;
+    
+	padding: 10px 20px 10 20px;
+}
+.menu-item
+{
+	
+}
+.menu-item a
+{
+	font-size: 20px;
+	text-decoration: none;
+	color: black;
+}
+.menu-item a:hover
+{
+	color: #5d8a05;
+}
+
+
+#mobile-menu {
+    display: none;
+    visibility: hidden;
+}
+
+
+
+/*** SOUNDCLOUD ***/
+#soundcloud_master_widget_advanced-2
+{
+     background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-radius:10px;
+}
+
+/*** EVENTS/GIGS ***/
+.EventsTable
+{
+    width: 100%;
+    border-spacing: 0;
+    
+    min-height: 406px;
+    
+}
+
+.EventsTable td
+{
+    padding: 0;
+    border-bottom: 1px solid #e6e6e6;
+    
+}
+
+.GigsBlock
+{
+    background-color: white;
+
+    margin-bottom: 2px;
+    padding:  10px;
+     border-radius:10px;
+    
+}
+
+/*** YOUTUBE VIDEOS ***/
+.YouTubeVideosBlock
+{
+    background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+     border-radius:10px;
+    
+}
+
+/*** EMAIL CAPTURE ***/
+.widget_wp_email_capture_widget_class
+{
+     background-color: #e6e6e6;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+     border-radius:10px;
+}
+
+/*** INSTAGRAM ***/
+#wpinstagram-widget-6
+{
+     background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+
+/* =WordPress Core
+-------------------------------------------------------------- */
+.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+.aligncenter,
+div.aligncenter {
+    display: block;
+    margin: 5px auto 5px auto;
+}
+
+.alignright {
+    float:right;
+    margin: 5px 0 20px 20px;
+}
+
+.alignleft {
+    float: left;
+    margin: 5px 20px 20px 0;
+}
+
+.aligncenter {
+    display: block;
+    margin: 5px auto 5px auto;
+}
+
+a img.alignright {
+    float: right;
+    margin: 5px 0 20px 20px;
+}
+
+a img.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+a img.alignleft {
+    float: left;
+    margin: 5px 20px 20px 0;
+}
+
+a img.aligncenter {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.wp-caption {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    max-width: 96%; /* Image does not overflow the content area */
+    padding: 5px 3px 10px;
+    text-align: center;
+}
+
+.wp-caption.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignleft {
+    margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignright {
+    margin: 5px 0 20px 20px;
+}
+
+.wp-caption img {
+    border: 0 none;
+    height: auto;
+    margin: 0;
+    max-width: 98.5%;
+    padding: 0;
+    width: auto;
+}
+
+.wp-caption p.wp-caption-text {
+    font-size: 11px;
+    line-height: 17px;
+    margin: 0;
+    padding: 0 4px 5px;
+}
+
+.easy-instagram-thumbnail-wrapper {
+position: relative;
+overflow: hidden;
+text-align: center;
+width: 200px;
+display: inline;
+}
+
+div.easy-instagram-container
+{
+    background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+     border-radius:10px;
+}
+
+#FacebookLikeBox
+{
+    background-color: #e6e6e6;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius:10px;
+}
+
+div.easy-instagram-container div a img
+{
+   width:  50px;
+}
+
+.wp-email-capture-name, .wp-email-capture-email
+{
+    width: 180px;
+}
+
+.wp-email-capture-submit
+{
+    margin-top: 5px;
+    margin-bottom: 5px;   
+}
+
+#LatestMixcloud
+{
+    background-color: white;
+     padding: 10px;
+     border-radius:10px;
+}
+
+#iTunesWidget
+{
+   background-color: #e6e6e6;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius:10px;
+}
+
+/******* MEDIA QUERIES *******/
+@media screen and (max-width: 980px){
+  
+    #content {width:100%;}
+     
+    #sidebar {
+       clear:both; 
+       float:none; 
+       width:100%; 
+       text-align:center; 
+       margin-bottom:10px;    
+    }       
+
+    #DesktopSocialMediaLinks{ display: none;}
+
+    #headerLogo {
+       position: absolute; 
+       top: 0px; 
+       right: 30px; 
+       width: 250px; 
+    }
+
+     #headerNav {
+        top: 0px; 
+        left: 20px; 
+        width: 100%;  
+    }
+
+}
+
+@media screen and (max-width: 850px) {
+    
+   #mobile-menu { 
+        background: url("../KidFonqueTheme/images/icon-mobile2.png") no-repeat scroll 0 0 transparent; 
+        cursor: pointer; 
+        display: block; 
+        /*float: left; */
+        height: 43px; 
+        margin: 15px 0 0 15px; 
+        width: 88px; 
+        visibility: visible; 
+        border-radius:5px;
+    
+    }
+
+    #headerNav {
+       display: none;
+       position: relative; 
+       top: 0px; 
+       left: 0; 
+       width: 100%; 
+    }  
+}   
+
+@media screen and (max-width: 540px){
+
+     #headerLogo {
+        position: absolute; 
+        top: 0px; 
+        right: 5px; 
+        width: 170px; 
+    }
+}
+
+/* Make sure main menu re-appears when scaled up */
+@media only screen and (min-width: 851px) {
+    #headerNav 
+    {
+        display: block !important;
+    }
+}
+
+
+
+

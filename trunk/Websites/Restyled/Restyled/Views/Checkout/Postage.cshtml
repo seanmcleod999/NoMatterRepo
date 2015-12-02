@@ -1,0 +1,122 @@
+﻿@model NoMatterWebApiModels.ViewModels.CheckoutPostageVm
+
+@{
+    ViewBag.Title = "Postage";
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Postage</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+            
+    @Html.HiddenFor(m=>m.UserId)      
+     
+    
+     <fieldset class="account form-wrapper" id="postage-options">
+        <legend>
+            <span class="fieldset-legend">Postage options</span>
+        </legend> 
+         
+         <div class="form-horizontal">
+            <br/>
+             <div class="form-group">
+                 <div class="col-sm-offset-2 col-sm-10">
+             
+                     @if (Model.DeliveryOptions.Any())
+                     {
+                        
+                             <table>
+                                 @foreach (var deliveryOption in Model.DeliveryOptions)
+                                 {                                     
+                                     <tr>
+                                         <td width="20px">
+                                             @if (deliveryOption.Selected)
+                                             {
+                                                 <input type="radio" name="DeliveryOption" value="@deliveryOption.ClientDeliveryOptionId" checked="checked" />
+                                             }
+                                             else
+                                             {
+                                                 <input type="radio" name="DeliveryOption" value="@deliveryOption.ClientDeliveryOptionId" />                                          
+                                             }
+                                         </td>
+                                         <td align="left">
+                        
+                                             @deliveryOption.Description - R @String.Format("{0:0}", deliveryOption.DeliveryAmount)
+                        
+                                         </td>
+                                         <td>
+                                        
+                                        
+                                         </td>
+                                     </tr>        
+                                 }  
+            
+            
+                             </table>            
+                        
+             
+                     }
+                     else
+                     {
+                         @:No postage options defined!
+                     }
+       
+                 </div>
+             </div>  
+         </div>
+
+     </fieldset>
+        
+        <br/>
+    
+         <fieldset class="account form-wrapper" id="order-comments">
+            <legend>
+                <span class="fieldset-legend">Order Comments</span>
+            </legend> 
+             
+    
+            <div class="form-horizontal">
+             <br/>
+             <div class="form-group">
+                @Html.LabelFor(m => m.OrderComments, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(m => m.OrderComments, new { @class = "form-control", placeholder = "", autofocus = true })
+                </div>
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationMessageFor(m => m.OrderComments)
+                </div>
+             </div> 
+             
+             <br/>
+    
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button onclick="submitForm()" class="btn btn-default">Continue to next step</button>
+                    <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
+                </div>
+            </div>    
+                
+            </div> 
+        
+         </fieldset>
+    
+      
+      <br/>
+}
+
+<script type="text/javascript">
+
+  function submitForm() {
+      
+      if ($("form").valid()) {
+          
+          $(".loader").show();      
+          $('form').submit();
+      } 
+  }
+</script>
+    
+

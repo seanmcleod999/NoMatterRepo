@@ -104,9 +104,9 @@ namespace RestyledLiving.Controllers
 			return View("CategoryShop", categoryShopVm);
 		}
 
-		public async Task<ActionResult> ViewProduct(string productId, string categoryId = null)
+		public async Task<ActionResult> Product(string id, string categoryId = null)
 		{
-			var product = await _productHelper.GetProductAsync(productId);
+			var product = await _productHelper.GetProductAsync(id);
 
 			var viewProductVm = new ViewProductVm
 			{

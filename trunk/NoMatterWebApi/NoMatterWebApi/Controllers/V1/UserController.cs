@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Antlr.Runtime.Misc;
 using CustomAuthLib;
 using NoMatterDataLibrary;
 using NoMatterWebApi.ActionResults;
@@ -29,7 +30,7 @@ namespace NoMatterWebApi.Controllers.V1
 		private ICartRepository _cartRepository;
 		private IUserRepository _userRepository;
 		private IGeneralHelper generalHelper;
-		private IGlobalSettings _globalSettings;
+		//private IGlobalSettings _globalSettings;
 		private ICustomAuthentication _customAuthentication;
 
 		public UserController()
@@ -41,7 +42,7 @@ namespace NoMatterWebApi.Controllers.V1
 			_cartRepository = new CartRepository();
 			_userRepository = new UserRepository();
 			generalHelper = new GeneralHelper();
-			_globalSettings = new GlobalSettings();
+			//_globalSettings = new GlobalSettings();
 			_customAuthentication = CustomAuthentication.Instance;
 		}
 
@@ -218,12 +219,12 @@ namespace NoMatterWebApi.Controllers.V1
 			}
 
 			//Profile successfully authenticated, so generate the response with token details etc
-			var accessToken = _customAuthentication.CreateAccessToken(user.UserId, user.Client.ClientUuid);
+			var accessToken = _customAuthentication.CreateAccessToken(user.UserUuid, user.Client.ClientUuid);
 
 			//Return the user details and token etc
 			var userAuthenticated = new UserAuthenticatedResult()
 			{
-				Id = user.UserId,
+				Id = user.UserUuid,
 				ClientId = user.Client != null ? user.Client.ClientUuid.ToString() : null,
 				Fullname = user.Fullname,
 				Email = user.Email,
@@ -238,73 +239,73 @@ namespace NoMatterWebApi.Controllers.V1
 			return Ok(userAuthenticated);
 		}
 
-		//// POST api/v1/clients/{id}/users/createorupdate>
-		//[Route("{clientUuid}/users")]
-		//[ResponseType(typeof(string))]
-		//[HttpPost]
-		//public async Task<IHttpActionResult> CreateOrUpdateUser(string clientUuid, UserModel model)
-		//{
-		//	try
-		//	{
-		
-		//		string userId;
+		// POST api/v1/clients/{id}/users>
+		[Route("{clientUuid}/users")]
+		[ResponseType(typeof(string))]
+		[HttpPost]
+		public async Task<IHttpActionResult> CreateOrUpdateUser(string clientUuid, UserModel model)
+		{
+			try
+			{
 
-		//		var clientDb = await _clientRepository.GetClientAsync(new Guid(clientUuid));
-		//		if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
+				string userId;
 
-		//		var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
+				var clientDb = await _clientRepository.GetClientAsync(new Guid(clientUuid));
+				if (clientDb == null) return new CustomBadRequest(Request, ApiResultCode.ClientNotFound);
 
-		//		if (userDb == null)
-		//		{
-		//			//Create the user
+				var userDb = await _userRepository.GetClientUserByEmailAsync(new Guid(clientUuid), model.Email);
 
-		//			userDb = new User
-		//				{
-		//					Client = clientDb,
-		//					CredentialTypeId = 3,
-		//					Identifier = model.Email,
-		//					Email = model.Email,
-		//					FullName = model.Fullname,
-		//					ContactNumber = model.ContactNumber,
-		//					Address = model.Address,
-		//					Suburb = model.Suburb,
-		//					City = model.City,
-		//					Province = model.Province,
-		//					Country = model.Country,
-		//					PostalCode = model.PostalCode
-		//				};
+				if (userDb == null)
+				{
+					//Create the user
 
-		//			userId = await _userRepository.SaveUserAsync(userDb);
-		//		}
-		//		else
-		//		{
-		//			userId = userDb.UserUUID.ToString();
+					userDb = new User
+						{
+							Client = clientDb,
+							CredentialTypeId = 3,
+							Identifier = model.Email,
+							Email = model.Email,
+							Fullname = model.Fullname,
+							ContactNumber = model.ContactNumber,
+							Address = model.Address,
+							Suburb = model.Suburb,
+							City = model.City,
+							Province = model.Province,
+							Country = model.Country,
+							PostalCode = model.PostalCode
+						};
 
-		//			userDb.FullName = model.Fullname;
-		//			userDb.ContactNumber = model.ContactNumber;
-		//			userDb.Address = model.Address;
+					userId = await _userRepository.SaveUserAsync(userDb);
+				}
+				else
+				{
+					userId = userDb.UserUuid;
 
-		//			userDb.Suburb = model.Suburb;
-		//			userDb.City = model.City;
-		//			userDb.Province = model.Province;
-		//			userDb.Country = model.Country;
-		//			userDb.PostalCode = model.PostalCode;
+					userDb.Fullname = model.Fullname;
+					userDb.ContactNumber = model.ContactNumber;
+					userDb.Address = model.Address;
 
-
-		//			//Update the user
-		//			await _userRepository.UpdateUserAsync(userDb);
-		//		}
+					userDb.Suburb = model.Suburb;
+					userDb.City = model.City;
+					userDb.Province = model.Province;
+					userDb.Country = model.Country;
+					userDb.PostalCode = model.PostalCode;
 
 
-		//		return Ok(userId);
+					//Update the user
+					await _userRepository.UpdateUserAsync(userDb);
+				}
 
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Logger.WriteGeneralError(ex);
-		//		return InternalServerError(ex);
-		//	}
-		//}
+
+				return Ok(userId);
+
+			}
+			catch (Exception ex)
+			{
+				Logger.WriteGeneralError(ex);
+				return InternalServerError(ex);
+			}
+		}
 
 		// POST api/v1/clients/{id}/users/{userId}/orders>
 		[Route("{clientId}/users/{userId}/orders")]
@@ -335,6 +336,7 @@ namespace NoMatterWebApi.Controllers.V1
 						Message = model.Message,
 						ClientDeliveryOptionId = Convert.ToInt16(model.ClientDeliveryOptionId),
 						OrderStatusId = 1,
+						Products = new List<Product>()
 					};
 
 				foreach (var cartProduct in cartProducts)

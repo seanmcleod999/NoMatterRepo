@@ -1,55 +1,96 @@
-﻿@using NoMatterWebApiWebHelper.OtherHelpers
+﻿@using NoMatterWebApiWebHelper
+@using NoMatterWebApiWebHelper.OtherHelpers
 @model NoMatterWebApiModels.ViewModels.CategoryShopVm
 
 @{
     ViewBag.Title = Model.Category.CategoryFriendlyName;
+    ViewBag.MetaDescription = "Buy awesome " + Model.Category.CategoryFriendlyName + " from " + StaticGlobalSettings.ClientName + ". " + StaticGlobalSettings.SiteMetaDescription;
+
 }
 
-<h1>@Model.Section.SectionName</h1>
+<div id="container" class="clearfix">
 
-@foreach (var category in Model.Categories)
-{
-     @Html.ActionLink((string)category.CategoryName, "CategoryShop", "Shop", new { categoryId = @category.CategoryId }, new {@class="btn btn-default"}) @:&nbsp; &nbsp;
-}
 
-<h2>@Model.Category.CategoryDescription</h2>
+    <div class="categoryImage mid">
 
-@foreach (var product in Model.Products)
-{
-    <div class="ShopProduct">
-        <a id="@product.ProductId" href="@Url.Action("ViewProduct", new { productId = product.ProductId, categoryId = Model.Category.CategoryId })"> 
-            
-            <div class="ShopProductImage">
-                               
-                <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=150"/>
-            
-                @if (product.Sold)
-                {                                                                          
-                    <div class="ShopProductSold"> 
-                        <div class="ShopProductSoldText">                      
-                            Sold
-                        </div>
-                    </div>                                                   
-                }
-                else if (product.Reserved)
-                {
-                    <div class="ShopProductReserved">
-                        <div class="ShopProductReservedText">                     
-                            Reserved
-                        </div>
-                    </div>
-                }
-                    
-                @if ((product.Reserved && product.DiscountDetails.Discounted) || product.DiscountDetails.Discounted)
-                {
-                    <div class="ShopProductSale">                         
-                    </div>
-                }
-              
-            </div>
-        </a>
-            
-        @product.Title
+        <img src="~/Content/images/Lighting2.jpg"/>
+
+        <h2>Lighting</h2>
+        <h3>Our beautiful selection of classic retro handmade lighting, perfect for your home.</h3>
 
     </div>
-}
+
+    <div id="content">
+                
+        <div class="itemListOuter">
+            
+            @{Html.RenderPartial("partialProductCategoryDetails", Model.Category);}   
+            
+            @if (Model.Products.Count == 0)
+            {    
+                @: <br /><br /><br />Sorry, there is currently nothing to display in this category. <br />Please check again soon.<br /><br /><br /><br />
+            }
+            else
+            {
+                foreach (var item in Model.Products.Where(item => !string.IsNullOrEmpty(item.Picture1)))
+                {
+                    <div class="itemListInner"> 
+                        <div class="itemListInnerPicture">
+
+                            <a id="@item.ProductId" href="@Url.Action("Product", new {id = item.ProductId, category = Model.Category.CategoryName})">
+                                 <img src="@StaticGlobalSettings.ImagesBaseAddress@item.Picture1?w=150"/>
+
+                                @if (item.Sold)
+                                {
+                                    <div class="itemListSoldItem">
+                                        <div class="itemListSoldItemText">
+                                            Sold
+                                        </div>
+                                    </div>
+                                }
+                                else if (item.Reserved)
+                                {
+                                    <div class="itemListReservedItem">
+                                        <div class="itemListReservedItemText">
+                                            Reserved
+                                        </div>
+                                    </div>
+                                }
+
+                                @if ((item.Reserved && item.DiscountDetails.Discounted) || item.DiscountDetails.Discounted)
+                                {
+                                    <div class="itemListSaleItem">
+                                    </div>
+                                }
+
+                            </a>
+                               
+                        </div>   
+                        
+                        <div class="itemListDetailsWrapper">
+                            <div class="itemListDetailsDescription">
+                                @item.Title                                                                
+                            </div>                   
+                    
+                            <div class="itemListDetailsPrice">
+                                @if (item.DiscountDetails.Discounted)
+                                {
+                                    <strike>R @String.Format("{0:0}", item.Price) </strike> @:&nbsp;
+                             
+                                    @:R @String.Format("{0:0}", item.DiscountDetails.DiscountedPrice) 
+                                }
+                                else
+                                {
+                                    @:R @String.Format("{0:0}", item.Price)  
+                                }
+                            </div>
+                        </div>          
+                  
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>

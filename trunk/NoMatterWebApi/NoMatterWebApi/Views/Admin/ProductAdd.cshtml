@@ -17,7 +17,7 @@
 {
     @Html.ValidationSummary(true)
 
-    @Html.HiddenFor(model => model.Category.Section.Client.ClientUuid)
+    @Html.HiddenFor(model => model.Product.ClientUuid)
     @Html.HiddenFor(model => model.Product.CategoryId)
 
 
@@ -73,9 +73,27 @@
         @Html.LabelFor(model => model.Product.ReleaseDate)
     </div>
     <div class="editor-field">
-        @Html.TextBox("Product.ReleaseDate", Model.Product.ReleaseDate.ToShortDateString(), new { style = "width:100px;" }) 
+        @Html.TextBox("Product.ReleaseDate", Model.Product.ReleaseDate.ToShortDateString(), new {style = "width:100px;"})
         @Html.ValidationMessageFor(model => model.Product.ReleaseDate)
     </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Product.ProductTypeId)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.Product.ProductTypeId, new SelectList(Model.ProductTypes, "ProductTypeId", "Description"), null, new { @class = "form-control", placeholder = "", autofocus = false })
+        @Html.ValidationMessageFor(model => model.Product.ProductTypeId)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Product.SupplierId)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.Product.SupplierId, new SelectList(Model.Suppliers, "SupplierId", "Name"), "-- Please Select --", new { @class = "form-control", placeholder = "", autofocus = false })
+        @Html.ValidationMessageFor(model => model.Product.SupplierId)
+    </div>
+    
+    
     <br/>
     
     <table>                      

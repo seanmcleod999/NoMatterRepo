@@ -1,0 +1,21 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.Models.Category
+
+
+@if (!string.IsNullOrEmpty(Model.CategoryDescription) || !string.IsNullOrWhiteSpace(Model.Picture))
+{ 
+    <div class="itemListCategoryDetailsWrapper">
+                
+        <div class="itemListCategoryDescription">
+             @Html.Raw(@Model.CategoryDescription)
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Picture))
+        {
+            <div class="itemListCategoryPicture">
+                <img src="@Url.Content(@StaticGlobalSettings.ImagesBaseAddress + Model.Picture)" alt="@Model.CategoryName" /> 
+            </div>
+        }
+                    
+    </div>
+}

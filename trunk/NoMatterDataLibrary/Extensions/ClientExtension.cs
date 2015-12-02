@@ -8,13 +8,14 @@ namespace NoMatterDataLibrary.Extensions
 		{
 			return new Client
 			{
+				ClientId = client.ClientId,
 				ClientUuid = client.ClientUUID.ToString(),
 				ClientName = client.ClientName,
 				Enabled = client.Enabled,
 				Logo = client.Logo,
 				SiteUrl = client.SiteUrl,
 				DomainName = client.DomainName,
-				FacebookAppId = client.FacebookAppId
+				//FacebookAppId = client.FacebookAppId
 			};
 		}
 

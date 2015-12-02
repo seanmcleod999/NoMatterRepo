@@ -56,6 +56,8 @@
     <Compile Include="CartRepository.cs" />
     <Compile Include="CategoryRepository.cs" />
     <Compile Include="ClientRepository.cs" />
+    <Compile Include="Enums\ThingAlertFrequencyEnum.cs" />
+    <Compile Include="Enums\ThingAlertTypeEnum.cs" />
     <Compile Include="Enums\DiscountTypeEnum.cs" />
     <Compile Include="Enums\OrderStatusEnum.cs" />
     <Compile Include="Enums\SettingEnum.cs" />
@@ -66,17 +68,27 @@
     <Compile Include="Extensions\ClientPageExtension.cs" />
     <Compile Include="Extensions\ClientPaymentTypeExtension.cs" />
     <Compile Include="Extensions\ClientSettingExtension.cs" />
+    <Compile Include="Extensions\ProductTypeExtension.cs" />
+    <Compile Include="Extensions\SupplierExtension.cs" />
     <Compile Include="Extensions\GlobalSettingExtension.cs" />
     <Compile Include="Extensions\OrderExtension.cs" />
     <Compile Include="Extensions\ProductExtension.cs" />
     <Compile Include="Extensions\SectionExtension.cs" />
     <Compile Include="Extensions\SettingExtension.cs" />
+    <Compile Include="Extensions\ThingAlertExtension.cs" />
+    <Compile Include="Extensions\ThingExtension.cs" />
+    <Compile Include="Extensions\ThingFieldExtension.cs" />
     <Compile Include="Extensions\UserExtension.cs" />
     <Compile Include="GlobalRepository.cs" />
+    <Compile Include="Models\Thing.cs" />
+    <Compile Include="Models\ThingAlert.cs" />
+    <Compile Include="Models\ThingField.cs" />
+    <Compile Include="Models\ThingFieldValue.cs" />
     <Compile Include="OrderRepository.cs" />
     <Compile Include="ProductRepository.cs" />
     <Compile Include="SectionRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThingRepository.cs" />
     <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>

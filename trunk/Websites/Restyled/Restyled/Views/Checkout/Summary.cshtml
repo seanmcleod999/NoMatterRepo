@@ -1,0 +1,235 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.ViewModels.CheckoutSummaryVm
+
+
+@{
+    ViewBag.Title = "Order Summary";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Review Order</h1>
+
+Review your order before continuing.
+<br/><br/>
+
+ <fieldset class="account form-wrapper" id="summary-account">
+     <legend>
+         <span class="fieldset-legend">Cart Contents</span>
+     </legend>
+     
+     <div class="CheckoutSectionWrapper">
+         
+         <div class="form-horizontal">
+                
+             <div class="form-group">
+                 <div class="col-sm-offset-2 col-sm-10">
+                     <br/>
+
+                     <div id="viewCartProductsHeader" class="clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="product-title">Title</span>
+                         <span class="product-price">Price</span>                            
+                         <div class="clear"><!-- --></div>    
+                     </div>   
+                    
+                     <ul id="viewCartProductList">
+                    
+                         @foreach (var product in Model.Order.Products)
+                         {
+                             <li>
+                                 <div id="viewCartProductWrapper" class="clearfix">
+                                     <div id="viewCartProductPicture">              
+                                         <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=40" />
+                                     </div>
+                                     <div id="viewCartProductDetails">
+                                         <span class="product-title">@product.Title</span>
+                                         <span class="product-price">R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)</span>
+                                         <div class="clear"><!-- --></div>
+                                     </div>
+                                 </div>
+                             </li>
+                         }
+                         
+                            
+                      
+                                             
+             </ul>
+                 
+                    <div class="viewCartSubtotals clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="heading">Sub Total</span>
+                         <span class="amount">R @String.Format("{0:0}", Model.Order.ProductAmount)</span>                            
+                         <div class="clear"><!-- --></div> 
+                    </div> 
+                     <div class="viewCartSubtotals clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="heading">Shipping</span>
+                         <span class="amount">R @String.Format("{0:0}", Model.Order.DeliveryAmount)</span>                            
+                         <div class="clear"><!-- --></div> 
+                     </div> 
+                     <div class="viewCartSubtotals clearfix">
+                         <span class="product-picture">&nbsp;</span>
+                         <span class="heading">Total</span>
+                         <span class="amount"><b>R @String.Format("{0:0}", Model.Order.TotalAmount)</b></span>                            
+                         <div class="clear"><!-- --></div> 
+                 </div> 
+                        
+                 </div>
+                
+             </div>
+             </div>
+         
+            </div>
+     
+ </fieldset>
+
+ 
+ <fieldset class="account form-wrapper" id="summary-account">
+     <legend>
+         <span class="fieldset-legend">Account Information</span>
+     </legend>
+     
+     <div class="form-horizontal">
+         <br/>
+         <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10">
+                  @Model.Order.User.Email
+             </div>
+         </div>
+     </div>
+     
+ </fieldset>
+
+<br/>
+
+
+<fieldset class="account form-wrapper" id="summary-shipping">
+    <legend>
+        <span class="fieldset-legend">Shipping Information</span>
+    </legend> 
+    
+     <div class="form-horizontal">
+         <br/>
+         <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-10">
+                @Model.Order.User.Fullname
+                <br/>
+                @Model.Order.User.Address
+                <br/>
+                @Model.Order.User.Suburb
+                <br/>
+                @Model.Order.User.City
+                <br/>
+                @Model.Order.User.Country
+                <br/>
+                @Model.Order.User.PostalCode
+                 
+                 @if (!string.IsNullOrEmpty(Model.Order.User.ContactNumber))
+                 {
+                    <br/><br/>
+                    <b>Phone Number</b>
+                    <br/>
+                    @Model.Order.User.ContactNumber
+                 }
+                 
+             </div>
+         </div>
+     </div>
+    
+</fieldset>
+ <br/>
+
+
+
+@Html.ValidationSummary(true)
+
+@using (Html.BeginForm("ProcessOrder", "Checkout"))
+{
+    @Html.HiddenFor(x => x.Order.OrderId)
+
+     <fieldset class="account form-wrapper" id="summary-payment">
+     <legend>
+        <span class="fieldset-legend">Payment Information</span>
+     </legend>           
+         
+    <div class="form-horizontal">
+    <br/>
+
+    @if (Model.PaymentTypes.Any())
+    {         
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+    
+                <table>
+                    @foreach (var paymentType in Model.PaymentTypes)
+                    {
+                        <tr>
+                            <td>
+                                @if (paymentType.Selected)
+                                {
+                                    <input type="radio" name="PaymentType" value="@paymentType.PaymentTypeId" checked="checked" />
+                                }
+                                else
+                                {
+                                    <input type="radio" name="PaymentType" value="@paymentType.PaymentTypeId" />
+                                }
+                            </td>
+                            <td align="left">
+                                @if (!string.IsNullOrEmpty(paymentType.PaymentTypePicture))
+                                {
+                                    <img src="@Url.Content(paymentType.PaymentTypePicture)"/>
+                                }
+                                else
+                                {
+                                    @paymentType.PaymentTypeName @:- @paymentType.PaymentTypeDetails
+                                }
+                            </td>
+                            <td>
+                                        
+                                        
+                            </td>
+                        </tr>
+                    }  
+                </table>                                   
+            </div>
+        </div>                    
+    }
+    else
+    {
+        @:No payment types defined!
+    }
+        
+    <br/>
+    
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button onclick="submitForm()" class="btn btn-default">Continue to next step</button>
+            <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
+        </div>
+    </div>   
+
+    </div>
+    </fieldset>   
+ 
+    
+    <br/>
+}
+
+
+<script type="text/javascript">
+
+  function submitForm() {
+      
+      if ($("form").valid()) {
+          
+          $(".loader").show();      
+          $('form').submit();
+      } 
+  }
+</script>
+    
+
+
+
+

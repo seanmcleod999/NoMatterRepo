@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NoMatterDataLibrary.Extensions;
 using NoMatterDatabaseModel;
 using Product = NoMatterWebApiModels.Models.Product;
+using ProductType = NoMatterWebApiModels.Models.ProductType;
 
 namespace NoMatterDataLibrary
 {
@@ -15,10 +16,11 @@ namespace NoMatterDataLibrary
 		Task<Product> GetProductAsync(int productId);
 		Task<Product> GetProductAsync(Guid productUuid);
 		Task<string> AddProductAsync(Product product);
+		Task UpdateClientShortUrlAsync(Guid productUuid, string shortUrl);
 		Task UpdateProductAsync(Product product);
 		Task DeleteProductAsync(int productId);
 		Task<List<Product>> GetRelatedProductsByKeywordsAsync(Guid productUuid, List<string> keywords, int relatedItemsCount);
-
+		Task<List<ProductType>> GetProductTypes();
 	}
 
 	public class ProductRepository : IProductRepository
@@ -60,6 +62,9 @@ namespace NoMatterDataLibrary
 
 			using (var mainDb = new DatabaseEntities())
 			{
+				var client = await mainDb.Clients.Where(x => x.ClientUUID == new Guid(product.ClientUuid)).FirstOrDefaultAsync();
+
+				productDb.Client = client;
 				productDb.ProductUUID = Guid.NewGuid();
 				productDb.DateCreated = DateTime.Now;
 				productDb.Sold = false;
@@ -72,6 +77,18 @@ namespace NoMatterDataLibrary
 
 			}
 			
+		}
+
+		public async Task UpdateClientShortUrlAsync(Guid productUuid, string shortUrl)
+		{
+			using (var mainDb = new DatabaseEntities())
+			{
+				var productDb = await mainDb.Products.Where(x=>x.ProductUUID == productUuid).FirstOrDefaultAsync();
+
+				productDb.ProductShortUrl = shortUrl;
+
+				await mainDb.SaveChangesAsync();
+			} 
 		}
 
 		public async Task UpdateProductAsync(Product product)
@@ -128,6 +145,16 @@ namespace NoMatterDataLibrary
 				return relatedProductsDb.Select(x=>x.ToDomainProduct()).ToList();
 			}
 
+		}
+
+		public async Task<List<ProductType>> GetProductTypes()
+		{
+			using (var mainDb = new DatabaseEntities())
+			{
+				var productTypes = await mainDb.ProductTypes.ToListAsync();
+
+				return productTypes.Select(x => x.ToDomainProductType()).ToList();
+			}
 		}
 	}
 }

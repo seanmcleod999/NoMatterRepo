@@ -11,7 +11,7 @@ namespace NoMatterDataLibrary
 {
 	public interface ICartRepository
 	{
-		Task<CartProduct> GetCartProductAsync(string cartId, Guid productId);
+		Task<CartProduct> GetCartProductAsync(string cartId, int productId);
 		Task<List<CartProduct>> GetCartProductsAsync(string cartId);
 		Task AddCartProductAsync(CartProduct cartProduct);
 		Task DeleteCartProductAsync(int cartProductId);
@@ -22,11 +22,11 @@ namespace NoMatterDataLibrary
 	public class CartRepository : ICartRepository
 	{
 
-		public async Task<CartProduct> GetCartProductAsync(string cartId, Guid productId)
+		public async Task<CartProduct> GetCartProductAsync(string cartId, int productId)
 		{
 			using (var mainDb = new DatabaseEntities())
 			{
-				var cartProduct = await mainDb.CartProducts.Where(x => x.CartId == cartId && x.Product.ProductUUID == productId).FirstOrDefaultAsync();
+				var cartProduct = await mainDb.CartProducts.Where(x => x.CartId == cartId && x.Product.ProductId == productId).FirstOrDefaultAsync();
 
 				return cartProduct.ToDomainCartProduct();
 			}

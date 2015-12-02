@@ -14,8 +14,8 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 	public interface ICartHelper
 	{
 		Task<ShoppingCartDetails> GetCartAsync(string cartId);
-		Task<int> AddProductToCartAsync(string cartId, string productId, int quantity);
-		Task<int> DeleteProductFromCartAsync(string cartId, string productId);
+		Task<int> AddProductToCartAsync(string cartId, int productId, int quantity);
+		Task<int> DeleteProductFromCartAsync(string cartId, int productId);
 		Task EmptyCartAsync(string cartId);
 	}
 
@@ -53,7 +53,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}
 		}
 
-		public async Task<int> AddProductToCartAsync(string cartId, string productId, int quantity)
+		public async Task<int> AddProductToCartAsync(string cartId, int productId, int quantity)
 		{
 			using (var client = new HttpClient())
 			{
@@ -78,7 +78,7 @@ namespace NoMatterWebApiWebHelper.WebApiHelpers
 			}
 		}
 
-		public async Task<int> DeleteProductFromCartAsync(string cartId, string productId)
+		public async Task<int> DeleteProductFromCartAsync(string cartId, int productId)
 		{
 			using (var client = new HttpClient())
 			{

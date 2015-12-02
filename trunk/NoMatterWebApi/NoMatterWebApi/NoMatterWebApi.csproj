@@ -200,6 +200,9 @@
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="TembooSDK">
+      <HintPath>..\..\Libs\Temboo\temboo_csharp_sdk_2.13.2\bin\TembooSDK.dll</HintPath>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
@@ -262,6 +265,7 @@
     <Compile Include="Controllers\V1\GlobalController.cs" />
     <Compile Include="Controllers\V1\ProductController.cs" />
     <Compile Include="Controllers\V1\SectionController.cs" />
+    <Compile Include="Controllers\V1\ThingController.cs" />
     <Compile Include="Controllers\V1\UserController.cs" />
     <Compile Include="Enums\CredentialTypeEnum.cs" />
     <Compile Include="Enums\EmailEventEnum.cs" />
@@ -271,12 +275,11 @@
     <Compile Include="Helpers\PasswordCrypto.cs" />
     <Compile Include="Helpers\ProductHelper.cs" />
     <Compile Include="Helpers\SectionHelper.cs" />
-    <Compile Include="Helpers\StaticGlobalSettings.cs" />
-    <Compile Include="Helpers\SuperuserHelper.cs" />
-    <Compile Include="Helpers\GeneralHelper.cs" />
-    <Compile Include="Helpers\GlobalSettings.cs">
+    <Compile Include="Helpers\StaticGlobalSettings.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helpers\SuperuserHelper.cs" />
+    <Compile Include="Helpers\GeneralHelper.cs" />
     <Compile Include="Helpers\ImageDeleteHelper.cs">
       <SubType>Code</SubType>
     </Compile>

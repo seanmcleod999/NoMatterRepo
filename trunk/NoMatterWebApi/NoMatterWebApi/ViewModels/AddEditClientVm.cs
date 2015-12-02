@@ -11,7 +11,7 @@ namespace NoMatterWebApi.ViewModels
 {
 	public class AddEditClientVm
 	{
-		[Required(ErrorMessage = "required")]
+
 		[Display(Name = "Logo")]
 		public HttpPostedFileBase Logo { get; set; }
 

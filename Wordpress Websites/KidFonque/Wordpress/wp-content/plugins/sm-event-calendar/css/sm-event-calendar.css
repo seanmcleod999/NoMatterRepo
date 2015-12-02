@@ -1,0 +1,179 @@
+/* 
+
+Copyright (C) 2012 Sean Mcleod
+SM Gig Calendar is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+MF Gig Calendar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+*/
+
+div.gigs
+{
+    background-color: white;
+    padding: 15px 5px 0px 5px;
+    /*margin-bottom: 15px;
+    margin-top: 15px*/
+    
+}
+
+#SingleGigPost
+{
+    background-color: white;
+    padding-bottom: 20px;  
+}
+
+#SingleGigFlyer img
+{
+    width: 100%;
+    height: auto;
+    
+}
+
+#ArchiveGigDetails
+{
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.ArchiveGigDetailsTable
+{
+    width:  100%;
+}
+
+.ArchiveGigDetailsTable tr td.gigtitleandvenue
+{
+    width:  60%;
+}
+
+.ArchiveGigDetailsTable tr td.gigcity
+{
+    width:  20%;
+}
+
+.ArchiveGigDetailsTable tr td.moredetails
+{
+    width:  20%x;
+}
+
+
+div.gigs span.gigdate
+{
+    display:  block;
+}
+
+div.gigs span.gigvenue
+{
+    display: inline;
+    width: 200px;
+}
+
+div.gigs span.gigcity
+{
+    display: inline;
+         width: 200px;
+}
+
+div.gigs span.moredetails
+{
+    display: inline;
+    width: 200px;
+}
+
+
+
+
+/* Shortcode styles */
+
+#sm-event-cal-list
+{
+   /*width: 100%;*/
+   
+    list-style: none;
+    width: 100%;
+    margin: 14px 0 5px 0;
+
+}
+
+#sm-event-cal-list li:first-child {
+border-top: 1px solid #e6e6e6;
+}
+
+#sm-event-cal-list li {
+width: 100%;
+border-bottom: 1px solid #e6e6e6;
+}
+
+#sm-event-cal-list li a {
+text-decoration: none;
+font-size: 16px;
+display: block;
+background: transparent url(images/selector.png) no-repeat 99% center;
+line-height: 17px !important;
+}
+
+#sm-event-cal-list li a span {
+float: left;
+
+margin-right: 1%;
+padding: 8px 0 6px 0;
+}
+
+#sm-event-cal-list li a span.title {
+
+/*color: #6f8da1;*/
+margin-left: 1px;
+font-weight: bold;
+
+}
+
+#sm-event-cal-list li a span.gigdate {
+
+display:  block;
+width:  100%
+}
+
+
+#sm-event-cal-list-archive
+{
+    list-style: none;
+    width: 100%;
+    margin: 14px 0 5px 0;
+}
+
+#sm-event-cal-list-gigdetails
+{
+    margin-right:  30px
+}
+
+#sm-event-cal-list-archive li {
+width: 100%;
+
+}
+
+#sm-event-cal-list-archive li a {
+text-decoration: none;
+font-size: 16px;
+display: block;
+background: transparent url(images/selector.png) no-repeat 99% center;
+line-height: 17px !important;
+}
+
+
+
+#ViewAllGigsLink
+{
+   text-align: right;
+   padding-right:  14px ;
+   padding-top:  5px ;
+   padding-bottom: 5px;
+}

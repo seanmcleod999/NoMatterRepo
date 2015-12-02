@@ -17,6 +17,8 @@ namespace NoMatterDataLibrary.Extensions
 				ProductId = product.ProductId,
 				Category = product.Category.ToDomainCategory(),
 				CategoryId = product.CategoryId,
+				ProductTypeId = product.ProductTypeId,
+				SupplierId = product.SupplierId,
 				Title = product.Title,
 				Description = product.Description,
 				Size = product.Size,
@@ -36,7 +38,7 @@ namespace NoMatterDataLibrary.Extensions
 				FacebookPostId = product.FacebookPostId,
 				TwitterPostId = product.TwitterPostId,
 				ProductShortUrl = product.ProductShortUrl,
-				AdminNotes=product.AdminNotes,
+				AdminNotes = product.AdminNotes,
 				Keywords = string.Join(",", product.ProductKeywords.Select(x => x.Keyword)), 
 				DiscountDetails = GetDiscountDetails(product.DiscountProducts, product.Price),
 				//RelatedProductDetails = GetRelatedProductDetails(product.ProductKeywords.ToList(), product.ProductUUID.ToString())
@@ -50,6 +52,8 @@ namespace NoMatterDataLibrary.Extensions
 			{
 				
 				CategoryId = product.CategoryId,
+				ProductTypeId = product.ProductTypeId,
+				SupplierId = product.SupplierId,
 				Title = product.Title,
 				Description = product.Description,
 				Size = product.Size,

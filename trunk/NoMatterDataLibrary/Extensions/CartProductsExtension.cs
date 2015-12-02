@@ -10,6 +10,8 @@ namespace NoMatterDataLibrary.Extensions
 	{
 		public static CartProduct ToDomainCartProduct(this   NoMatterDatabaseModel.CartProduct cartProduct)
 		{
+			if (cartProduct == null) return null;
+
 			return new CartProduct()
 			{
 				CartProductId = cartProduct.CartProductId,

@@ -76,7 +76,7 @@ namespace NoMatterWebApi.Controllers.v1
 					return View(userLoginVm);
 				}
 
-				GenerateAuthenticationCookie(user.UserId, user.Fullname, user.UserRolesString, clientUuid.ToString(), userLoginVm.RememberMe);
+				GenerateAuthenticationCookie(user.UserUuid, user.Fullname, user.UserRolesString, clientUuid.ToString(), userLoginVm.RememberMe);
 
 				return RedirectToAction("Index", "Admin");					
 				

@@ -11,9 +11,17 @@ namespace NoMatterWebApiModels.Models
 	{
 		public int ProductId { get; set; }
 
+		public string ClientUuid { get; set; }
+
 		public Category Category { get; set; }
 
 		public int CategoryId { get; set; }
+
+		[Display(Name = "Supplier")]
+		public int? SupplierId { get; set; }
+
+		[Display(Name = "Product Type")]
+		public short ProductTypeId { get; set; }
 
 		[Required(ErrorMessage = "required")]
 		[StringLength(50, ErrorMessage = "Must be under 50 characters")]

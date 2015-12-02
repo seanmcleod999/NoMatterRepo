@@ -10,7 +10,9 @@ namespace NoMatterWebApiModels.Models
 	{
 		public Client Client { get; set; }
 
-		public string UserId { get; set; }
+		public int UserId { get; set; }
+
+		public string UserUuid { get; set; }
 
 		public byte CredentialTypeId { get; set; }
 

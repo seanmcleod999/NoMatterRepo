@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using CustomAuthLib;
 using NoMatterDataLibrary;
+using NoMatterDataLibrary.Enums;
 using NoMatterWebApi.Helpers;
 using NoMatterWebApi.Logging;
 using NoMatterWebApiModels.Models;
@@ -312,14 +313,22 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			var category = await _categoryRepository.GetCategoryAsync(new Guid(clientUuid), categoryId);
 
+			var suppliers = await _clientRepository.GetClientSuppliersAsync(new Guid(clientUuid));
+
+			var productTypes = await _productRepository.GetProductTypes();
+
 			var addEditProductVm = new AddProductVm
 			{
 				Category = category,
+				Suppliers = suppliers,
+				ProductTypes = productTypes,
 				Product = new Product()
 				{
+					ClientUuid = clientUuid,
 					CategoryId = category.CategoryId,
 					ReleaseDate = DateTime.Now
-				}
+				},
+				
 			};
 
 			return View(addEditProductVm);
@@ -332,40 +341,43 @@ namespace NoMatterWebApi.Controllers.v1
 		{
 			try
 			{
-				//var client = await _clientRepository.GetClientAsync(new Guid(addProductVm.Section.clientUuid));
+				
+				var clientUuid = addProductVm.Product.ClientUuid;
 
 				if (addProductVm.Picture1 != null)
-					addProductVm.Product.Picture1 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture1), addProductVm.Category.Section.Client.ClientUuid);			
+					addProductVm.Product.Picture1 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture1), clientUuid);			
 
 				if (addProductVm.Picture2 != null)
-					addProductVm.Product.Picture2 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture2), addProductVm.Category.Section.Client.ClientUuid);
+					addProductVm.Product.Picture2 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture2), clientUuid);
 				
 				if (addProductVm.Picture3 != null)
-					addProductVm.Product.Picture3 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture3), addProductVm.Category.Section.Client.ClientUuid);			
+					addProductVm.Product.Picture3 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture3), clientUuid);			
 
 				if (addProductVm.Picture4 != null)
-					addProductVm.Product.Picture4 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture4), addProductVm.Category.Section.Client.ClientUuid);
+					addProductVm.Product.Picture4 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture4), clientUuid);
 				
 				if (addProductVm.Picture5 != null)
-					addProductVm.Product.Picture5 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture5), addProductVm.Category.Section.Client.ClientUuid);				
+					addProductVm.Product.Picture5 = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.Picture5), clientUuid);				
 
 				if (addProductVm.PictureOther != null)
-					addProductVm.Product.PictureOther = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.PictureOther), addProductVm.Category.Section.Client.ClientUuid);
+					addProductVm.Product.PictureOther = _generalHelper.SaveImage(GeneralHelper.ConvertPicToBase64String(addProductVm.PictureOther), clientUuid);
 
 
+				var client = await _clientRepository.GetClientAsync(new Guid(clientUuid));
 				
-
 				//Save the product
 				 var productUuid = await _productRepository.AddProductAsync(addProductVm.Product);
+				
+				 var shortUrl = _generalHelper.MakeGoogleShortUrl(client.DomainName + "/shop/product/" + productUuid);
 
-				 //TODO: generate the short URL
-				 //addProductVm.Product.ProductShortUrl = "";
-
-				//TODO: then save the short url
-
+				if (!string.IsNullOrEmpty(shortUrl))
+				{
+					await _productRepository.UpdateClientShortUrlAsync(new Guid(productUuid), shortUrl);
+				}
+				 
 				return RedirectToAction("CategoryProducts", new
 				{
-					clientUuid = addProductVm.Category.Section.Client.ClientUuid,
+					clientUuid = addProductVm.Product.ClientUuid,
 					categoryId = addProductVm.Product.CategoryId
 				});
 			}
@@ -488,7 +500,12 @@ namespace NoMatterWebApi.Controllers.v1
 			{
 				var product = await _productRepository.GetProductAsync(productId);
 
-				//string facebookMessageTemplate = Globals.FacebookItemPostMessage;
+				string facebookMessageTemplate = await ClientHelper.GetClientSetting(_clientRepository, new Guid(clientUuid), SettingEnum.FacebookPostTemplate);
+
+				if (string.IsNullOrEmpty(facebookMessageTemplate))
+				{
+					throw new Exception("Facebook template for client not specified");
+				}
 
 				//var facebookPostText = String.Format(facebookMessageTemplate,
 				//	product.Description,
@@ -496,12 +513,15 @@ namespace NoMatterWebApi.Controllers.v1
 				//	String.IsNullOrEmpty(product.Size) ? "" : "Size: " + product.Size,
 				//	product.ItemShortUrl);
 
+				var facebookPostText = facebookMessageTemplate;
+
 
 				var postToFacebookVm = new PostToFacebookVm
 				{
 					ClientUuid = clientUuid,
 					Product = product,
-					SelectedPicturePath = product.Picture1
+					SelectedPicturePath = product.Picture1,
+					FacebookPostText = facebookPostText
 				};
 
 

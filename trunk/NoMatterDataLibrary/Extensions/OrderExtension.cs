@@ -29,5 +29,23 @@ namespace NoMatterDataLibrary.Extensions
 				PaymentType = order.PaymentType1 != null ? order.PaymentType1.Name : null
 			};
 		}
+
+		public static NoMatterDatabaseModel.Order ToDatabaseOrder(this  NoMatterWebApiModels.Models.Order order)
+		{
+			return new NoMatterDatabaseModel.Order
+			{
+
+				//UserId = order.User.UserId,
+				Message = order.Message,
+				TotalAmount = order.TotalAmount,
+				DeliveryAmount = order.DeliveryAmount,
+				ClientDeliveryOptionId = order.ClientDeliveryOptionId,
+				PaymentTypeId = order.PaymentTypeId,
+				OrderStatusId = order.OrderStatusId,
+				//OrderProducts = order.Products.Select(x=>x.ToDatabaseProduct()).ToList()
+
+			};
+
+		}
 	}
 }

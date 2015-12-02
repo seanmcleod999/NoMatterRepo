@@ -1,0 +1,90 @@
+﻿@using NoMatterWebApiWebHelper.OtherHelpers
+@model NoMatterWebApiModels.Models.ShoppingCartDetails
+
+@{
+    ViewBag.Title = "Your Cart";
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Your Cart</h1>
+
+
+
+    @if (!Model.Products.Any())
+    {
+        <br/>
+        @:Your cart is currently empty
+        <br/><br/>
+    }
+    else
+    {
+        
+        <fieldset class="account form-wrapper" id="postage-options">
+        <legend>
+            <span class="fieldset-legend">Your current items</span>
+        </legend> 
+            
+        <div class="form-horizontal">
+                
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <br/>
+                    
+                    <div id="viewCartProductsHeader" class="clearfix">
+                        <span class="product-picture">&nbsp;</span>
+                        <span class="product-title">Title</span>
+                        <span class="product-price">Price</span>                            
+                        <div class="clear"><!-- --></div>    
+                    </div>   
+                    
+                    <ul id="viewCartProductList">
+                    
+                        @foreach (var product in Model.Products)
+                        {
+                            <li>
+                                <div id="viewCartProductWrapper" class="clearfix">
+                                    <div id="viewCartProductPicture">              
+                                        <img src="@StaticGlobalSettings.ImagesBaseAddress@product.Picture1?w=40" />
+                                    </div>
+                                    <div id="viewCartProductDetails">
+                                        <span class="product-title">@product.Title</span>
+                                        <span class="product-price">R @String.Format("{0:0}", product.DiscountDetails.DiscountedPrice)</span>
+                                        <span class="product-remove">@Html.ActionLink("remove", "RemoveProductFromCart", "Cart", new { productId = @product.ProductId }, new { @class = "RemoveFromCartLink" })</span>
+                                        <div class="clear"><!-- --></div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                                             
+                    </ul>
+                                                        
+                </div>
+               
+            </div>
+            
+             <br/>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button onclick="location.href='@Url.Action("Index", "Checkout")'" class="btn btn-default">Checkout</button>
+                            <img src="~/Content/images/rotator.gif" id="imgRotator" class="loader" alt="Loading" style="display: none"/>
+                        </div>
+                    </div>
+        </div>
+            
+           
+            <div>
+                
+            </div>
+
+@*        Total: R @String.Format("{0:0}", Model.TotalAmount)*@
+
+        <br/>
+
+            
+        </fieldset>
+    }
+       
+
+
+

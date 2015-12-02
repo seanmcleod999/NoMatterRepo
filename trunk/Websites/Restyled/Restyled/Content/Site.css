@@ -1,6 +1,6 @@
 ﻿body {
     padding-top: 50px;
-    padding-bottom: 20px;
+    
  
     font-size:medium;
     font-family: 'Muli', sans-serif;
@@ -14,8 +14,7 @@
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 30px 20px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -30,6 +29,32 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+
+.navbar-inverse {
+background-color: #778585;
+border-color: #778585;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+color: #E8E3DF;
+}
+
+.navbar-inverse .navbar-brand {
+color: #E8E3DF;
+}
+
+
+.container {
+max-width: 900px;
+}
+
+.footer-main {
+    text-align: center;
+    background: #939CA1;
+    color: white;
+    padding: 10px 10px;
 }
 
 h1 {
@@ -59,6 +84,44 @@ h2 {
     padding: 5px 0 15px 0;
 }
 
+.categoryImage {
+  margin: 10px;
+  width: 860px;
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+
+
+
+.mid h2 {
+   font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  margin: 0;
+  position: absolute;
+  top: 40px;
+  right: 00px;
+  font-size: 2rem;
+  transform: translate(-50%, -50%);
+}
+
+
+.mid h3 {
+   font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  color: white;
+  
+  margin: 0;
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  font-size: 1.5rem;
+  transform: translate(-50%, -50%);
+}
+
 /*.siteButton {
     border-radius:20px;
     border-color: #7c7c7c;
@@ -71,7 +134,18 @@ h2 {
 
 }*/
 
+.field-validation-error {
+    color: red
+}
 
+.validation-summary-errors {
+     color: red
+}
+
+ .validation-summary-errors ul
+{
+    list-style-type: none;
+}
 
 button, html input[type="button"], input[type="reset"], input[type="submit"] {
     cursor: pointer;
@@ -157,45 +231,322 @@ textarea {
 margin: 0.6em 0 0 0;
 }
 
-/* View Shop Products
+/* Login
 -----------------------------------------------------------*/
-.ShopProduct {
-    display: inline-block;
-    padding: 5px 5px;
+
+.LoginContentWrapper {
+    padding: 0 0;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:center;
 }
 
-/*.ShopProduct img{
-    width: 150px;
-    padding: 0 0px;
-}*/
-
-
-
-.ShopProductImage{
-    position: relative;
+.LoginPageLoginContent {
+    display:  inline-table;
+    padding: 0 10px;
+    text-align:left;
+    width: 100%;
+    max-width: 400px
 }
 
-.ShopRelatedProduct {
-   display: inline-block
+.LoginPageRegisterContent {
+   display:  inline-table;
+   padding: 0 10px; 
+   text-align:left;
+   width: 100%;
+   max-width: 400px
 }
 
-.ShopProductSold
+.loginPageFacebookLogin {
+    padding: 20px 0;
+}
+
+.loginPageFormButton {
+    padding: 20px 0;
+}
+
+
+
+/* Viewing shop item
+-----------------------------------------------------------*/
+
+.viewItemOuter 
 {
-    position:absolute;
+   
+    margin-left: auto;
+    margin-right:auto;
+    padding: 20px 10px;
+    margin-bottom:10px; 
+    
+    text-align: center;
+}
+
+.viewItemLeft 
+{ 
+    display: inline-block;
+    vertical-align: top;
+    padding-bottom: 10px;
+    padding-right: 10px
+}
+
+.viewItemLeft img
+{
+
+}
+
+.viewItemLeftImageView 
+{ 
+    position: relative;
+    padding: 0;
+}
+
+.viewItemRight 
+{
+     max-width: 390px;
+    display: inline-block;
+     padding-left: 10px;
+    text-align: left;     
+}
+
+
+
+.viewItemLeftThumbnails 
+{ 
+    
+}
+
+
+
+@media only screen and (max-width: 480px) 
+{
+    .viewItemLeft 
+    {
+        display: block;
+    }
+
+    .viewItemRight 
+    { 
+        display: block;
+    }
+   			
+}
+
+.viewItemDescription 
+{
+     font-size:large;
+     font-weight: bold;
+     color: #00A99D;
+     padding-bottom: 15px; 
+}
+
+.viewItempPrice 
+{
+     display:inline;
+     font-weight: bold;
+}
+
+.viewItemSize 
+{
+    display:inline;
+    padding-left: 30px;
+} 
+
+.viewItemNotes 
+{
+    display:block;
+    padding: 20px 0; 
+} 
+
+.viewItemSocialMediaLinks 
+{
+    padding:10px 0;
+
+}
+
+
+.viewItemBackLink 
+{
+    padding:10px 0 5px 0;  
+}
+
+.viewItemSaleItem
+{
+     position: absolute; 
+     top: 0px; left: 0px;
+     width:90px;
+     height:90px; 
+     background-image:url('images/SaleLayerLarge2.png');
+     background-repeat:no-repeat; 
+   
+}
+
+.viewItemSoldItem
+{
+     position: absolute; 
+     bottom: 60px; left: 0px;
+     background-image:url('images/soldLayer.png'); 
+     width:100%;   
+     text-align: center;     
+}
+
+.viewItemSoldItemText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;
+     line-height: 30px;    
+}
+
+.viewItemReservedItem
+{
+     position: absolute; 
+     bottom: 60px; left: 0px;
+     background-image:url('images/reservedLayer.png'); 
+     width:100%;   
+     text-align: center;     
+
+}
+
+.viewItemReservedItemText
+{
+     font-size: large;
+     color: #F1F2EF;  
+     height:30px;
+     line-height: 30px;   
+}
+
+.ViewItemItemStatus
+ {
+    padding-top: 5px;
+    padding-bottom: 15px;    
+}
+
+.AddToCartLink a:link, .AddToCartLink a:visited,  .AddToCartLink a:hover,  .AddToCartLink a:active 
+{
+    text-decoration: none;
+    
+}
+
+.viewItemRelatedItemsHeadingBox {
+    border-top: 1px dotted #7c7c7c;
+    border-bottom: 1px dotted #7c7c7c;
+    padding: 7px 0px 7px 8px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    margin-left: 1px;
+    text-align: left;
+}
+
+.viewItemRelatedItem {
+    display: inline;
+}
+
+.viewItemRelatedItem img{
+    max-height: 200px;
+    border: none;
+    padding: 11px;
+}
+
+.viewShopItemPagingControl {
+    padding: 10px 0;
+}
+
+/* Shopping items list
+-----------------------------------------------------------*/
+.itemListOuter 
+{
+     /*text-align: center;*/
+     display:block;
+     padding:0; 
+}
+
+@media (max-width: 650px) {
+    .itemListOuter {
+        text-align: center;
+    }
+}
+
+.itemListInner 
+{
+    text-align: center;
+    vertical-align:top;
+    display:inline-table;
+    /*width: 220px;
+    height: 275px;*/
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px
+}
+
+.itemListInnerPicture
+{
+    text-align: center;
+    position: relative;
+    display: table;
+
+}
+
+.itemListInnerPicture a:focus
+{
+    outline: 0;
+}
+
+.itemListInnerPicture a img
+{
+    border: none;
+    border-style: none;
+    border: 0
+}
+
+.itemListInner img
+{
+    margin-left: auto;
+    margin-right:auto;  
+    max-height:280px;
+}
+
+@media (max-width: 650px) {
+    .itemListInner img {
+        max-height:350px;
+    }
+}
+
+.itemListInner img:hover {
+    opacity: 0.8;
+}
+
+.itemListDetailsWrapper 
+{
+    height: 45px;
+}
+
+.itemListDetailsDescription 
+{
+   max-width: 190px
+}
+
+.itemListDetailsPrice 
+{
+   
+}
+
+.itemListSoldItem
+{
+     position:absolute;
     top: 100px;
     left:0;
     right:0;
     margin-left:auto;
     margin-right:auto;
 
-     background-image:url('images/soldLayer2.png'); 
+     background-image:url('images/soldLayer.png'); 
      width:100px;   
      text-align: center;     
      border-radius: 150px;
       height: 100px
 }
 
-.ShopProductSoldText
+.itemListSoldItemText
 {
      font-size: large;
      color: #F1F2EF;  
@@ -203,7 +554,7 @@ margin: 0.6em 0 0 0;
      line-height: 100px;    
 }
 
-.ShopProductReserved
+.itemListReservedItem
 {
     position:absolute;
     top: 100px;
@@ -220,7 +571,7 @@ margin: 0.6em 0 0 0;
     
 }
 
-.ShopProductReservedText
+.itemListReservedItemText
 {
      font-size: large;
      color: #F1F2EF;  
@@ -228,7 +579,7 @@ margin: 0.6em 0 0 0;
      line-height: 100px;   
 }
 
-.ShopProductSale
+.itemListSaleItem
 {
      position: absolute; top: 0px; left: 0px;
      width:50px;
@@ -236,6 +587,55 @@ margin: 0.6em 0 0 0;
      background-image:url('images/SaleLayer2.png');
      background-repeat:no-repeat; 
    
+}
+
+.itemListCategoryDetailsWrapper
+{
+     padding-bottom: 10px
+}
+
+.itemListCategoryDescription
+{
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+    margin-right: 150px
+}
+
+@media (max-width: 650px) {
+    .itemListCategoryDescription {
+      margin-right: 0
+   }
+}
+
+
+
+.itemListCategoryPicture img
+{   
+   height: 100px
+}
+
+.categoryListWrapper {
+    padding: 10px 20px 10px 0px
+}
+
+.categoryListWrapper ul li {
+    list-style-type: none;
+}
+
+
+.categoryListWrapper ul li a:hover, .categoryListWrapper a:link, .categoryListWrapper a:visited, .categoryListWrapper a:active
+{
+    font-size: medium;
+    color: #999999;
+    text-decoration:none;
+}
+
+
+.latestItemListPagingControls 
+{
+    text-align: center;
+    padding: 5px
 }
 
 /* View Shop Product

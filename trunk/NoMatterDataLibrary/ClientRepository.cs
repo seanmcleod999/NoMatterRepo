@@ -12,6 +12,7 @@ using ClientSetting = NoMatterWebApiModels.Models.ClientSetting;
 using ClientPaymentType = NoMatterWebApiModels.Models.ClientPaymentType;
 using ClientDeliveryOption = NoMatterWebApiModels.Models.ClientDeliveryOption;
 using ClientPage = NoMatterWebApiModels.Models.ClientPage;
+using Supplier = NoMatterWebApiModels.Models.Supplier;
 
 
 namespace NoMatterDataLibrary
@@ -43,6 +44,8 @@ namespace NoMatterDataLibrary
 
 		Task<string> GetClientStringSettingsAsync(Guid clientUuid, SettingEnum setting);
 		Task<int> GetClientIntSettingsAsync(Guid clientUuid, SettingEnum settingName);
+
+		Task<List<Supplier>> GetClientSuppliersAsync(Guid clientUuid);
 
 		Task AddClientDefaultAdminUserAsync(Guid clientUuid, string domainName, byte[] password);
 	}
@@ -422,6 +425,16 @@ namespace NoMatterDataLibrary
 
 			}
 
+		}
+
+		public async Task<List<Supplier>> GetClientSuppliersAsync(Guid clientUuid)
+		{
+			using (var mainDb = new DatabaseEntities())
+			{
+				var suppliers = await mainDb.Suppliers.Where(x => x.Client.ClientUUID == clientUuid).OrderBy(x=>x.Name).ToListAsync();
+
+				return suppliers.Select(x => x.ToDomainSupplier()).ToList();
+			}
 		}
 	}
 }

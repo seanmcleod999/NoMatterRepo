@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using NoMatterWebApiModels.Models;
@@ -13,6 +14,10 @@ namespace NoMatterWebApiModels.ViewModels
 
 		public Product Product { get; set; }
 
+		public List<Supplier> Suppliers;
+
+		public List<ProductType> ProductTypes;
+			
 		[Required(ErrorMessage = "required")]
 		[Display(Name = "Picture 1")]
 		public HttpPostedFileBase Picture1 { get; set; }

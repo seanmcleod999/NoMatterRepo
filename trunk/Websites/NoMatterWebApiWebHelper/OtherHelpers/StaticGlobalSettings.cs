@@ -26,7 +26,8 @@ namespace NoMatterWebApiWebHelper.OtherHelpers
 		public static string ClientName { get { return ClientStaticCache.Client().ClientName; } }
 		public static string SiteUrl { get { return ClientStaticCache.Client().SiteUrl; } }
 		public static string ClientLogo { get { return ClientStaticCache.Client().Logo; } }
-		public static string FacebookAppId { get { return ClientStaticCache.Client().FacebookAppId; } }
+		public static string FacebookAppId { get { return ConfigurationManager.AppSettings["FacebookPageAppId"]; } }
+		public static string FacebookAppSecret { get { return ConfigurationManager.AppSettings["FacebookPageAppSecret"]; } }
 
 		//SEO
 		public static string SEOKeywords { get { return ClientSettingsStaticCache.GetStringSetting("SEOKeywords"); } }

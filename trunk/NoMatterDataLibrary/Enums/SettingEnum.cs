@@ -9,7 +9,9 @@
 		AccountNumber = 5,
 		SiteNameFriendly = 9,
 		SalesEmailAddress = 20,
-		InfoEmailAddress = 21
+		InfoEmailAddress = 21,
+		FacebookPostTemplate = 35
+
 
 	}
 }

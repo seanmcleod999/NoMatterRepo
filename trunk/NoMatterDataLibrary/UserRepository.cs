@@ -82,8 +82,7 @@ namespace NoMatterDataLibrary
 
 				return userDb.UserUUID.ToString();
 
-			}
-			
+			}		
 		}
 
 		public async Task UpdateUserAsync(User user)

@@ -13,7 +13,7 @@ namespace NoMatterWebApi.Controllers.V1
 	public class ImageController : ApiController
 	{
 		private IClientRepository _clientRepository;
-		private IGlobalSettings _globalSettings;
+		//private IGlobalSettings _globalSettings;
 		private IGeneralHelper _generalHelper;
 		
 
@@ -21,14 +21,14 @@ namespace NoMatterWebApi.Controllers.V1
 		{
 
 			_clientRepository = new ClientRepository();		
-			_globalSettings = new GlobalSettings();
+			//_globalSettings = new GlobalSettings();
 			_generalHelper = new GeneralHelper();
 		}
 
-		public ImageController(IClientRepository clientRepository, IGlobalSettings globalSettings, IGeneralHelper generalHelper)
+		public ImageController(IClientRepository clientRepository, IGeneralHelper generalHelper)
 		{
 			_clientRepository = clientRepository;
-			_globalSettings = globalSettings;
+			//_globalSettings = globalSettings;
 			_generalHelper = generalHelper;
 		}
 
@@ -47,7 +47,9 @@ namespace NoMatterWebApi.Controllers.V1
 
 				var imagepath = _generalHelper.SaveImage(ImageData, client.ClientUuid);
 
-				return Created(new Uri(_globalSettings.ImagesBaseUrl + imagepath), imagepath);
+				//return Created(new Uri(_globalSettings.ImagesBaseUrl + imagepath), imagepath);
+
+				return Ok();
 
 			}
 			catch (Exception ex)
@@ -55,6 +57,13 @@ namespace NoMatterWebApi.Controllers.V1
 				Logger.WriteGeneralError(ex);
 				return InternalServerError(ex);
 			}
+		}
+
+
+		[Route("images/{imagePath}", Name = "GetImage")]
+		public async Task<IHttpActionResult> GetImageAsync(string imagePath)
+		{
+			return Ok();
 		}
 
 		

@@ -62,7 +62,7 @@ namespace RestyledLiving.Controllers
 
 		public ActionResult Login()
 		{
-			var userLoginVm = new UserLoginVm();
+			var userLoginVm = new LoginVm();
 
 			return View(userLoginVm);
 		}

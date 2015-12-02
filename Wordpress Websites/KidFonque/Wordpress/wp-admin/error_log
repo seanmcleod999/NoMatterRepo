@@ -1,0 +1,15 @@
+[20-Jun-2014 20:17:00 UTC] PHP Strict Standards:  Declaration of c2c_ConfigureSMTP::options_page_description() should be compatible with C2C_Plugin_023::options_page_description($localized_heading_text = '') in /home/kidfovih/public_html/wp-content/plugins/configure-smtp/configure-smtp.php on line 47
+[21-Jun-2014 08:29:57 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[21-Jun-2014 08:29:57 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[21-Jun-2014 08:29:57 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[21-Jun-2014 08:29:58 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 295
+[02-Sep-2015 12:21:07 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[02-Sep-2015 12:21:07 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[02-Sep-2015 12:21:07 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[02-Sep-2015 12:21:08 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 311
+[02-Sep-2015 12:21:08 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 315
+[02-Sep-2015 12:21:09 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 119
+[02-Sep-2015 12:21:09 UTC] PHP Warning:  array_search() expects parameter 2 to be array, null given in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[02-Sep-2015 12:21:09 UTC] PHP Warning:  Attempt to modify property of non-object in /home/kidfovih/public_html/wp-content/plugins/soundcloud-master/soundcloud-master.php on line 120
+[02-Sep-2015 12:21:09 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 311
+[02-Sep-2015 12:21:09 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/kidfovih/public_html/wp-includes/update.php on line 315

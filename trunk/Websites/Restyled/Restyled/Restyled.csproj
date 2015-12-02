@@ -136,6 +136,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -148,6 +150,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\chair.jpg" />
     <Content Include="Content\images\icon.ico" />
     <Content Include="Content\images\icon_add.png" />
     <Content Include="Content\images\icon_back.png" />
@@ -157,6 +160,7 @@
     <Content Include="Content\images\icon_next.png" />
     <Content Include="Content\images\icon_previous.png" />
     <Content Include="Content\images\icon_view.png" />
+    <Content Include="Content\images\Lighting.jpg" />
     <Content Include="Content\images\payfast_icon.png" />
     <Content Include="Content\images\redorange.jpg" />
     <Content Include="Content\images\ReservedLayer.png" />
@@ -205,10 +209,25 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shop\CategoryShop.cshtml" />
     <Content Include="Views\Shop\Index.cshtml" />
-    <Content Include="Views\Shop\ViewProduct.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Shop\ProductOld.cshtml" />
+    <Content Include="Views\Account\LoginOld.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Registered.cshtml" />
+    <Content Include="Views\Cart\AddProductToCart.cshtml" />
+    <Content Include="Views\Cart\ViewCart.cshtml" />
+    <Content Include="Views\Checkout\EftPaymentDetails.cshtml" />
+    <Content Include="Views\Checkout\Index.cshtml" />
+    <Content Include="Views\Checkout\PayfastCancelPayment.cshtml" />
+    <Content Include="Views\Checkout\PayfastPaymentSuccessful.cshtml" />
+    <Content Include="Views\Checkout\Postage.cshtml" />
+    <Content Include="Views\Checkout\Summary.cshtml" />
+    <Content Include="Views\Account\Login.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shop\Product.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shop\partialProductCategoryDetails.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

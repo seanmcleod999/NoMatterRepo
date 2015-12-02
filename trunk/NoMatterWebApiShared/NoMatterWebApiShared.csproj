@@ -56,8 +56,12 @@
     <Compile Include="Models\ClientDeliveryOption.cs" />
     <Compile Include="Models\ClientPage.cs" />
     <Compile Include="Models\ClientPaymentType.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\ProcessFailedOrderModel.cs" />
     <Compile Include="Models\ProcessPaidOrderModel.cs" />
+    <Compile Include="Models\ProductType.cs" />
+    <Compile Include="Models\RegisterUserModel.cs" />
+    <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\UpdateOrderPaymentTypeModel.cs" />
     <Compile Include="ViewModels\EftOrderProcessedVm.cs" />
     <Compile Include="Models\JsonBadRequest.cs" />
@@ -109,6 +113,7 @@
     <Compile Include="ViewModels\EditProductVm.cs" />
     <Compile Include="ViewModels\GlobalSettingsVm.cs" />
     <Compile Include="ViewModels\AddProductVm.cs" />
+    <Compile Include="ViewModels\LoginVm.cs" />
     <Compile Include="ViewModels\PostToFacebookVm.cs" />
     <Compile Include="ViewModels\SectionCategoriesVm.cs" />
     <Compile Include="ViewModels\UserLoginVm.cs" />

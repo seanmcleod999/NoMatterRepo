@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="07669aa52e71479eb9b9e308963a04fc" Name="Diagram1" ZoomLevel="68">
-        <EntityTypeShape EntityType="DatabaseModel.CartProduct" Width="1.5" PointX="9.75" PointY="20.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.CartProduct" Width="1.5" PointX="14.75" PointY="24.25" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Category" Width="1.5" PointX="5.25" PointY="23.875" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Client" Width="1.5" PointX="0.75" PointY="15.125" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.ClientPaymentType" Width="1.5" PointX="3" PointY="15.75" IsExpanded="true" />
@@ -14,14 +14,14 @@
         <EntityTypeShape EntityType="DatabaseModel.DiscountType" Width="1.5" PointX="6.125" PointY="12.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Enquiry" Width="1.5" PointX="3" PointY="19.25" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.GlobalSetting" Width="1.5" PointX="15.375" PointY="6.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Order" Width="1.875" PointX="6.5" PointY="29.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.OrderProduct" Width="1.5" PointX="9.25" PointY="30.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Order" Width="1.875" PointX="4.25" PointY="29.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.OrderProduct" Width="1.5" PointX="11.125" PointY="31.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.PaymentType" Width="1.5" PointX="3" PointY="12.375" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Product" Width="1.5" PointX="7.5" PointY="22.5" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.ProductKeyword" Width="1.5" PointX="11" PointY="25" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Section" Width="1.5" PointX="3" PointY="24.25" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.Setting" Width="1.5" PointX="8.875" PointY="6.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.User" Width="1.5" PointX="2.75" PointY="28.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.User" Width="1.5" PointX="1.5" PointY="28.875" IsExpanded="true" />
         <AssociationConnector Association="DatabaseModel.FK_CartProduct_Product" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_Category_Section" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_Product_Category" ManuallyRouted="false" />
@@ -60,6 +60,22 @@
         <EntityTypeShape EntityType="DatabaseModel.EmailEvent" Width="1.5" PointX="3.75" PointY="6.125" />
         <AssociationConnector Association="DatabaseModel.FK_ClientEmail_Client" />
         <AssociationConnector Association="DatabaseModel.FK_ClientEmail_EmailEvent" />
+        <EntityTypeShape EntityType="DatabaseModel.ProductType" Width="1.5" PointX="12.875" PointY="52.5" />
+        <EntityTypeShape EntityType="DatabaseModel.Supplier" Width="1.5" PointX="10.375" PointY="19.625" />
+        <AssociationConnector Association="DatabaseModel.FK_Product_Client" />
+        <AssociationConnector Association="DatabaseModel.FK_Supplier_Client" />
+        <AssociationConnector Association="DatabaseModel.FK_Product_ProductType" />
+        <AssociationConnector Association="DatabaseModel.FK_Product_Supplier" />
+        <EntityTypeShape EntityType="DatabaseModel.Thing" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="DatabaseModel.ThingField" Width="1.5" PointX="3" PointY="0.875" />
+        <EntityTypeShape EntityType="DatabaseModel.ThingFieldValue" Width="1.5" PointX="5.75" PointY="0.75" />
+        <AssociationConnector Association="DatabaseModel.FK_ThingField_Thing" />
+        <AssociationConnector Association="DatabaseModel.FK_ThingFieldValue_ThingField" />
+        <EntityTypeShape EntityType="DatabaseModel.ThingAlert" Width="1.5" PointX="12.625" PointY="0.625" />
+        <EntityTypeShape EntityType="DatabaseModel.ThingAlertFrequency" Width="1.5" PointX="15.75" PointY="1.375" />
+        <EntityTypeShape EntityType="DatabaseModel.ThingAlertType" Width="1.5" PointX="9.375" PointY="1" />
+        <AssociationConnector Association="DatabaseModel.FK_ThingAlert_ThingAlertFrequency" />
+        <AssociationConnector Association="DatabaseModel.FK_ThingAlert_ThingAlertType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

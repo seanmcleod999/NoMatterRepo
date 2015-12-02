@@ -20,7 +20,7 @@ namespace NoMatterWebApi.Controllers.V1
 		
 		private ICartRepository _cartRepository;
 		private IProductRepository _productRepository;
-		private IGlobalSettings _globalSettings;
+		//private IGlobalSettings _globalSettings;
 		
 
 		public CartController()
@@ -28,16 +28,16 @@ namespace NoMatterWebApi.Controllers.V1
 
 			_cartRepository = new CartRepository();
 			_productRepository = new ProductRepository();
-			_globalSettings = new GlobalSettings();
+			//_globalSettings = new GlobalSettings();
 			
 			
 		}
 
-		public CartController(ICartRepository cartRepository, IProductRepository productRepository, IGlobalSettings globalSettings)
+		public CartController(ICartRepository cartRepository, IProductRepository productRepository)
 		{
 			_cartRepository = cartRepository;
 			_productRepository = productRepository;
-			_globalSettings = globalSettings;
+			//_globalSettings = globalSettings;
 		}
 
 		// GET api/v1/cart/{cartId}
@@ -73,11 +73,11 @@ namespace NoMatterWebApi.Controllers.V1
 			//TODO: if the product allows more than one order and the product already exists in the cart.. update the quantity
 			try
 			{
-				var cartProduct = await _cartRepository.GetCartProductAsync(cartId, new Guid(model.ProductId));
+				var cartProduct = await _cartRepository.GetCartProductAsync(cartId, model.ProductId);
 
 				if (cartProduct == null)
 				{
-					var product = await _productRepository.GetProductAsync(new Guid(model.ProductId));
+					var product = await _productRepository.GetProductAsync(model.ProductId);
 
 					if (product == null) return new CustomBadRequest(Request, ApiResultCode.ProductNotFound);
 
@@ -107,13 +107,13 @@ namespace NoMatterWebApi.Controllers.V1
 		// DELETE api/v1/cart/{cartId}/product/{productId}
 		[Route("{cartId}/product/{productId}")]
 		[HttpDelete]
-		public async Task<IHttpActionResult> DeleteProductFromCart(string cartId, string productId)
+		public async Task<IHttpActionResult> DeleteProductFromCart(string cartId, int productId)
 		{
 			//TODO: IF deleting and the quanity is more than 1... remove 1 from quanity
 
 			try
 			{
-				var cartProduct = await _cartRepository.GetCartProductAsync(cartId, new Guid(productId));
+				var cartProduct = await _cartRepository.GetCartProductAsync(cartId, productId);
 
 				if (cartProduct != null)
 				{

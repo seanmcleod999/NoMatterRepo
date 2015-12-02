@@ -1,0 +1,51 @@
+﻿@model NoMatterWebApiModels.ViewModels.EftOrderProcessedVm
+
+@using NoMatterWebApiWebHelper.OtherHelpers
+@{
+    ViewBag.Title = "Eft Order";
+}
+
+<h1>Yay, order completed successfully!</h1>
+
+Your order number is <b>@Model.Order.OrderId</b>.
+<br /><br />
+<u>Order Details:</u><br />
+@foreach (var item in Model.Order.Products)
+{
+    if (item.DiscountDetails.Discounted == true)
+    {
+        @item.Title @: - R @String.Format("{0:0}", item.DiscountDetails.DiscountedPrice)<br />
+    }
+    else
+    {
+        @item.Title @: - R @String.Format("{0:0}", item.Price)<br />
+    }
+}
+
+Shipping - R @String.Format("{0:0}", Model.Order.DeliveryAmount) 
+<br />
+The total amount is <b> R @String.Format("{0:0}", Model.Order.TotalAmount)</b>
+
+<br /><br />
+<u>Please pay the total due amount into the bank details below:</u>
+<br />
+Name: <b>@Model.BankDetails.AccountName</b><br />
+Bank: <b>@Model.BankDetails.BankName</b><br />
+Branch: <b>@Model.BankDetails.BranchName</b><br />
+Branch Code: <b>@Model.BankDetails.BranchNumber</b><br />
+Account Number: <b>@Model.BankDetails.AccountNumber</b><br />
+Reference: (please use your name & order number)
+<br /><br />
+*Payment needs to be made within 24hrs or goods will be unreserved & sold to the next customer. 
+<br/>
+Kindly send proof of payment to <b><u>@StaticGlobalSettings.EmailAddressSales</u></b> asap to confirm your items as SOLD.
+<br /><br/>
+*Please note that we cannot courier your item(s) until the funds have cleared. 
+<br /><br />
+*This information has also been emailed to you at <b><u>@Model.Order.User.Email</u></b>.
+<br /><br /><br/>
+Thanks for shopping with us!
+
+<br/><br/>
+
+<script src="@Url.Content("~/Scripts/GoogleAnalytics.js")" type="text/javascript"></script>

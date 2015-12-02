@@ -39,7 +39,19 @@
         <th>
             
         </th>
-        
+
+        <th>
+
+        </th>
+
+        <th>
+
+        </th>
+
+        <th>
+
+        </th>
+
          <th>
             
         </th>
@@ -66,15 +78,23 @@
          <td>
             @Html.DisplayFor(modelItem => client.Enabled)
         </td>
-        
+
         <td>
-            @Html.ActionLink("edit", "ClientEdit", "Superuser", new { clientUuid = @client.ClientUuid }, null)
+            @Html.ActionLink("edit", "ClientEdit", "Superuser", new {clientUuid = @client.ClientUuid}, null)
         </td>
-       
+
+         <td>
+            @Html.ActionLink("products", "Products", "Admin", new { clientUuid = @client.ClientUuid }, null)
+        </td>
+
         <td>
-            @Html.ActionLink("sections", "Sections", "Admin", new { clientUuid = @client.ClientUuid }, null)
+            @Html.ActionLink("sections", "Sections", "Admin", new {clientUuid = @client.ClientUuid}, null)
         </td>
-        
+
+         <td>
+            @Html.ActionLink("settings", "ClientSettings", "Admin", new {clientUuid = @client.ClientUuid}, null)
+        </td>
+
         <td>
             @Html.ActionLink("discounts", "Discounts", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
@@ -88,11 +108,11 @@
         </td>
 
         <td>
-            @Html.ActionLink("settings", "ClientSettings", "Admin", new {clientUuid = @client.ClientUuid}, null)
+            @Html.ActionLink("users", "ClientUsers", "Admin", new {clientUuid = @client.ClientUuid}, null)
         </td>
 
-        <td>
-            @Html.ActionLink("users", "ClientUsers", "Admin", new { clientUuid = @client.ClientUuid }, null)
+         <td>
+            @Html.ActionLink("suppliers", "ClientSuppliers", "Admin", new { clientUuid = @client.ClientUuid }, null)
         </td>
 
     </tr>
