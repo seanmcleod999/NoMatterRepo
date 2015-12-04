@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Security.Policy;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
-using Newtonsoft.Json.Linq;
 using NoMatterDataLibrary;
 using NoMatterDataLibrary.Enums;
 using NoMatterWebApi.Logging;
-using NoMatterWebApiModels.Models;
 using Temboo.Core;
 using Temboo.Library.Google.Gmail;
-using Temboo.Library.Utilities.Dates;
 
 namespace NoMatterWebApi.Controllers.V1
 {
@@ -198,21 +190,18 @@ namespace NoMatterWebApi.Controllers.V1
 			//Send the alert
 
 			// Instantiate a TembooSession object using your Account name and Application key
-			TembooSession session = new TembooSession("seanmcleod", "MelvilleGreen", "st812ho9sjnKC4YJ6GF13cAv83oOt6PT");
+			TembooSession session = new TembooSession("seanmcleod", "MelvilleGreen", "st812ho9sjnKC4YJ6GF13cAv83oOt6PT");//todo: move to config
 
 			// Instantiate the Choreo using the TembooSession
 			SendEmail sendEmailChoreo = new SendEmail(session);
 
 			// Set inputs
-			sendEmailChoreo.setUsername("mcleod.sean@gmail.com");
-			sendEmailChoreo.setPassword("56546546456"); //App password
-			sendEmailChoreo.setFromAddress("mcleod.sean@gmail.com");
-			sendEmailChoreo.setToAddress("mcleod.sean@gmail.com");
+			sendEmailChoreo.setUsername("mcleod.sean@gmail.com"); //todo: move to config
+			sendEmailChoreo.setPassword("fqrrcdgvikdpftqt"); //App password //todo: move to config
+			sendEmailChoreo.setFromAddress("mcleod.sean@gmail.com");//todo: move to config
+			sendEmailChoreo.setToAddress("mcleod.sean@gmail.com");//todo: move to config
 			sendEmailChoreo.setSubject(alertSubject);
 			sendEmailChoreo.setMessageBody(alertBody);
-
-			// Set Profile
-			//sendEmailChoreo.setCredential("YOUR_GMAIL_PROFILE_NAME");
 
 			// Execute Choreo
 			SendEmailResultSet sendEmailResultSet = sendEmailChoreo.execute();
@@ -220,15 +209,14 @@ namespace NoMatterWebApi.Controllers.V1
 			// Print results
 			//Console.WriteLine(sendEmailResults.Success);
 
-			//if (sendEmailResultSet.Success.)
-			//{
-				
-			//}
-
-			//update the lastAlertSent date
-
-			await _thingRepository.UpdateThingAlertSent(thingAlertId);
-
+			if (sendEmailResultSet.Success == "true")
+			{
+				await _thingRepository.UpdateThingAlertSent(thingAlertId);
+			}
+			else
+			{
+				Logger.WriteGeneralError("Error sending email notification. Error: " + sendEmailResultSet.Output.ToString());
+			}
 
 		}
 	}

@@ -26,6 +26,7 @@ CREATE TABLE [dbo].[Category](
 	[SectionId] [int] NOT NULL,
 	[CategoryUUID] [uniqueidentifier] NOT NULL,
 	[CategoryName] [varchar](50) NOT NULL,
+	[CategoryFriendlyName] [varchar](50) NULL,
 	[CategoryDescription] [varchar](max) NULL,
 	[CategoryOrder] [smallint] NOT NULL,
 	[ActionName] [varchar](20) NULL,
@@ -46,8 +47,9 @@ CREATE TABLE [dbo].[Client](
 	[ClientUUID] [uniqueidentifier] NOT NULL,
 	[ClientName] [varchar](50) NOT NULL,
 	[Enabled] [bit] NOT NULL,
-	[Logo] [varchar](50) NULL,
-	[SiteUrl] [varchar](100) NULL
+	[Logo] [varchar](100) NULL,
+	[SiteUrl] [varchar](100) NULL,
+	[DomainName] [varchar](50) NULL
 ) ON [PRIMARY]
 GO
 
@@ -64,6 +66,21 @@ CREATE TABLE [dbo].[ClientDeliveryOption](
 	[DeliveryAmount] [decimal](18, 2) NOT NULL,
 	[OptionOrder] [tinyint] NOT NULL,
 	[Enabled] [bit] NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ClientEmail](
+	[ClientEmailId] [int] IDENTITY(1,1) NOT NULL,
+	[ClientID] [int] NOT NULL,
+	[EmailEventId] [smallint] NOT NULL,
+	[Success] [bit] NOT NULL,
+	[ErrorMessage] [varchar](max) NULL
 ) ON [PRIMARY]
 GO
 
@@ -116,6 +133,20 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+CREATE TABLE [dbo].[Coupon](
+	[CouponId] [smallint] IDENTITY(1,1) NOT NULL,
+	[CouponName] [varchar](20) NOT NULL,
+	[DiscountTypeId] [smallint] NOT NULL,
+	[DiscountAmount] [int] NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[Discount](
 	[DiscountId] [smallint] IDENTITY(1,1) NOT NULL,
 	[ClientId] [int] NOT NULL,
@@ -157,6 +188,19 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+CREATE TABLE [dbo].[EmailEvent](
+	[EmailEventId] [smallint] NOT NULL,
+	[EventName] [varchar](50) NOT NULL,
+	[DefaultTemplateName] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[Enquiry](
 	[EnquiryId] [smallint] IDENTITY(1,1) NOT NULL,
 	[ClientId] [int] NOT NULL,
@@ -189,22 +233,6 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[OldSetting](
-	[SettingId] [smallint] IDENTITY(1,1) NOT NULL,
-	[ClientId] [int] NOT NULL,
-	[SettingName] [varchar](50) NOT NULL,
-	[SettingType] [tinyint] NOT NULL,
-	[StringValue] [varchar](200) NULL,
-	[IntValue] [smallint] NULL
-) ON [PRIMARY]
-GO
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[Order](
 	[OrderId] [int] IDENTITY(1,1) NOT NULL,
 	[UserId] [int] NOT NULL,
@@ -215,9 +243,9 @@ CREATE TABLE [dbo].[Order](
 	[CourierName] [varchar](50) NULL,
 	[TrackingNumber] [varchar](50) NULL,
 	[DateCreated] [datetime] NOT NULL,
-	[PaymentType] [varchar](20) NULL,
 	[Paid] [bit] NOT NULL,
-	[OrderStatusId] [smallint] NOT NULL
+	[OrderStatusId] [smallint] NOT NULL,
+	[PaymentTypeId] [smallint] NULL
 ) ON [PRIMARY]
 GO
 
@@ -256,23 +284,27 @@ GO
 
 CREATE TABLE [dbo].[Product](
 	[ProductId] [int] IDENTITY(1,1) NOT NULL,
+	[ClientId] [int] NOT NULL,
 	[CategoryId] [int] NOT NULL,
+	[SupplierId] [int] NULL,
+	[ProductTypeId] [smallint] NOT NULL,
 	[ProductUUID] [uniqueidentifier] NOT NULL,
 	[Title] [varchar](200) NOT NULL,
 	[Description] [varchar](max) NULL,
 	[AdminNotes] [varchar](200) NULL,
 	[Size] [varchar](20) NULL,
 	[Price] [decimal](18, 2) NOT NULL,
+	[QuantityRemaining] [smallint] NULL,
 	[Hidden] [bit] NOT NULL,
 	[Reserved] [bit] NOT NULL,
 	[Sold] [bit] NOT NULL,
 	[DateSold] [datetime] NULL,
-	[Picture1] [varchar](50) NULL,
-	[Picture2] [varchar](50) NULL,
-	[Picture3] [varchar](50) NULL,
-	[Picture4] [varchar](50) NULL,
-	[Picture5] [varchar](50) NULL,
-	[PictureOther] [varchar](50) NULL,
+	[Picture1] [varchar](80) NULL,
+	[Picture2] [varchar](80) NULL,
+	[Picture3] [varchar](80) NULL,
+	[Picture4] [varchar](80) NULL,
+	[Picture5] [varchar](80) NULL,
+	[PictureOther] [varchar](80) NULL,
 	[FacebookPostId] [varchar](20) NULL,
 	[TwitterPostId] [varchar](20) NULL,
 	[ProductShortUrl] [varchar](50) NULL,
@@ -290,6 +322,18 @@ GO
 CREATE TABLE [dbo].[ProductKeyword](
 	[ProductId] [int] NOT NULL,
 	[Keyword] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ProductType](
+	[ProductTypeId] [smallint] NOT NULL,
+	[Description] [varchar](50) NOT NULL
 ) ON [PRIMARY]
 GO
 
@@ -319,7 +363,7 @@ CREATE TABLE [dbo].[Section](
 	[ControllerName] [varchar](50) NULL,
 	[SectionDescription] [varchar](max) NULL,
 	[Hidden] [bit] NOT NULL,
-	[Picture] [varchar](50) NULL,
+	[Picture] [varchar](80) NULL,
 	[SectionOrder] [smallint] NOT NULL
 ) ON [PRIMARY]
 GO
@@ -370,9 +414,100 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[temp](
-	[tempid] [nchar](10) NULL,
-	[tegfhg] [nchar](10) NULL
+CREATE TABLE [dbo].[Supplier](
+	[SupplierId] [int] IDENTITY(1,1) NOT NULL,
+	[ClientId] [int] NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+	[ContactNumber] [varchar](20) NULL,
+	[Email] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Thing](
+	[ThingId] [int] IDENTITY(1,1) NOT NULL,
+	[ThingName] [varchar](100) NOT NULL,
+	[DateAdded] [datetime] NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ThingAlert](
+	[ThingAlertId] [int] IDENTITY(1,1) NOT NULL,
+	[ThingName] [varchar](50) NOT NULL,
+	[FieldName] [varchar](50) NOT NULL,
+	[ThingAlertTypeId] [smallint] NOT NULL,
+	[ThingAlertFrequencyId] [smallint] NOT NULL,
+	[Criteria] [int] NOT NULL,
+	[Description] [varchar](200) NULL,
+	[AlertSubject] [varchar](100) NOT NULL,
+	[AlertBody] [varchar](max) NOT NULL,
+	[DateAdded] [datetime] NOT NULL,
+	[LastAlertSent] [datetime] NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ThingAlertFrequency](
+	[ThingAlertFrequencyId] [smallint] NOT NULL,
+	[Description] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ThingAlertType](
+	[ThingAlertTypeId] [smallint] NOT NULL,
+	[Type] [varchar](20) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ThingField](
+	[ThingFieldId] [int] IDENTITY(1,1) NOT NULL,
+	[ThingId] [int] NOT NULL,
+	[FieldName] [varchar](50) NOT NULL,
+	[DateAdded] [datetime] NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ThingFieldValue](
+	[ThingFieldValueId] [int] IDENTITY(1,1) NOT NULL,
+	[ThingFieldId] [int] NOT NULL,
+	[IntValue] [int] NULL,
+	[BoolValue] [bit] NULL,
+	[StringValue] [varchar](50) NULL,
+	[DateAdded] [datetime] NOT NULL
 ) ON [PRIMARY]
 GO
 
@@ -388,8 +523,7 @@ CREATE TABLE [dbo].[User](
 	[UserUUID] [uniqueidentifier] NOT NULL,
 	[CredentialTypeId] [tinyint] NOT NULL,
 	[Identifier] [varchar](100) NOT NULL,
-	[Password] [binary](200) NULL,
-	[PasswordSalt] [nvarchar](128) NULL,
+	[Password] [varbinary](24) NULL,
 	[Email] [varchar](100) NULL,
 	[FullName] [varchar](100) NULL,
 	[ContactNumber] [varchar](100) NULL,
@@ -438,6 +572,9 @@ GO
 ALTER TABLE [dbo].[Setting] ADD  CONSTRAINT [DF_SiteSetting_SiteSettingTypeId]  DEFAULT ((0)) FOR [SettingCategoryId]
 GO
 
+ALTER TABLE [dbo].[ThingAlert] ADD  CONSTRAINT [DF_ThingAlert_DateAdded]  DEFAULT (getdate()) FOR [DateAdded]
+GO
+
 
 -- INDEXES
 
@@ -445,13 +582,6 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ClientPage] ON [dbo].[ClientPage]
 (
 	[ClientId] ASC,
 	[PageName] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
-
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Setting_ClientId_SettingName] ON [dbo].[OldSetting] 
-(
-	[ClientId] ASC,
-	[SettingName] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
@@ -473,6 +603,12 @@ ALTER TABLE [dbo].[ClientDeliveryOption] ADD  CONSTRAINT [PK_ClientDeliveryOptio
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[ClientEmail] ADD  CONSTRAINT [PK_ClientEmail] PRIMARY KEY CLUSTERED 
+(
+	[ClientEmailId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
 ALTER TABLE [dbo].[Enquiry] ADD  CONSTRAINT [PK_ClientEnquiry] PRIMARY KEY CLUSTERED 
 (
 	[EnquiryId] ASC
@@ -491,15 +627,15 @@ ALTER TABLE [dbo].[ClientPaymentType] ADD  CONSTRAINT [PK_ClientPaymentType] PRI
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[OldSetting] ADD  CONSTRAINT [PK_ClientSetting] PRIMARY KEY CLUSTERED 
-(
-	[SettingId] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
-
 ALTER TABLE [dbo].[ClientSetting] ADD  CONSTRAINT [PK_ClientSiteSetting] PRIMARY KEY CLUSTERED 
 (
 	[ClientSettingId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Coupon] ADD  CONSTRAINT [PK_Coupon] PRIMARY KEY CLUSTERED 
+(
+	[CouponId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
@@ -519,6 +655,12 @@ GO
 ALTER TABLE [dbo].[DiscountType] ADD  CONSTRAINT [PK_DiscountType] PRIMARY KEY CLUSTERED 
 (
 	[DiscountTypeId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[EmailEvent] ADD  CONSTRAINT [PK_EmailEvent] PRIMARY KEY CLUSTERED 
+(
+	[EmailEventId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
@@ -544,6 +686,12 @@ ALTER TABLE [dbo].[ProductKeyword] ADD  CONSTRAINT [PK_ProductKeyword] PRIMARY K
 (
 	[ProductId] ASC,
 	[Keyword] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ProductType] ADD  CONSTRAINT [PK_ProductType] PRIMARY KEY CLUSTERED 
+(
+	[ProductTypeId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
@@ -583,6 +731,48 @@ ALTER TABLE [dbo].[SettingCategory] ADD  CONSTRAINT [PK_SiteSettingType] PRIMARY
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Supplier] ADD  CONSTRAINT [PK_Supplier] PRIMARY KEY CLUSTERED 
+(
+	[SupplierId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Thing] ADD  CONSTRAINT [PK_Thing] PRIMARY KEY CLUSTERED 
+(
+	[ThingId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ThingAlert] ADD  CONSTRAINT [PK_ThingAlert] PRIMARY KEY CLUSTERED 
+(
+	[ThingAlertId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ThingAlertFrequency] ADD  CONSTRAINT [PK_ThingAlertFrequency] PRIMARY KEY CLUSTERED 
+(
+	[ThingAlertFrequencyId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ThingAlertType] ADD  CONSTRAINT [PK_ThingAlertType] PRIMARY KEY CLUSTERED 
+(
+	[ThingAlertTypeId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ThingField] ADD  CONSTRAINT [PK_ThingField] PRIMARY KEY CLUSTERED 
+(
+	[ThingFieldId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ThingFieldValue] ADD  CONSTRAINT [PK_ThingFieldValue] PRIMARY KEY CLUSTERED 
+(
+	[ThingFieldValueId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
 ALTER TABLE [dbo].[User] ADD  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[UserId] ASC
@@ -607,6 +797,12 @@ ALTER TABLE [dbo].[UserRole] ADD  CONSTRAINT [PK_UserRole] PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
+CREATE UNIQUE NONCLUSTERED INDEX [UX_ThingName] ON [dbo].[Thing] 
+(
+	[ThingName] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
 
 -- FOREIGN KEYS
 
@@ -627,9 +823,24 @@ GO
 
 ALTER TABLE [dbo].[ClientDeliveryOption]  WITH CHECK ADD  CONSTRAINT [FK_ClientDeliveryOption_Client] FOREIGN KEY([ClientId])
 REFERENCES [Client] ([ClientId])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[ClientDeliveryOption] CHECK CONSTRAINT [FK_ClientDeliveryOption_Client]
+GO
+
+ALTER TABLE [dbo].[ClientEmail]  WITH CHECK ADD  CONSTRAINT [FK_ClientEmail_Client] FOREIGN KEY([ClientID])
+REFERENCES [Client] ([ClientId])
+GO
+
+ALTER TABLE [dbo].[ClientEmail] CHECK CONSTRAINT [FK_ClientEmail_Client]
+GO
+
+ALTER TABLE [dbo].[ClientEmail]  WITH CHECK ADD  CONSTRAINT [FK_ClientEmail_EmailEvent] FOREIGN KEY([EmailEventId])
+REFERENCES [EmailEvent] ([EmailEventId])
+GO
+
+ALTER TABLE [dbo].[ClientEmail] CHECK CONSTRAINT [FK_ClientEmail_EmailEvent]
 GO
 
 ALTER TABLE [dbo].[Enquiry]  WITH CHECK ADD  CONSTRAINT [FK_ClientEnquiry_Client] FOREIGN KEY([ClientId])
@@ -660,15 +871,9 @@ GO
 ALTER TABLE [dbo].[ClientPaymentType] CHECK CONSTRAINT [FK_ClientPaymentType_PaymentType]
 GO
 
-ALTER TABLE [dbo].[OldSetting]  WITH CHECK ADD  CONSTRAINT [FK_ClientSetting_Client] FOREIGN KEY([ClientId])
-REFERENCES [Client] ([ClientId])
-GO
-
-ALTER TABLE [dbo].[OldSetting] CHECK CONSTRAINT [FK_ClientSetting_Client]
-GO
-
 ALTER TABLE [dbo].[ClientSetting]  WITH CHECK ADD  CONSTRAINT [FK_ClientSetting_Client1] FOREIGN KEY([ClientId])
 REFERENCES [Client] ([ClientId])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[ClientSetting] CHECK CONSTRAINT [FK_ClientSetting_Client1]
@@ -676,6 +881,7 @@ GO
 
 ALTER TABLE [dbo].[ClientSetting]  WITH CHECK ADD  CONSTRAINT [FK_ClientSetting_Setting] FOREIGN KEY([SettingId])
 REFERENCES [Setting] ([SettingId])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[ClientSetting] CHECK CONSTRAINT [FK_ClientSetting_Setting]
@@ -717,6 +923,13 @@ GO
 ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_ClientDeliveryOption]
 GO
 
+ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_PaymentType] FOREIGN KEY([PaymentTypeId])
+REFERENCES [PaymentType] ([PaymentTypeId])
+GO
+
+ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_PaymentType]
+GO
+
 ALTER TABLE [dbo].[OrderProduct]  WITH CHECK ADD  CONSTRAINT [FK_OrderProduct_Order] FOREIGN KEY([OrderId])
 REFERENCES [Order] ([OrderId])
 GO
@@ -738,6 +951,27 @@ ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[Product] CHECK CONSTRAINT [FK_Product_Category]
+GO
+
+ALTER TABLE [dbo].[Product]  WITH CHECK ADD  CONSTRAINT [FK_Product_Client] FOREIGN KEY([ClientId])
+REFERENCES [Client] ([ClientId])
+GO
+
+ALTER TABLE [dbo].[Product] CHECK CONSTRAINT [FK_Product_Client]
+GO
+
+ALTER TABLE [dbo].[Product]  WITH CHECK ADD  CONSTRAINT [FK_Product_ProductType] FOREIGN KEY([ProductTypeId])
+REFERENCES [ProductType] ([ProductTypeId])
+GO
+
+ALTER TABLE [dbo].[Product] CHECK CONSTRAINT [FK_Product_ProductType]
+GO
+
+ALTER TABLE [dbo].[Product]  WITH CHECK ADD  CONSTRAINT [FK_Product_Supplier] FOREIGN KEY([SupplierId])
+REFERENCES [Supplier] ([SupplierId])
+GO
+
+ALTER TABLE [dbo].[Product] CHECK CONSTRAINT [FK_Product_Supplier]
 GO
 
 ALTER TABLE [dbo].[ProductKeyword]  WITH CHECK ADD  CONSTRAINT [FK_ProductKeyword_Product] FOREIGN KEY([ProductId])
@@ -767,6 +1001,41 @@ REFERENCES [SettingType] ([SettingTypeId])
 GO
 
 ALTER TABLE [dbo].[Setting] CHECK CONSTRAINT [FK_Setting_SettingType]
+GO
+
+ALTER TABLE [dbo].[Supplier]  WITH CHECK ADD  CONSTRAINT [FK_Supplier_Client] FOREIGN KEY([ClientId])
+REFERENCES [Client] ([ClientId])
+GO
+
+ALTER TABLE [dbo].[Supplier] CHECK CONSTRAINT [FK_Supplier_Client]
+GO
+
+ALTER TABLE [dbo].[ThingAlert]  WITH CHECK ADD  CONSTRAINT [FK_ThingAlert_ThingAlertFrequency] FOREIGN KEY([ThingAlertFrequencyId])
+REFERENCES [ThingAlertFrequency] ([ThingAlertFrequencyId])
+GO
+
+ALTER TABLE [dbo].[ThingAlert] CHECK CONSTRAINT [FK_ThingAlert_ThingAlertFrequency]
+GO
+
+ALTER TABLE [dbo].[ThingAlert]  WITH CHECK ADD  CONSTRAINT [FK_ThingAlert_ThingAlertType] FOREIGN KEY([ThingAlertTypeId])
+REFERENCES [ThingAlertType] ([ThingAlertTypeId])
+GO
+
+ALTER TABLE [dbo].[ThingAlert] CHECK CONSTRAINT [FK_ThingAlert_ThingAlertType]
+GO
+
+ALTER TABLE [dbo].[ThingField]  WITH CHECK ADD  CONSTRAINT [FK_ThingField_Thing] FOREIGN KEY([ThingId])
+REFERENCES [Thing] ([ThingId])
+GO
+
+ALTER TABLE [dbo].[ThingField] CHECK CONSTRAINT [FK_ThingField_Thing]
+GO
+
+ALTER TABLE [dbo].[ThingFieldValue]  WITH CHECK ADD  CONSTRAINT [FK_ThingFieldValue_ThingField] FOREIGN KEY([ThingFieldId])
+REFERENCES [ThingField] ([ThingFieldId])
+GO
+
+ALTER TABLE [dbo].[ThingFieldValue] CHECK CONSTRAINT [FK_ThingFieldValue_ThingField]
 GO
 
 ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_UserOrder_User] FOREIGN KEY([UserId])

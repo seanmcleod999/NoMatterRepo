@@ -19,5 +19,9 @@
        <table name="Setting" />
   </scriptValues>
 
+ <scriptValues outputFile="thingsinsert.sql">
+       <table name="ThingAlertType" />
+       <table name="ThingAlertFrequency" />
+  </scriptValues>
 
 </scriptOptions>
